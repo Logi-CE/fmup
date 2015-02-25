@@ -1,6 +1,6 @@
 {
-    "name":"castelis/FMUP",
-    "version":"0.1.0",
+    "name":"castelis/fmup",
+    "version":"dev-trunk",
     "require": {
         "php": "~5.3.3",
         "ext-pdo_mysql": "~1.0",
