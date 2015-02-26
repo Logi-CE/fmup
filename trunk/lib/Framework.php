@@ -1,6 +1,8 @@
 <?php
 namespace FMUP;
 require_once BASE_PATH . '/system/framework.php';
+//fix compliance for DB in model
+\Model::setDb(Helper\Db::getInstance());
 
 /**
  * Class Framework - extends FMU
