@@ -8,7 +8,8 @@ namespace FMUP\Response\Header;
  */
 abstract class Status
 {
-    const TYPE = 'Status';
+    const TYPE = 'HTTP/1.1';
 
     const VALUE_OK = '200 OK';
+    const VALUE_NOT_FOUND = '404 Not Found';
 }

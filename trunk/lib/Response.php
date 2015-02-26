@@ -95,10 +95,9 @@ class Response
     {
         foreach ($this->getHeaders() as $type => $values) {
             foreach ($values as $value) {
-                header("$type: $value");
+                header("$type $value");
             }
         }
-
         echo $this->getBody();
     }
 }

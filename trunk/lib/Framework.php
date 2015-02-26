@@ -104,8 +104,8 @@ class Framework extends \Framework
     /**
      * @param string $controllerName
      * @param string $action
-     * @throws \NotFoundError
-     * @return \Controller
+     * @return \Controller|Controller
+     * @throws Exception\NotFound
      */
     protected function instantiate($controllerName, $action)
     {
@@ -113,7 +113,7 @@ class Framework extends \Framework
         global $sys_controller_instance;
 
         if (!class_exists($controllerName)) {
-            throw new \NotFoundError('Controller does not exist');
+            throw new Exception\NotFound('Controller does not exist');
         }
         /* @var $controllerInstance \Controller */
         $controllerInstance = new $controllerName();
@@ -131,17 +131,43 @@ class Framework extends \Framework
         if (method_exists($controllerInstance, $action)) {
             $actionReturn = call_user_func(array($controllerInstance, $action));
         } else {
-            throw new \NotFoundError(\Error::fonctionIntrouvable($action));
+            throw new Exception\NotFound(\Error::fonctionIntrouvable($action));
         }
         $controllerInstance->postFiltre();
 
         if ($controllerInstance instanceof Controller && !is_null($actionReturn)) {
             $controllerInstance->getResponse()
                 ->setBody(
-                    $actionReturn instanceof \FMUP\View ? $actionReturn->render() : $actionReturn
+                    $actionReturn instanceof View ? $actionReturn->render() : $actionReturn
                 );
         }
         return $controllerInstance;
+    }
+
+    /**
+     * @return $this
+     * @throws Exception\NotFound
+     */
+    protected function dispatch()
+    {
+        try {
+            return parent::dispatch();
+        } catch (Exception\NotFound $exception) {
+            list($controller, $action) = $this->getRouteError();
+            $this->postDispatch(
+                $this->instantiate($controller, $action)
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Retrieve controller/action on error
+     * @return array
+     */
+    protected function getRouteError()
+    {
+        return array('\FMUP\Controller\Error', 'index');
     }
 
     /**
