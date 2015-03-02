@@ -71,6 +71,7 @@ class View
             throw new \OutOfBoundsException("File does not exist");
         }
         ob_start();
+        extract($this->getParams()); //for compliance only - @todo remove this line
         require ($this->getViewPath());
         return ob_get_clean();
     }
@@ -92,5 +93,26 @@ class View
     public function getViewPath()
     {
         return $this->viewPath;
+    }
+
+    /**
+     * Implements object use
+     * @param string $param
+     * @return mixed
+     */
+    public function __get($param)
+    {
+        return $this->getParam($param);
+    }
+
+    /**
+     * Implements object use
+     * @param string $param
+     * @param mixed $value
+     * @return View
+     */
+    public function __set($param, $value)
+    {
+        return $this->setParam($param, $param);
     }
 }

@@ -7,6 +7,7 @@ abstract class Controller extends \Controller
     private $request;
     private $response;
     private $dbInstance;
+    private $view;
 
     /**
      * @return Request
@@ -59,5 +60,24 @@ abstract class Controller extends \Controller
             $this->dbInstance = Helper\Db::getInstance();
         }
         return $this->dbInstance;
+    }
+
+    public function getView()
+    {
+        if (!$this->view) {
+            $this->view = new View();
+            $this->view
+                ->setViewPath(implode(DIRECTORY_SEPARATOR, array(BASE_PATH, 'application', APPLICATION, 'view', 'layout', 'default.php')))
+                ->setParam('styles', \Config::paramsVariables('styles'))
+                ->setParam('javascripts', \Config::paramsVariables('javascripts'))
+            ;
+        }
+        return $this->view;
+    }
+
+    public function setView(View $view)
+    {
+        $this->view = $view;
+        return $this;
     }
 }
