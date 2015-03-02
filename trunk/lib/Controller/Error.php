@@ -19,7 +19,7 @@ class Error extends \FMUP\Controller
     /**
      * Url call for each 404
      */
-    public function index()
+    public function indexAction()
     {
         ob_start();
         new \View('accueil/erreur404', array('fil_ariane' => 'Accueil > Erreur'));

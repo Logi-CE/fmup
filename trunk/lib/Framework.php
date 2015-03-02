@@ -125,7 +125,9 @@ class Framework extends \Framework
             $controllerInstance
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse());
+            $action = $action . 'Action'; //we force action to be a xxxAction
         }
+
         $controllerInstance->preFiltre();
         $actionReturn = null;
         if (method_exists($controllerInstance, $action)) {
