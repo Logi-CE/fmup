@@ -107,7 +107,7 @@ class Framework extends \Framework
      * @param string $controllerName
      * @param string $action
      * @return \Controller|Controller
-     * @throws Exception\NotFound
+     * @throws Exception\Status\NotFound
      */
     protected function instantiate($controllerName, $action)
     {
@@ -115,7 +115,7 @@ class Framework extends \Framework
         global $sys_controller_instance;
 
         if (!class_exists($controllerName)) {
-            throw new Exception\NotFound('Controller does not exist');
+            throw new Exception\Status\NotFound('Controller does not exist');
         }
         /* @var $controllerInstance \Controller */
         $controllerInstance = new $controllerName();
@@ -135,7 +135,7 @@ class Framework extends \Framework
         if (method_exists($controllerInstance, $action)) {
             $actionReturn = call_user_func(array($controllerInstance, $action));
         } else {
-            throw new Exception\NotFound(\Error::fonctionIntrouvable($action));
+            throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($action));
         }
         $controllerInstance->postFiltre();
 
