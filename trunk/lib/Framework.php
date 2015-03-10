@@ -1,5 +1,7 @@
 <?php
 namespace FMUP;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 require_once BASE_PATH . '/system/framework.php';
 //fix compliance for DB in model
 \Model::setDb(Helper\Db::getInstance());
@@ -128,7 +130,7 @@ class Framework extends \Framework
             $action = $action . 'Action'; //we force action to be a xxxAction
         }
 
-        $controllerInstance->preFiltre();
+        $controllerInstance->preFiltre($action);
         $actionReturn = null;
         if (method_exists($controllerInstance, $action)) {
             $actionReturn = call_user_func(array($controllerInstance, $action));
@@ -148,28 +150,25 @@ class Framework extends \Framework
 
     /**
      * @return $this
-     * @throws Exception\NotFound
      */
     protected function dispatch()
     {
         try {
             return parent::dispatch();
-        } catch (Exception\NotFound $exception) {
-            list($controller, $action) = $this->getRouteError();
+        } catch (\Exception $exception) {
             $this->postDispatch(
-                $this->instantiate($controller, $action)
+                $this->getErrorController()->setException($exception)->indexAction()
             );
         }
         return $this;
     }
 
     /**
-     * Retrieve controller/action on error
-     * @return array
+     * @return Controller\Error
      */
-    protected function getRouteError()
+    protected function getErrorController()
     {
-        return array('\FMUP\Controller\Error', 'index');
+        return new \FMUP\Controller\Error;
     }
 
     /**

@@ -159,10 +159,10 @@ class Controller
     /**
      * Filtre exécuté avant chaque accès au controlleur.
      */
-    public function preFiltre()
+    public function preFiltre($calledAction = null)
     {
         if (call_user_func(array(APP, "hasAuthentification"))) {
-            $this->authorize();
+            $this->authorize($calledAction);
         }
     }
 
@@ -187,13 +187,15 @@ class Controller
     /**
      * Fonction validant l'accès au site backend (utilisateur enregistré et tout et tout).
      */
-    private function authorize()
+    private function authorize($calledAction = null)
     {
         global $sys_controller;
         global $sys_function;
         global $sys_directory;
 
-        DroitHelperApplication::authorize($sys_controller, $sys_function, $sys_directory);
+        $calledAction = $calledAction === null ? $sys_function : $calledAction;
+
+        DroitHelperApplication::authorize($sys_controller, $calledAction, $sys_directory);
 
     }
 }
