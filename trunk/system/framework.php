@@ -159,7 +159,7 @@ class Framework
         }
         
         // Préfiltre
-        $sys_controller_instance->preFiltre();
+        $sys_controller_instance->preFiltre($sys_function);
 
         
         // Si la fonction peut être appelée on l'appelle

@@ -159,7 +159,7 @@ class Controller
     /**
      * Filtre exécuté avant chaque accès au controlleur.
      */
-    public function preFiltre($calledAction = null)
+    public function preFiltre($calledAction)
     {
         if (call_user_func(array(APP, "hasAuthentification"))) {
             $this->authorize($calledAction);
