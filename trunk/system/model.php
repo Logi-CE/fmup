@@ -553,10 +553,10 @@ abstract class Model extends FiltreListe
      */
     public static function getDb()
     {
-        if (self::$dbInstance) {
-            return self::$dbInstance;
+        if (!self::$dbInstance) {
+            self::$dbInstance = DbHelper::get(Config::parametresConnexionDb());
         }
-        return null;
+        return self::$dbInstance;
     }
 
     /**

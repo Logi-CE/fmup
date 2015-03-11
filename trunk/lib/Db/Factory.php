@@ -4,6 +4,7 @@ namespace FMUP\Db;
 abstract class Factory
 {
     const DRIVER_PDO = 'Pdo';
+    const DRIVER_MOCK = 'Mock';
 
     /**
      * @param string $driver

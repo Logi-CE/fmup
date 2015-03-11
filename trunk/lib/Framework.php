@@ -1,10 +1,8 @@
 <?php
 namespace FMUP;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
-require_once BASE_PATH . '/system/framework.php';
-//fix compliance for DB in model
-\Model::setDb(Helper\Db::getInstance());
+require_once __DIR__ . '/../system/framework.php';
+
 
 /**
  * Class Framework - extends FMU
@@ -113,7 +111,6 @@ class Framework extends \Framework
     {
         //To be compliant with old system @todo
         global $sys_controller_instance;
-
         if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }

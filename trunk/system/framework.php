@@ -33,28 +33,26 @@ spl_autoload_register('__autoload');
  **/
 function __autoload($class_name)
 {
-    if (!defined('BASE_PATH')) {
-        throw new Exception("BASE_PATH non défini.");
-    }
-
     $class_name = strtolower(String::to_Case($class_name));
 
     //liste des repertoires pouvant contenir une classe à include
-    $classes_path =
-        array(
-            'system',
-            'system/helper',
-            'system/component',
-            'application',
-            'application/model',
-            'application/model/base'
-        );
+    $classes_path = array(
+        __DIR__,
+        __DIR__ . '/helper',
+        __DIR__ . '/component',
+        __DIR__ . '/../application',
+        __DIR__ . '/../application/model',
+        __DIR__ . '/../application/model/base',
+        __DIR__ . '/../../../../application',
+        __DIR__ . '/../../../../application/model',
+        __DIR__ . '/../../../../application/model/base',
+    );
 
     //recherche de la classe
     $include_path = '';
     foreach ($classes_path as $class_path) {
-        if (file_exists(BASE_PATH.'/'.$class_path.'/'.$class_name.'.php')) {
-            $include_path = BASE_PATH.'/'.$class_path.'/'.$class_name.'.php';
+        if (file_exists($class_path.'/'.$class_name.'.php')) {
+            $include_path = $class_path.'/'.$class_name.'.php';
             break;
         }
     }
@@ -67,9 +65,6 @@ $sys_directory = null;
 $sys_controller = null;
 $sys_function = null;
 $sys_controller_instance = null;
-
-//fix compliance for DB in model
-Model::setDb(DbHelper::get(Config::parametresConnexionDb()));
 
 /**
  * Classe d'initialisation du framework
@@ -115,7 +110,6 @@ class Framework
                 FileHelper::fLog($url."\r\n".print_r($_REQUEST, 1), 'POST');
             }
         }
-
         $this->dispatch();
 
         // historisation
