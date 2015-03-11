@@ -156,9 +156,9 @@ class Framework extends \Framework
         try {
             return parent::dispatch();
         } catch (\Exception $exception) {
-            $this->postDispatch(
-                $this->getErrorController()->setException($exception)->indexAction()
-            );
+            $controller = $this->getErrorController()->setException($exception);
+            $controller->indexAction();
+            $this->postDispatch($controller);
         }
         return $this;
     }
