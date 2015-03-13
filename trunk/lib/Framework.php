@@ -22,6 +22,10 @@ class Framework extends \Framework
      * @var Routing
      */
     private $routingSystem;
+    /**
+     * @var Controller\Error
+     */
+    private $errorController;
 
     /**
      * @param Routing $routingSystem
@@ -163,9 +167,22 @@ class Framework extends \Framework
     /**
      * @return Controller\Error
      */
-    protected function getErrorController()
+    public function getErrorController()
     {
-        return new \FMUP\Controller\Error;
+        if (!$this->errorController) {
+            $this->errorController = new \FMUP\Controller\Error;
+        }
+        return $this->errorController;
+    }
+
+    /**
+     * @param Controller\Error $errorController
+     * @return $this
+     */
+    public function setErrorController(Controller\Error $errorController)
+    {
+        $this->errorController = $errorController;
+        return $this;
     }
 
     /**
