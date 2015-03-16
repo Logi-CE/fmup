@@ -27,15 +27,16 @@ class Cache
     private function __construct()
     {
     }
-    
+
     /**
-     * Get Cache
-     * @return Cache
+     * @param $instanceKey
+     * @return mixed
      */
     public static function getInstance($instanceKey)
     {
         if(!isset(self::$instance[$instanceKey])){
-            self::$instance[$instanceKey] = new self();
+            $instance = new self();
+            self::$instance[$instanceKey] = $instance->setDriver($instanceKey);
         }
         return self::$instance[$instanceKey];
     }
