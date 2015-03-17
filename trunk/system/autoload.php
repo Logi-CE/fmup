@@ -26,6 +26,8 @@ function __autoload($class_name)
         __DIR__ . '/../../../../application',
         __DIR__ . '/../../../../application/model',
         __DIR__ . '/../../../../application/model/base',
+        __DIR__ . '/../../../../application/' . APPLICATION . '/controller',
+        __DIR__ . '/../../../../application/' . APPLICATION . '/controller/component',
     );
 
     //recherche de la classe
