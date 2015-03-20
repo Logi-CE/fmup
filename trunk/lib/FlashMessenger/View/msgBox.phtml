@@ -1,8 +1,11 @@
 <?php $flashes = \FMUP\FlashMessenger::getInstance()->get(); ?>
-<?php if ($flashes !== null): ?>
+<?php
+/**
+ * On ne récupère que la dernière flash en raison de l'éxistant
+ * TODO : Supprimer les créations de flash des modèles et faire un système plus propre
+ */
+if ($flashes !== null): ?>
     <script type="text/javascript">
-    <?php foreach ($flashes as $flash): ?>
-        showNotification("<?php echo $flash->getMessage(); ?>", "<?php echo $flash->getType(); ?>");
-    <?php endforeach; ?>
+        showNotification("<?php echo end($flashes)->getMessage(); ?>", "<?php echo end($flashes)->getType(); ?>");
     </script>
 <?php endif; ?>
