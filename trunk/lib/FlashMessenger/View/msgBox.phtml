@@ -1,0 +1,15 @@
+<?php $flashes = \FMUP\FlashMessenger::getInstance()->get(); ?>
+<?php if ($flashes !== null): ?>
+    <div class="msgBox" id="msgBox">
+        <table>
+            <?php foreach ($flashes as $flash): ?>
+                <tr>
+                    <td><img class="img_msgBox_js" src="/images/message/<?php echo $flash->getType() === \FMUP\FlashMessenger\Message::TYPE_DANGER ? 'errorMedium.png' : 'okMedium.png';?>"/>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="messagebox_js"><?php echo $flash->getMessage(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+<?php endif; ?>
