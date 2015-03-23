@@ -5,24 +5,24 @@ namespace FMUP\FlashMessenger;
  * Defines methods to implement for each driver
  * @author sweffling
  */
-interface InterfaceMessenger
+interface DriverInterface
 {
     /**
      * Add a message in driver
-     * @param \FMUP\FlashMessenger\Message $flash
-     * @return \FMUP\FlashMessenger\Driver\Session
+     * @param Message $flash
+     * @return $this
      */
     public function add(Message $flash);
     
     /**
      * Get all the messages in the driver
-     * @return array $flashes
+     * @return array|null $flashes
      */
     public function get();
     
     /**
      * Clear the driver from messages
-     * @return \FMUP\FlashMessenger\Driver\Session
+     * @return $this
      */
     public function clear();
 }

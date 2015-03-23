@@ -1,43 +1,45 @@
 <?php
 namespace FMUP\FlashMessenger\Driver;
 
+use FMUP\FlashMessenger\DriverInterface;
+use FMUP\FlashMessenger\Message;
+
 /**
  * Description of Session
  *
  * @author sweffling
  */
-class Session implements \FMUP\FlashMessenger\InterfaceMessenger
+class Session implements DriverInterface
 {
     /**
      * Add a message in session
-     * @param \FMUP\FlashMessenger\Message $flash
-     * @return \FMUP\FlashMessenger\Driver\Session
+     * @param Message $flash
+     * @return $this
      */
-    public function add(\FMUP\FlashMessenger\Message $flash)
+    public function add(Message $flash)
     {
-        $_SESSION['flashMessenger'][] = $flash;
+        $_SESSION[__CLASS__][] = $flash;
         return $this;
     }
-    
+
     /**
      * Get all the messages in the session
-     * @return array $flashes
+     * @return array|null $flashes
      */
     public function get()
     {
-        return isset($_SESSION['flashMessenger']) ? $_SESSION['flashMessenger'] : null;
+        return isset($_SESSION[__CLASS__]) ? $_SESSION[__CLASS__] : null;
     }
 
     /**
      * Clear the session from messages
-     * @return \FMUP\FlashMessenger\Driver\Session
+     * @return $this
      */
     public function clear()
     {
-        if (isset($_SESSION['flashMessenger'])) {
-            unset($_SESSION['flashMessenger']);
+        if (isset($_SESSION[__CLASS__])) {
+            unset($_SESSION[__CLASS__]);
         }
         return $this;
     }
-    
 }

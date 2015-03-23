@@ -1,7 +1,10 @@
 <?php
-
 namespace FMUP;
 
+/**
+ * Class FlashMessenger
+ * @package FMUP
+ */
 class FlashMessenger
 {
 
@@ -10,7 +13,7 @@ class FlashMessenger
 
     /**
      * Set the singleton messenger instance
-     * @return Messenger $instance
+     * @return FlashMessenger
      */
     public static function getInstance()
     {
@@ -22,19 +25,31 @@ class FlashMessenger
 
     /**
      * Get the driver to stock messages in
-     * @return FlashMessenger\Driver\Session $driver
+     * @return FlashMessenger\DriverInterface
      */
     public function getDriver()
     {
-        if($this->driver === null){
+        if ($this->driver === null) {
             $this->driver = new FlashMessenger\Driver\Session();
         }
         return $this->driver;
     }
 
     /**
+     * Change driver used for flashmessenger
+     * @param FlashMessenger\DriverInterface $driver
+     * @return $this
+     */
+    public function setDriver(FlashMessenger\DriverInterface $driver)
+    {
+        $this->driver = $driver;
+        return $this;
+    }
+
+    /**
      * Set a flash in session
-     * @return Message
+     * @param FlashMessenger\Message $flash
+     * @return $this
      */
     public function add(FlashMessenger\Message $flash)
     {
@@ -44,7 +59,7 @@ class FlashMessenger
 
     /**
      * Get all flashes messages
-     * @return array|null flashes
+     * @return array|null
      */
     public function get()
     {
@@ -55,6 +70,7 @@ class FlashMessenger
 
     /**
      * Unset all flashes from driver
+     * @return $this
      */
     public function clear()
     {
