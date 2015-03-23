@@ -1,4 +1,27 @@
 /*********/
+/* 0.2.0 */
+/*********/
+
+Add cache + Exception for dispathing + FlashMessenger + view compliance with FMU
+
+# New
+
+ - View can access params by $this or variable
+ - Component Cache
+ - Component Cache\Ram
+ - Exception Forbidden
+ - Component Db\Mock
+ - Ability to redefine its own ErrorController
+ - Component FlashMessenger
+
+# Incompatible
+
+ - Controller add suffix Action to be called
+ - Exception NotFound moved to Exception\Status\NotFound
+ - preFiltre in controller need an $action parameter to know which action is called
+
+
+/*********/
 /* 0.1.0 */
 /*********/
 
