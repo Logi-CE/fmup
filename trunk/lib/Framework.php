@@ -221,8 +221,12 @@ class Framework extends \Framework
             }
             if (($error = error_get_last()) !== null) {
                 Error::addContextToErrorLog();
-                if (!\Config::isDebug() && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR))) {
-                    echo \Constantes::getMessageErreurApplication();
+                $isUrgentError = in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR));
+                if ($isUrgentError) {
+                    Error::sendMail();
+                    if (!\Config::isDebug()) {
+                        echo \Constantes::getMessageErreurApplication();
+                    }
                 }
             }
             exit();
