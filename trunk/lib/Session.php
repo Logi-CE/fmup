@@ -54,6 +54,11 @@ class Session
      */
     public function isStarted()
     {
+        if (version_compare(phpversion(), '5.4.0', '>=')) {
+            $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
+        } else {
+            $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
+        }
         return $this->sessionState == self::SESSION_STARTED;
     }
 
@@ -64,9 +69,9 @@ class Session
      */
     public function start($name = null)
     {
-        if ($this->sessionState == self::SESSION_NOT_STARTED) {
+        if (!$this->isStarted()) {
             session_name($name);
-//            $this->sessionState = session_start();
+            $this->sessionState = session_start();
         }
 
         return $this->sessionState;
@@ -123,7 +128,7 @@ class Session
      */
     public function destroy()
     {
-        if ($this->sessionState == self::SESSION_STARTED) {
+        if ($this->isStarted()) {
             $this->sessionState = !session_destroy();
             unset($_SESSION);
 
