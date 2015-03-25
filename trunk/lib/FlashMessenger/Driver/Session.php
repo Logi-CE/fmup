@@ -11,6 +11,29 @@ use FMUP\FlashMessenger\Message;
  */
 class Session implements DriverInterface
 {
+    private $session;
+
+    /**
+     * @return \FMUP\Session
+     */
+    private function getSession()
+    {
+        if (!$this->session) {
+            $this->session = \FMUP\Session::getInstance();
+        }
+        return $this->session;
+    }
+
+    /**
+     * @param \FMUP\Session $session
+     * @return $this
+     */
+    public function setSession(\FMUP\Session $session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
     /**
      * Add a message in session
      * @param Message $flash
@@ -18,7 +41,7 @@ class Session implements DriverInterface
      */
     public function add(Message $flash)
     {
-        $_SESSION[__CLASS__][] = $flash;
+        $this->getSession()->set(__CLASS__, array_push($this->getSession()->get(__CLASS__), $flash));
         return $this;
     }
 
@@ -28,7 +51,7 @@ class Session implements DriverInterface
      */
     public function get()
     {
-        return isset($_SESSION[__CLASS__]) ? $_SESSION[__CLASS__] : null;
+        return $this->getSession()->get(__CLASS__);
     }
 
     /**
@@ -37,9 +60,7 @@ class Session implements DriverInterface
      */
     public function clear()
     {
-        if (isset($_SESSION[__CLASS__])) {
-            unset($_SESSION[__CLASS__]);
-        }
+        $this->getSession()->remove(__CLASS__);
         return $this;
     }
 }

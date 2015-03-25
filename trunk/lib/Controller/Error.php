@@ -21,6 +21,11 @@ class Error extends \FMUP\Controller
     {
     }
 
+    /**
+     * Define exception
+     * @param \Exception $exception
+     * @return $this
+     */
     public function setException(\Exception $exception)
     {
         $this->exception = $exception;
@@ -33,24 +38,36 @@ class Error extends \FMUP\Controller
     public function indexAction()
     {
         try {
-            throw $this->exception;
+            throw $this->getException();
         } catch (\FMUP\Exception\Status $e) {
             $this->error($e->getStatus());
         } catch (\Exception $e) {
             throw $e; //uncaught exception because we don't know
         }
         ob_start();
-        new \View('accueil/erreur404', array('fil_ariane' => 'Accueil > Erreur', 'error' => $this->exception->getMessage()));
+        new \View('accueil/erreur404', array('fil_ariane' => 'Accueil > Erreur', 'error' => $this->getException()->getMessage()));
         $view = ob_get_clean();
 
         $this->getResponse()->setBody($view);
     }
 
-    private function error($status)
+    /**
+     * Sends error message
+     * @param string $status
+     */
+    protected function error($status)
     {
         error_log($status);
         \FMUP\Error::addContextToErrorLog();
 
         $this->getResponse()->addHeader(Status::TYPE, $status);
+    }
+
+    /**
+     * @return \Exception
+     */
+    protected function getException()
+    {
+        return $this->exception;
     }
 }
