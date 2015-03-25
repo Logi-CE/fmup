@@ -66,7 +66,7 @@ class Session
     {
         if ($this->sessionState == self::SESSION_NOT_STARTED) {
             session_name($name);
-            $this->sessionState = session_start();
+//            $this->sessionState = session_start();
         }
 
         return $this->sessionState;
