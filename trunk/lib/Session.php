@@ -10,7 +10,7 @@ class Session
     const SESSION_STARTED = true;
     const SESSION_NOT_STARTED = false;
 
-    private $sessionState = self::SESSION_NOT_STARTED;
+    private $sessionState;
     private static $instance;
 
     private function __construct()
@@ -54,10 +54,12 @@ class Session
      */
     public function isStarted()
     {
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
-            $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
-        } else {
-            $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
+        if (is_null($this->sessionState)){
+            if (version_compare(phpversion(), '5.4.0', '>=')) {
+                $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
+            } else {
+                $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
+            }
         }
         return $this->sessionState == self::SESSION_STARTED;
     }
