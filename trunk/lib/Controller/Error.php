@@ -40,7 +40,7 @@ class Error extends \FMUP\Controller
         try {
             throw $this->getException();
         } catch (\FMUP\Exception\Status $e) {
-            $this->error($e->getStatus());
+            $this->errorStatus($e->getStatus());
         } catch (\Exception $e) {
             throw $e; //uncaught exception because we don't know
         }
@@ -55,7 +55,7 @@ class Error extends \FMUP\Controller
      * Sends error message
      * @param string $status
      */
-    protected function error($status)
+    protected function errorStatus($status)
     {
         error_log($status);
         \FMUP\Error::addContextToErrorLog();
