@@ -72,7 +72,9 @@ class Session
     public function start($name = null)
     {
         if (!$this->isStarted()) {
-            session_name($name);
+            if (!is_null($name)) {
+                session_name($name);
+            }
             $this->sessionState = session_start();
         }
 

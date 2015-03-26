@@ -28,6 +28,11 @@ class Framework extends \Framework
     private $errorController;
 
     /**
+     * @var PreDispatch
+     */
+    private $preDispatchSystem;
+
+    /**
      * @param Routing $routingSystem
      * @return $this
      */
@@ -185,6 +190,12 @@ class Framework extends \Framework
         return $this;
     }
 
+    protected function preDispatch()
+    {
+        $this->getPreDispatchSystem()->dispatch();
+        return $this;
+    }
+
     /**
      * Treatment on response if needed
      * @param \Controller $controller
@@ -231,5 +242,26 @@ class Framework extends \Framework
             }
             exit();
         }
+    }
+
+    /**
+     * @return PreDispatch
+     */
+    public function getPreDispatchSystem()
+    {
+        if (!$this->preDispatchSystem) {
+            $this->preDispatchSystem = new PreDispatch();
+        }
+        return $this->preDispatchSystem;
+    }
+
+    /**
+     * @param PreDispatch $preDispatch
+     * @return $this
+     */
+    public function setPreDispatchSystem(PreDispatch $preDispatch)
+    {
+        $this->preDispatchSystem = $preDispatch;
+        return $this;
     }
 }
