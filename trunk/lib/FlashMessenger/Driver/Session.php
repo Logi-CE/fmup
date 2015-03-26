@@ -41,7 +41,7 @@ class Session implements DriverInterface
      */
     public function add(Message $flash)
     {
-        $messages = $this->getSession()->get(__CLASS__);
+        $messages = (array) $this->getSession()->get(__CLASS__);
         $this->getSession()->set(__CLASS__, array_push($messages, $flash));
         return $this;
     }
