@@ -2,7 +2,7 @@
     "name":"castelis/fmup",
     "version":"dev-trunk",
     "require": {
-        "php": ">=5.3.3",
+        "php": "~5.3",
         "ext-pdo_mysql": "~1.0",
         "ext-json": "~1.2",
         "ext-pcre": "0.0.0.*",
