@@ -70,10 +70,18 @@ class Framework
                 FileHelper::fLog($url."\r\n".print_r($_REQUEST, 1), 'POST');
             }
         }
+        $this->preDispatch();
         $this->dispatch();
 
         // historisation
         HistoriqueHelper::stockageHistoriqueNavigation($sys_directory, $sys_controller, $sys_function);
+    }
+
+    /**
+     * Allow overwriting of an eventual pre treatment
+     */
+    protected function preDispatch()
+    {
     }
 
     /**
