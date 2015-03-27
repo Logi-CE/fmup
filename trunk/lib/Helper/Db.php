@@ -22,7 +22,7 @@ abstract class Db
             throw new \InvalidArgumentException('Name must be set');
         }
         $name = (string)$name;
-        if (is_null(self::$instances[$name])) {
+        if (!isset(self::$instances[$name])) {
             if ($name == self::DEFAULT_NAME) {
                 $params = \Config::parametresConnexionDb();
             } else {
