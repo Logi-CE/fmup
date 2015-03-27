@@ -1,15 +1,10 @@
 <?php
 namespace FMUP\Response\Header;
 
-/**
- * Class Status
- * @package FMUP\Response\Header
- * @todo must implement http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
- */
 abstract class ContentType
 {
-    const TEXT = 'Content-Type: text/html;';
+    const TYPE = 'Content-Type:';
 
-
-    const UTF_8 = 'charset=utf-8';
+    const TEXT_HTML = 'text/html;';
+    const CHARSET_UTF_8 = ';charset=utf-8';
 }

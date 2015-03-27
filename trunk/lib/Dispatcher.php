@@ -1,7 +1,7 @@
 <?php
 namespace FMUP;
 
-use FMUP\Dispatch\Plugin;
+use FMUP\Dispatcher\Plugin;
 
 class Dispatcher
 {

@@ -280,7 +280,7 @@ class Framework extends \Framework
     public function getPostDispatcherSystem()
     {
         if (!$this->postDispatcherSystem) {
-            $this->postDispatcherSystem = new Dispatcher();
+            $this->postDispatcherSystem = new Dispatcher\Post();
         }
         return $this->postDispatcherSystem;
     }
