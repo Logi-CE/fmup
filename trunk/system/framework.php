@@ -91,8 +91,8 @@ class Framework
     protected function dispatch()
     {
         list($controllerName, $action) = $this->getRoute();
-        $controllerInstance = $this->instantiate($controllerName, $action);
-        $this->postDispatch($controllerInstance);
+        $this->instantiate($controllerName, $action);
+        $this->postDispatch();
         return $this;
     }
 
@@ -100,7 +100,7 @@ class Framework
      * Allow overwriting of an eventual post treatment
      * @param Controller $controller
      */
-    protected function postDispatch(Controller $controller)
+    protected function postDispatch()
     {
     }
 

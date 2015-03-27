@@ -1,9 +1,9 @@
 <?php
 namespace FMUP;
 
-use FMUP\PreDispatch\Plugin;
+use FMUP\Dispatch\Plugin;
 
-class PreDispatch
+class Dispatch
 {
     /**
      * List of routes to check on routing
@@ -26,15 +26,14 @@ class PreDispatch
     /**
      * Dispatch routes and return the first available route
      * @param Request $request
+     * @param Response $response
      */
-    public function dispatch(Request $request)
+    public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
-        $redispatch = false;
-        $routeSelected = null;
         foreach ($this->plugins as $plugin) {
             /* @var $plugin Plugin */
-            $plugin->setRequest($request)->handle();
+            $plugin->setRequest($request)->setResponse($response)->handle();
         }
     }
 
