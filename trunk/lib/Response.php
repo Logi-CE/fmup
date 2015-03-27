@@ -19,16 +19,15 @@ class Response
     /**
      * Add a header to send in response
      *
-     * @param string $name Name of the header
-     * @param string $value
+     * @param Response\Header $header
      * @return $this
      */
-    public function addHeader($name, $value)
+    public function addHeader(Response\Header $header)
     {
-        if (!array_key_exists($name, $this->headers)) {
-            $this->setHeader($name, $value);
+        if (!array_key_exists($header->getType(), $this->headers)) {
+            $this->setHeader($header);
         } else {
-            array_push($this->headers[$name], $value);
+            array_push($this->headers[$header->getType()], $header);
         }
         return $this;
     }
@@ -44,13 +43,12 @@ class Response
 
     /**
      * Define a specific header
-     * @param string $name Name of the header
-     * @param string $value
+     * @param Response\Header $header
      * @return $this
      */
-    public function setHeader($name, $value)
+    public function setHeader(Response\Header $header)
     {
-        $this->headers[$name] = array($value);
+        $this->headers[$header->getType()] = array($header);
         return $this;
     }
 
@@ -93,9 +91,10 @@ class Response
      */
     public function send()
     {
-        foreach ($this->getHeaders() as $type => $values) {
-            foreach ($values as $value) {
-                header("$type $value");
+        foreach ($this->getHeaders() as $type => $headers) {
+            foreach ($headers as $header) {
+                /* @var $header Response\Header */
+                $header->render();
             }
         }
         echo $this->getBody();

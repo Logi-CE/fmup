@@ -60,7 +60,7 @@ class Error extends \FMUP\Controller
         error_log($status);
         \FMUP\Error::addContextToErrorLog();
 
-        $this->getResponse()->addHeader(Status::TYPE, $status);
+        $this->getResponse()->setHeader(new Status($status));
     }
 
     /**
