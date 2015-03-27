@@ -22,7 +22,6 @@ abstract class Factory
         if (!$instance instanceof DbInterface) {
             throw new Exception('Unable to create ' . $class);
         }
-
         return $instance;
     }
 }
