@@ -243,13 +243,11 @@ class Framework
         $sys_controller = "ctrl_".$matches[2];
         $sys_function = String::toCamlCase($matches[3]);
 
-        // Si le fichier existe on l'inclue
-        if (file_exists(BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php")) {
-            require_once(BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php");
-        } elseif (file_exists(BASE_PATH."/system/component/".$sys_directory.$sys_controller.".php")) {
-            require_once(BASE_PATH."/system/component/".$sys_directory.$sys_controller.".php");
-            // Sinon on appelle la page 404
-        } else {
+        
+        if (
+            !class_exists(\String::toCamlCase($sys_controller)) ||
+            !is_callable(array(\String::toCamlCase($sys_controller), $sys_function)))
+        {
             $this->getRouteError();
         }
         return array(\String::toCamlCase($sys_controller), $sys_function);
