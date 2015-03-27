@@ -71,7 +71,8 @@ class View
             throw new \OutOfBoundsException("File does not exist");
         }
         ob_start();
-        extract($this->getParams()); //for compliance only - @todo remove this line
+        $vars = $this->getParams();
+        extract($vars); //for compliance only - @todo remove this line
         require ($this->getViewPath());
         return ob_get_clean();
     }
