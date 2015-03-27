@@ -28,14 +28,14 @@ class Framework extends \Framework
     private $errorController;
 
     /**
-     * @var Dispatch
+     * @var Dispatcher
      */
-    private $preDispatchSystem;
+    private $preDispatcherSystem;
 
     /**
-     * @var Dispatch
+     * @var Dispatcher
      */
-    private $postDispatchSystem;
+    private $postDispatcherSystem;
 
     /**
      * @param Routing $routingSystem
@@ -201,7 +201,7 @@ class Framework extends \Framework
      */
     protected function preDispatch()
     {
-        $this->getPreDispatchSystem()
+        $this->getPreDispatcherSystem()
             ->dispatch($this->getRequest(), $this->getResponse());
         return $this;
     }
@@ -211,7 +211,7 @@ class Framework extends \Framework
      */
     protected function postDispatch()
     {
-        $this->getPostDispatchSystem()
+        $this->getPostDispatcherSystem()
             ->dispatch($this->getRequest(), $this->getResponse());
         return $this;
 
@@ -254,44 +254,44 @@ class Framework extends \Framework
     }
 
     /**
-     * @return Dispatch
+     * @return Dispatcher
      */
-    public function getPreDispatchSystem()
+    public function getPreDispatcherSystem()
     {
-        if (!$this->preDispatchSystem) {
-            $this->preDispatchSystem = new Dispatch();
+        if (!$this->preDispatcherSystem) {
+            $this->preDispatcherSystem = new Dispatcher();
         }
-        return $this->preDispatchSystem;
+        return $this->preDispatcherSystem;
     }
 
     /**
-     * @param Dispatch $preDispatch
+     * @param Dispatcher $preDispatch
      * @return $this
      */
-    public function setPreDispatchSystem(Dispatch $preDispatch)
+    public function setPreDispatcherSystem(Dispatcher $preDispatch)
     {
-        $this->preDispatchSystem = $preDispatch;
+        $this->preDispatcherSystem = $preDispatch;
         return $this;
     }
 
     /**
-     * @return Dispatch
+     * @return Dispatcher
      */
-    public function getPostDispatchSystem()
+    public function getPostDispatcherSystem()
     {
-        if (!$this->postDispatchSystem) {
-            $this->postDispatchSystem = new Dispatch();
+        if (!$this->postDispatcherSystem) {
+            $this->postDispatcherSystem = new Dispatcher();
         }
-        return $this->postDispatchSystem;
+        return $this->postDispatcherSystem;
     }
 
     /**
-     * @param Dispatch $postDispatch
+     * @param Dispatcher $postDispatch
      * @return $this
      */
-    public function setPostDispatchSystem(Dispatch $postDispatch)
+    public function setPostDispatcherSystem(Dispatcher $postDispatch)
     {
-        $this->postDispatchSystem = $postDispatch;
+        $this->postDispatcherSystem = $postDispatch;
         return $this;
     }
 }

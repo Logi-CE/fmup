@@ -3,7 +3,7 @@ namespace FMUP;
 
 use FMUP\Dispatch\Plugin;
 
-class Dispatch
+class Dispatcher
 {
     /**
      * List of routes to check on routing

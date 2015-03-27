@@ -1,5 +1,5 @@
 <?php
-namespace FMUP\Dispatch;
+namespace FMUP\Dispatcher;
 
 use FMUP\Exception;
 use FMUP\Request;
