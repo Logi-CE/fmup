@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class View
+ * @deprecated Might I suggest use of \FMUP\View
+ */
 class View
 {
     /**
