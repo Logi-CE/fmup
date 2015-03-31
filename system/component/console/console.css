@@ -1,0 +1,137 @@
+#debug-zone {
+    position:fixed;
+    _position:absolute; /* IE <7 */
+    top:1em;
+    right:1em;
+    width:40em;
+    height:50em;
+    overflow:auto;
+    border:1px solid #ccc;
+    padding:1em;
+    margin:1em;
+    font: 10px "lucida console",courier,system;
+    background:#f6f6f6;
+    opacity:0.9;
+    color:#333;
+    z-index: 1000;
+    padding-top: 10px;
+}
+#debug-zone-button {
+    position:fixed;
+    _position:absolute; /* IE <7 */
+    top:-1em;
+    height:1em;
+    right:-1em;
+    width:1em;
+    padding:1em;
+    margin:1em;
+    font: 10px "lucida console",courier,system;
+    z-index: 1000;
+    padding-top: 10px;
+}
+#debug-zone-button button {
+    position: fixed;
+    _position:absolute; /* IE <7 */
+    top: 0;
+    background: url(/images/layout/console/sprite.gif) no-repeat;
+    width: 18px;
+    height: 18px;
+    font-size: 8px;
+    border: 1px dotted grey;
+    cursor: pointer;
+}
+#debug-zone div.page {
+    text-align: center;
+    border: 1px dotted indigo;
+    border-width: 1px 0;
+    margin:0.5em 0;
+    color: indigo;
+    font-weight: bold;
+}
+#debug-zone div .minilog {
+    font-size: 0.9em;
+    font-style: italic;
+    color: steelblue;
+}
+#debug-zone-button #bouton_allumer {
+    background-position: 0 0;
+    right: 20px;
+}
+#debug-zone-button #bouton_eteindre {
+    background-position: -16px 0;
+    right: 20px;
+}
+#debug-zone-button #bouton_cacher {
+    background-position: -32px 0;
+    right: 45px;
+}
+#debug-zone-button #bouton_ouvrir {
+    background-position: -48px 0;
+    right: 45px;
+}
+#debug-zone-button #bouton_agrandir {
+    background-position: -64px 0;
+    right: 70px;
+}
+#debug-zone-button #bouton_vider {
+    background-position: -80px 0;
+    right: 95px;
+}
+#debug-zone-button #bouton_rafraichir {
+    background-position: -96px 0;
+    right: 120px;
+}
+#debug-zone-button #bouton_descendre {
+    background-position: -112px 0;
+    right: 145px;
+}
+#debug-zone-button #bouton_detacher {
+    background-position: -128px 0;
+    right: 170px;
+}
+/* Options */
+#debug-zone-button #bouton_activer_params {
+    background-position: -144px 0;
+    right: 195px;
+}
+#debug-zone-button #bouton_desactiver_params {
+    background-position: -144px 0;
+    background-color: #EDE6DE;
+    right: 195px;
+}
+#debug-zone-button #bouton_activer_sql {
+    background-position: -160px 0;
+    right: 220px;
+}
+#debug-zone-button #bouton_desactiver_sql {
+    background-position: -160px 0;
+    background-color: #EDE6DE;
+    right: 220px;
+}
+#debug-zone-button #bouton_activer_contenu {
+    background-position: -176px 0;
+    right: 245px;
+}
+#debug-zone-button #bouton_desactiver_contenu {
+    background-position: -176px 0;
+    background-color: #EDE6DE;
+    right: 245px;
+}
+#debug-zone-button #bouton_activer_erreur {
+    background-position: -192px 0;
+    right: 270px;
+}
+#debug-zone-button #bouton_desactiver_erreur {
+    background-position: -192px 0;
+    background-color: #EDE6DE;
+    right: 270px;
+}
+#debug-zone-button #bouton_activer_stats {
+    background-position: -208px 0;
+    right: 295px;
+}
+#debug-zone-button #bouton_desactiver_stats {
+    background-position: -208px 0;
+    background-color: #EDE6DE;
+    right: 295px;
+}
