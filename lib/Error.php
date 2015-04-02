@@ -8,6 +8,29 @@ namespace FMUP;
  */
 class Error
 {
+    private static $session;
+
+    /**
+     * @return \FMUP\Session
+     */
+    public static function getSession()
+    {
+        if (!self::$session) {
+            self::$session = \FMUP\Session::getInstance();
+        }
+        return self::$session;
+    }
+
+    /**
+     * @param \FMUP\Session $session
+     * @return $this
+     */
+    public static function setSession(\FMUP\Session $session)
+    {
+        self::$session = $session;
+        return self;
+    }
+
     /**
      * @todo : rewrite this since this is really dirty
      * @todo : think SOLID : this function must not Format AND Write + access to superglobals that might not exit
@@ -34,20 +57,20 @@ class Error
         print_r($_POST);
         echo PHP_EOL;
         echo "État des variables SESSION lors de l'erreur :".PHP_EOL;
-        if(isset($_SESSION['id_utilisateur'])) {
-            print_r($_SESSION['id_utilisateur']);
+        if(self::getSession()->has('id_utilisateur')) {
+            print_r(self::getSession()->get('id_utilisateur'));
             echo PHP_EOL;
         }
-        if(isset($_SESSION['id_historisation'])) {
-            print_r($_SESSION['id_historisation']);
+        if(self::getSession()->has('id_historisation')) {
+            print_r(self::getSession()->get('id_historisation'));
             echo PHP_EOL;
         }
-        if(isset($_SESSION['id_menu_en_cours'])) {
-            print_r($_SESSION['id_menu_en_cours']);
+        if(self::getSession()->has('id_menu_en_cours')) {
+            print_r(self::getSession()->get('id_menu_en_cours'));
             echo PHP_EOL;
         }
-        if(isset($_SESSION['droits_controlleurs'])) {
-            print_r($_SESSION['droits_controlleurs']);
+        if(self::getSession()->has('droits_controlleurs')) {
+            print_r(self::getSession()->get('droits_controlleurs'));
             echo PHP_EOL;
         }
         echo "État des variables HTTP lors de l'erreur :".PHP_EOL;
