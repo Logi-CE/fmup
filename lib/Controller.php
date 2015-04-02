@@ -9,6 +9,10 @@ abstract class Controller extends \Controller
     private $dbInstance;
     private $view;
 
+    public function preFiltre($calledAction)
+    {
+    }
+    
     /**
      * @return Request
      */
