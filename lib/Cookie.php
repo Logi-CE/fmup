@@ -17,14 +17,6 @@ class Cookie
     {
     }
 
-    private function __sleep()
-    {
-    }
-
-    private function __wakeup()
-    {
-    }
-
     /**
      * Retrieve cookie system - start cookie if not started
      * @param string $name
