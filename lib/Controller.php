@@ -7,7 +7,7 @@ abstract class Controller extends \Controller
     private $request;
     private $response;
     private $dbInstance;
-    private $view;
+    protected $view;
 
     /**
      * @return Request
