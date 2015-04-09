@@ -169,7 +169,7 @@ class Framework extends \Framework
         } catch (\Exception $exception) {
             $controller = $this->getErrorController()->setException($exception);
             $controller->indexAction();
-            $this->postDispatch($controller);
+            $this->postDispatch();
         }
         return $this;
     }
