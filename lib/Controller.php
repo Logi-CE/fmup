@@ -7,7 +7,7 @@ abstract class Controller extends \Controller
     private $request;
     private $response;
     private $dbInstance;
-    private $view;
+    protected $view;
 
     public function preFiltre($calledAction)
     {
@@ -71,7 +71,6 @@ abstract class Controller extends \Controller
         if (!$this->view) {
             $this->view = new View();
             $this->view
-                ->setViewPath(implode(DIRECTORY_SEPARATOR, array(BASE_PATH, 'application', APPLICATION, 'view', 'layout', 'default.php')))
                 ->setParam('styles', \Config::paramsVariables('styles'))
                 ->setParam('javascripts', \Config::paramsVariables('javascripts'))
             ;

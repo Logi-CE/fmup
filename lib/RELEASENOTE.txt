@@ -1,4 +1,38 @@
 /*********/
+/* 1.0.0 */
+/*********/
+
+First stable release
+
+# Compatibility
+
+ - Update compatibility with PHP >= 5.3
+
+# New
+
+ - ErrorController can be override
+ - Db can now be multiton
+ - Component Session
+ - Component Pre/Post Dispatcher system
+ - Component Header/Status
+ - Component Db/Driver/Pdo/Odbc
+ - Component Db/Driver/Pdo/SqlSrv
+ - Component Cookie
+ - Autoloader
+
+# Deprecated
+
+ - Component View - Use FMUP\View
+
+# Fix
+
+ - Use Session component
+ 
+# Incompatible
+
+ - FMUP\View don't define its view path by default
+
+/*********/
 /* 0.2.0 */
 /*********/
 
