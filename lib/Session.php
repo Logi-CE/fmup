@@ -104,6 +104,16 @@ class Session
     }
 
     /**
+     * Forget all values in session without destructing it
+     * @return $this
+     */
+    public function clear()
+    {
+        $_SESSION = array();
+        return $this;
+    }
+
+    /**
      * Delete a specific information from session
      * @param string $name
      * @return $this

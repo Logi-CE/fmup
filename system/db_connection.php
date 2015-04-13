@@ -6,6 +6,10 @@
 if (!defined('MSSQL')) define('MSSQL', 'mssql');
 if (!defined('MYSQL')) define('MYSQL', 'mysql');
 
+/**
+ * Class DbConnection
+ * @deprecated use \FMUP\Db instead
+ */
 class DbConnection
 {
     protected $conn; // la connexion
