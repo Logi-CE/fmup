@@ -14,6 +14,10 @@ class Pdo implements DbInterface
         $this->params = $params;
     }
 
+    /**
+     * @return null|\PDO
+     * @throws Exception
+     */
     public function getDriver()
     {
         if (!is_null($this->instance)) {
@@ -47,6 +51,11 @@ class Pdo implements DbInterface
     }
 
 
+    /**
+     * Begin a transaction
+     * @return bool
+     * @throws Exception
+     */
     public function beginTransaction()
     {
         if ($this->getDriver()->inTransaction()) {
@@ -55,31 +64,60 @@ class Pdo implements DbInterface
         return $this->getDriver()->beginTransaction();
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function rollback()
     {
         return $this->getDriver()->rollBack();
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function errorCode()
     {
         return $this->getDriver()->errorCode();
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function errorInfo()
     {
         return $this->getDriver()->errorInfo();
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function commit()
     {
         return $this->getDriver()->commit();
     }
 
+    /**
+     * @param $sql
+     * @return bool
+     * @throws Exception
+     */
     public function rawExecute($sql)
     {
         return $this->getDriver()->prepare($sql)->execute();
     }
 
+    /**
+     * Execute a statement for given values
+     * @param object $statement
+     * @param array $values
+     * @return bool
+     * @throws Exception
+     * @throws \Exception
+     */
     public function execute($statement, $values = array())
     {
         if (!$statement instanceof \PDOStatement) {
@@ -89,16 +127,37 @@ class Pdo implements DbInterface
         return $statement->execute($values);
     }
 
+    /**
+     * Prepare a SQL string to a statement
+     * @param string $sql
+     * @return \PDOStatement
+     * @throws Exception
+     * @throws \Exception
+     */
     public function prepare($sql)
     {
         return $this->getDriver()->prepare($sql);
     }
 
-    public function lastInsertId()
+    /**
+     * Retrieve id inserted
+     * @param string $name optional
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function lastInsertId($name = null)
     {
-        return $this->getDriver()->lastInsertId();
+        return $this->getDriver()->lastInsertId($name);
     }
 
+    /**
+     * Fetch a row for a given statement
+     * @param object $statement
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
     public function fetchRow($statement)
     {
         if (!$statement instanceof \PDOStatement) {
@@ -108,6 +167,13 @@ class Pdo implements DbInterface
         return $statement->fetch(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Fetch all rows for a given statement
+     * @param object $statement
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
     public function fetchAll($statement)
     {
         if (!$statement instanceof \PDOStatement) {

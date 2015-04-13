@@ -1,7 +1,10 @@
 <?php
 namespace FMUP;
 
-
+/**
+ * Class Controller
+ * @package FMUP
+ */
 abstract class Controller extends \Controller
 {
     private $request;
@@ -9,6 +12,10 @@ abstract class Controller extends \Controller
     private $dbInstance;
     protected $view;
 
+    /**
+     * this method is called before each action
+     * @param string $calledAction
+     */
     public function preFiltre($calledAction)
     {
     }
@@ -35,6 +42,7 @@ abstract class Controller extends \Controller
     }
 
     /**
+     *
      * @return Response
      */
     public function getResponse()
@@ -66,6 +74,11 @@ abstract class Controller extends \Controller
         return $this->dbInstance;
     }
 
+    /**
+     * Retrieve current view system
+     * @return View
+     * @throws \Error
+     */
     public function getView()
     {
         if (!$this->view) {
@@ -78,6 +91,11 @@ abstract class Controller extends \Controller
         return $this->view;
     }
 
+    /**
+     * Define new view system
+     * @param View $view
+     * @return $this
+     */
     public function setView(View $view)
     {
         $this->view = $view;

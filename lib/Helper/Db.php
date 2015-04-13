@@ -8,13 +8,12 @@ namespace FMUP\Helper;
 abstract class Db
 {
     const DEFAULT_NAME = 'DEFAULT_NAME';
-    /**
-     * @var array \FMUP\Db
-     */
     protected static $instances = array();
 
     /**
+     * @param string $name
      * @return \FMUP\Db
+     * @throws \Error
      */
     public static function getInstance($name = self::DEFAULT_NAME)
     {
@@ -40,7 +39,7 @@ abstract class Db
     }
 
     /**
-     * Singleton - private construct
+     * Multiton - private construct
      */
     private function __construct()
     {

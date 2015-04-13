@@ -22,16 +22,6 @@ class Session
 
     }
 
-    private function __sleep()
-    {
-
-    }
-
-    private function __wakeup()
-    {
-
-    }
-
     /**
      * Retrieve session system - start session if not started
      * @param string $name

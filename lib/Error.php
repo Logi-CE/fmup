@@ -23,12 +23,10 @@ class Error
 
     /**
      * @param \FMUP\Session $session
-     * @return $this
      */
     public static function setSession(\FMUP\Session $session)
     {
         self::$session = $session;
-        return self;
     }
 
     /**
@@ -140,8 +138,8 @@ class Error
         unset($retour[0]);
         foreach ($retour as $trace) {
             echo '<tr>';
-            echo '<td>'.( (isset($trace['file'])) ? $trace['file'] : $this->fichier ).'</td>';
-            echo '<td style="text-align: right;">'.( (isset($trace['line'])) ? $trace['line'] :  $this->ligne ).'</td>';
+            echo '<td>'.( (isset($trace['file'])) ? $trace['file'] : '' ).'</td>';
+            echo '<td style="text-align: right;">'.( (isset($trace['line'])) ? $trace['line'] :  '' ).'</td>';
             echo '<td>'.( (isset($trace['class'])) ? $trace['class'] : '' );
             echo (isset($trace['type'])) ? $trace['type'] : '';
             echo (isset($trace['function'])) ? $trace['function'] : '';
@@ -165,7 +163,9 @@ class Error
             echo '</tr>';
         }
         if (!empty($retour[0]['args'][0]) && is_object($retour[0]['args'][0])) {
-            $traces = $retour[0]['args'][0]->getTrace();
+            $exception = $retour[0]['args'][0];
+            /* @var $exception \Exception */
+            $traces = $exception->getTrace();
             foreach ($traces as $trace) {
                 echo '<tr>';
                 echo '<td>'.( (isset($trace['file'])) ? $trace['file'] : '-' ).'</td>';

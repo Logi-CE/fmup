@@ -20,6 +20,7 @@ abstract class Header
     }
 
     /**
+     * Retrieve defined value
      * @return string
      */
     public function getValue()

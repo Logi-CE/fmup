@@ -13,6 +13,9 @@ class Db
     protected $params = array();
     private $driverInstance = null;
 
+    /**
+     * @param array $params
+     */
     public function __construct($params = array())
     {
         $this->driver = isset($params['db_driver']) ? $params['db_driver'] : Factory::DRIVER_PDO;
@@ -34,6 +37,11 @@ class Db
         return $this->driverInstance;
     }
 
+    /**
+     * @param $sql
+     * @param array $params
+     * @return bool
+     */
     public function query($sql, $params = array())
     {
         $statement = $this->getDriver()->prepare($sql);
@@ -58,6 +66,11 @@ class Db
         return empty($arrayResult) ? array() : new \ArrayIterator($arrayResult);
     }
 
+    /**
+     * @param $sql
+     * @param $params
+     * @return array
+     */
     public function fetchRow($sql, $params)
     {
         $statement = $this->getDriver()->prepare($sql);
@@ -66,21 +79,33 @@ class Db
         return $this->getDriver()->fetchRow($statement);
     }
 
+    /**
+     * @return bool
+     */
     public function beginTransaction()
     {
         return $this->getDriver()->beginTransaction();
     }
 
+    /**
+     * @return bool
+     */
     public function commit()
     {
         return $this->getDriver()->commit();
     }
 
+    /**
+     * @return bool
+     */
     public function rollback()
     {
         return $this->getDriver()->rollback();
     }
 
+    /**
+     * @return string
+     */
     public function lastInsertId()
     {
         return $this->getDriver()->lastInsertId();
@@ -102,6 +127,7 @@ class Db
         } catch (\Exception $e) {
             new \Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
         }
+        return null;
     }
 
     /**
@@ -192,6 +218,9 @@ class Db
      */
     public function execute($sql, $commentaire = '', $logguer_requete = true, $params = array(array()))
     {
+        $type_execute = NULL;
+        $new_records = array();
+        $nb_rows = 0;
         try {
             if (strtoupper(substr($sql, 0, 7)) == "UPDATE ") {
                 $type_execute = "UPDATE";
@@ -204,9 +233,6 @@ class Db
             } else {
                 $type_execute = "?";
             }
-
-            $new_records = array();
-            $nb_rows = 0;
 
             if (((strpos($sql, "?") !== false) || (strpos($sql, ":") !== false)) && count($params[0]) == 0) {
                 $duree = microtime(1);
@@ -226,9 +252,6 @@ class Db
                 $stmt = $this->getDriver()->prepare($sql);
 
                 foreach ($params as $param) {
-                    foreach ($param as $cle => $valeur) {
-                        $param[$cle] = str_replace($tab_script, $tab_script_replace, $valeur);
-                    }
                     $duree = microtime(1);
                     $memoire = memory_get_usage();
                     $nb_rows = $nb_rows + $this->getDriver()->execute($stmt, $param);
