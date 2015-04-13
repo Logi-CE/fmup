@@ -65,6 +65,7 @@ abstract class Controller extends \Controller
 
     /**
      * @return Helper\Db
+     * @deprecated use Helper\Db::getInstance() if REALLY needed. But you'd prefer use of Dependency Injection instead
      */
     public function getDb()
     {

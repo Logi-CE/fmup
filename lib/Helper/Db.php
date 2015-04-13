@@ -14,6 +14,8 @@ abstract class Db
      * @param string $name
      * @return \FMUP\Db
      * @throws \Error
+     * @throws \InvalidArgumentException
+     * @throws \OutOfRangeException
      */
     public static function getInstance($name = self::DEFAULT_NAME)
     {
