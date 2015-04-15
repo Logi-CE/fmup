@@ -36,6 +36,10 @@ class Framework extends \Framework
      * @var Dispatcher
      */
     private $postDispatcherSystem;
+    /**
+     * @var Bootstrap
+     */
+    private $bootstrap;
 
     /**
      * @param Routing $routingSystem
@@ -137,7 +141,9 @@ class Framework extends \Framework
             /* @var $controllerInstance Controller */
             $controllerInstance
                 ->setRequest($this->getRequest())
-                ->setResponse($this->getResponse());
+                ->setResponse($this->getResponse())
+                ->setBootstrap($this->getBootstrap())
+            ;
             $action = $action . 'Action'; //we force action to be a xxxAction
         }
 
@@ -293,5 +299,37 @@ class Framework extends \Framework
     {
         $this->postDispatcherSystem = $postDispatch;
         return $this;
+    }
+
+    /**
+     * @return Bootstrap
+     */
+    public function getBootstrap()
+    {
+        if (!$this->bootstrap) {
+            $this->bootstrap = new Bootstrap;
+        }
+        return $this->bootstrap;
+    }
+
+    /**
+     * @param Bootstrap $bootstrap
+     * @return $this
+     */
+    public function setBootstrap(Bootstrap $bootstrap)
+    {
+        $this->bootstrap = $bootstrap;
+        return $this;
+    }
+
+    /**
+     * @throws \Error
+     */
+    public function initialize()
+    {
+        $this->getBootstrap()
+            ->setRequest($this->getRequest())
+            ->warmUp();
+        parent::initialize();
     }
 }

@@ -7,6 +7,7 @@ namespace FMUP;
  */
 abstract class Controller extends \Controller
 {
+    private $bootstrap;
     private $request;
     private $response;
     private $dbInstance;
@@ -100,6 +101,27 @@ abstract class Controller extends \Controller
     public function setView(View $view)
     {
         $this->view = $view;
+        return $this;
+    }
+
+    /**
+     * @return Bootstrap
+     */
+    public function getBootstrap()
+    {
+        if (!$this->bootstrap) {
+            throw new \DomainException('Bootstrap must be defined');
+        }
+        return $this->bootstrap;
+    }
+
+    /**
+     * @param Bootstrap $bootstrap
+     * @return $this
+     */
+    public function setBootstrap(Bootstrap $bootstrap)
+    {
+        $this->bootstrap = $bootstrap;
         return $this;
     }
 }
