@@ -20,6 +20,7 @@ class Request
     protected $get = array();
     protected $post = array();
     protected $server = array();
+    protected $files = array();
 
     /**
      * mapped to HTTP values
@@ -29,6 +30,7 @@ class Request
         $this->get = $_GET;
         $this->post = $_POST;
         $this->server = $_SERVER;
+        $this->files = $_FILES;
     }
 
     /**
@@ -82,6 +84,17 @@ class Request
     public function getServer($name, $defaultValue = null)
     {
         return $this->hasServer($name) ? $this->server[$name] : $defaultValue;
+    }
+    
+    /**
+     * Retrieve a value defined on files
+     * @param int $name
+     * @param mixed $defaultValue Value returned if name is not defined in query
+     * @return mixed
+     */
+    public function getFiles($name, $defaultValue = null)
+    {
+        return $this->hasFiles($name) ? $this->files[$name] : $defaultValue;
     }
 
     /**
@@ -174,5 +187,15 @@ class Request
     public function hasServer($name)
     {
         return array_key_exists($name, $this->server);
+    }
+    
+    /**
+     * Check whether selected files value exists
+     * @param string $name
+     * @return bool
+     */
+    public function hasFiles($name)
+    {
+        return array_key_exists($name, $this->files);
     }
 }
