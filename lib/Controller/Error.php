@@ -7,7 +7,7 @@ use FMUP\Response\Header\Status;
  * Class Error
  * @package FMUP\Controller
  */
-class Error extends \FMUP\Controller
+abstract class Error extends \FMUP\Controller
 {
     /**
      * @var \Exception
@@ -42,14 +42,11 @@ class Error extends \FMUP\Controller
         } catch (\FMUP\Exception\Status $e) {
             $this->errorStatus($e->getStatus());
         } catch (\Exception $e) {
-            throw $e; //uncaught exception because we don't know
         }
-        ob_start();
-        new \View('accueil/erreur404', array('fil_ariane' => 'Accueil > Erreur', 'error' => $this->getException()->getMessage()));
-        $view = ob_get_clean();
-
-        $this->getResponse()->setBody($view);
+        $this->render();
     }
+
+    abstract public function render();
 
     /**
      * Sends error message

@@ -1,6 +1,8 @@
 <?php
 namespace FMUP;
 
+use FMUP\Exception\Status\NotFound;
+
 require_once __DIR__ . '/../system/framework.php';
 
 
@@ -120,6 +122,15 @@ class Framework extends \Framework
     }
 
     /**
+     * Real 404 errors
+     * @throws NotFound
+     */
+    public function getRouteError()
+    {
+        throw new NotFound('Controller not found');
+    }
+
+    /**
      * @param string $controllerName
      * @param string $action
      * @return \Controller|Controller
@@ -186,7 +197,7 @@ class Framework extends \Framework
     public function getErrorController()
     {
         if (!$this->errorController) {
-            $this->errorController = new \FMUP\Controller\Error;
+            throw new \LogicException('Error controller must be defined');
         }
         return $this->errorController;
     }

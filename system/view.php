@@ -41,6 +41,7 @@ class View
      *				* layout			: le layout à utiliser (si pas celui par défaut)
      *				* css				 : les css à utiliser dans la vue
      *				* javascripts : les javascripts à utiliser dans la vue
+     * @deprecated this will not work
      **/
     public function __construct($vue, $params = array(), $options = array())
     {
@@ -105,7 +106,7 @@ class View
             $params['exporter'] = false;
         }
 
-        $this->vue	 = '../../application/'.APPLICATION.'/view/'.$vue.'.php';
+        $this->vue	 = __DIR__ . '/../../logi-ce/sandbox/application/'.APPLICATION.'/view/'.$vue.'.php';
 
         $this->withoutBandeau = false;
         if(isset($options['withoutBandeau'])){
@@ -117,9 +118,9 @@ class View
 
             // récupération de l'option layout
             if (isset($options['layout'])) {
-                $this->layout = "../../application/".APPLICATION."/view/layout/".$options["layout"].".php";
+                $this->layout = __DIR__ . "/../../logi-ce/sandbox/application/".APPLICATION."/view/layout/".$options["layout"].".php";
             } else {
-                $this->layout = "../../application/".APPLICATION."/view/layout/".$layout.".php";
+                $this->layout = __DIR__ . "/../../logi-ce/sandbox/application/".APPLICATION."/view/layout/".$layout.".php";
             }
 
             // récupération de l'option styles
