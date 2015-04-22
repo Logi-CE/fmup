@@ -1,4 +1,30 @@
 /*********/
+/* 1.1.0 */
+/*********/
+
+Error controller will now need a specific render
+
+
+# New
+
+ - Add Bootstrap system + add Monolog logger
+ - Request can test uploded files
+
+# Deprecated
+
+ - DbConnection - use \FMUP\Db instead
+ - Controller::getDb
+ - Debug - use logs instead
+
+# Fix
+
+ - Tidy up some code
+ 
+# Incompatible
+
+ - ErrorController is now abstract
+
+/*********/
 /* 1.0.0 */
 /*********/
 
