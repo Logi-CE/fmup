@@ -17,6 +17,8 @@ class Request
     const REQUEST_METHOD_GET = 'GET';
     const REQUEST_METHOD_POST = 'POST';
 
+    const SERVER_NAME = 'SERVER_NAME';
+
     protected $get = array();
     protected $post = array();
     protected $server = array();

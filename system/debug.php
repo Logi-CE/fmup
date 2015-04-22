@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class Debug
+ * @deprecated use logs instead
+ */
 class Debug
 {
     /**

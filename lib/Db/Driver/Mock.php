@@ -2,7 +2,6 @@
 namespace FMUP\Db\Driver;
 
 use FMUP\Db\DbInterface;
-use FMUP\Db\Exception;
 
 class Mock implements DbInterface
 {
@@ -60,7 +59,7 @@ class Mock implements DbInterface
         return $this;
     }
 
-    public function lastInsertId()
+    public function lastInsertId($name = null)
     {
         return $this;
     }

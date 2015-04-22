@@ -22,16 +22,6 @@ class Session
 
     }
 
-    private function __sleep()
-    {
-
-    }
-
-    private function __wakeup()
-    {
-
-    }
-
     /**
      * Retrieve session system - start session if not started
      * @param string $name
@@ -110,6 +100,16 @@ class Session
     public function set($name, $value)
     {
         $_SESSION[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * Forget all values in session without destructing it
+     * @return $this
+     */
+    public function clear()
+    {
+        $_SESSION = array();
         return $this;
     }
 

@@ -1,14 +1,26 @@
 <?php
 namespace FMUP;
 
-
+/**
+ * Class Controller
+ * @package FMUP
+ */
 abstract class Controller extends \Controller
 {
+    private $bootstrap;
     private $request;
     private $response;
     private $dbInstance;
-    private $view;
+    protected $view;
 
+    /**
+     * this method is called before each action
+     * @param string $calledAction
+     */
+    public function preFiltre($calledAction)
+    {
+    }
+    
     /**
      * @return Request
      */
@@ -31,6 +43,7 @@ abstract class Controller extends \Controller
     }
 
     /**
+     *
      * @return Response
      */
     public function getResponse()
@@ -53,6 +66,7 @@ abstract class Controller extends \Controller
 
     /**
      * @return Helper\Db
+     * @deprecated use Helper\Db::getInstance() if REALLY needed. But you'd prefer use of Dependency Injection instead
      */
     public function getDb()
     {
@@ -62,12 +76,16 @@ abstract class Controller extends \Controller
         return $this->dbInstance;
     }
 
+    /**
+     * Retrieve current view system
+     * @return View
+     * @throws \Error
+     */
     public function getView()
     {
         if (!$this->view) {
             $this->view = new View();
             $this->view
-                ->setViewPath(implode(DIRECTORY_SEPARATOR, array(BASE_PATH, 'application', APPLICATION, 'view', 'layout', 'default.php')))
                 ->setParam('styles', \Config::paramsVariables('styles'))
                 ->setParam('javascripts', \Config::paramsVariables('javascripts'))
             ;
@@ -75,9 +93,35 @@ abstract class Controller extends \Controller
         return $this->view;
     }
 
+    /**
+     * Define new view system
+     * @param View $view
+     * @return $this
+     */
     public function setView(View $view)
     {
         $this->view = $view;
+        return $this;
+    }
+
+    /**
+     * @return Bootstrap
+     */
+    public function getBootstrap()
+    {
+        if (!$this->bootstrap) {
+            throw new \DomainException('Bootstrap must be defined');
+        }
+        return $this->bootstrap;
+    }
+
+    /**
+     * @param Bootstrap $bootstrap
+     * @return $this
+     */
+    public function setBootstrap(Bootstrap $bootstrap)
+    {
+        $this->bootstrap = $bootstrap;
         return $this;
     }
 }

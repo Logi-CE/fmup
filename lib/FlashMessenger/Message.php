@@ -20,22 +20,20 @@ class Message
     const TYPE_DANGER = 'danger';
 
     /**
-     * Construct a new flash
+     * Construct a new flash message
      * @param string $message
      * @param string $type
-     * @return \FMUP\FlashMessenger\FlashMessage
      */
     public function __construct($message, $type = self::TYPE_DEFAULT)
     {
         $this->type = $this->checkType($type);
         $this->message = $message;
-        return $this;
     }
 
     /**
      * Set message property
      * @param string $message
-     * @return \FMUP\FlashMessenger\FlashMessage
+     * @return $this
      */
     public function setMessage($message)
     {
@@ -46,7 +44,7 @@ class Message
     /**
      * Set type property
      * @param string $type
-     * @return \FMUP\FlashMessenger\FlashMessage
+     * @return $this
      */
     public function setType($type)
     {
@@ -75,6 +73,7 @@ class Message
     /**
      * Checks if the type given is valid
      * @param string $type
+     * @return string
      */
     private function checkType($type)
     {
