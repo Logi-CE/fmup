@@ -7,6 +7,7 @@ class Bootstrap
     private $isErrorHandlerRegistered = false;
     private $logger;
     private $request;
+    private $session;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -23,7 +24,29 @@ class Bootstrap
     }
 
     /**
-     * Return logger system
+     * @return Session
+     */
+    public function getSession()
+    {
+        if (!$this->session) {
+            $this->session = \FMUP\Session::getInstance();
+        }
+        return $this->session;
+    }
+
+    /**
+     * Define session component
+     * @param Session $session
+     * @return $this
+     */
+    public function setSession(\FMUP\Session $session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
+    /**
+     * Return logger
      * @return Logger
      */
     public function getLogger()
@@ -36,7 +59,7 @@ class Bootstrap
     }
 
     /**
-     * Define logger system
+     * Define logger
      * @param Logger $logger
      * @return $this
      */

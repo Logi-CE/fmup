@@ -184,7 +184,11 @@ class Framework extends \Framework
         try {
             return parent::dispatch();
         } catch (\Exception $exception) {
-            $controller = $this->getErrorController()->setException($exception);
+            $controller = $this->getErrorController()
+                ->setBootstrap($this->getBootstrap())
+                ->setRequest($this->getRequest())
+                ->setResponse($this->getResponse())
+                ->setException($exception);
             $controller->indexAction();
             $this->postDispatch();
         }

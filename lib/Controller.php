@@ -1,5 +1,6 @@
 <?php
 namespace FMUP;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * Class Controller
@@ -11,7 +12,7 @@ abstract class Controller extends \Controller
     private $request;
     private $response;
     private $dbInstance;
-    protected $view;
+    private $view;
 
     /**
      * this method is called before each action
@@ -20,14 +21,15 @@ abstract class Controller extends \Controller
     public function preFiltre($calledAction)
     {
     }
-    
+
     /**
-     * @return Request
+     * @throws LogicException
+     * @return mixed
      */
     public function getRequest()
     {
         if (!$this->request) {
-            $this->request = new Request();
+            throw new \LogicException('Request must be set');
         }
         return $this->request;
     }
@@ -43,13 +45,13 @@ abstract class Controller extends \Controller
     }
 
     /**
-     *
+     * @throws LogicException
      * @return Response
      */
     public function getResponse()
     {
         if (!$this->response) {
-            $this->response = new Response();
+            throw new \LogicException('Response must be set');
         }
         return $this->response;
     }
@@ -107,10 +109,10 @@ abstract class Controller extends \Controller
     /**
      * @return Bootstrap
      */
-    public function getBootstrap()
+    protected function getBootstrap()
     {
         if (!$this->bootstrap) {
-            throw new \DomainException('Bootstrap must be defined');
+            throw new \LogicException('Bootstrap must be defined');
         }
         return $this->bootstrap;
     }
@@ -123,5 +125,13 @@ abstract class Controller extends \Controller
     {
         $this->bootstrap = $bootstrap;
         return $this;
+    }
+
+    /**
+     * @return Session
+     */
+    protected function getSession()
+    {
+        return $this->getBootstrap()->getSession();
     }
 }
