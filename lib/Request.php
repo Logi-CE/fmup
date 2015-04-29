@@ -18,6 +18,7 @@ class Request
     const REQUEST_METHOD_POST = 'POST';
 
     const SERVER_NAME = 'SERVER_NAME';
+    const HTTP_REFERER = 'HTTP_REFERER';
 
     protected $get = array();
     protected $post = array();
@@ -199,5 +200,14 @@ class Request
     public function hasFiles($name)
     {
         return array_key_exists($name, $this->files);
+    }
+
+    /**
+     * Return request referer
+     * @return string
+     */
+    public function getReferer()
+    {
+        return $this->getServer(self::HTTP_REFERER);
     }
 }

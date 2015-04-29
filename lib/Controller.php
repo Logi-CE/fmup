@@ -24,7 +24,7 @@ abstract class Controller extends \Controller
 
     /**
      * @throws LogicException
-     * @return mixed
+     * @return Request
      */
     public function getRequest()
     {

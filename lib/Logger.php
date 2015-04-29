@@ -22,7 +22,9 @@ class Logger
     public function get($instanceName = self::SYSTEM)
     {
         if (!isset($this->instances[$instanceName])) {
-            $this->instances[$instanceName] = new \Monolog\Logger($instanceName);
+            $logger = new \Monolog\Logger($instanceName);
+            $this->configureDefault($logger, $instanceName);
+            $this->instances[$instanceName] = $logger;
         }
         return $this->instances[$instanceName];
     }

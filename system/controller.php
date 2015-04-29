@@ -43,12 +43,13 @@ class Controller
      **/
     public static function redirect($controlleur = "", $adresse = false)
     {
-        if ($adresse) {
-            header('Location: '.$controlleur);
-        } else {
-            header('Location: /'.$controlleur);
+        if (strpos($controlleur, '://') === false) {
+            if ($controlleur{0} != '/') {
+                $controlleur = '/' . $controlleur;
+            }
         }
-        die();
+        header('Location: '.$controlleur);
+        exit;
     }
 
     public function getUrlSaved()
