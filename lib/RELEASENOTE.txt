@@ -1,9 +1,23 @@
 /*********/
+/* 1.1.1 */
+/*********/
+
+Login now redirect to requested page + add Session in bootstrap
+
+# New
+
+ - Login now redirect to requested page
+ - add Session in bootstrap
+
+# Fix
+
+ - Tidy up some code
+ 
+/*********/
 /* 1.1.0 */
 /*********/
 
 Error controller will now need a specific render
-
 
 # New
 
