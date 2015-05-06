@@ -84,6 +84,9 @@ class Error
 
     static public function sendMail()
     {
+        if (!\Config::isEnvoiMailPossible()) {
+            return false;
+        }
         $mailBody = self::mailContent();
         require_once __DIR__ .'/../../../../lib/PHPMailer_v5.0.2/class.phpmailer.php';
 
