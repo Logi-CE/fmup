@@ -1122,15 +1122,17 @@ abstract class Model extends FiltreListe
             // insertion de la différence dans la table de log
             if (count($tab_diff) > 0) {
                 $libelle = "";
-
+                $tab_contenu = array();
                 foreach ($tab_diff as $index => $value) {
-                    $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
-                    $libelle .= "Le champ '".$field."' a été modifié : '".$tab_champs_log[$index]."' a été remplacé par '".$value."'\n";
+                    if (isset($tab_champs_log[$index])) {
+                        $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
+                        $libelle .= "Le champ '".$field."' a été modifié : '".$tab_champs_log[$index]."' a été remplacé par '".$value."'\n";
 
-                    $tab_contenu[$index] = array(
-                                                    "old_value"	=> ($tab_champs_log[$index]),
-                                                    "new_value"	=> ($value)
-                                                );
+                        $tab_contenu[$index] = array(
+                            "old_value"	=> ($tab_champs_log[$index]),
+                            "new_value"	=> ($value)
+                        );
+                    }
                 }
 
                 $contenu = serialize($tab_contenu);

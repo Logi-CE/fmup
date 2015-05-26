@@ -1,4 +1,14 @@
 /*********/
+/* 1.1.2 */
+/*********/
+
+Fix multiple notice when log table is not handled properly
+
+# Fix
+
+ - Fix multiple notice when log table is not handled properly
+
+/*********/
 /* 1.1.1 */
 /*********/
 
