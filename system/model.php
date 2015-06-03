@@ -750,7 +750,9 @@ abstract class Model extends FiltreListe
      **/
     public function setIdModificateur($value = 0)
     {
-        if ($value==='null') {
+        if ($this->id_modificateur) {
+            //nothing to do
+        } else if ($value==='null') {
             $this->id_modificateur = '';
         } elseif ($value) {
             $this->id_modificateur = $value;

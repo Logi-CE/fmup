@@ -8,6 +8,7 @@ class Bootstrap
     private $logger;
     private $request;
     private $session;
+    private $flashMessenger;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -100,5 +101,27 @@ class Bootstrap
             throw new \LogicException('Request is not defined');
         }
         return $this->request;
+    }
+
+    /**
+     * Get flashMessenger
+     * @return \FMUP\FlashMessenger
+     */
+    public function getFlashMessenger()
+    {
+        if ($this->flashMessenger === null) {
+            $this->flashMessenger = \FMUP\FlashMessenger::getInstance();
+        }
+        return $this->flashMessenger;
+    }
+
+    /**
+     * @param FlashMessenger $flashMessenger
+     * @return $this
+     */
+    public function setFlashMessenger(\FMUP\FlashMessenger $flashMessenger)
+    {
+        $this->flashMessenger = $flashMessenger;
+        return $this;
     }
 }

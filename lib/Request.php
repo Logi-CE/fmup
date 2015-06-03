@@ -49,6 +49,11 @@ class Request
             : $this->getGet($name, $defaultValue);
     }
 
+    /**
+     * Check if param exists
+     * @param string $name
+     * @return bool
+     */
     public function has($name)
     {
         return ($this->getMethod() == self::REQUEST_METHOD_POST)
@@ -209,5 +214,10 @@ class Request
     public function getReferer()
     {
         return $this->getServer(self::HTTP_REFERER);
+    }
+
+    static public function createUrl()
+    {
+        return new Request\Url;
     }
 }
