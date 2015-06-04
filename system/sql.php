@@ -152,7 +152,7 @@ class Sql
             throw new Error("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".var_dump($where));
         }
 
-        $where = array_filter($where, create_function('$i', 'return $i <> "";'));
+        $where = array_filter($where, function($i) { return $i <> "";});
         if ($where == array()) {
             return "";
         } else {
