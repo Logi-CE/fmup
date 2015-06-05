@@ -1,4 +1,19 @@
 /*********/
+/* 1.2.0 */
+/*********/
+
+Add 
+
+# New
+ - Add Referer in request
+ - Add FlashMessenger in Bootstrap
+ - Add Request\Url component to create url in object
+ 
+# Fix
+ - Redirect method
+ - modifier in model
+
+/*********/
 /* 1.1.3 */
 /*********/
 
