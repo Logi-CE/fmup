@@ -25,7 +25,7 @@
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
         <phingcall target="phpcs" />
-        <phingcall target="phpdoc" />
+        <!--phingcall target="phpdoc" /-->
         <!--phingcall target="phpunit" /-->
         <phingcall target="phpcb" />
     </target>
@@ -45,13 +45,13 @@
     </target>
 
     <target name="phpcpd">
-        <phpcpd file="${project.basedir}">
+        <phpcpd file="${project.basedir}/">
             <formatter type="pmd" outfile="${project.basedir}/build/logs/pmd-cpd.xml"/>
         </phpcpd>
     </target>
     
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/'" escape="false" />
     </target>
     
     <target name="phpcs">
