@@ -16,6 +16,7 @@ abstract class Error extends \FMUP\Controller
 
     /**
      * rewrite to tell everybody can access error controller
+     * @param string $calledAction
      */
     public function preFiltre($calledAction)
     {
@@ -37,11 +38,11 @@ abstract class Error extends \FMUP\Controller
      */
     public function indexAction()
     {
-        try {
-            throw $this->getException();
-        } catch (\FMUP\Exception\Status $e) {
+        $e = $this->getException();
+        if ($e instanceof \FMUP\Exception\Status) {
             $this->errorStatus($e->getStatus());
-        } catch (\Exception $e) {
+        } else {
+            $this->writeContextToLog();
         }
         $this->render();
     }
@@ -51,13 +52,21 @@ abstract class Error extends \FMUP\Controller
     /**
      * Sends error message
      * @param string $status
+     * @return $this
      */
     protected function errorStatus($status)
     {
         error_log($status);
-        \FMUP\Error::addContextToErrorLog();
+        $this->writeContextToLog()
+            ->getResponse()
+            ->setHeader(new Status($status));
+        return $this;
+    }
 
-        $this->getResponse()->setHeader(new Status($status));
+    protected function writeContextToLog()
+    {
+        \FMUP\Error::addContextToErrorLog();
+        return $this;
     }
 
     /**
