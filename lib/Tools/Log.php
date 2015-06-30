@@ -1,11 +1,6 @@
 <?php
 namespace FMUP\Tools;
 
-/**
- * @todo Refactor this since PHPMailer must not be a hard dependency of Log component
- */
-require_once BASE_PATH."/lib/PHPMailer_v5.0.2/class.phpmailer.php";
-
 class Log
 {
     /**
@@ -57,7 +52,7 @@ class Log
     public function getMailer()
     {
         if (!$this->mailerInstance) {
-            $mailer = new \PHPMailer(true);
+            $mailer = new PHPMailer(true);
             $mailer->IsHTML(false);
             $mailer->CharSet = "UTF-8";
             $mailer->SetFrom(\Config::mailRobot(), \Config::mailRobotName());
@@ -67,11 +62,11 @@ class Log
     }
 
     /**
-     * @todo Hard dependency with PHPMailer // see for abstraction layer and user PHPMailer as a driver
-     * @param \PHPMailer $mailer
+     * @todo Hard dependency with PHPMailer // see for abstraction layer and use PHPMailer as a driver
+     * @param PHPMailer $mailer
      * @return $this
      */
-    public function setMailer(\PHPMailer $mailer)
+    public function setMailer(PHPMailer $mailer)
     {
         $this->mailerInstance = $mailer;
         return $this;

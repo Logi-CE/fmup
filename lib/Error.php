@@ -88,9 +88,9 @@ class Error
             return false;
         }
         $mailBody = self::mailContent();
-        require_once __DIR__ .'/../../../../lib/PHPMailer_v5.0.2/class.phpmailer.php';
+        //require_once __DIR__ .'/../../../../lib/PHPMailer_v5.0.2/class.phpmailer.php';
 
-        $mail = new \PHPMailer();
+        $mail = new PHPMailer();
         if (\Config::smtpServeur() != 'localhost') {
             $mail->IsSMTP();
         }

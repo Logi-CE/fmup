@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Class Component - used to load a 'lib' library. You might want to use composer
+ * @deprecated
+ * @see composer
+ */
 class Component
 {
     /**
