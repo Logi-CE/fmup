@@ -11,7 +11,7 @@ class Version
     private $structure;
 
     /**
-     * @return Version
+     * @return $this
      */
     static public function getInstance()
     {
