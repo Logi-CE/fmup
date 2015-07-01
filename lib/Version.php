@@ -16,9 +16,26 @@ class Version
     static public function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new self;
+            $obj = get_called_class();
+            self::$instance = new $obj;
         }
         return self::$instance;
+    }
+
+    /**
+     * private construct - singleton
+     */
+    private function __construct()
+    {
+
+    }
+
+    /**
+     * private clone - singleton
+     */
+    private function __clone()
+    {
+
     }
 
     /**
@@ -43,7 +60,7 @@ class Version
      * Get composer file structure
      * @return Object
      */
-    private function getStructure()
+    protected function getStructure()
     {
         if (!$this->structure) {
             if (!is_file($this->getComposerPath())) {
