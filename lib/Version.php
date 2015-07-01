@@ -34,7 +34,7 @@ class Version
      * Get composer json path
      * @return string
      */
-    private function getComposerPath()
+    protected function getComposerPath()
     {
         return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'composer.json'));
     }
