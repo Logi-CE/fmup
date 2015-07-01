@@ -42,12 +42,31 @@ abstract class Error extends \FMUP\Controller
         if ($e instanceof \FMUP\Exception\Status) {
             $this->errorStatus($e->getStatus());
         } else {
-            $this->writeContextToLog();
+            $this->writeContextToLog()
+                ->sendMailOnException();
         }
         $this->render();
     }
 
     abstract public function render();
+
+    /**
+     * Will send a mail if useDailyAlert is not active and we're not in debug
+     * @todo rewrite to avoid use of Error
+     * @uses \Config
+     * @uses \Error
+     * @return $this
+     */
+    protected function sendMailOnException()
+    {
+        if (!\Config::useDailyAlert() && !\Config::isDebug()) {
+            try {
+                throw new \Error($this->getException()->getMessage());
+            } catch (\Exception $e) {
+            }
+        }
+        return $this;
+    }
 
     /**
      * Sends error message
@@ -58,6 +77,7 @@ abstract class Error extends \FMUP\Controller
     {
         error_log($status);
         $this->writeContextToLog()
+            ->sendMailOnException()
             ->getResponse()
             ->setHeader(new Status($status));
         return $this;
