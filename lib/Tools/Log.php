@@ -52,7 +52,7 @@ class Log
     public function getMailer()
     {
         if (!$this->mailerInstance) {
-            $mailer = new PHPMailer(true);
+            $mailer = new \PHPMailer(true);
             $mailer->IsHTML(false);
             $mailer->CharSet = "UTF-8";
             $mailer->SetFrom(\Config::mailRobot(), \Config::mailRobotName());
@@ -63,10 +63,10 @@ class Log
 
     /**
      * @todo Hard dependency with PHPMailer // see for abstraction layer and use PHPMailer as a driver
-     * @param PHPMailer $mailer
+     * @param \PHPMailer $mailer
      * @return $this
      */
-    public function setMailer(PHPMailer $mailer)
+    public function setMailer(\PHPMailer $mailer)
     {
         $this->mailerInstance = $mailer;
         return $this;
