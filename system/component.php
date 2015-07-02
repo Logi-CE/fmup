@@ -16,7 +16,7 @@ class Component
      **/
     public function __construct($composant, $variable_name = "tmp", $variable_value = null, $silent = 0)
     {
-        $this->component = BASE_PATH."/lib/$composant.php";
+        $this->component = __DIR__."/component/$composant.php";
 
         $$variable_name = $variable_value;
 
