@@ -16,8 +16,7 @@ class Version
     static public function getInstance()
     {
         if (!self::$instance) {
-            $obj = get_called_class();
-            self::$instance = new $obj;
+            self::$instance = new self;
         }
         return self::$instance;
     }
