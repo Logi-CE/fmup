@@ -20,14 +20,14 @@
     </target>
 
     <target name="qa" description="Lance les outils d'analyse">
+        <phingcall target="phpcs" />
+        <!--phingcall target="phpdoc" />
+        <phingcall target="phpunit" />
         <phingcall target="pdepend" />
         <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
-        <phingcall target="phpcs" />
-        <!--phingcall target="phpdoc" /-->
-        <!--phingcall target="phpunit" /-->
-        <phingcall target="phpcb" />
+        <phingcall target="phpcb" /-->
     </target>
     
     <target name="pdepend">
