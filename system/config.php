@@ -48,7 +48,7 @@ class Config extends ConfigApplication
             * Dans le cas des tests unitaires, le serveur aura pour nom 'phpunit' et nécessitera une connexion particulière.
             * Le fichier config_test.php (placé au même endroit que config.php) sera alors chargé à la place
             */
-            if ($_SERVER['SERVER_NAME'] == 'phpunit') {
+            if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'phpunit') {
                 $nom_fichier_config = 'config_test.php';
             } else {
                 $nom_fichier_config = 'config.php';
