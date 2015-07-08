@@ -9,16 +9,18 @@
         <delete dir="${project.basedir}/build/api" />
         <delete dir="${project.basedir}/build/code-browser" />
         <delete dir="${project.basedir}/build/coverage" />
+        <delete dir="${project.basedir}/build/doc" />
         <delete dir="${project.basedir}/build/logs" />
         <delete dir="${project.basedir}/build/pdepend" />
 
         <mkdir dir="${project.basedir}/build/api" />
         <mkdir dir="${project.basedir}/build/code-browser" />
         <mkdir dir="${project.basedir}/build/coverage" />
+        <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
     </target>
-e
+
     <target name="qa" description="Lance les outils d'analyse">
         <phingcall target="phpcs" />
         <phingcall target="phpdoc" />
@@ -40,7 +42,9 @@ e
     </target>
     
     <target name="phpdoc">
-        <exec logoutput="true" dir="${project.basedir}" command="../../bin/phpdoc -d ${project.basedir} -t ${project.basedir}/build/phpdoc/" escape="false" />
+        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="HTML:Smarty:PHP">
+            <fileset refid="project.reportable-files" />
+        </phpdoc2>
     </target>
     
     <target name="pdepend">
