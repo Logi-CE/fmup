@@ -18,11 +18,11 @@
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
     </target>
-
+e
     <target name="qa" description="Lance les outils d'analyse">
         <phingcall target="phpcs" />
-        <!--phingcall target="phpdoc" />
-        <phingcall target="phpunit" />
+        <phingcall target="phpdoc" />
+        <!-- phingcall target="phpunit" />
         <phingcall target="pdepend" />
         <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
@@ -40,19 +40,7 @@
     </target>
     
     <target name="phpdoc">
-        <phpdoc title="API Documentation"
-                destdir="${project.basedir}/build/api"
-                sourcecode="false"
-                output="HTML:Smarty:PHP">
-            <fileset dir="${project.basedir}/">
-                <include name="**/*.php"/>
-            </fileset>
-            <projdocfileset dir=".">
-                <include name="README"/>
-                <include name="INSTALL"/>
-                <include name="CHANGELOG"/>
-            </projdocfileset>
-        </phpdoc>
+        <exec logoutput="true" dir="${project.basedir}" command="../../bin/phpdoc -d ${project.basedir} -t ${project.basedir}/build/phpdoc/" escape="false" />
     </target>
     
     <target name="pdepend">
