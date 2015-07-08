@@ -2,7 +2,7 @@
 <project name="FMUP" default="ci" basedir=".">
     <target name="ci"
         description="Tâche principale d'intégration continue"
-        depends="clean,qa"
+        depends="clean,quality_assurance"
     />
 
     <target name="clean" description="Vide les répertoires d'artefacts">
@@ -21,11 +21,11 @@
         <mkdir dir="${project.basedir}/build/pdepend" />
     </target>
 
-    <target name="qa" description="Lance les outils d'analyse">
+    <target name="quality_assurance" description="Lance les outils d'analyse" depends="clean">
+        <phingcall target="phpunit" />
         <phingcall target="phpcs" />
         <phingcall target="phpdoc" />
-        <!-- phingcall target="phpunit" />
-        <phingcall target="pdepend" />
+        <!-- phingcall target="pdepend" />
         <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
@@ -42,9 +42,22 @@
     </target>
     
     <target name="phpdoc">
-        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="HTML:Smarty:PHP">
-            <fileset refid="project.reportable-files" />
+        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
+            <fileset dir="${project.basedir}/lib">
+                <include name="**/*.php" />
+                <include name="*.php" />
+            </fileset>
         </phpdoc2>
+    </target>
+    
+    <target name="phpunit">
+        <phpunit haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir="${project.basedir}/tests">
+                    <include name="*"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
     </target>
     
     <target name="pdepend">
@@ -85,10 +98,6 @@
                 <include name="CHANGELOG"/>
             </projdocfileset>
         </phpdoc>
-    </target>
-    
-    <target name="phpunit">
-        <exec logoutput="true" dir="${project.basedir}/tests" command="phpunit" escape="false" />
     </target>
     
     <target name="phpcb">

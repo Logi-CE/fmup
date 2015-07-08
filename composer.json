@@ -12,6 +12,7 @@
     },
     "require-dev": {
       "phing/phing": "~2.11",
+      "phpunit/phpunit": "~4.7",
       "phpdocumentor/phpdocumentor": "~2.8",
       "squizlabs/php_codesniffer": "~2.3"
     },
