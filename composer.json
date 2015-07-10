@@ -12,7 +12,8 @@
     },
     "autoload": {
         "psr-4": {
-            "FMUP\\": "lib"
+            "FMUP\\": "lib",
+            "FMU\\": "system/FMU"
         },
         "files": ["system/autoload.php"]
     }
