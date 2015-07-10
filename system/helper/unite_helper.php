@@ -118,7 +118,7 @@ class UniteHelper
         if (!$valeur) {
             $valeur = 0;
         }
-        $valeur_formatee = number_format(str_replace(".", ",", $valeur), $virgule, $separateur, $separateur_millier);
+        $valeur_formatee = number_format(str_replace(",", ".", $valeur), $virgule, $separateur, $separateur_millier);
         if ($format) {
             $valeur_formatee .= ' '.$format ;
         }

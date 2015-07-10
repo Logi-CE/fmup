@@ -17,7 +17,7 @@ abstract class Error extends \FMUP\Controller
     /**
      * rewrite to tell everybody can access error controller
      */
-    public function preFiltre($calledAction)
+    public function preFiltre($calledAction = NULL)
     {
     }
 

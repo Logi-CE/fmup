@@ -293,4 +293,32 @@ class Framework
         ini_set('error_log', Config::pathToPhpErrorLog());
         return $this;
     }
+
+    /**
+     * @deprecated not needed anymore in FMUP
+     * @throws Error
+     */
+    public function executerCron ()
+    {
+        global $sys_controller_instance;
+
+        if (!defined('APPLICATION')) {
+            throw new Error("La variable APPLICATION doit être définie.");
+        } else {
+            define('APP', "App".String::toCamlCase(APPLICATION));
+        }
+
+        // On détermine le niveau d'erreur
+        error_reporting(Config::errorReporting());
+
+        $this->defineErrorLog();
+        $this->registerErrorHandler();
+        $this->registerShutdownFunction();
+        $this->instantiateSession();
+
+        // Création d'une instance du controlleur
+        $sys_controller_instance = new Controller();
+        $cron = new CronApplication();
+        $cron->executer();
+    }
 }

@@ -3,6 +3,8 @@
  * Classe dont dérivent tous les contolleurs.
  * Elle gère notamment la connexion à la base de données et la vérification des droits
  * @version 1.0
+ * @deprecated
+ * @see \FMUP\Controller
  */
 class Controller
 {
@@ -133,10 +135,12 @@ class Controller
     /**
      * Fonction exécutée avant chaque accès au controlleur.
      */
-    public function preFiltre($calledAction)
+    public function preFiltre($calledAction = NULL)
     {
         // Si l'application nécéssite une connexion on vérifie les droits
         if (call_user_func(array(APP, "hasAuthentification"))) {
+            global $sys_function;
+            $calledAction = $calledAction === null ? $sys_function : $calledAction;
             $this->authorize($calledAction);
         }
     }
@@ -155,13 +159,11 @@ class Controller
     /**
      * Fonction validant l'accès au site en vérifiant les droits et la connexion de l'utilisateur courant
      */
-    private function authorize($calledAction = null)
+    private function authorize($calledAction)
     {
         global $sys_controller;
-        global $sys_function;
         global $sys_directory;
 
-        $calledAction = $calledAction === null ? $sys_function : $calledAction;
         DroitHelperApplication::authorizeRead($sys_controller, $calledAction, $sys_directory);
     }
 }

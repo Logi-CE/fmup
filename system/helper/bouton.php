@@ -82,4 +82,8 @@ class Bouton
     {
         return self::construire(array('id' => 'btn_creer', 'font-image' => /*'add.png'*/'check', 'libelle' => 'Créer'));
     }
+    public static function valider($id = 'btn_valider')
+    {
+        return self::construire(array('id' => $id, 'libelle' => 'Valider'));
+    }
 }
