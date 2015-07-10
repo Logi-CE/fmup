@@ -7,14 +7,12 @@
 
     <target name="clean" description="Vide les répertoires d'artefacts">
         <delete dir="${project.basedir}/build/api" />
-        <delete dir="${project.basedir}/build/code-browser" />
         <delete dir="${project.basedir}/build/coverage" />
         <delete dir="${project.basedir}/build/doc" />
         <delete dir="${project.basedir}/build/logs" />
         <delete dir="${project.basedir}/build/pdepend" />
 
         <mkdir dir="${project.basedir}/build/api" />
-        <mkdir dir="${project.basedir}/build/code-browser" />
         <mkdir dir="${project.basedir}/build/coverage" />
         <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
@@ -25,17 +23,19 @@
         <phingcall target="phpunit" />
         <phingcall target="phpcs" />
         <phingcall target="phpdoc" />
-        <!-- phingcall target="pdepend" />
-        <phingcall target="phpmd" />
+        <!-- phingcall target="phpmd" /-->
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
-        <phingcall target="phpcb" /-->
+        <phingcall target="pdepend" />
     </target>
     
     <target name="phpcs">
         <phpcodesniffer standard="PSR2">
-            <fileset dir="${project.basedir}">
-                <include name="**/*.php"/>
+            <fileset dir="${project.basedir}/">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
             </fileset>
             <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
         </phpcodesniffer>
@@ -43,9 +43,11 @@
     
     <target name="phpdoc">
         <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
-            <fileset dir="${project.basedir}/lib">
-                <include name="**/*.php" />
-                <include name="*.php" />
+            <fileset dir="${project.basedir}">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
             </fileset>
         </phpdoc2>
     </target>
@@ -59,29 +61,28 @@
             </batchtest>
         </phpunit>
     </target>
-    
-    <target name="pdepend">
-      <phpdepend file="${project.basedir}">
-          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
-          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
-          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
-      </phpdepend>
-    </target>
-    
+       
     <target name="phpmd">
-        <phpmd file="${project.basedir}">
-            <formatter type="xml" outfile="${project.basedir}/build/phpmd.xml" />
+        <phpmd file="${project.basedir}/lib">
+            <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
+        </phpmd>
+        <phpmd file="${project.basedir}/system">
+            <formatter type="xml" outfile="${project.basedir}/build/logs/fmu-phpmd.xml" />
         </phpmd>
     </target>
 
     <target name="phpcpd">
-        <phpcpd file="${project.basedir}/">
-            <formatter type="pmd" outfile="${project.basedir}/build/logs/pmd-cpd.xml"/>
+        <phpcpd file="${project.basedir}/lib/">
+            <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
+        </phpcpd>
+        <phpcpd file="${project.basedir}/system/">
+            <formatter type="pmd" outfile="${project.basedir}/build/logs/fmu-cpd.xml"/>
         </phpcpd>
     </target>
     
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/lib'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/fmu-phploc.csv' '${project.basedir}/system'" escape="false" />
     </target>
        
     <target name="phpdoc">
@@ -90,17 +91,31 @@
                 sourcecode="false"
                 output="HTML:Smarty:PHP">
             <fileset dir="${project.basedir}/">
-                <include name="**/*.php"/>
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
             </fileset>
             <projdocfileset dir=".">
-                <include name="README"/>
-                <include name="INSTALL"/>
-                <include name="CHANGELOG"/>
+                <include name="composer.json"/>
+                <include name="lib/README.txt"/>
+                <include name="lib/RELEASENOTE.txt"/>
             </projdocfileset>
         </phpdoc>
     </target>
     
-    <target name="phpcb">
-        <exec logoutput="true" command="phpcb --log '${project.basedir}/build/logs' --source '${project.basedir}/' --output '${project.basedir}/build/code-browser'" escape="false" />
+    <target name="pdepend">
+      <phpdepend file="${project.basedir}/lib">
+          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
+          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
+          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
+      </phpdepend>
+      
+      <phpdepend file="${project.basedir}/system">
+          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/fmu-jdepend.xml" />
+          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/fmu-dependencies.svg" />
+          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/fmu-overview-pyramid.svg" />
+      </phpdepend>
     </target>
+    
 </project>
