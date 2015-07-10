@@ -1,66 +1,123 @@
 <?php
 if (!defined('BASE_PATH')) {
-    define('BASE_PATH', dirname(dirname(__FILE__).'..'));
+    define('BASE_PATH', dirname(dirname(__FILE__) . '..'));
 }
+
 /**
  * Classe comprenant les paramètres de configuration de l'application
- **/
+ */
 class Config extends ConfigApplication
 {
-    public static $instanceParams = array();
+    protected static $instanceParams = array();
 
     /**
      * Constantes pouvant varier suivant le site
-     * @param null $index
-     * @return array
-     * @throws Error
+     * @param string $index : [OPT] Paramètre demandé, laisser à FAUX pour avoir tous les paramètres
+     * @return mixed|array : Le paramètre de retour OU un tableau contenant tous les paramètres
      */
-    public static function paramsVariables($index = NULL)
+    public static function paramsVariables($index = false)
     {
         if (empty(self::$instanceParams)) {
             $param_defaut = array();
-            $param_defaut['app_port'] = '80'; // port par défaut.
-            $param_defaut['ISOtoUTF8'] = false; // indique si on doit encoder les valeurs de la Bdd
+            // port par défaut.
+            $param_defaut['app_port'] = '80';
+            // Indique si les mots de passe sont cryptés en base, et si oui, l'application les encodera directement
+            $param_defaut['mot_passe_crypte'] = true;
+            // Force la page de maintenance
             $param_defaut['maintenance_forcee'] = false;
-            $param_defaut['maintenance_plages'] = array(); //jour / heure (-1 si parametre omis)
+            //Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
+            $param_defaut['maintenance_plages'] = array();
+            // Détermine si l'application utilise les logs
             $param_defaut['is_logue'] = false;
-            $param_defaut['affichage_erreurs'] = true; // Affichage de l'erreur sur la page (false pour phpunit)
-            $param_defaut['historisation_navigation'] = false; //historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
-            $param_defaut['historisation_requete'] = false; //historisation en BDD de toutes les requetes lancées, dans la table hitorique_requetes
+            // Chemin du dossier ou sont stockés les fichiers de log
+            $param_defaut['log_path'] = BASE_PATH . '/log/';
+            // Chemin physique vers les documents partagés ou générés
+            $param_defaut['data_path'] = BASE_PATH . '/public/commun/documents/';
+            // Chemin physique vers les fichiers templates
+            $param_defaut['template_path'] = BASE_PATH . '/public/commun/templates/';
+            // Chemin physique vers les fichiers de traduction
+            $param_defaut['translate_path'] = BASE_PATH . '/data/translation/';
+            // Chemin "SRC" des documents partagés et générés (pour les balises img)
+            $param_defaut['data_src'] = '/documents/';
+            // Utilisation de la table de paramètrage
+            $param_defaut['utilise_parametres'] = false;
+            // historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
+            $param_defaut['historisation_navigation'] = false;
+            // historisation en BDD de toutes les requetes lancées, dans la table hitorique_requetes
+            $param_defaut['historisation_requete'] = false;
+            // Mode DEBUG, il désactive les envois de mail et affiche les erreurs à l'écran. Il active la console à tous les utilisateurs
             $param_defaut['is_debug'] = true;
-            // $param_defaut['mail_support']              = 'support@castelis.com';
+            // Affichage de l'erreur sur la page (false pour phpunit)
+            $param_defaut['affichage_erreurs'] = true;
+            // Nb de mails d'erreurs autorisés par minute (-1 correspond à pas de limitation)
+            $param_defaut['limite_mail_erreur'] = -1;
+            // Force l'envoi de mail sur les autres versions que "prod"
+            $param_defaut['envoi_mail'] = false;
+            // Mail d'envoi des mails de l'application
             $param_defaut['mail_robot'] = 'no-reply@castelis.com';
+            // Nom des mails d'envoi de l'application
             $param_defaut['mail_robot_name'] = 'Application CASTELIS';
-            // $param_defaut['mail_reply']                  = 'support@castelis.com';
-            // $param_defaut['mail_reply_name']          = 'CASTELIS';
+            // Mail de test qui se substitue à l'adresse classique en cas d'envoi impossible ou pour les tests
+            $param_defaut['mail_envoi_test'] = 'castelis@castelis.local';
+            // Mail de retour des mails envoyés par l'application
+            $param_defaut['mail_reply'] = 'support@castelis.com';
+            // Nom des mails de retour des mails envoyés par l'application
+            $param_defaut['mail_reply_name'] = 'CASTELIS';
+            // Mail support recevant les erreurs de l'application
+            $param_defaut['mail_support'] = 'castelis@castelis.local';
+            // Mail caché dans tous les envois et recevant tous les mails
+            $param_defaut['mail_cache'] = '';
+            // ID de l'utilisateur CASTELIS
             $param_defaut['id_castelis'] = 1;
+            // ID de l'utilisateur CRON
             $param_defaut['id_cron'] = -1;
+            // Condition site multilingue
+            $param_defaut['is_multilingue'] = false;
+            // indique si on doit encoder les valeurs de la Bdd
+            $param_defaut['ISOtoUTF8'] = false;
+            // Taille maximum autorisé pour un upload de fichier
+            $param_defaut['taille_max_fichier'] = 1024 * 1000 * 20;
+            // Nom du serveur de mail
+            $param_defaut['smtp_serveur'] = 'smtp.castelis.local';
+            // Numéro de port utilisé pour les mails
+            $param_defaut['smtp_port'] = 25;
+            // Indique si le serveur mail nécéssite une authentification
+            $param_defaut['smtp_authentification'] = false;
+            // "", "ssl" ou "tls"
+            $param_defaut['smtp_secure'] = '';
+            // Identifiant de connexion au serveur de mail
+            $param_defaut['smtp_username'] = '';
+            // Mot de passe de connexion au serveur de mail
+            $param_defaut['smtp_password'] = '';
+            //Nom de la version
             $param_defaut['nom_version'] = '';
-            $param_defaut['limite_mail_erreur'] = -1; // nb par minute (-1 correspond à pas de limitation)
-            $param_defaut['is_multilingue'] = false; // Condition site multilingue
-            $param_defaut['utilise_parametres'] = false; // Utilisation de la table de paramètrage
-            $param_defaut['php_error_log'] = BASE_PATH . '/logs/php/error/%date%.log'; //PHP Error log
+            //Path vers le fichier de log d'erreur de PHP
+            $param_defaut['php_error_log'] = BASE_PATH . '/logs/php/error/%date%.log';
 
+            // LDAP :
+            // serveur_ldap - port_connexion_ldap - user_connexion_ldap - mdp_connexion_ldap - domaine_racine_ldap - nom_domaine_racine_ldap
+
+            // On ajoute ensuite les paramètres de ConfigApplication, qui vont surcharger les paramètres par défaut
             $params = parent::setVariables($param_defaut);
 
             /* fichier config.ini est obligatoire (placé à la racine du site) mais ne doit surtout pas être intégré dans le SVN; il doit contenir les paramétrage d'accès à la BDD
             * un fichier d'exemple nommé config_exemple.ini indique les paramètres obligatoires à renseigner dans le fichier config.ini
             * Dans le cas des tests unitaires, le serveur aura pour nom 'phpunit' et nécessitera une connexion particulière.
-            * Le fichier config_test.php (placé au même endroit que config.php) sera alors chargé à la place
+            * Le fichier config_test.ini (placé au même endroit que config.ini) sera alors chargé à la place
             */
-            if ($_SERVER['SERVER_NAME'] == 'phpunit') {
-                $nom_fichier_config = 'config_test.php';
+            if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'phpunit') {
+                $nom_fichier_config = 'config_test.ini';
             } else {
-                $nom_fichier_config = 'config.php';
+                $nom_fichier_config = 'config.ini';
             }
             if (file_exists(dirname(__FILE__) . '/../' . $nom_fichier_config)) {
-                include(dirname(__FILE__) . '/../' . $nom_fichier_config);
+                include_once(dirname(__FILE__) . '/../' . $nom_fichier_config);
             }
 
-            if (empty($params['mail_envoie_test'])) {
+            if (empty($params['mail_envoi_test'])) {
                 // email à qui on envoie les mails dans le cas de TEST et de non envoi d'email de l'application
                 // si non renseigné alors on envoie au support
-                $params['mail_envoie_test'] = $params['mail_support'];
+                $params['mail_envoi_test'] = $params['mail_support'];
             }
             /**
              * FMUP daily alert
@@ -71,40 +128,43 @@ class Config extends ConfigApplication
             self::$instanceParams = $params;
         }
 
-        if (empty($index) || $index === false) {
+        if ($index === false || empty($index)) {
             return self::$instanceParams;
-        } else if (array_key_exists($index, self::$instanceParams)) {
+        } elseif (array_key_exists($index, self::$instanceParams)) {
             return self::$instanceParams[$index];
         } else {
             throw new Error(Error::configParamAbsent($index));
         }
     }
 
-    public static function getVersionApplicationLibelle()
+    public static function getCheminData()
     {
-        if (self::paramsVariables('version')=='prod') {
-            return false;
-        }
-        $params = self::paramsVariables('parametres_connexion_db');
-        $version_bdd = "BDD sur <span style=\"color:red;\">".$params['host']." [ ".$params['database']." ] </span> --- ";
-        return $version_bdd.'<span style=\'color:red; _text-decoration:blink;\'>VERSION DE DEVELOPPEMENT</span>';
-
+        return BASE_PATH . '/data/';
     }
 
     /**
-     * Verifie si on peut envoyer un mail
-     * @return bool
-     * @throws Error
+     * Détermine si un envoi de mail est possible, par défaut seulement en production ou en réécrivant le paramètre envoi_mail
+     * @return bool : VRAI si envoi possible
      */
     public static function isEnvoiMailPossible()
     {
-        if (!self::paramsVariables('envoi_mail') && (self::paramsVariables('version') == 'prod')) {
+        if (!Config::paramsVariables('envoi_mail') && (Config::paramsVariables('version') == 'prod')) {
             return true;
-        } elseif (!self::paramsVariables('envoi_mail')) {
+        } elseif (!Config::paramsVariables('envoi_mail')) {
             return false;
         } else {
             return true;
         }
+    }
+
+    public static function grainSel()
+    {
+        return 'dS7vNfuVHj';
+    }
+
+    public static function crypter($chaine, $grain_sel = '')
+    {
+        return sha1(self::grainSel() . $chaine . $grain_sel);
     }
 
     /**
@@ -112,254 +172,35 @@ class Config extends ConfigApplication
      */
     public static function consoleActive()
     {
-        return self::isDebug() || (!empty($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur'] == self::idCastelis());
+        return Config::isDebug() || (!empty($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur'] == Config::paramsVariables('id_castelis'));
     }
 
     public static function isDebug()
     {
-        return self::paramsVariables('is_debug');
+        return Config::paramsVariables('is_debug');
     }
 
-    public static function idCastelis()
-    {
-        return self::paramsVariables('id_castelis');
-    }
-
-    public static function idCron()
-    {
-        return self::paramsVariables('id_cron');
-    }
-
-    /**
-     * doit-on loguer les changement dans la base de données (via l'application) ?
-     */
-    public static function isLogue()
-    {
-        return self::paramsVariables('is_logue');
-    }
 
     /**
      * La racine du site
-     **/
+     */
     public static function siteWWWRoot()
     {
-        return call_user_func(array(APP, "defaultWWWroot")).":".self::getAppPort();
+        return call_user_func(array(APP, "defaultWWWroot")) . ":" . Config::getAppPort();
     }
 
     public static function getAppPort()
     {
-        return self::paramsVariables('app_port')."/";
+        return Config::paramsVariables('app_port') . "/";
     }
 
-    /* *
-     * Chemin vers rep Data
+    /**
+     * Durée avant expiration de la session filtre-liste
+     * @return int : Secondes
      */
-    public static function getCheminData()
-    {
-        return BASE_PATH."/data/";
-    }
-
-    /* *
-     * Chemin vers rep temporaire de data
-     */
-    public static function getDataTempDirectory()
-    {
-        return BASE_PATH."/public/front/data/";
-    }
-
-    /* *
-     * Chemin vers rep de templates
-     */
-    public static function getTemplatesDirectory()
-    {
-        return BASE_PATH."/public/front/templates/";
-    }
-
-    public static function timeLimit()
-    {
-        return 1200;
-    }
-
-    public static function memoryLimit()
-    {
-        return "540M";
-    }
-
-    public static function getMaxSize()
-    {
-        return 1024*1000*20;
-    }
     public static function getTimeoutSessionId()
     {
-        return 5*60;
-    }
-
-
-    public static function getNomExpediteur()
-    {
-        return "Framework";
-    }
-
-
-    /**
-     * Nom du serveur SMTP utilisé
-     */
-    public static function smtpServeur()
-    {
-        return self::paramsVariables('smtp_serveur');
-    }
-
-
-    /**
-     * Numero de port SMTP utilisé
-     */
-    public static function smtpPort()
-    {
-        return self::paramsVariables('smtp_port');
-    }
-
-    /**
-     * Besoin d'authentification SMTP
-     * @return true si une authentification est requise, false sinon
-     */
-    public static function smtpAuthentification()
-    {
-        return self::paramsVariables('smtp_authentification');
-    }
-
-    /**
-     * Préfixe de connection SMTP
-     * @return string
-     */
-    public static function smtpSecure()
-    {
-        return self::paramsVariables('smtp_secure');
-    }
-
-    /**
-     * Login SMTP
-     */
-    public static function smtpUsername()
-    {
-        return self::paramsVariables('smtp_username');
-    }
-    /**
-     * Mot de passe SMTP
-     */
-    public static function smtpPassword()
-    {
-        return self::paramsVariables('smtp_password');
-    }
-    /**
-     * Nom du serveur LDAP pour connexion
-     */
-    public static function serveurLdap()
-    {
-        return self::paramsVariables('serveur_ldap');
-    }
-    /**
-     * Port de connexion au serveur LDAP
-     */
-    public static function portConnexionLdap()
-    {
-        return self::paramsVariables('port_commexion_ldap');
-    }
-    /**
-     * User pour la connexion au serveur LDAP
-     */
-    public static function userConnexionLdap()
-    {
-        return self::paramsVariables('user_connexion_ldap');
-    }
-    /**
-     * Mot de passe pour la connexion au serveur LDAP
-     */
-    public static function passConnexionLdap()
-    {
-        return self::paramsVariables('mdp_connexion_ldap');
-    }
-    /**
-     * Domaine racine du LDAP
-     */
-    public static function domaineRacineLdap()
-    {
-        return self::paramsVariables('domaine_racine_ldap');
-    }
-    /**
-     * Nom de domaine racine du LDAP
-     */
-    public static function nomDomaineRacineLdap()
-    {
-        return self::paramsVariables('nom_domaine_racine_ldap');
-    }
-
-    /**
-     * Nom de l'email From pour le mail d'erreur
-     */
-    public static function erreurMailFromName()
-    {
-        return self::paramsVariables('erreur_mail_from_name');
-    }
-    /**
-     * Sujet du mail d'erreur
-     */
-    public static function erreurMailSubject()
-    {
-        return self::paramsVariables('erreur_mail_sujet');
-    }
-
-
-    /**
-     * Mail support
-     */
-    public static function mailSupport()
-    {
-        return self::paramsVariables('mail_support');
-    }
-    /**
-     * Mail à qui on envoi les mails dans le cas de TEST et de non envoie d'email de l'application
-     */
-    public static function mailEnvoieTest()
-    {
-        return self::paramsVariables('mail_envoie_test');
-    }
-    /**
-     * Mail du robot qui envoie les mails
-     **/
-    public static function mailRobot()
-    {
-        return self::paramsVariables('mail_robot');
-    }
-    public static function mailRobotName()
-    {
-        return self::paramsVariables('mail_robot_name');
-    }
-    /**
-     * Adresse où répondre aux mails
-     **/
-    public static function mailReply()
-    {
-        return self::paramsVariables('mail_reply');
-    }
-    public static function mailReplyName()
-    {
-        return self::paramsVariables('mail_reply_name');
-    }
-
-    /**
-     * Liens vers site web du client
-     **/
-    public static function siteWebClient()
-    {
-        return self::paramsVariables('site_web_client');
-    }
-
-    /**
-     * URL du front de l'appli
-     */
-    public static function urlFront()
-    {
-        return self::paramsVariables('url_front');
+        return 24 * 60;
     }
 
     /**
@@ -367,81 +208,68 @@ class Config extends ConfigApplication
      */
     public static function errorReporting()
     {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            return E_ALL | E_STRICT;
-        } else {
+        if (Config::isDebug()) {
             return E_ALL;
+        } else {
+            return 0;
         }
+    }
+
+    /**
+     * Défini si le site est ouvert au public
+     * @return booleen
+     */
+    public static function siteOuvert()
+    {
+        $retour = true;
+        if (Config::paramsVariables('maintenance_forcee')) {
+            $retour = false;
+        }
+
+        $day_number = date('w');
+        $heure = date('H');
+        foreach (Config::paramsVariables('maintenance_plages') as $plage) {
+            list($var_jour, $var_heure_debut, $var_heure_fin) = $plage;
+            if ($var_jour == -1) $var_jour = $day_number;
+            if ($var_heure_debut == -1) $var_heure_debut = $heure;
+            if ($var_heure_fin == -1) $var_heure_fin = $heure;
+            if ($day_number == $var_jour && $heure <= $var_heure_fin && $heure >= $var_heure_debut) {
+                $retour = false;
+            }
+        }
+
+        if (Config::paramsVariables('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance')) {
+            $retour = false;
+        }
+
+        return $retour;
     }
 
     /**
      * Les paramètres de connexion à la base de données
-     **/
-    public static function parametresConnexionDb()
-    {
-        return self::paramsVariables('parametres_connexion_db');
-    }
-
-    /**
-     * Numero de version de l'application
-     * @return string
+     * @param string $libelle : [OPT] Nom du paramètre demandé, FAUX par défaut
+     * @return string|array
      */
-    public static function version()
+    public static function parametresConnexionDb($libelle = false)
     {
-        return self::paramsVariables('version_site');
-    }
-    /**
-     * Nom de la version de l'application
-     * @return string
-     */
-    public static function nomVersion()
-    {
-        return self::paramsVariables('nom_version');
-    }
-
-    /**
-     * Ip locale pour la securisation du cron
-     * @return string
-     */
-    public static function ipLocale()
-    {
-        return self::paramsVariables('ip_locale');
-    }
-
-    /**
-     * retourne la page de non ouverture du site
-     * @return string
-     */
-    public static function getMaintenancePlage()
-    {
-        try {
-            return self::paramsVariables('maintenance_plages');
-        } catch (Exception $e) {
-            return false;
+        $params = Config::paramsVariables('parametres_connexion_db');
+        if ($libelle) {
+            $params = $params[$libelle];
         }
-    }
-    /**
-     * retourne sir le site est en maintenance actuellement
-     * @return bool
-     */
-    public static function getMaintenanceForcee()
-    {
-        try {
-            return (bool)self::paramsVariables('maintenance_forcee');
-        } catch (Exception $e) {
-            return false;
-        }
+        return $params;
     }
 
     /**
      * pour savoir si on gère les sessions en bdd
-     * @return bool
      */
     public static function getGestionSession()
     {
-        $config = self::paramsVariables();
-        if (isset($config['gestion_session_'.APPLICATION])) return $config['gestion_session_'.APPLICATION];
-        if (isset($config['gestion_session'])) return $config['gestion_session'];
+        $config = Config::paramsVariables();
+        if (isset($config['gestion_session_' . APPLICATION])) {
+            return $config['gestion_session_' . APPLICATION];
+        } elseif (isset($config['gestion_session'])) {
+            return $config['gestion_session'];
+        }
         return false;
     }
 
@@ -450,17 +278,11 @@ class Config extends ConfigApplication
      */
     public static function getGestionMultiOnglet()
     {
-        $config = self::paramsVariables();
-        if (isset($config['mode_multi_onglet'])) return $config['mode_multi_onglet'];
+        $config = Config::paramsVariables();
+        if (isset($config['mode_multi_onglet'])) {
+            return $config['mode_multi_onglet'];
+        }
         return false;
-    }
-
-    /**
-     * Savoir si le site est multilingue
-     */
-    public static function getIsMultilingue()
-    {
-        return self::paramsVariables('is_multilingue');
     }
 
     public static function pathToPhpErrorLog($date = NULL)
@@ -471,6 +293,6 @@ class Config extends ConfigApplication
 
     public static function useDailyAlert()
     {
-        return (bool)self::paramsVariables('use_daily_alert');
+        return (bool) self::paramsVariables('use_daily_alert');
     }
 }

@@ -20,7 +20,7 @@ class DbHelper
             }
             switch($params['driver']) {
                 case 'mssql':
-                    self::$instance = new DbConnection($params);
+                    self::$instance = new DbConnectionMssql($params);
                     break;
                 case 'mysql' :
                 default:

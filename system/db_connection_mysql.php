@@ -1,23 +1,35 @@
 <?php
-/**
- * Classe de connexion à une base de données
- **/
-
 if (!defined('MSSQL')) define('MSSQL', 'mssql');
 if (!defined('MYSQL')) define('MYSQL', 'mysql');
 
+/**
+ * Classe de connexion à une base de données
+ * @version 1.0
+ * @deprecated use \FMUP\Db instead
+ * @see \FMUP\Db
+ */
 class DbConnectionMysql
 {
     protected $conn; // la connexion
     protected $driver;
     protected $charset;
 
+    static $instance = null;
+
+    public static function getInstance ($params)
+    {
+        if (self::$instance == null) {
+            self::$instance = new DbConnectionMysql($params);
+        }
+        return self::$instance;
+    }
+
     /**
      * Constructeur
      **/
     public function __construct($params)
     {
-        if (isset($params['host']) && isset($params['login']) && isset($params['password']) && isset($params['database']) && isset($params['driver']) && isset($params['PDOBddPersistant'])) {
+        if (isset($params['host'], $params['login'], $params['password'], $params['database'], $params['driver'], $params['PDOBddPersistant'])) {
             try {
                 if (isset($params['charset'])) {
                     $this->charset = $params['charset'];
@@ -53,14 +65,6 @@ class DbConnectionMysql
     }
 
     /**
-     * Destructeur
-     **/
-    public function __destruct()
-    {
-        /* @mysql_close($this->conn); */
-    }
-
-    /**
      * Requete a la base de donnees
      * @return Tableau à 2 dimensions (enregistrements / champs)
      */
@@ -81,6 +85,7 @@ class DbConnectionMysql
                 $duree -= microtime(1);
                 $memoire -= memory_get_usage();
                 Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
+
             }
             $stmt->closeCursor();
 
@@ -110,57 +115,37 @@ class DbConnectionMysql
             return array();
         }
     }
-    /**
-     * @deprecated utiliser requeteUneLigne
-     */
-    public function requete_une_ligne($sql, $params = array(array()))
-    {
-        return $this->requeteUneLigne($sql, $params);
-    }
 
     public function exportQuery($sql)
     {
-        $duree = microtime(1);
-        $memoire = memory_get_usage();
+        try {
+            $rows = array();
+            $stmt = $this->conn->prepare($sql);
 
-        if (MSSQL === $this->driver) {
-            $stmt = mssql_query($sql, $this->conn);
-        } elseif (MYSQL === $this->driver) {
-            $stmt = mysql_query($sql, $this->conn);
-        }
-        if (!$stmt) {
-            echo mysql_error();
-            throw new Error(Error::erreurRequete($sql));
-        }
 
-        $duree -= microtime(1);
-        $memoire -= memory_get_usage();
-        //Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3)), LOG_SQL);
+            $duree = microtime(1);
+            $memoire = memory_get_usage();
+            
+            $stmt->execute();
+            
+            $duree -= microtime(1);
+            $memoire -= memory_get_usage();
+            Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
+
+        } catch (Exception $e) {
+            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
+        }
 
         return $stmt;
-    }
-    /**
-     * @deprecated utiliser exportQuery
-     */
-    public function export_query($sql)
-    {
-        return $this->exportQuery($sql);
     }
 
     public function exportFetchArray($stmt)
     {
-        if (MSSQL === $this->driver) {
-            return mssql_fetch_array($stmt);
-        } elseif (MYSQL === $this->driver) {
-            return mysql_fetch_array($stmt);
+        $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$resultat) {
+            $stmt->closeCursor();
         }
-    }
-    /**
-     * @deprecated utiliser exportFetchArray
-     */
-    public function export_fetch_array($stmt)
-    {
-        return $this->exportFetchArray($stmt);
+        return $resultat;
     }
 
     /**

@@ -56,9 +56,9 @@ class Logger
                 break;
             case self::ERROR:
                 $handler = new NativeMailerHandler(
-                    explode(',', \Config::mailSupport()),
+                    explode(',', \Config::paramsVariables('mail_support')),
                     '[Erreur] ' . $this->getRequest()->getServer(Request::SERVER_NAME),
-                    \Config::mailRobot(),
+                    \Config::paramsVariables('mail_robot'),
                     \Monolog\Logger::CRITICAL
                 );
                 $handler->setFormatter(new HtmlFormatter());

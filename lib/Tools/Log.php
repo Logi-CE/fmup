@@ -20,7 +20,7 @@ class Log
      */
     public function sendErrorLog($date = NULL)
     {
-        $mailAddresses = explode(';', \Config::mailSupport());
+        $mailAddresses = explode(';', \Config::paramsVariables('mail_support'));
         return $this->sendFileToMail(\Config::pathToPhpErrorLog($date), $mailAddresses);
     }
 
@@ -60,7 +60,7 @@ class Log
             $mailer = new \PHPMailer(true);
             $mailer->IsHTML(false);
             $mailer->CharSet = "UTF-8";
-            $mailer->SetFrom(\Config::mailRobot(), \Config::mailRobotName());
+            $mailer->SetFrom(\Config::paramsVariables('mail_robot'), \Config::paramsVariables('mail_robot_name'));
             $this->mailerInstance = $mailer;
         }
         return $this->mailerInstance;

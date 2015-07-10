@@ -135,3 +135,12 @@
     background-color: #EDE6DE;
     right: 295px;
 }
+#debug-zone-button #taille_console {
+    position: absolute;
+    right: 324px;
+    top: 2px;
+    height: 11px;
+    color: red;
+    border: 1px dotted grey;
+    padding: 3px 4px 0;
+}

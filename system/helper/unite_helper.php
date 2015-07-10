@@ -1,125 +1,139 @@
 <?php
+/**
+ * Classe permettant de formater des valeurs pour affichage
+ * @version 1.0
+ */
 class UniteHelper
 {
     /**
-     * Retourne un décimal formaté en monaie
-     *
-     * @param {Integer} la valeur
-     * @param {String} la monaie à afficher -> par défaut "&euro;"
-     * @param {Integer} le nombre de chiffres après la virgule
-     **/
-    public static function getFormatMonetaire($valeur, $monaie = '€', $virgule = 2)
-    {
-        if (Is::decimal($valeur)) {
-        //if ($valeur) {
-            $valeur_formatee = number_format($valeur, $virgule, ',', ' ') ;
-            if ($monaie) {
-                $valeur_formatee.= ' '.$monaie ;
-            }
-            return $valeur_formatee;
-        } else {
-            return false;
-        }
-
-    }
-
-    public static function getFormatPourcentage($valeur, $virgule = 1)
-    {
-        $valeur_formatee = number_format($valeur, $virgule, ',', ' ').' %' ;
-        return $valeur_formatee;
-    }
-
-    /**
      * Affiche un texte au singulier ou au pluriel
-     * @param {Integer|Float|String} $valeur            La quantité
-     * @param {String}               $singulier         Le mot au singulier
-     * @param {String}               $pluriel           Le mot au pluriel (facultatif)
-     * @param {Boolean}              $afficher_valeur   Faut il afficher la valeur devant le texte
-     * @return {String}                                 La quantité + le mot accordé
-     **/
+     * @param int $valeur : La quantité
+     * @param string $singulier : Le mot au singulier
+     * @param string $pluriel : [OPT] Le mot au pluriel, par défaut il mettra un S à la fin
+     * @param bool $afficher_valeur : [OPT] Faut il afficher la valeur devant le texte, par défaut oui
+     * @return string : La quantité + le mot accordé
+     */
     public static function getSingulierPluriel($valeur, $singulier, $pluriel = null, $afficher_valeur = true)
     {
-        if (!$pluriel) {
-            $pluriel = $singulier.'s';
+        $retour = '';
+        if ($afficher_valeur) {
+            $retour = $valeur.' ';
         }
+        
         if ($valeur <= 1) {
-            if ($afficher_valeur) {
-                return "$valeur $singulier";
-            } else {
-                return "$singulier";
-            }
+            $retour .= $singulier;
         } else {
-            if ($afficher_valeur) {
-                return "$valeur $pluriel";
-            } else {
-                return "$pluriel";
+            if (!$pluriel) {
+                $pluriel = $singulier.'s';
             }
+            $retour .= $pluriel;
         }
+        
+        return $retour;
+    }
+    
+    /**
+     * Retourne un décimal formaté en monnaie
+     * @param float $valeur : La valeur à formater
+     * @param string $monaie : [OPT] La monnaie à afficher, par défaut "&euro;"
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 2
+     * @return string : Valeur formatée
+     */
+    public static function getFormatMonetaire($valeur, $format = '€', $virgule = 2)
+    {
+        return self::getNombreFormat($valeur, $virgule, $format);
     }
 
     /**
      * Retourne un décimal formaté en tonne
-     *
-     * @param {Integer} la valeur
-     * @param {Integer} le nombre de chiffres après la virgule
-     **/
+     * @param float $valeur : La valeur en tonne
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 3
+     * @param string $format : [OPT] Le format à afficher, par défaut "t"
+     * @return string : Valeur formatée
+     */
+    public static function getFormatPourcentage($valeur, $virgule = "1", $format = '%')
+    {
+        return self::getNombreFormat($valeur, $virgule, $format);
+    }
+    
+    /**
+     * Retourne un décimal formaté en tonne
+     * @param float $valeur : La valeur en tonne
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 3
+     * @param string $format : [OPT] Le format à afficher, par défaut "t"
+     * @return string : Valeur formatée
+     */
     public static function getFormatTonne($valeur, $virgule = "3", $format = 't')
     {
-        $valeur_formatee = number_format($valeur, $virgule, ',', ' ');
-        if ($format) {
-            $valeur_formatee.= ' '.$format ;
-        }
-        return $valeur_formatee;
+        return self::getNombreFormat($valeur, $virgule, $format);
+    }
+    
+    /**
+     * Retourne un décimal formaté en kilogrammes
+     * @param float $valeur : La valeur en kilogrammes
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 3
+     * @param string $format : [OPT] Le format à afficher, par défaut "kg"
+     * @return string : Valeur formatée
+     */
+    public static function getFormatKilogramme($valeur, $virgule = "3", $format = 'kg')
+    {
+        return self::getNombreFormat($valeur, $virgule, $format);
     }
 
+    /**
+     * Retourne un décimal formaté en kilomètre
+     * @param float $valeur : La valeur en kilomètre
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 2
+     * @param string $format : [OPT] Le format à afficher, par défaut "km"
+     * @return string : Valeur formatée
+     */
     public static function getFormatKilometre($valeur, $virgule = "2", $format = 'km')
     {
-        $valeur_formatee = number_format($valeur, $virgule, ',', ' ') ;
-        if ($format) {
-            $valeur_formatee.= ' '.$format ;
-        }
-        return $valeur_formatee;
+        return self::getNombreFormat($valeur, $virgule, $format);
     }
 
-    public static function getFormatUm($valeur, $virgule = "1", $format = '')
-    {
-        $valeur_formatee = number_format($valeur, $virgule, ',', ' ');
-        if ($format) {
-            $valeur_formatee.= ' '.$format ;
-        }
-        return $valeur_formatee;
-    }
-
+    /**
+     * Retourne un décimal formaté en mètre carré
+     * @param float $valeur : La valeur en mètre carré
+     * @param int $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 2
+     * @param string $format : [OPT] Le format à afficher, par défaut "m²"
+     * @return string : Valeur formatée
+     */
     public static function getFormatMetreCarre($valeur, $virgule = "2", $format = 'm²')
     {
-        $valeur_formatee = number_format($valeur, $virgule, ',', ' ') ;
+        return self::getNombreFormat($valeur, $virgule, $format);
+    }
+    
+    /**
+     * Retourne un décimal formaté
+     * @param float $valeur : La valeur à formater
+     * @param int $virgule : Le nombre de chiffres après la virgule
+     * @param string $format : [OPT] Le format à afficher, par défaut rien
+     * @param string $separateur : [OPT] Le séparateur de décimal, par défaut ","
+     * @param string $separateur_millier : [OPT] Le séparateur de millier, par défaut " "
+     * @return string : Valeur formatée
+     */
+    public static function getNombreFormat ($valeur, $virgule, $format = '', $separateur = ",", $separateur_millier = " ")
+    {
+        if (!$valeur) {
+            $valeur = 0;
+        }
+        $valeur_formatee = number_format(str_replace(".", ",", $valeur), $virgule, $separateur, $separateur_millier);
         if ($format) {
-            $valeur_formatee.= ' '.$format ;
+            $valeur_formatee .= ' '.$format ;
         }
         return $valeur_formatee;
     }
 
-    public static function getNombreFormat($valeur, $virgule = "2", $separateur = ", ", $separateur_millier = " ")
-    {
-        if (!$valeur) {
-            $valeur=0;
-        }
-        return number_format($valeur, $virgule, $separateur, $separateur_millier);
-    }
-
-    public static function getNombreFormatVirgule($valeur)
-    {
-        return str_replace(".", ",", $valeur);
-    }
-
-    public static function getNombreFormatForfait($valeur)
-    {
-        return UniteHelper::getNombreFormat($valeur, 1, ',');
-    }
-
+    /**
+     * Formate un nombre pour excel, il n'aura pas d'unité
+     * @param float $valeur : Le nombre à formater
+     * @param string $virgule : [OPT] Le nombre de chiffres après la virgule, par défaut 2
+     * @return string : Valeur formatée
+     */
     public static function getFormatNombreExcel($valeur, $virgule = "2")
     {
-        return UniteHelper::getNombreFormat($valeur, $virgule, ',');
+        return UniteHelper::getNombreFormat($valeur, $virgule, '', ',', '');
     }
 
     public static function getInt($id="") {
@@ -133,29 +147,5 @@ class UniteHelper
         }
     
         return $retour;
-    }
-
-    public static function getFormatPerformance($valeur, $virgule = "3", $format = 'kg/hab')
-    {
-        if (is_numeric($valeur)) {
-            $valeur_formatee = number_format($valeur, $virgule, ',', ' ');
-            if ($format) {
-                $valeur_formatee.= ' '.$format ;
-            }
-            return $valeur_formatee;
-        } else {
-            return $valeur;
-        }
-    }
-
-    public static function toUpperCase($valeur)
-    {
-        $valeur = strtoupper($valeur);
-        return strtr($valeur, "äâàáåãéèëêòóôõöøìíîïùúûüýñçþÿæœðø", "ÄÂÀÁÅÃÉÈËÊÒÓÔÕÖØÌÍÎÏÙÚÛÜÝÑÇÞÝÆŒÐØ");
-    }
-
-    public static function floorDecimal($zahl, $decimals = 2)
-    {
-         return floor($zahl*pow(10, $decimals))/pow(10, $decimals);
     }
 }

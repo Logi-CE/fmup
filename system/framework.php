@@ -63,11 +63,11 @@ class Framework
         if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         if (Config::isDebug()) {
             if (isset($_SESSION['id_utilisateur'])) {
-                FileHelper::fLog($url, 'URL_'.$_SESSION['id_utilisateur']);
-                FileHelper::fLog($url."\r\n".print_r($_REQUEST, 1), 'POST_'.$_SESSION['id_utilisateur']);
+                FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
+                FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
             } else {
-                FileHelper::fLog($url, 'URL');
-                FileHelper::fLog($url."\r\n".print_r($_REQUEST, 1), 'POST');
+                FileHelper::fLog('URL', $url);
+                FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
             }
         }
         $this->preDispatch();
@@ -98,7 +98,6 @@ class Framework
 
     /**
      * Allow overwriting of an eventual post treatment
-     * @param Controller $controller
      */
     protected function postDispatch()
     {
@@ -181,6 +180,11 @@ class Framework
     /**
      * On déclare la fonction permettant de remplacer une erreur par une exception
      * Cette méthode permet de gérer de la même manière des erreurs et les exceptions
+     * @param int $code
+     * @param string $msg
+     * @param string $file
+     * @param int $line
+     * @param mixed $context
      */
     public function errorToException($code, $msg, $file, $line, $context)
     {
@@ -227,14 +231,14 @@ class Framework
             $sys = call_user_func(array(APP,"authController"));
         }
 
-        if (!Navigation::siteOuvert()) {
+        if (!Config::siteOuvert()) {
             if ((!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
                 || $sys == call_user_func(array(APP, "authController"))
             ) {
                 Controller::clearFlash();
                 $sys = call_user_func(array(APP, "closedAppController"));
             } else {
-                Controller::setFlash(Constantes::getMessageFlashMaintenance(), true);
+                Controller::setFlash(Constantes::getMessageFlashMaintenance());
             }
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);

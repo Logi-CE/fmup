@@ -1,34 +1,30 @@
 <?php
 /**
  * Classe dont dérivent tous les contolleurs.
- **/
-
+ * Elle gère notamment la connexion à la base de données et la vérification des droits
+ * @version 1.0
+ */
 class Controller
 {
     /**
-     * Une instance de la classe de connexions au bases de données
-     **/
-    private $db_connection;
-    /**
-     * Une instance des droits
+     * Une instance de la classe de connexions aux bases de données
      */
-    private $droits;
+    private $db_connection;
 
     /**
      * Allow construct rewrite
      */
     public function __construct()
     {
-
     }
 
 
     /**
      * Précharge une vue mais ne l'affiche pas (intéressant pour les sous-vues)
-     * @param String $vue
-     * @param Array $params
+     * @param string $vue : Nom de la vue
+     * @param array $params : Paramètres et variables à passer dans la vue
      */
-    public static function chargerVue ($vue, $params)
+    public function chargerVue ($vue, $params)
     {
         $params['popup'] = true;
         ob_start();
@@ -38,9 +34,9 @@ class Controller
 
     /**
      * Redirige vers une autre page
-     * @param {String} le controlleur+action auquel accéder
-     * @param {Boolean} si le paramètre précédent est une adresse et pas un controlleur
-     **/
+     * @param string $controlleur : l'URL interne sous la forme controlleur/fonction à laquelle accéder
+     * @param bool $adresse : [OPT] VRAI si le paramètre précédent est une adresse externe, FAUX par défaut
+     */
     public static function redirect($controlleur = "", $adresse = false)
     {
         if (strpos($controlleur, '://') === false) {
@@ -52,7 +48,11 @@ class Controller
         exit;
     }
 
-    public function getUrlSaved()
+    /**
+     * Retourne l'URL gardé en mémoire lors de l'expiration de la session
+     * @return string : L'URL
+     */
+    protected function getUrlSaved()
     {
         $url = '';
         //Récupération de la page enregistrée
@@ -73,32 +73,29 @@ class Controller
         return $url;
     }
 
-/* *****************
-* Base de données *
-***************** */
     /**
-     * @return DbConnection|DbConnectionMysql|\FMUP\Db
+     * @return DbConnectionMssql|DbConnectionMysql|\FMUP\Db
      */
     public function getDb()
     {
         if (!$this->db_connection) {
             $param = Config::parametresConnexionDb();
             switch ($param['driver']) {
-                case 'mysql':
-                    $this->db_connection = DbHelper::get($param);
-                    break;
                 case 'mssql':
                     $this->db_connection = DbHelper::get($param);
                     break;
+                case 'mysql':
+                    $this->db_connection = DbHelper::get($param);
+                    break;
                 default:
-                    new Error('Moteur de base de données non paramétré');
+                    new Error('Moteur de base de donnée non paramétré');
             }
         }
         return $this->db_connection;
     }
 
     /**
-     * @param DbConnection|DbConnectionMysql|\FMUP\Db $dbConnection
+     * @param DbConnectionMssql|DbConnectionMysql|\FMUP\Db $dbConnection
      * @return Controller
      */
     public function setDb($dbConnection)
@@ -107,72 +104,45 @@ class Controller
         return $this;
     }
 
-/* **************************************************
-* Gestion des flash (messages d'une page à l'autre *
-************************************************** */
     /**
-     * Affecte un message qui sera transmis à la page suivante
-     * @param {String} $message Le message à transmettre
+     * Affecte un message qui sera transmis à la page suivante (sauvergardé en session)
+     * @param string $message : Le message à transmettre
      */
-    public static function setFlash($flash, $erreur = false)
+    public static function setFlash($flash)
     {
-        $_SESSION['flash'] = $flash;
-        // Couleur du flash
-        if ($erreur == true) {
-            $_SESSION['class_flash'] = "erreur";
-        }
+        \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message($flash));
     }
 
     /**
      * Renvoie le message envoyé par la dernière page
+     * @return string : Le message
      */
     public static function getFlash()
     {
-        $flash = '';
-        if (isset($_SESSION['flash'])) {
-            $flash = $_SESSION['flash'];
-        }
-        return $flash;
+        return \FMUP\FlashMessenger::getInstance()->get();
     }
+    
     /**
-     * Renvoie la classe du dernier message flash
-     */
-    public static function getClassFlash()
-    {
-        $class = '';
-        if (isset($_SESSION['class_flash'])) {
-            $class = $_SESSION['class_flash'];
-        }
-        return $class;
-    }
-    /**
-     * Efface le message de la dernière page
+     * Efface le message sauvegardé en session
      */
     public static function clearFlash()
     {
-        unset($_SESSION['flash']);
-        unset($_SESSION['class_flash']);
+        return \FMUP\FlashMessenger::getInstance()->clear();
     }
 
-/* *********************
-* Pré et post filtres *
-***********************/
     /**
-     * Filtre exécuté avant chaque accès au controlleur.
+     * Fonction exécutée avant chaque accès au controlleur.
      */
     public function preFiltre($calledAction)
     {
+        // Si l'application nécéssite une connexion on vérifie les droits
         if (call_user_func(array(APP, "hasAuthentification"))) {
             $this->authorize($calledAction);
         }
     }
 
-    public function getDroits()
-    {
-        return $this -> droits;
-    }
     /**
-     * Filtre exécuté éventuellement après accès au controlleur.
+     * Fonction exécutée éventuellement après accès au controlleur.
      * Contrairement au préfiltre il n'est pas toujours exécuté.
      * (En cas de redirection dans le controlleur, de die(), d'erreur, ...)
      */
@@ -182,11 +152,8 @@ class Controller
         Controller::clearFlash();
     }
 
-/* ******************
-* Authentification *
-****************** */
     /**
-     * Fonction validant l'accès au site backend (utilisateur enregistré et tout et tout).
+     * Fonction validant l'accès au site en vérifiant les droits et la connexion de l'utilisateur courant
      */
     private function authorize($calledAction = null)
     {
@@ -195,8 +162,6 @@ class Controller
         global $sys_directory;
 
         $calledAction = $calledAction === null ? $sys_function : $calledAction;
-
-        DroitHelperApplication::authorize($sys_controller, $calledAction, $sys_directory);
-
+        DroitHelperApplication::authorizeRead($sys_controller, $calledAction, $sys_directory);
     }
 }
