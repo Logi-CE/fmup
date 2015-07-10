@@ -1,6 +1,8 @@
 <?php
 /**
- * Classe permettant d'inclure une bibliothèque PHP
+ * Class Component - used to load a 'lib' library. You might want to use composer
+ * @deprecated
+ * @see composer
  */
 class Component
 {
@@ -19,7 +21,7 @@ class Component
      **/
     public function __construct($composant, $variable_nom = "tmp", $variable_valeur = null, $silent = false)
     {
-        $this->component = BASE_PATH."/lib/$composant.php";
+        $this->component = __DIR__."/component/$composant.php";
 
         $$variable_nom = $variable_valeur;
 

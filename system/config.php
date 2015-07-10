@@ -106,9 +106,9 @@ class Config extends ConfigApplication
             * Le fichier config_test.ini (placé au même endroit que config.ini) sera alors chargé à la place
             */
             if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'phpunit') {
-                $nom_fichier_config = 'config_test.ini';
+                $nom_fichier_config = 'config_test.php';
             } else {
-                $nom_fichier_config = 'config.ini';
+                $nom_fichier_config = 'config.php';
             }
             if (file_exists(dirname(__FILE__) . '/../' . $nom_fichier_config)) {
                 include_once(dirname(__FILE__) . '/../' . $nom_fichier_config);
