@@ -541,10 +541,8 @@ abstract class Model
                         $infos_suppression
                         WHERE id = ".$this->id;
                 if (Model::getDb()->execute($SQL)) {
-                    Controller::setFlash(Constantes::getMessageFlashSuppressionOk());
                     return true;
                 } else {
-                    Controller::setFlash(Constantes::getMessageFlashErreurSuppression(), 1);
                     return false;
                 }
             // Cas de la suppression physique
@@ -554,15 +552,12 @@ abstract class Model
                 $SQL = "DELETE FROM $table WHERE id = ".$this->id;
                 if (Model::getDb()->execute($SQL)) {
                     $this->id = "";
-                    Controller::setFlash(Constantes::getMessageFlashSuppressionOk());
                     return true;
                 } else {
-                    Controller::setFlash(Constantes::getMessageFlashErreurSuppression(), 1);
                     return false;
                 }
             }
         } else {
-            Controller::setFlash(Constantes::getMessageFlashBlocageSuppression(), 1);
             return false;
         }
     }
