@@ -29,6 +29,16 @@
         <phingcall target="pdepend" />
     </target>
     
+        <target name="phpunit">
+        <phpunit haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir="${project.basedir}/tests">
+                    <include name="*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+    
     <target name="phpcs">
         <phpcodesniffer standard="PSR2">
             <fileset dir="${project.basedir}/">
@@ -51,17 +61,7 @@
             </fileset>
         </phpdoc2>
     </target>
-    
-    <target name="phpunit">
-        <phpunit haltonfailure="true" printsummary="true">
-            <batchtest>
-                <fileset dir="${project.basedir}/tests">
-                    <include name="*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
-    </target>
-       
+           
     <target name="phpmd">
         <phpmd file="${project.basedir}/lib">
             <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
@@ -83,25 +83,6 @@
     <target name="phploc">
         <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/lib'" escape="false" />
         <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/fmu-phploc.csv' '${project.basedir}/system'" escape="false" />
-    </target>
-       
-    <target name="phpdoc">
-        <phpdoc title="API Documentation"
-                destdir="${project.basedir}/build/api"
-                sourcecode="false"
-                output="HTML:Smarty:PHP">
-            <fileset dir="${project.basedir}/">
-                <include name="lib/**/*.php"/>
-                <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
-            </fileset>
-            <projdocfileset dir=".">
-                <include name="composer.json"/>
-                <include name="lib/README.txt"/>
-                <include name="lib/RELEASENOTE.txt"/>
-            </projdocfileset>
-        </phpdoc>
     </target>
     
     <target name="pdepend">
