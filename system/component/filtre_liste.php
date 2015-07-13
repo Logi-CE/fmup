@@ -65,6 +65,10 @@ class FiltreListe
      */
     protected $options_supplementaires = array();
     /**
+     * Requête spécifique
+     */
+    protected  $requete_specifique = "";
+    /**
      * Tableau de filtres supplémentaires placés au dessus de la liste. Ce tableau accepte :
      *         - libelle : Libellé affiché pour le filtre
      *         - nom : Nom du champ recherché
@@ -576,6 +580,9 @@ class FiltreListe
                 $select[$this->clef] = $this->clef;
             }
             $tableau_objets = call_user_func(array($this->classe, $this->fonction_listage), $select, $filtre, $options);
+        } elseif ($this->requete_specifique) {
+            $classe = $this->classe;
+            $tableau_objets = $classe::executerRequeteSpecifique($this->requete_specifique, $filtre, $options);
         } else {
             $tableau_objets = call_user_func(array($this->classe, $this->fonction_listage), $filtre, $options);
         }
@@ -778,6 +785,7 @@ class FiltreListe
                         $instance->champHTML['titre'] = false;
                     }
                     break;
+                case 'html':
                 case 'image':
                     // Rien
                     break;
@@ -811,6 +819,9 @@ class FiltreListe
             // Cas d'une requête MySQL utilisant le findAll, le résultat total de la dernière requête exécutée est dans l'attribut $nb_elements du Model
             } elseif (!empty(Model::$nb_elements)) {
                 $nb_objets = Model::$nb_elements;
+            // Cas d'une requête spécifique : on prend le nombre d'éléments du tableau d'objets
+            } elseif ($this->requete_specifique) {
+                $nb_objets = count($tableau_objets);
             // Sinon on utilise la fonction count de l'objet lui même, en réutilisant les filtres
             } elseif (method_exists($this->classe, 'count')) {
                 $nb_objets = call_user_func(array($this->classe, 'count'), $filtre);
