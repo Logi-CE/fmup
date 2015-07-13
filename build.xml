@@ -33,7 +33,8 @@
         <phpunit haltonfailure="true" printsummary="true">
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
-                    <include name="*Test.php"/>
+                  <include name="**/*.php"/>
+                  <include name="*.php"/>
                 </fileset>
             </batchtest>
         </phpunit>
