@@ -30,21 +30,28 @@
     </target>
     
     <target name="phpunit">
-        <phpunit haltonfailure="true" printsummary="true">
+        <coverage-setup database="${project.basedir}/build/coverage/database">
+            <fileset dir="${project.basedir}/">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
+        </coverage-setup>
+
+        <phpunit haltonfailure="true" printsummary="true" codecoverage="true" haltonerror="true" haltonincomplete="true" haltonskipped="true">
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
                   <include name="**/*.php"/>
                   <include name="*.php"/>
                 </fileset>
             </batchtest>
-            <logging>
-              <log type="coverage-html" target="${project.basedir}/build/coverage" title="FMUP"
-                   charset="UTF-8" yui="true" highlight="true"
-                   lowUpperBound="35" highLowerBound="70"/>
-              <log type="coverage-clover" target="${project.basedir}/build/logs/clover.xml"/>
-              <log type="junit" target="${project.basedir}/build/logs/junit.xml" logIncompleteSkipped="false"/>
-          </logging>
+            <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml"></formatter>
         </phpunit>
+
+        <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
+            <report styleDir="${project.basedir}/build/coverage/report/style" toDir="${project.basedir}/build/coverage/report/" />
+        </coverage-report>
     </target>
     
     <target name="phpcs">
