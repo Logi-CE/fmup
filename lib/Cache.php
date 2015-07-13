@@ -29,8 +29,8 @@ class Cache
     }
 
     /**
-     * @param $instanceKey
-     * @return mixed
+     * @param string $instanceKey
+     * @return $this
      */
     public static function getInstance($instanceKey)
     {

@@ -2,10 +2,10 @@
 namespace FMUP;
 
 /**
- * Retrieve FMUP Version
- * @package FMUP
+ * Class ProjectVersion
+ * @package LogiCE
  */
-class Version
+class ProjectVersion
 {
     static private $instance;
     private $structure;
@@ -46,13 +46,18 @@ class Version
         return $this->getStructure()->version;
     }
 
+    public function name()
+    {
+        return $this->getStructure()->name;
+    }
+
     /**
-     * Get composer json path
+     * Return composer.json path to project
      * @return string
      */
     protected function getComposerPath()
     {
-        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'composer.json'));
+        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', 'composer.json'));
     }
 
     /**
