@@ -1,6 +1,10 @@
 <?php
 /**
  * Classe d'erreur pour les pages non trouvés
+ * @author afalaise
+ * @version 1.0
+ * @deprecated use \FMUP\Exception\Status\NotFound instead
+ * @see \FMUP\Exception\Status\NotFound
  */
 class NotFoundError extends Error
 {

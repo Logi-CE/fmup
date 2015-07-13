@@ -1,6 +1,9 @@
 <?php
 /**
- * Classe de identifiant le comportement de l'application en cas d'erreur
+ * Classe gérant le comportement de l'application en cas d'erreur
+ * Elle est etendue d'Exception et est donc appelée lorsqu'une erreur survient
+ * @author afalaise
+ * @version 1.0
  */
 class Error extends Exception
 {
@@ -54,7 +57,7 @@ class Error extends Exception
     }
 
     /**
-     * Fonction déterminant les erreurs bloquantes
+     * Fonction déterminant les niveaux d'erreurs bloquants
      */
     protected function estBloquante ()
     {
@@ -62,6 +65,12 @@ class Error extends Exception
         return (in_array($this->code, array(E_PARSE, E_ERROR, E_USER_ERROR)));
     }
 
+    /**
+     * Fonction envoyant un mail d'erreur au support avec l'URL et le contenu des données utilisées
+     * Ce mail est véritablement envoyé si la limitation du nombre par minute est activée et n'a pas été dépassée
+     * @param string $corps : Les données de debug sous forme de texte
+     * @return bool : VRAI si le mail est envoyé
+     */
     protected function envoyerMail($corps)
     {
         // Gestion de la limitation des mails d'erreur
@@ -72,32 +81,18 @@ class Error extends Exception
                 return false;
             }
         }
-        
+
         $mail = new PHPMailer();
-        if (Config::smtpServeur() != 'localhost') {
-            $mail->IsSMTP();
-        }
-        $mail->CharSet = "UTF-8";
-        $mail->SMTPAuth   = Config::smtpAuthentification();
-        $mail->SMTPSecure = Config::smtpSecure();
-
-        $mail->Host   = Config::smtpServeur();
-        $mail->Port   = Config::smtpPort();
-
-        if (Config::smtpAuthentification()) {
-            $mail->Username   = Config::smtpUsername();     // Gmail identifiant
-            $mail->Password   = Config::smtpPassword();		// Gmail mot de passe
-        }
-
-        $mail->From       = Config::mailRobot();
-        $mail->FromName   = Config::erreurMailFromName();
+        $mail = EmailHelper::parametrerHeaders($mail);
+        $mail->From       = Config::paramsVariables('mail_robot');
+        $mail->FromName   = Config::paramsVariables('mail_robot_name');
         $mail->Subject    = '[Erreur '.$this->type_erreur[$this->code].'] '.$_SERVER['SERVER_NAME'];
         $mail->AltBody    = $corps;
         $mail->WordWrap   = 50; // set word wrap
 
-        $mail->Body = $corps;
+        $mail->Body       = $corps;
 
-        $recipients = Config::mailSupport();
+        $recipients       = Config::paramsVariables('mail_support');
         if (strpos($recipients, ',') === false) {
              $mail->AddAddress($recipients, "Support");
         } else {
@@ -110,6 +105,11 @@ class Error extends Exception
         return $mail->Send();
     }
 
+    /**
+     * Fonction gérant la limitation d'envoi du nombre de mail par minute
+     * Elle enregistre ce nombre dans la table compteur_mail
+     * @return array : Le nombre de mail déjà envoyés (nb_mails) et la date courante (date_envoi)
+     */
     protected function incrementerCompteur ()
     {
         switch ($this->code) {
@@ -143,7 +143,11 @@ class Error extends Exception
         return $resultat;
     }
 
-    public function tracerErreur()
+    /**
+     * Génère un texte contenant l'arborescence de l'erreur, les variables utilisées, postées et en session
+     * @return string : Le texte
+     */
+    public function tracerErreur ()
     {
         Console::enregistrer(array('fichier' => $this->fichier, 'ligne' => $this->ligne, 'erreur' => 'Erreur ['.$this->type_erreur[$this->code].'] : '.$this->message), LOG_ERREUR);
 
@@ -163,10 +167,11 @@ class Error extends Exception
         print_r($_POST);
         echo "</pre><br/>";
         echo "État des variables SESSION lors de l'erreur :<pre>";
-        if(isset($_SESSION['id_utilisateur']))		print_r($_SESSION['id_utilisateur']);
-        if(isset($_SESSION['id_historisation']))	print_r($_SESSION['id_historisation']);
-        if(isset($_SESSION['id_menu_en_cours']))	print_r($_SESSION['id_menu_en_cours']);
-        if(isset($_SESSION['droits_controlleurs']))	print_r($_SESSION['droits_controlleurs']);
+        $session = $_SESSION;
+        if (isset($session['filtre_liste'])) {
+            unset($session['filtre_liste']);
+        }
+        print_r($session);
         echo "</pre><br/>";
         echo "État des variables HTTP lors de l'erreur :<pre>";
         $http_variable['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
@@ -193,6 +198,10 @@ class Error extends Exception
                         foreach ($trace['args'] as $name => $arg) {
                             if (is_array($arg)) {
                                 $arguments[] = 'Array';
+                            } elseif (is_object($arg)) {
+                                $arguments[] = 'Object';
+                            } elseif (is_resource($arg)) {
+                                $arguments[] = 'Ressource';
                             } else {
                                 if (is_string($arg)) {
                                     $arg = '"'.$arg.'"';
@@ -221,6 +230,10 @@ class Error extends Exception
                             foreach ($trace['args'] as $name => $arg) {
                                 if (is_array($arg)) {
                                     $arguments[] = 'Array';
+                                } elseif (is_object($arg)) {
+                                    $arguments[] = 'Object';
+                                } elseif (is_resource($arg)) {
+                                    $arguments[] = 'Ressource';
                                 } else {
                                     if (is_string($arg)) {
                                         $arg = '"'.$arg.'"';
@@ -361,18 +374,25 @@ class Error extends Exception
         return "Liaison au serveur LDAP impossible : ".$erreur;
     }
     /**
-     * Bind de l'utilisateur au LDAP impossible
+     * Ajout de l'entrée LDAP impossible
      */
     public static function erreurAjoutEntreeLdap($erreur)
     {
         return "Erreur lors de l'ajout d'une entrée LDAP : ".$erreur;
     }
     /**
-     * Bind de l'utilisateur au LDAP impossible
+     * Modification de l'entrée LDAP impossible
      */
     public static function erreurModificationEntreeLdap($erreur)
     {
         return "Modification impossible : ".$erreur;
+    }
+    /**
+     * Suppression de l'entrée LDAP impossible
+     */
+    public static function erreurSuppressionEntreeLdap($erreur)
+    {
+        return "Suppression impossible : ".$erreur;
     }
     /**
      * Erreur inconnue

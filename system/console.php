@@ -7,6 +7,12 @@ define('LOG_STATS', 5);
 define('LOG_CONNEXION', 6);
 define('LOG_PARAMS', 7);
 
+/**
+ * Classe de debogage grâce à un affichage de logs sur le coté du site
+ * Elle se sert de variables de session
+ * @author afalaise
+ * @version 1.0
+ */
 class Console
 {
     static public $statut_console = 'eteinte';
@@ -23,6 +29,9 @@ class Console
         , 'params'		=> 'les variables globales'
     );
 
+    /**
+     * Fonctino d'initialisation de la console suivant les différents paramètres enregistrés
+     */
     public static function initialiser ()
     {
         if (Config::consoleActive()) {
@@ -55,7 +64,7 @@ class Console
             }
             if (isset($_SESSION)) {
                 foreach ($_SESSION as $index => $valeur) {
-                    if ($index != 'console' && $index != 'statut_console' && $index != 'option_console_params') {
+                    if ($index != 'console' && $index != 'statut_console' && $index != 'option_console_params' && $index != 'filtre_liste') {
                         $params['SESSION'][$index] = $valeur;
                     }
                 }
@@ -68,6 +77,11 @@ class Console
         }
     }
 
+    /**
+     * Fonction enregistrant un log à afficher
+     * @param mixed $message : Le texte ou la variable à afficher
+     * @param int $type : [OPT] Le type de log, par défaut log de type standard (2)
+     */
     public static function enregistrer ($message, $type = LOG_VARIABLE)
     {
         if (Config::consoleActive() && self::$statut_console != 'eteinte') {
@@ -102,6 +116,9 @@ class Console
         }
     }
 
+    /**
+     * Fonction d'affichage des données dans la console
+     */
     public static function afficher ()
     {
         if (!empty($_SESSION['console'])) {
@@ -148,7 +165,7 @@ class Console
                             . '<br/>'
                             . preg_replace(
                                 array('#(SELECT|UPDATE|INSERT|INTO|DELETE|FROM|INNER|JOIN|LEFT|ASC|DESC|WHERE|ORDER BY|GROUP BY|TOP|ISNULL|YEAR|MONTH|IDENTITY|'.
-                                                        'IFNULL|AND |MIN|MAX|COUNT|SUM|ON |IN |OR |IS |NOT |NULL|null|CONCAT|GROUP_CONCAT|HAVING|'.
+                                                        'IFNULL|AND |MIN|MAX|COUNT|SUM|ON |IN |OR |IS |NOT |NULL|null|CONCAT|GROUP_CONCAT|HAVING|BETWEEN|'.
                                                         'CASE|WHEN|THEN|ELSE|END|AS |SEPARATOR|SQL_CALC_FOUND_ROWS|LIMIT|DISTINCT|CURRENT_TIMESTAMP|CURRENT_DATE|'.
                                                         'DATE_FORMAT|IF\(|UNION|FOUND_ROWS|NOW|INTERVAL|DAY|MONTH|MINUTE|SECOND|VALUES|SET|LIKE|DATE_ADD)#'),
                                 '<span style="color: blue;">$1</span>',
@@ -196,7 +213,24 @@ class Console
             }
         }
     }
+    
+    /**
+     * Calcule la mémoire consommée par la console
+     * @return string : La mémoire consomée
+     */
+    public static function compterTailleConsole ()
+    {
+        $debut = memory_get_usage();
+        $variable = unserialize(serialize($_SESSION['console']));
+        $taille = memory_get_usage() - $debut;
+        unset($variable);
+        
+        return round($taille / 1024 / 1024, 3).'Mo';
+    }
 
+    /**
+     * Fonction lançant un chronomètre
+     */
     public static function demarrerCompteur ()
     {
         if (Config::consoleActive() && self::$statut_console != 'eteinte') {
@@ -205,6 +239,10 @@ class Console
         }
     }
     
+    /**
+     * Fonction stoppant le chronomètre et enregistrant le résultat dans la console
+     * @param string $message : Méssage associé
+     */
     public static function arreterCompteur ($message = 'Durée enregistrée')
     {
         if (Config::consoleActive() && self::$statut_console != 'eteinte') {
@@ -216,6 +254,9 @@ class Console
         }
     }
 
+    /**
+     * Fonction vidant toutes les données enregistrées dans la console
+     */
     public static function vider ()
     {
         if (isset($_SESSION['console'])) {
@@ -224,6 +265,9 @@ class Console
         }
     }
 
+    /**
+     * Fonction exécutée à la fin du script pour indiquer le temps et la mémoire totale consommée
+     */
     public static function finaliser ()
     {
         if (Config::consoleActive() && self::$statut_console != 'eteinte') {

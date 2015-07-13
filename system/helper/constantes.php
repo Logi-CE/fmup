@@ -1,7 +1,8 @@
 <?php
 /**
  * Définit un jeu de constantes pour le site
- **/
+ * @version 1.0
+ */
 class Constantes extends ConstantesApplication
 {
     public static function getMessageErreurApplication ()
@@ -35,61 +36,13 @@ class Constantes extends ConstantesApplication
     }
 
     /**
-     * Message quand il n'y a pas d'éléments dans une ligne
+     * Message affiché quand il n'y a pas d'éléments dans une ligne
+     * @return string : Le message
      */
-    public static function messageListeVide($colspan = 5)
+    public static function messageListeVide ()
     {
-        return '<tr class="pas_de_resultats"><td colspan="'.$colspan.'">Pas de résultats</td></tr>';
+        return 'Pas de résultats';
     }
-    /**
-     * Paging
-     * @return Nb d'éléments par page
-     */
-    public static function getNbMaxPage ()
-    {
-        // 08/01/10 : par défaut : 14, modification pour adaptation à une résolution de 1024*768
-        return 10;
-    }
-
-    /**
-     * Paging
-     * @return Nb d'éléments par page
-     */
-    public static function getNbMaxPageGrosseListe ()
-    {
-        return 18;
-    }
-
-    /*
-     * Retourne l'adresse email de contact du site
-     */
-    public static function emailInfo()
-    {
-        return "mailto:'shuet@castelis.com'";
-    }
-    /*
-     * Retourne l'adresse email de contact du site
-     */
-    public static function siteWeb()
-    {
-        return '';
-    }
-    /**
-     * Message indiquant un nombre maximum de caractères autorisés
-     */
-    public static function messageNbMaxCaracteres($nb_max)
-    {
-        return $nb_max." caractères maximum";
-    }
-
-    /**
-     * nombre de caractères maximum affichés dans les colonnes des listes
-     */
-    public static function getNbCaracteresMax()
-    {
-        return 20;
-    }
-    
     
     public static function getMessageFlashInsertionOk ()
     {
@@ -119,16 +72,45 @@ class Constantes extends ConstantesApplication
     {
         return "Suppression non autorisée";
     }
-
-    /* **********************************
-    * logue des changement dans la BDD *
-    ********************************** */
-    public static function getTablesALoguer()
+    /**
+     * Message présent dans les fonctions de droits, indiquant que l'utilisateur n'a pas les droits suffisants
+     * @return string : Le message
+     */
+     public static function getMessageDroitsInsuffisants ()
     {
-        return array_map(create_function('$i', 'return String::toCamlCase($i);'), array(
-            'Documents',
-            'utilisateur'
-        ));
+        return "Vous n'avez pas les droits suffisants pour accéder à cette page.";
+    }
+    /**
+     * Message présent dans les fonctions de droits, indiquant que l'utilisateur doit se connecter
+     * @return string : Le message
+     */
+    public static function getMessageConnexionNecessaire ()
+    {
+        return "Vous devez vous connecter avant d'accèder à cette zone";
+    }
+    
+    public static function getMessageMailOubliEnvoye ()
+    {
+        return 'Nous avons bien pris en compte votre demande. Vous allez recevoir un mail de réinitialisation.::Réinitialisation::ok';
+    }
+    
+    public static function getMessageDeconnexion ()
+    {
+        return "Vous avez bien été déconnecté.::Déconnexion::ok";
+    }
+    
+    public static function getMessageErreurConnexion ()
+    {
+        return "Erreur lors de l'authentification::Erreur::alerte";
+    }
+    
+    public static function imageOui ()
+    {
+        return '<span class="fa fa-check-circle fa-lg" style="color: limegreen;"></span>';
+    }
+    public static function imageNon ()
+    {
+        return '<span class="fa fa-minus-circle fa-lg" style="color: red;"></span>';
     }
 
     /**************
@@ -155,7 +137,7 @@ class Constantes extends ConstantesApplication
         }
         return $tableau;
     }
-    public static function getTableauminutes ()
+    public static function getTableauMinutes ()
     {
         $tableau = array();
         for ($m = 0; $m < 60; $m++) {
@@ -178,5 +160,43 @@ class Constantes extends ConstantesApplication
     public static function getCiviliteMr()
     {
         return 3;
+    }
+    
+    public static function getNombreMinutesExpirationMotPasse ()
+    {
+        return 30;
+    }
+    
+    public static function getNombreCaractereMinimumMotPasse ()
+    {
+        return 6;
+    }
+    
+    /**
+     * Durée en minutes avant de déclarer le blocage du jeton utilisé
+     */
+    public static function getDureeAvantBlocageCron ()
+    {
+        return 60;
+    }
+    
+    public static function getEtatCronLibre ()
+    {
+        return 1;
+    }
+    
+    public static function getEtatCronOccupe ()
+    {
+        return 2;
+    }
+    
+    public static function getEtatCronBloque ()
+    {
+        return 3;
+    }
+    
+    public static function getEtatCronBloqueIndique ()
+    {
+        return 4;
     }
 }

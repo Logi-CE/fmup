@@ -91,30 +91,30 @@ class Error
         //require_once __DIR__ .'/../../../../lib/PHPMailer_v5.0.2/class.phpmailer.php';
 
         $mail = new \PHPMailer();
-        if (\Config::smtpServeur() != 'localhost') {
+        if (\Config::paramsVariables('smtp_serveur') != 'localhost') {
             $mail->IsSMTP();
         }
         $mail->CharSet = "UTF-8";
-        $mail->SMTPAuth   = \Config::smtpAuthentification();
-        $mail->SMTPSecure = \Config::smtpSecure();
+        $mail->SMTPAuth   = \Config::paramsVariables('smtp_authentification');
+        $mail->SMTPSecure = \Config::paramsVariables('smtp_secure');
 
-        $mail->Host   = \Config::smtpServeur();
-        $mail->Port   = \Config::smtpPort();
+        $mail->Host   = \Config::paramsVariables('smtp_serveur');
+        $mail->Port   = \Config::paramsVariables('smtp_port');
 
-        if (\Config::smtpAuthentification()) {
-            $mail->Username   = \Config::smtpUsername();     // Gmail identifiant
-            $mail->Password   = \Config::smtpPassword();		// Gmail mot de passe
+        if (\Config::paramsVariables('smtp_authentification')) {
+            $mail->Username   = \Config::paramsVariables('smtp_username');     // Gmail identifiant
+            $mail->Password   = \Config::paramsVariables('smtp_password');		// Gmail mot de passe
         }
 
-        $mail->From       = \Config::mailRobot();
-        $mail->FromName   = \Config::erreurMailFromName();
+        $mail->From       = \Config::paramsVariables('mail_robot');
+        $mail->FromName   = \Config::paramsVariables('erreur_mail_from_name');
         $mail->Subject    = '[Erreur] '.$_SERVER['SERVER_NAME'];
         $mail->AltBody    = $mailBody;
         $mail->WordWrap   = 50; // set word wrap
 
         $mail->Body = $mailBody;
 
-        $recipients = \Config::mailSupport();
+        $recipients = \Config::paramsVariables('mail_support');
         if (strpos($recipients, ',') === false) {
             $mail->AddAddress($recipients, "Support");
         } else {

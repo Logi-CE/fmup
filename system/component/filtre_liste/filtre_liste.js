@@ -11,12 +11,14 @@ function cocherTout (nom_classe, checkbox) {
 	});
 }
 
-// Petit timer pour �viter de charger trop souvent les appels
+// Petit timer pour éviter de charger trop souvent les appels
 function lancerFiltre (unique_id) {
 	if(timer){
 		clearTimeout(timer);
 		timer = null;
 	}
+	// Si on filtre on retourne sur la page 1
+	$('numero_page_' + unique_id).value = 1;
 	timer = setTimeout('filtre("' + unique_id + '")', 500);
 }
 
@@ -24,21 +26,45 @@ function lancerFiltre (unique_id) {
 function filtre(unique_id) {
 
 	$('div_filtre_liste_' + unique_id).innerHTML = '';
-	$('div_filtre_liste_' + unique_id).className = 'attente';
+	$('div_filtre_liste_' + unique_id).addClass('attente');
 
 	//on rend la main au navigateur pour lui laisser le temps d'afficher l'image d'attente et on lance la recherche
 	setTimeout('filtreTimer("' + unique_id + '")', 50);
+}
 
+function filtreTimer(unique_id){
+
+	new Request({
+		url: "/filtre_liste/liste/lister",
+		data: $('formulaire_filtre_' + unique_id),
+		evalScripts:true,
+		onSuccess: function(retour_ajax) {
+			$('div_filtre_liste_' + unique_id).removeClass('attente');
+			$('div_filtre_liste_' + unique_id).innerHTML = retour_ajax;
+			$('div_filtre_liste_' + unique_id).scrollLeft = $("div_filtre_entete_" + unique_id).scrollLeft;
+
+			currentUniqueId = unique_id;
+			memoIndiceCurrentColonne = -1;
+			redimensonneColonne(null,0);
+			appliquerApresFiltre(unique_id);
+		}
+	}).send();
+}
+
+//A réécrire si on en a besoin
+function appliquerApresFiltre(unique_id){
+	
 }
 
 function changerPage(unique_id) {
-	var page_actuelle = Fonctions.numerise($('numero_page_' + unique_id).value);
+	var page_actuelle = numerise($('numero_page_' + unique_id).value);
 	var nb_elements_par_ligne = parseInt($('top_' + unique_id).value);
 	var nb_elements_total = nb_elements_par_ligne;
 	if ($('nb_elements_total_' + unique_id)) {
 		nb_elements_total = parseInt($('nb_elements_total_' + unique_id).value);
 	}
 	var page_max = Math.ceil(nb_elements_total / nb_elements_par_ligne);
+	page_max = Math.max(page_max, 1);
 	if (isNaN(page_actuelle)) {
 		page_actuelle = 1;
 	} else if (page_actuelle <= 0) {
@@ -49,27 +75,11 @@ function changerPage(unique_id) {
 
 	$('numero_page_' + unique_id).value = page_actuelle;
 	
-	filtre(unique_id);
-}
-
-function filtreTimer(unique_id){
-
-	new Request({
-		url: "/filtre_liste/liste/lister",
-		data: $('formulaire_filtre_' + unique_id),
-		evalScripts:true,
-		onSuccess: function(retour_ajax) {
-			$('div_filtre_liste_' + unique_id).className = '';
-			$('div_filtre_liste_' + unique_id).innerHTML = retour_ajax;
-			$('div_filtre_liste_' + unique_id).scrollLeft = $("div_filtre_entete_" + unique_id).scrollLeft;
-
-			currentUniqueId = unique_id;
-			memoIndiceCurrentColonne = -1;
-			remplitTableauNomColonne(unique_id);
-			redimensonneColonne(null,0);
-		}
-	}).send();
-
+	if(timer){
+		clearTimeout(timer);
+		timer = null;
+	}
+	timer = setTimeout('filtre("' + unique_id + '")', 500);
 }
 
 function deplaceEnteteFiltre(unique_id){
@@ -93,7 +103,7 @@ function ajouteEventFiltre(unique_id, bouton_autoload){
 	$(bouton_autoload).onclick = function onclick(){
 									eval(js_onclick);
 									filtre(unique_id);
-								}
+								};
 
 }
 
@@ -114,15 +124,12 @@ function autoRedimensionneColonne(event,unique_id){
 	//memo de l'id du filtre
 	currentUniqueId = unique_id;
 
-	//colonne d�plac�e
+	//colonne déplacée
 	if(event.srcElement.id.indexOf("div_redimensionne_entete_colonne_") > -1){
 		currentColonne = event.srcElement.id.replace("div_redimensionne_entete_colonne_" + unique_id + "_","");
 	}else{
 		currentColonne = event.srcElement.id.replace("div_redimensionne_liste_colonne_" + unique_id + "_","");
 	}
-
-	//remplissage de la position et taille initiales de chaque colonne
-	remplitTableauNomColonne(unique_id);
 
 	var delta = 0;
 	memoIndiceCurrentColonne = 0;
@@ -164,43 +171,12 @@ function debutRedimensionneColonne(event,unique_id){
 	//memo de la position initiale de la souris
 	memoClickX = event.clientX;
 
-	//colonne d�plac�e
+	//colonne déplacée
 	if(event.srcElement.id.indexOf("div_redimensionne_entete_colonne_") > -1){
 		currentColonne = event.srcElement.id.replace("div_redimensionne_entete_colonne_" + unique_id + "_","");
 	}else{
 		currentColonne = event.srcElement.id.replace("div_redimensionne_liste_colonne_" + unique_id + "_","");
 	}
-
-	//remplissage de la position et taille initiales de chaque colonne
-	remplitTableauNomColonne(unique_id);
-
-}
-
-function remplitTableauNomColonne(unique_id){
-
-	if(currentUniqueId == "") return;
-
-	tableau_info_colonne = new Array();
-
-	//remplissage de la position et taille initiales de chaque colonne
-	var tableau_nom_colonne = $("liste_colonne_" + unique_id).value.split(",");
-	for(var i = 0; i < tableau_nom_colonne.length; i++){
-
-		var nom_colonne = tableau_nom_colonne[i].trim();
-		var tableau_temp = new Array();
-
-		tableau_temp["nom"] = nom_colonne;
-		tableau_temp["left"] = numerise($("div_entete_colonne_" + currentUniqueId + "_" + nom_colonne).style.left);
-		tableau_temp["width"] = numerise($("div_entete_colonne_" + currentUniqueId + "_" + nom_colonne).style.width);
-
-		tableau_info_colonne[i] = tableau_temp;
-
-		if(currentColonne == nom_colonne){
-			memoIndiceCurrentColonne = i;
-		}
-
-	}
-
 }
 
 function redimensonneColonne(event,p_delta){
@@ -210,7 +186,7 @@ function redimensonneColonne(event,p_delta){
 		if(currentUniqueId == "") return;
 		if(currentColonne == "") return;
 
-		//calcul du d�calage par rapport au click initial
+		//calcul du décalage par rapport au click initial
 		var delta = numerise(event.clientX - memoClickX);
 		var max_largeur = $("formulaire_filtre_" + currentUniqueId).offsetWidth;
 	}else{
@@ -260,11 +236,12 @@ function redimensonneColonne(event,p_delta){
 			}
 
 			//cas particulier pour ajuster les colonnes avec la meme largeur des entetes
-			//par exemple utile apr�s une recherche qui recherche la liste avec les largeurs par defaut
+			//par exemple utile après une recherche qui recherche la liste avec les largeurs par defaut
 			if(i > memoIndiceCurrentColonne){
-
-				$("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne).style.left = $("div_entete_colonne_" + currentUniqueId +  "_" + nom_colonne).style.left;
-				$("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne).style.width = $("div_entete_colonne_" + currentUniqueId +  "_" + nom_colonne).style.width;
+				if ($("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne)) {
+					$("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne).style.left = $("div_entete_colonne_" + currentUniqueId +  "_" + nom_colonne).style.left;
+					$("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne).style.width = $("div_entete_colonne_" + currentUniqueId +  "_" + nom_colonne).style.width;
+				}
 
 			}
 
@@ -283,7 +260,7 @@ function redimensonneColonne(event,p_delta){
 
 			}
 
-			//cas colonne apr�s
+			//cas colonne après
 			if(i > memoIndiceCurrentColonne){
 				if($("div_liste_colonne_" + currentUniqueId +  "_" + nom_colonne)){
 
@@ -360,20 +337,24 @@ function changeTri(unique_id, nom_champ){
 
 			//oui, changement de sens
 			if(tableau_temp[1] == "ASC"){
-				$("img_ordre_" + unique_id + "_" + nom_champ).src = "/images/filtre_liste/table_tri_desc.gif";
+				$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_asc');
+				$("img_ordre_" + unique_id + "_" + nom_champ).addClass('tri_desc');
 				tableau_old_tri[unique_id] = nom_champ + "#DESC";
 			}else{
-				$("img_ordre_" + unique_id + "_" + nom_champ).src = "/images/filtre_liste/table_tri.gif";
+				$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_asc');
+				$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_desc');
 				tableau_old_tri[unique_id] = null;
 			}
 
 		}else{
 
-			//non, on reset l'ancien champs
-			$("img_ordre_" + unique_id + "_" + tableau_temp[0]).src = "/images/filtre_liste/table_tri.gif";
+			//non, on reset l'ancien champ
+			$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_asc');
+			$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_desc');
 
 			//premier tri, ordre croissant
-			$("img_ordre_" + unique_id + "_" + nom_champ).src = "/images/filtre_liste/table_tri_asc.gif";
+			$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_desc');
+			$("img_ordre_" + unique_id + "_" + nom_champ).addClass('tri_asc');
 			tableau_old_tri[unique_id] = nom_champ + "#ASC";
 
 		}
@@ -382,7 +363,8 @@ function changeTri(unique_id, nom_champ){
 	}else{
 
 		//premier tri, ordre croissant
-		$("img_ordre_" + unique_id + "_" + nom_champ).src = "/images/filtre_liste/table_tri_asc.gif";
+		$("img_ordre_" + unique_id + "_" + nom_champ).removeClass('tri_desc');
+		$("img_ordre_" + unique_id + "_" + nom_champ).addClass('tri_asc');
 		tableau_old_tri[unique_id] = nom_champ + "#ASC";
 
 	}
@@ -400,15 +382,11 @@ function changeTri(unique_id, nom_champ){
 /*
  * fonction qui gère le fait que toute la ligne se mette en surbrillance, lorsqu'on passe la souris dessus (hover)
  */
-function gestionHoverLigne(num_ligne, classe_forcee){
-	var liste_id = document.getElementById("num_ligne_"+num_ligne).value;
-	tmp = liste_id.split(",");
-	for (var i=0; i<tmp.length; i++) {
-		if(document.getElementById("case_"+tmp[i].trim())){
-			document.getElementById("case_"+tmp[i].trim()).style.backgroundcolor = classe_forcee;
-			//console.log(tmp[i]);
-		}
-	}
+function surlignerLigne (unique_id, num_ligne) {
+	$$('#formulaire_filtre_' + unique_id + ' div.ligne_' + num_ligne).addClass('ligne_hover');
+}
+function libererLigne (unique_id, num_ligne) {
+	$$('#formulaire_filtre_' + unique_id + ' div.ligne_' + num_ligne).removeClass('ligne_hover');
 }
 
 
@@ -421,7 +399,7 @@ function exportXLS(unique_id){
 	formulaire.style.display = "none";
 	$$("body").adopt(formulaire);
 
-	$$("#formulaire_filtre_" + unique_id + " input").each(function(el){
+	$$("#formulaire_filtre_" + unique_id + " input, #formulaire_filtre_" + unique_id + " select").each(function(el){
 		var input = document.createElement('input');
 		input.name = el.name;
 		input.value = el.value;
@@ -442,7 +420,7 @@ function filtreListePageSuivante(UniqueId){
 	var numero_page = numerise($("numero_page_" + UniqueId).value);
 	numero_page++;
 	$("numero_page_" + UniqueId).value = numero_page;
-	filtreTimer(UniqueId);
+	filtre(UniqueId);
 	
 }
 
@@ -452,6 +430,6 @@ function filtreListePagePrecedente(UniqueId){
 	numero_page--;
 	numero_page = Math.max(1,numero_page);
 	$("numero_page_" + UniqueId).value = numero_page;
-	filtreTimer(UniqueId);
+	filtre(UniqueId);
 	
 }

@@ -1,54 +1,76 @@
 <?php
+
+/**
+ * Classe enregistrant les différentes actions des utilisateurs
+ * @author shuet
+ */
 class HistoriqueHelper
 {
+
+    /**
+     * @param $directory
+     * @param $controller
+     * @param $function
+     * @param string $commentaire
+     * @return bool
+     * @deprecated see self::stockageHistoriqueNavigation
+     * @see self::stockageHistoriqueNavigation
+     */
+    public static function stocakgeHistoriqueNavigation($directory, $controller, $function, $commentaire = '')
+    {
+        return self::stockageHistoriqueNavigation($directory, $controller, $function, $commentaire);
+    }
 
     /*
      * Fonction de stockage en BDD de l'historique de navigation de tous les utilisateurs
      * avec possibilité d'y ajouter un commentaire au besoin.
      *
      * cette focntion n'ai lancée que si la config est paramétrée pour.
-     *
+     * @param string $directory
+     * @param string $controller
+     * @param string $function
+     * @param string $commentaire
      */
     public static function stockageHistoriqueNavigation($directory, $controller, $function, $commentaire = '')
     {
         if (Config::paramsVariables('historisation_navigation')) {
-	        $id_utilisateur='';
-	        $nature_id='';
-	        if(isset($_SESSION['id_utilisateur']))   $id_utilisateur=$_SESSION['id_utilisateur'];
-	        if(isset($_SESSION['nature_id']))        $nature_id=$_SESSION['nature_id'];
+            $id_utilisateur = '';
+            $nature_id = '';
+            if (isset($_SESSION['id_utilisateur'])) $id_utilisateur = $_SESSION['id_utilisateur'];
+            if (isset($_SESSION['nature_id'])) $nature_id = $_SESSION['nature_id'];
 
-	        $format = 'US';
-	        $temp = Config::parametresConnexionDb();
-	        if ($temp['driver'] == 'mssql') {
-	            $format = 'FR';
-	        }
+            $format = 'US';
+            $temp = Config::parametresConnexionDb();
+            if ($temp['driver'] == 'mssql') {
+                $format = 'FR';
+            }
 
-	        $sql = "INSERT INTO historique_navigation
-	                    (url,
-	                    sys_directory,
-	                    sys_controller,
-	                    sys_function,
-	                    id_utilisateur_connecte,
-	                    adresse_ip,
-	                    adresse_host,
-	                    date,
-	                    commentaire)
-	                VALUES (
-	                    ".Sql::secure($_SERVER['REQUEST_URI']).",
-	                    ".Sql::secure($directory).",
-	                    ".Sql::secure($controller).",
-	                    ".Sql::secure($function).",
-	                    ".Sql::secureId($id_utilisateur).",
-	                    ".Sql::secure($_SERVER["REMOTE_ADDR"]).",
-	                    ".Sql::secure(gethostbyaddr($_SERVER["REMOTE_ADDR"])).",
-	                    ".Sql::secureDate(Date::today(true, $format)).",
-	                    ".Sql::secure($commentaire)."
-	                )";
-	        //debug::output($controller);
-	        $controller = new Controller();
-	        $controller->getDb()->execute($sql);
-	        return true;
-        }else{
+            $sql = "INSERT INTO historique_navigation
+                      (url,
+                      sys_directory,
+                      sys_controller,
+                      sys_function,
+                      id_utilisateur_connecte,
+                      adresse_ip,
+                      adresse_host,
+                      date,
+                      commentaire)
+                  VALUES (
+                      " . Sql::secure($_SERVER['REQUEST_URI']) . ",
+                        " . Sql::secure($directory) . ",
+                        " . Sql::secure($controller) . ",
+                        " . Sql::secure($function) . ",
+                        " . Sql::secureId($id_utilisateur) . ",
+                        " . Sql::secure($_SERVER["REMOTE_ADDR"]) . ",
+                        " . Sql::secure(gethostbyaddr($_SERVER["REMOTE_ADDR"])) . ",
+                        " . Sql::secureDate(Date::today(true, $format)) . ",
+                        " . Sql::secure($commentaire) . "
+                    )";
+            //debug::output($controller);
+            $controller = new Controller();
+            $controller->getDb()->execute($sql);
+            return true;
+        } else {
             //la config de l'application ne permet pas d'historiser cette donnée
             return false;
         }
@@ -63,7 +85,7 @@ class HistoriqueHelper
      * 			 	- memoire (la mémoire serveur utilisée)
      * 			 	- resultat (nb lignes retournées)
      */
-    public static function logRequete($params = array(), $commentaire='')
+    public static function logRequete($params = array(), $commentaire = '')
     {
         /* REQUETE DE CREATION DE TABLE (SQL SERVEUR) :
 
@@ -87,10 +109,10 @@ class HistoriqueHelper
 
 
         // vérification des paramètres obligtaoire s
-        if(!isset($params['requete']))   return false;
-        if(!isset($params['duree']))     return false;
-        if(!isset($params['memoire']))   return false;
-        if(!isset($params['resultat']))  return false;
+        if (!isset($params['requete'])) return false;
+        if (!isset($params['duree'])) return false;
+        if (!isset($params['memoire'])) return false;
+        if (!isset($params['resultat'])) return false;
 
         if (Config::paramsVariables('historisation_requete')) {
 
@@ -99,53 +121,53 @@ class HistoriqueHelper
             $chaine_a_verifier[] = 'INSERT INTO historique_requetes';
             $chaine_a_verifier[] = 'INSERT INTO historique_navigation';
             $chaine_a_verifier[] = 'SELECT @@';
-            foreach($chaine_a_verifier as $texte){
-	            if(false===strpos($params['requete'], $texte)){
-	                // on continue !
-	            }else{
-	                // STOP !
-	                // on ne sauvegarde pas les requetes de sauvegarde de requete, sinon : boucle infinie !!!
-	                return false;
-	            }
+            foreach ($chaine_a_verifier as $texte) {
+                if (false === strpos($params['requete'], $texte)) {
+                    // on continue !
+                } else {
+                    // STOP !
+                    // on ne sauvegarde pas les requetes de sauvegarde de requete, sinon : boucle infinie !!!
+                    return false;
+                }
             }
 
-	        $id_utilisateur='';
-	        if(isset($_SESSION['id_utilisateur'])){
-	             $id_utilisateur=$_SESSION['id_utilisateur'];
-	        }
+            $id_utilisateur = '';
+            if (isset($_SESSION['id_utilisateur'])) {
+                $id_utilisateur = $_SESSION['id_utilisateur'];
+            }
 
             $format = 'US';
-	        $temp = Config::parametresConnexionDb();
-	        if ($temp['driver'] == 'mssql') {
-	            $format = 'FR';
-	        }
+            $temp = Config::parametresConnexionDb();
+            if ($temp['driver'] == 'mssql') {
+                $format = 'FR';
+            }
 
-	        $sql = "INSERT INTO historique_requetes
-	                    (requete,
-	                    temps_execution,
-	                    memoire_utilisee,
-	                    nb_lignes_retournees,
-	                    date_execution,
-	                    hostname,
-	                    url_appelle,
-	                    id_utilisateur_connecte,
-	                    commentaire)
-	                VALUES (
-	                    ".Sql::secure($params['requete']).",
-	                    ".Sql::secureDecimal($params['duree']).",
-	                    ".Sql::secureDecimal($params['memoire']).",
-	                    ".Sql::secureInteger($params['resultat']).",
-	                    ".Sql::secureDate(Date::today(true, $format)).",
-	                    ".Sql::secure($_SERVER['HTTP_HOST']).",
-	                    ".Sql::secure($_SERVER['REQUEST_URI']).",
-	                    ".Sql::secureId($id_utilisateur).",
-	                    ".Sql::secure($commentaire)."
-	                )";
+            $sql = "INSERT INTO historique_requetes
+                      (requete,
+                      temps_execution,
+                      memoire_utilisee,
+                      nb_lignes_retournees,
+                      date_execution,
+                      hostname,
+                      url_appelle,
+                      id_utilisateur_connecte,
+                      commentaire)
+                  VALUES (
+                      " . Sql::secure($params['requete']) . ",
+                        " . Sql::secureDecimal($params['duree']) . ",
+                        " . Sql::secureDecimal($params['memoire']) . ",
+                        " . Sql::secureInteger($params['resultat']) . ",
+                        " . Sql::secureDate(Date::today(true, $format)) . ",
+                        " . ((isset($_SERVER['HTTP_HOST'])) ? Sql::secure($_SERVER['HTTP_HOST']) : Sql::secure('CRON')) . ",
+                        " . ((isset($_SERVER['REQUEST_URI'])) ? Sql::secure($_SERVER['REQUEST_URI']) : Sql::secure('CRON')) . ",
+                        " . Sql::secureId($id_utilisateur) . ",
+                        " . Sql::secure($commentaire) . "
+                    )";
 
-	        $controller = new Controller();
-	        $controller->getDb()->execute($sql);
-	        return true;
-        }else{
+            $controller = new Controller();
+            $controller->getDb()->execute($sql);
+            return true;
+        } else {
             //la config de l'application ne permet pas d'historiser cette donnée
             return false;
         }

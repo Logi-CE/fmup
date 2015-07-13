@@ -1,4 +1,7 @@
 <?php
+/**
+ * Controleur gérant les retours AJAX de la console
+ */
 class CtrlConsole extends Controller
 {
     public function afficherConsole ()

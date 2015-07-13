@@ -1,6 +1,7 @@
 <?php
 /**
  * Définit les images pour le site
+ * @version 1.0
  **/
 class Images
 {
@@ -211,5 +212,37 @@ class Images
     public static function flecheHaut()
     {
         return "<img src='images/interface/fleche_h.png' alt='fleche' />";
+    }
+    
+    public static function help($title, $text, $class = '')
+    {
+        //replacement des < et > par des parentheses pour la validation w3c
+        $search = array ('<', '>');
+        $replace = array ('((', '))');
+        $text = str_replace($search, $replace, $text);
+        return <<<HTML
+    <img class="_blink tooltip $class" src="/images/lib/tooltips/help.png" alt="help" title="$title::$text" />
+HTML;
+    }
+    
+    public static function trois_points ($params)
+    {
+        $defaut_parametres = array('class'=>'trois_points');
+    
+        //fusion des attributs communs
+        foreach ($defaut_parametres as $cle => $param) {
+            if (isset($params[$cle])) {
+                $params[$cle] .= $defaut_parametres[$cle];
+            } else {
+                $params[$cle] = $defaut_parametres[$cle];
+            }
+        }
+    
+        $html_attributs = "";
+        foreach ($params as $cle => $param) {
+            $html_attributs .= ' '.$cle.'="'.$param.'"';
+        }
+    
+        return '<img src="/images/boutons/btn_3pt_off.png" alt="..." '.$html_attributs.' />';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class Component - used to load a 'lib' library. You might want to use composer
  * @deprecated
@@ -8,23 +7,23 @@
 class Component
 {
     /**
-     * Le résultat du componsant
-     * @var {String}
+     * Le résultat du composant
+     * @var string
      */
     private $content;
 
     /**
      * Effectue le rendu d'un composant (sorte de vue partielle)
-     * @param {String} le controler à charger (sans l'extension .php)
-     * @param {String} le nom de la variable dans le composant
-     * @param {String} la valeur de la variable
-     * @param {Boolean} Est-ce qu'on lance en mode silencieux pour ne pas l'afficher directement.
+     * @param string $composant : le controler à charger (sans l'extension .php)
+     * @param string $variable_nom : [OPT] le nom de la variable dans le composant
+     * @param string $variable_valeur : [OPT] la valeur de la variable
+     * @param bool $silent : [OPT] Est-ce qu'on lance en mode silencieux pour ne pas l'afficher directement, par défaut non.
      **/
-    public function __construct($composant, $variable_name = "tmp", $variable_value = null, $silent = 0)
+    public function __construct($composant, $variable_nom = "tmp", $variable_valeur = null, $silent = false)
     {
         $this->component = __DIR__."/component/$composant.php";
 
-        $$variable_name = $variable_value;
+        $$variable_nom = $variable_valeur;
 
         if ($silent) {
             ob_start();
@@ -44,7 +43,7 @@ class Component
 
     /**
      * Retourne le résultat du composant
-     * @return {String}
+     * @return string : Le composant
      */
     public function getContent()
     {

@@ -1,18 +1,19 @@
 <?php
-
 /**
- * Class View
- * @deprecated Might I suggest use of \FMUP\View
+ * Classe permettant un rendu visuel des pages HTML
+ * @version 1.0
+ * @deprecated use \FMUP\View instead
+ * @see \FMUP\View
  */
 class View
 {
     /**
      * La vue à afficher
-     **/
+     */
     protected $vue;
     /**
      * Le layout à afficher
-     **/
+     */
     protected $layout;
     /*
      * Afficher bandeau de droite ou non dans le layout
@@ -24,12 +25,11 @@ class View
     protected $styles;
     /**
      * Les javascripts à inclure dans la page
-     **/
+     */
     protected $javascripts;
     /**
      * Le titre de la page
-     *
-     * @var String
+     * @var string
      */
     protected $title;
 
@@ -41,18 +41,22 @@ class View
      *				* layout			: le layout à utiliser (si pas celui par défaut)
      *				* css				 : les css à utiliser dans la vue
      *				* javascripts : les javascripts à utiliser dans la vue
-     * @deprecated this will not work
-     **/
+     */
     public function __construct($vue, $params = array(), $options = array())
     {
         // Gestion des fichiers de langue
-        if (Config::getIsMultilingue()) {
+        if (Config::paramsVariables('is_multilingue')) {
 
-            if(!isset($GLOBALS["codelanguagedefaut"])){
+            if (!isset($GLOBALS["codelanguagedefaut"])) {
                 //On récupère la langue du navigateur
-                $langue_nav = explode(',',getenv('HTTP_ACCEPT_LANGUAGE'));
-                $langue_nav = strtoupper(substr(chop($langue_nav[0]),0,2));
-                $GLOBALS["codelanguagedefaut"] = trim($langue_nav);
+                $langue_nav = getenv('HTTP_ACCEPT_LANGUAGE');
+                if ($langue_nav) {
+                    $langue_nav = explode(',', $langue_nav);
+                    $langue_nav = strtoupper(substr(chop($langue_nav[0]), 0, 2));
+                    $GLOBALS["codelanguagedefaut"] = trim($langue_nav);
+                } else {
+                    $GLOBALS["codelanguagedefaut"] = 'FR';
+                }
             }
 
             if(isset($_SESSION["codelanguagedefaut"])){
@@ -66,16 +70,16 @@ class View
             if(isset($dossier[0])){
                 $translation_include[]  = $dossier[0].".ini";
             }
-
+            
             foreach($translation_include as $translation) {
-                Langue::chargeFile($translation);
+                LangueHelper::chargerFichier($translation);
             }
         } else {
             // On initialise la variable quand même au cas où un paramètre de config aurait été oublié
             $GLOBALS["codelanguagedefaut"] = 'FR';
         }
 
-        $varappli = Config::paramsVariables('');
+        $varappli = Config::paramsVariables();
 
         $layout = call_user_func(array(APP, "defaultLayout"));
         if (isset($varappli['styles'])) {
@@ -89,16 +93,6 @@ class View
         } else {
             $javascripts = call_user_func(array(APP, "defaultJavascripts"));
         }
-    	/**
-    	 * 19/11/2014 : modification du traitement du js
-    	 * l'option javascripts_default permet de remplacer totalement la liste des js par défaut
-    	 * pour certains cas spécifiques où on ne veut pas utiliser certains fichiers js
-    	 * par ex : pour l'utilisation de différentes versions de jquery non compatibles avec des js passé en options
-    	 */
-        if(!empty($options['javascripts_default_forced'])){
-			$javascripts = $options['javascripts_default_forced'];
-        }
-
         if (!isset($params['popup'])) {
             $params['popup'] = false;
         }
@@ -106,8 +100,9 @@ class View
             $params['exporter'] = false;
         }
 
-        $this->vue	 = __DIR__ . '/../../logi-ce/sandbox/application/'.APPLICATION.'/view/'.$vue.'.php';
-
+        $basePath = file_exists(__DIR__ . '/../../logi-ce/sandbox') ? __DIR__ . '/../../logi-ce/sandbox' : BASE_PATH;
+        $this->vue	 = $basePath.'/application/'.APPLICATION.'/view/'.$vue.'.php';
+        
         $this->withoutBandeau = false;
         if(isset($options['withoutBandeau'])){
             $this->withoutBandeau = true;
@@ -118,9 +113,9 @@ class View
 
             // récupération de l'option layout
             if (isset($options['layout'])) {
-                $this->layout = __DIR__ . "/../../logi-ce/sandbox/application/".APPLICATION."/view/layout/".$options["layout"].".php";
+                $this->layout = $basePath."/application/".APPLICATION."/layout/".$options["layout"].".php";
             } else {
-                $this->layout = __DIR__ . "/../../logi-ce/sandbox/application/".APPLICATION."/view/layout/".$layout.".php";
+                $this->layout = $basePath."/application/".APPLICATION."/layout/".$layout.".php";
             }
 
             // récupération de l'option styles
@@ -144,10 +139,10 @@ class View
             }
             $this->title = call_user_func(array(APP, "titleApplication"));
             if (isset($params['titre'])) {
-                $this->title .= '&nbsp;&ndash;&nbsp;'.$params['titre'];
+                $this->title .= '&nbsp;&ndash;&nbsp;'.((Config::paramsVariables('is_multilingue')) ? LangueHelper::display($params['titre']) : $params['titre']);
             }
 
-        }
+        }        
 
         // récupération de toutes les variables à poster au layout
         extract($params);

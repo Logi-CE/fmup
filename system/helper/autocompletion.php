@@ -1,4 +1,9 @@
 <?php
+/**
+ * Controleur de base des appels AJAX par autocompetion
+ * Il doit être surchargé pour être utilisé
+ * @author afalaise
+ */
 class Autocompletion extends Controller
 {
 	protected function genererXml ($objets, $identifiant, $texte, $info = false)
