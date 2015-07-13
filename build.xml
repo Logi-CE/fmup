@@ -23,7 +23,7 @@
         <phingcall target="phpunit" />
         <phingcall target="phpcs" />
         <phingcall target="phpdoc" />
-        <!-- phingcall target="phpmd" /-->
+        <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
         <phingcall target="pdepend" />
