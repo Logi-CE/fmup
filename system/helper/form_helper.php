@@ -299,7 +299,9 @@ class FormHelper
         }
         $retour .= ">";
     
-        $retour .= htmlentities($valeur);
+        if (isset($valeur)) {
+            $retour .= htmlentities($valeur);
+        }
         $retour .= "</textarea>";
     
         return $retour;
