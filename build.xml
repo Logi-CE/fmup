@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="FMUP" default="ci" basedir=".">
+    <target name="ci"
+        description="Tâche principale d'intégration continue"
+        depends="clean,quality_assurance"
+    />
+
+    <target name="clean" description="Vide les répertoires d'artefacts">
+        <delete dir="${project.basedir}/build/api" />
+        <delete dir="${project.basedir}/build/coverage" />
+        <delete dir="${project.basedir}/build/doc" />
+        <delete dir="${project.basedir}/build/logs" />
+        <delete dir="${project.basedir}/build/pdepend" />
+
+        <mkdir dir="${project.basedir}/build/api" />
+        <mkdir dir="${project.basedir}/build/coverage" />
+        <mkdir dir="${project.basedir}/build/doc" />
+        <mkdir dir="${project.basedir}/build/logs" />
+        <mkdir dir="${project.basedir}/build/pdepend" />
+    </target>
+
+    <target name="quality_assurance" description="Lance les outils d'analyse" depends="clean">
+        <phingcall target="phpunit" />
+        <phingcall target="phpcs" />
+        <phingcall target="phpdoc" />
+        <!-- phingcall target="phpmd" /-->
+        <phingcall target="phpcpd" />
+        <phingcall target="phploc" />
+        <phingcall target="pdepend" />
+    </target>
+    
+    <target name="phpcs">
+        <phpcodesniffer standard="PSR2">
+            <fileset dir="${project.basedir}/">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
+            <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
+        </phpcodesniffer>
+    </target>
+    
+    <target name="phpdoc">
+        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
+            <fileset dir="${project.basedir}">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
+        </phpdoc2>
+    </target>
+    
+    <target name="phpunit">
+        <phpunit haltonfailure="true" printsummary="true">
+            <batchtest>
+                <fileset dir="${project.basedir}/tests">
+                    <include name="*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+       
+    <target name="phpmd">
+        <phpmd file="${project.basedir}/lib">
+            <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
+        </phpmd>
+        <phpmd file="${project.basedir}/system">
+            <formatter type="xml" outfile="${project.basedir}/build/logs/fmu-phpmd.xml" />
+        </phpmd>
+    </target>
+
+    <target name="phpcpd">
+        <phpcpd file="${project.basedir}/lib/">
+            <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
+        </phpcpd>
+        <phpcpd file="${project.basedir}/system/">
+            <formatter type="pmd" outfile="${project.basedir}/build/logs/fmu-cpd.xml"/>
+        </phpcpd>
+    </target>
+    
+    <target name="phploc">
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/lib'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/fmu-phploc.csv' '${project.basedir}/system'" escape="false" />
+    </target>
+       
+    <target name="phpdoc">
+        <phpdoc title="API Documentation"
+                destdir="${project.basedir}/build/api"
+                sourcecode="false"
+                output="HTML:Smarty:PHP">
+            <fileset dir="${project.basedir}/">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
+            <projdocfileset dir=".">
+                <include name="composer.json"/>
+                <include name="lib/README.txt"/>
+                <include name="lib/RELEASENOTE.txt"/>
+            </projdocfileset>
+        </phpdoc>
+    </target>
+    
+    <target name="pdepend">
+      <phpdepend file="${project.basedir}/lib">
+          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
+          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
+          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
+      </phpdepend>
+      
+      <phpdepend file="${project.basedir}/system">
+          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/fmu-jdepend.xml" />
+          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/fmu-dependencies.svg" />
+          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/fmu-overview-pyramid.svg" />
+      </phpdepend>
+    </target>
+    
+</project>
