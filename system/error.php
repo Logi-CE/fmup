@@ -81,7 +81,6 @@ class Error extends Exception
                 return false;
             }
         }
-
         $mail = new PHPMailer();
         $mail = EmailHelper::parametrerHeaders($mail);
         $mail->From       = Config::paramsVariables('mail_robot');

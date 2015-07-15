@@ -108,7 +108,7 @@ class Config extends ConfigApplication
             if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'phpunit') {
                 $nom_fichier_config = 'config_test.php';
             } else {
-                $nom_fichier_config = 'config.ini';
+                $nom_fichier_config = 'config.php';
             }
             if (file_exists(dirname(__FILE__) . '/../' . $nom_fichier_config)) {
                 include_once(dirname(__FILE__) . '/../' . $nom_fichier_config);
