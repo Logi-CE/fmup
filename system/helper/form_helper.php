@@ -231,7 +231,14 @@ class FormHelper
         }
     
         if (!$autoriser_html) {
-            $texte = htmlentities($texte);
+            $defaultCharset = version_compare(PHP_VERSION, '5.6', '>=') ? ini_get('default_charset') : 'UTF-8';
+            if (!defined('ENT_COMPAT')) {
+                define('ENT_COMPAT', 2);
+            }
+            if (!defined('ENT_HTML401')) {
+                define('ENT_HTML401', 0);
+            }
+            $texte = htmlentities($texte, ENT_COMPAT | ENT_HTML401, $defaultCharset);
         }
     
         $retour = '<span title="'.$params["title"].'" class="'.$params["class"].'" id="'.$id.'">'.$texte.'</span>';
