@@ -2,6 +2,8 @@
 /* 2.0.0 */
 /*********/
 
+Industrialization + new FMU 1.0.0.6 compatibility
+
 #New
 
  - PHPMailer no longer needed in lib folder - FMUP Dependency thanks to composer
