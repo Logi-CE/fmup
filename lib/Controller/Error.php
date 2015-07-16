@@ -43,7 +43,9 @@ abstract class Error extends \FMUP\Controller
             $this->errorStatus($e->getStatus());
         } else {
             $this->writeContextToLog()
-                ->sendMailOnException();
+                ->sendMailOnException()
+                ->getResponse()
+                ->setHeader(new Status(Status::VALUE_INTERNAL_SERVER_ERROR));
         }
         $this->render();
     }

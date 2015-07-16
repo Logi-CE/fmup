@@ -15,6 +15,7 @@ class Status extends Header
     const VALUE_OK = '200 OK';
     const VALUE_FORBIDDEN = '403 Forbidden';
     const VALUE_NOT_FOUND = '404 Not Found';
+    const VALUE_INTERNAL_SERVER_ERROR = '500 Internal Server Error';
 
     /**
      * @param string $value
