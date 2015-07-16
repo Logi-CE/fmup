@@ -63,7 +63,7 @@ abstract class Error extends \FMUP\Controller
     {
         if (!\Config::useDailyAlert() && !\Config::isDebug()) {
             try {
-                throw new \Error($this->getException()->getMessage());
+                throw new \Error($this->getException()->getMessage(), E_WARNING);
             } catch (\Exception $e) {
             }
         }
