@@ -200,11 +200,9 @@ class Error extends Exception
                             } elseif (is_object($arg)) {
                                 $arguments[] = 'Object';
                             } elseif (is_resource($arg)) {
-                                $arguments[] = 'Ressource';
+                                $arguments[] = 'Resource';
                             } else {
-                                if (is_string($arg)) {
-                                    $arg = '"'.$arg.'"';
-                                }
+                                $arg = '"'.$arg.'"';
                                 $coupure = (strlen($arg) > 50) ? '...' : '';
                                 $arguments[] = substr($arg, 0, 50).$coupure;
                             }
@@ -232,11 +230,9 @@ class Error extends Exception
                                 } elseif (is_object($arg)) {
                                     $arguments[] = 'Object';
                                 } elseif (is_resource($arg)) {
-                                    $arguments[] = 'Ressource';
+                                    $arguments[] = 'Resource';
                                 } else {
-                                    if (is_string($arg)) {
-                                        $arg = '"'.$arg.'"';
-                                    }
+                                    $arg = '"'.$arg.'"';
                                     $coupure = (strlen($arg) > 50) ? '...' : '';
                                     $arguments[] = substr($arg, 0, 50).$coupure;
                                 }

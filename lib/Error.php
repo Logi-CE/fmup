@@ -153,9 +153,7 @@ class Error
                     if (is_array($arg)) {
                         $arguments[] = 'Array';
                     } else {
-                        if (is_string($arg)) {
-                            $arg = '"'.$arg.'"';
-                        }
+                        $arg = '"'.$arg.'"';
                         $coupure = (strlen($arg) > 50) ? '...' : '';
                         $arguments[] = substr($arg, 0, 50).$coupure;
                     }
@@ -183,9 +181,7 @@ class Error
                         if (is_array($arg)) {
                             $arguments[] = 'Array';
                         } else {
-                            if (is_string($arg)) {
-                                $arg = '"'.$arg.'"';
-                            }
+                            $arg = '"'.$arg.'"';
                             $coupure = (strlen($arg) > 50) ? '...' : '';
                             $arguments[] = substr($arg, 0, 50).$coupure;
                         }
