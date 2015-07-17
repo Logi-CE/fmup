@@ -20,6 +20,7 @@ Industrialization + new FMU 1.0.0.6 compatibility
  - added Helper Pdf
  - added Helper Sage
  - Enhanced String
+ - Add Db\Driver\Sqlite
  
 #Fix
  - Config can now be called in cli
