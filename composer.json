@@ -1,6 +1,6 @@
 {
     "name":"castelis/fmup",
-    "version":"dev-release_20150715",
+    "version":"2.0.0",
     "require": {
         "php": "~5.3",
         "ext-pdo_mysql": "~1.0",
