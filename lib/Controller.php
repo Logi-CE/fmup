@@ -18,7 +18,7 @@ abstract class Controller extends \Controller
      * this method is called before each action
      * @param string $calledAction
      */
-    public function preFiltre($calledAction)
+    public function preFiltre($calledAction = NULL)
     {
     }
 

@@ -1,6 +1,7 @@
 <?php
 /**
  * Cette classe contient des fonctions de formatage ou de calcul de date
+ * @version 1.0
  */
 class Date
 {
@@ -534,131 +535,51 @@ class Date
             , date('n_j', $timestamp_paques + (86400 * 50)) => 'Lundi de Pentecôte'
         );
     }
-
-    /**
-     * Retourne la date du dernier jour ouvré
-     * @return date
-     * @todo : Utiliser Date::estOuvre() dans une boucle, et tant qu'à faire mettre un paramètre pour choisir la date
+    
+	/**
+     * Retourne la date de la veille, ou de l'avant veille si on a passé un lundi
+     * @param string $date : [OPT] Date au format UK
+     * @return string : La date
      */
-    public static function getDateDernierJourOuvre ()
+    public static function getDateDernierJourOuvre ($date = false)
     {
-        $date = new DateTime(Date::today(false, 'UK'));
-        $hier = $date->format('Y-m-d');
-        $jour = $date->format('l');
-        //Si nous sommes lundi nous vérifions la clôture du samedi
-        if($jour == "Monday"){
+        if (!$date) {
+            $date = new DateTime(Date::today(false, 'UK'));
+        } else {
+            $date = new DateTime($date);
+        }
+        
+        // Si nous sommes lundi nous vérifions la clôture du samedi
+        if ($date->format('l') == "Monday") {
             $date->modify('-2 days');
-            $hier = $date->format('Y-m-d');
-        }else{
+        } else {
             $date->modify('-1 days');
-            $hier = $date->format('Y-m-d');
         }
 
-        return $hier;
+        return $date->format('Y-m-d');
     }
-
-    public static function getDateVeille($date)
+    
+    /**
+     * Donne la différence entre deux dates au format français (JJ/MM/AAAA) avec ou sans heure
+     * @param string $date1 : Première date
+     * @param string $date2 : Seconde date
+     * @return int : Nombre d'heure
+     */
+    public static function donnerDifferenceDate ($date1, $date2)
     {
-        $dateTimestamp = strtotime(Date::frToUk($date));
-        $date          = date('Y-m-d', strtotime('-1 days', $dateTimestamp));
-        //gestion du cas du dimanche
-        if(date('l', strtotime($date)) == 'Sunday'){
-            $dateTimestamp = strtotime(Date::frToUk($date));
-            $date          = date('Y-m-d', strtotime('-1 days', $dateTimestamp));
+        if (Is::dateTime($date1) && Is::dateTime($date2)) {
+            $date1 = new DateTime(self::frToUk($date1));
+            $date2 = new DateTime(self::frToUk($date2));
+    
+            $reste_heure = $date1->getTimestamp() - $date2->getTimestamp();
+    
+            $reste_minute = $reste_heure % 3600;
+            $heure_retour = floor($reste_heure / 3600);
+            $reste_seconde = $reste_minute % 60;
+            $minutes_retour = floor($reste_minute / 60);
+    
+            return $heure_retour.':'.$minutes_retour.':'.$reste_seconde;
         }
-        return $date;
+        return false;
     }
-
-    /**
-     * Retourne la date d'anniversaire
-     */
-    public static function isDateAnniversaire($ma_date)
-    {   
-        $return = false;
-
-        if($ma_date == Date::today()){
-            $return = true;
-        }
-        return $return;
-    }
-
-	/**
-     * @deprecated utiliser getDateUniquement
-     */
-    public static function getDateWithoutHeure($ma_date)
-    {
-        return self::getDateUniquement($ma_date);
-    }
-    
-	/**
-     * @deprecated : Utiliser addTime
-     */
-    public static function addMinutesDate($ma_date, $nb_minutes)
-    {
-        return self::addTime($ma_date, 'minute', $nb_minutes);
-    }
-
-    /**
-     * @deprecated : Utiliser addTime
-     */
-    public static function addDay($ma_date, $nb_jours)
-    {
-        return self::addTime($ma_date, 'jour', $nb_jours);
-    }
-    
-    /**
-     * @deprecated : Utiliser today
-     */
-    public static function todayWithHeure()
-    {
-        return self::today(true);
-    }
-    
-    /**
-     * @deprecated : Utiliser today
-     */
-    public static function todayWithHeureUk()
-    {
-        return self::today(true, 'US');
-    }
-    
-    /**
-     * @deprecated : Utiliser today
-     */
-    public static function todayFr ($heure = false)
-    {
-        self::today();
-    }
-    
-    /**
-     * @deprecated : Utiliser today
-     */
-    public static function todaySql ($heure = false)
-    {
-        self::today(false, 'US');
-    }
-    
-	/**
-     * @deprecated : Utiliser compareFr
-     */
-    public static function compareFrWithHeure($date1, $date2)
-    {
-        return self::compareFr($date1, $date2);
-    }
-
-	/**
-     * @deprecated : Utiliser ukToFr
-     */
-    public static function ukToFrWithHeure($ma_date)
-    {
-        return Date::ukToFr($ma_date);
-    }
-    
-	/**
-     * @deprecated : Utiliser ukToFr
-     */
-    public static function sqlToFr($ma_date)
-    {
-        return self::ukToFr($ma_date);
-    }	
 }

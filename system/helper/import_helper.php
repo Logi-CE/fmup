@@ -3,6 +3,8 @@
  * Classe ImportHelper
  * @author : afalaise
  * @description : cette classe gère toutes les données concernant l'import
+ * @version 1.0
+ * @todo : Cette classe doit être dépassée
  */
 class ImportHelper
 {

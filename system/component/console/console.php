@@ -15,6 +15,7 @@
                 <button id="bouton_activer_<?php echo $option; ?>" title="Activer <?php echo $titre; ?>" onclick="Console.activer(1, '<?php echo $option; ?>');" <?php if (isset($_SESSION['option_console_'.$option])) echo 'style="display:none"'; ?>></button>
                 <button id="bouton_desactiver_<?php echo $option; ?>" title="Désactiver <?php echo $titre; ?>" onclick="Console.activer(0, '<?php echo $option; ?>');" <?php if (!isset($_SESSION['option_console_'.$option])) echo 'style="display:none"'; ?>></button>
             <?php endforeach; ?>
+            <div id="taille_console"><?php echo Console::compterTailleConsole(); ?></div>
         </span>
     </pre>
     <pre id="debug-zone" <?php if (in_array(Console::$statut_console, array('eteinte', 'veille'))) echo 'style="display:none"'; ?>>

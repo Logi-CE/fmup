@@ -1,4 +1,8 @@
 <?php
+/**
+ * Classe fornissant des fonctions de protection des injections SQL et d'autres fonctions liées aux requetes
+ * @version 1.0
+ */
 class Sql
 {
     /**
@@ -10,6 +14,8 @@ class Sql
     {
         $temp = Config::parametresConnexionDb();
 
+        $value = preg_replace('@<script[^>]*?>.*?</script>@si', '[disabled]', $value);
+        
         switch ($temp['driver']) {
             case 'mysql':
                 //return mysql_real_escape_string($value);
@@ -41,7 +47,9 @@ class Sql
     public static function secureListeId($value)
     {
         if ($value) {
-            return $value;
+            $values = explode(',', $value);
+            $values = self::secureArray($values);
+            return implode(',', $values);
         } else {
             return "0"; // entre guillements pour que ça devienne une requète SQL
         }
@@ -108,18 +116,38 @@ class Sql
      **/
     public static function secureArray($values)
     {
-        array_map(array('Sql', 'sanitize'), $values);
-        return "'".implode("', '", $values)."'";
+        return array_map(array('Sql', 'secure'), $values);
     }
 
-    public static function replaceXFields($tab, $class = null, $option = array())
+    public static function replaceXJoins($tabs, $orig_join, &$join = array())
+    {
+        foreach ($tabs as $tab) {
+            if (!isset($join[$tab])) {
+                if (isset($orig_join[$tab]['dep'])) {
+                    self::replaceXJoins($orig_join[$tab]['dep'], $orig_join, $join);
+                }
+                if (isset($orig_join[$tab])) {
+                    $join[$tab] = $orig_join[$tab]['join'];
+                }
+            }
+        }
+    }
+
+    public static function replaceXFields($tab, $class = null, $option = array(), &$join = array())
     {
         if ($class) {
             $fields = call_user_func(array($class, 'xFields'), $option);
             $orig_fields = array_keys($fields);
             $dest_fields = array_values($fields);
+            if (isset($option['x_joins'])) {
+                $orig_join = call_user_func(array($class, 'xJoins'), $option);
+            }
             foreach ($tab as $key => $value) {
                 $tab[$key] = preg_replace($orig_fields, $dest_fields, trim($value));
+                if (!empty($orig_join)) {
+                    preg_match_all("/([[:alpha:]_]+)\./", $tab[$key], $out);
+                    self::replaceXJoins($out[1], $orig_join, $join);
+                }
             }
         }
 
@@ -139,10 +167,33 @@ class Sql
         return $order_parse;
     }
 
+    public static function parseSelect($select_alias, $class = null, $option = array(), &$join = array())
+    {
+        $select = self::replaceXFields($select_alias, $class, $option, $join);
+        if (!is_array($select)) {
+            throw new Error("Erreur à l'utilisation de sqlParseSelect : tableau attendu. Reçu : " . var_dump($select));
+        }
+
+        $select = array_filter($select, function($i) { return $i <> "";});
+        if ($select == array()) {
+            return "";
+        } else {
+            $result = "SELECT SQL_CALC_FOUND_ROWS ";
+            foreach ($select as $key => $condition) {
+                if ($condition != '') {
+                    $result .= "\n" . $condition . ' AS ' . $select_alias[$key] . ', ';
+                }
+            }
+            // suppression du dernier ,
+            $result = substr($result, 0, -2);
+            return $result;
+        }
+    }
+
     /**
      * Convertit un tableau de conditions en un WHERE conditions
      * Le deuxième paramètre permet de faire un HAVING à la place
-     **/
+     */
 
     public static function parseWhere($where, $having = false, $class = null, $option = array())
     {
@@ -152,7 +203,7 @@ class Sql
             throw new Error("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".var_dump($where));
         }
 
-        $where = array_filter($where, function($i) { return $i <> "";});
+        $where = array_filter($where, create_function('$i', 'return $i <> "";'));
         if ($where == array()) {
             return "";
         } else {
@@ -163,7 +214,7 @@ class Sql
             }
             foreach ($where as $condition) {
                 if ($condition != '') {
-                    $result .= '('.$condition.')' . ' AND '."\n";
+                    $result .= '('.$condition.') '."\n".'AND ';
                 }
             }
             // suppression du dernier AND
@@ -172,12 +223,26 @@ class Sql
         }
     }
 
-/* *********
- * Filtres *
- ********* */
+    public static function parseJoin($join, $class = null, $option = array(), $table_name = 'S')
+    {
+        $result = "\n" . 'FROM ' . $class::getTableName() . ' ' . $table_name;
+        if (!empty($join)) {
+            foreach ($join as $condition) {
+                if ($condition != '') {
+                    $result .= "\n" . $condition;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /*     * ********
+     * Filtres *
+     * ******** */
+
     /**
      * Cette fonction crée un tableau de conditions LIKE à partir d'un tableau
-     **/
+     */
     public static function conditionsFromArray($params)
     {
         $where = array();
@@ -188,7 +253,6 @@ class Sql
                     $where[$champ] = "$champ = ".Sql::secureId($valeur);
                 }
             } elseif (0 === strpos($champ, "date_")) {
-                //$where[$champ] = RequeteHelper::convertFiltreDate($champ, $valeur);
                 $where[$champ] = " CONVERT(VARCHAR, ".$champ.", 103) LIKE '%".Sql::sanitize(trim($valeur))."%' " ;
             } elseif (0 < strpos($champ, "chrono") && $valeur) {
                 try {

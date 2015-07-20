@@ -1,4 +1,8 @@
 <?php
+/**
+ * Classe gérant l'affichage de certains éléments
+ * @version 1.0
+ */
 class DisplayHelper
 {
     /**
@@ -31,86 +35,6 @@ class DisplayHelper
         return $retour;
     }
 
-    public static function getClassLienMenu($controlleur_courant, $fonction_courante, $lien)
-    {
-        $controlleur_courant = preg_replace("/^ctrl_/", '', $controlleur_courant);
-
-        $accueil = array();
-        $accueil[0] = 'campagne';
-        $accueil[1] = 'produit';
-        $accueil[2] = 'categorie';
-        $accueil[3] = 'sous_categorie';
-        $accueil[4] = 'home';
-
-        $mon_compte = array();
-        $mon_compte[0] = 'filleul';
-        $mon_compte[1] = 'client';
-        $mon_compte[2] = 'commande';
-
-        if ($controlleur_courant == 'le_club') {
-            if ($lien == 'le club') {
-                return '_actif';
-            }
-        }
-
-        if (($controlleur_courant == 'contact') && ($fonction_courante == 'RemplirFormulaire')) {
-            if ($lien == 'contact') {
-                return '_actif';
-            }
-        }
-        if (($controlleur_courant == 'filleul') && ($fonction_courante == 'Parrainage')) {
-            if ($lien == 'parrainage') {
-                return '_actif';
-            }
-        }
-
-        foreach ($accueil as $i => $controlleur) {
-            if ($controlleur_courant == $controlleur) {
-                if ($lien == 'accueil') {
-                    return '_actif';
-                }
-            }
-        }
-
-        foreach ($mon_compte as $i => $controlleur) {
-            if ($controlleur_courant == $controlleur) {
-                if (($lien == 'mon compte') && ($fonction_courante != 'Parrainage')) {
-                    return '_actif';
-                }
-            }
-        }
-        return '';
-    }
-
-    public static function getClassDoublon($produit, $liste_doublons, $liste_tous_doublons, $tableau_inconnu)
-    {
-        if (isset($liste_tous_doublons) && ($liste_tous_doublons)) {
-            foreach ($liste_tous_doublons as $doublon) {
-                if (($produit -> getId() == $doublon -> getId())) {
-                    $class =  'ligne_doublon';
-                }
-            }
-        }
-        foreach ($tableau_inconnu as $tableau) {
-            if (isset($tableau['libelle'])) {
-                if (($produit -> getLibelleTableau() == $tableau['libelle'])) {
-                    $class = 'ligne_tableau_inconnu';
-                }
-            }
-        }
-        if (isset($liste_doublons) && ($liste_doublons)) {
-            foreach ($liste_doublons as $doublon_unique) {
-                if (($produit -> getId() == $doublon_unique -> getId())) {
-                    $class = 'ligne_paire';
-                }
-            }
-        }
-        if (isset ($class)) {
-            return $class;
-        } else {
-            return 'ligne_paire';
-        }
-    }
     /**
      * Affiche un tableau de toutes les erreurs de validation d'un objet donné
      * @params {Object} L'objet pour lequel afficher les erreurs
@@ -270,27 +194,6 @@ class DisplayHelper
             return "<i>trop long à afficher</i>...";
         } else {
             return $valeur;
-        }
-    }
-
-    public static function getClassForFinalise($id_statut)
-    {
-        $retour = "";
-        switch ($id_statut) {
-            case Constantes::getIdStatutCommandeRealisee():
-                $retour = "a_realiser_";
-                break;
-            default:
-        }
-        return $retour;
-    }
-
-    public static function getIdForTrimestre($trimestre)
-    {
-        if (Utilisateur::isEcologic()) {
-            return $trimestre->getId();
-        } else {
-            return $trimestre->getIdTrimestre();
         }
     }
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Fonction gérant les logs et l'historisation de ceux-ci
+ * C'est aussi un modèle pour la table du même nom
+ * @author shuet
+ */
 class Historisation extends Model
 {
         protected $id;
@@ -194,8 +199,6 @@ class Historisation extends Model
     {
         $champs = array();
 
-        // !!!! exemple à modifier !!!!
-        // TODO : Paramétrer les droits sur les attributs de l'objet
         $champs['id_utilisateur'] = 'id_utilisateur';
         $champs['ip'] = 'ip';
         $champs['date_action'] = 'date_action';

@@ -1,11 +1,13 @@
 <?php
-
 /**
- * Class Debug
- * @deprecated use logs instead
+ * Classe permettant le débogage de l'application
+ * @version 1.0
  */
 class Debug
 {
+	public static $duree;       // Variable utilisée pour les mesures de temps d'exécution
+    public static $memoire;     // Variable utilisée pour les mesures de consommation mémoire
+    
     /**
      * Effectue une sortie lisible d'une variable
      * @param {Object} La variable
@@ -54,13 +56,13 @@ class Debug
     {
       $headers  = 'MIME-Version: 1.0' . "\r\n";
       $headers .= "Content-type: text/html; charset=utf-8 \r\n";
-      $headers .= "From: ".Config::mailRobot(). "\r\n";
-      return mail(Config::mailSupport(), $title, $buffer, $headers);
+      $headers .= "From: ".Config::paramsVariables('mail_robot'). "\r\n";
+      return mail(Config::paramsVariables('mail_support'), $title, $buffer, $headers);
     }
     /**
      * Backtrace
      **/
-    public function backtrace()
+    public static function backtrace()
     {
       ob_start();
       debug_print_backtrace();
@@ -68,41 +70,37 @@ class Debug
       ob_end_clean();
       echo "<pre style='border: 2px solid red; padding: 10px; background-color: #FFCCCC'>$backtrace</pre>";
       echo "<hr />";
+	}
+
+    /**
+     * Méthode pour initialiser la mesure de mémoire et de temps d'exécution
+     * @return un tableau avec la durée initiale et la mémoire initiale
+     */
+    public static function debuterMesureTempsMemoire()
+    {
+        self::$duree = microtime(true);
+        self::$memoire = memory_get_usage();
     }
 
     /**
-     * @deprecated
+     * Méthode terminant la mesure de mémoire et de temps d'exécution
+     * @param {console} : Affichage du résultat dans la console (par défaut à false : un Debug::output sera effectué)
+     * @param {message} : Un message à afficher au début de l'affichage du résultat de la mesure
      */
-    public static function initConsole ()
+    public static function terminerMesureTempsMemoire($console = false, $message = "")
     {
-        if (Config::consoleActive()) {
-            if (empty($_SESSION['console'])) {
-                $_SESSION['console'] = '';
-            }
-            if (!empty($_SESSION['afficher_console'])) {
-                $_SESSION['console'] .= '<div class="page">'.$_SERVER['REQUEST_URI'].'</div>';
-            }
-        } else {
-            if (!empty($_SESSION['console'])) {
-                unset($_SESSION['console']);
-            }
+        self::$duree -= microtime(true);
+        self::$memoire -= memory_get_usage();
+        $retour = "";
+        if ($message) {
+            $retour .= $message."\n";
         }
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function setConsole ($message)
-    {
-        if (Config::consoleActive() && !empty($_SESSION['afficher_console'])) {
-            if (is_array($message) || is_object($message)) {
-                $message = print_r($message, true);
-            }
-            if (isset($_SESSION['option_console_navigation'])) {
-                $source = debug_backtrace();
-                $_SESSION['console'] .= '<br/><strong style="color: red;">'.$source[0]['file'].':'.$source[0]['line'].'</strong>';
-            }
-            $_SESSION['console'] .= '<br/>'.$message;
+        $retour .= "Temps d'exécution : ".round(abs($duree), 4)."\n";
+        $retour .= "Mémoire consommée : ".round(abs($memoire), 4)."\n";
+        if (!$console) {
+            Debug::output($retour);
+        } else {
+            Console::enregistrer($retour);
         }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 /**
  * Contient les paramètres généraux de l'application
+ * @version 1.0
  */
 class ParametreHelper
 {
@@ -15,7 +16,17 @@ class ParametreHelper
 	 */
 	protected function __construct()
 	{
-		$this->db = new DbConnection(Config::parametresConnexionDb());
+	    $param = Config::parametresConnexionDb();
+        switch ($param['driver']) {
+            case 'mysql':
+                $this->db = DbConnectionMysql::getInstance(Config::parametresConnexionDb());
+                break;
+            case 'mssql':
+                $this->db = new DbConnectionMssql(Config::parametresConnexionDb());
+                break;
+            default:
+                new Error('Moteur de base de données non paramétré');
+        }
 	}
 	
 	public static function getInstance ()

@@ -1,6 +1,7 @@
 <?php
 /**
  * Cette classe contient des fonctions de vérification de format ou de type
+ * @version 1.0
  */
 class Is
 {

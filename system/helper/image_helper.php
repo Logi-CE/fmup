@@ -1,266 +1,29 @@
 <?php
 /**
- * Cette classe est à revoir, les noms de fonctions sont pourries !!!
+ * Contient différentes fonctions de création et de manipulation d'images
+ * @version 1.0
  */
-
 class ImageHelper
 {
     /**
-     * Retourne l'adresse d'une miniature correspondant à une image donnée
-     * Si jamais l'image cherchée n'existe pas on la crée.
-     *
-     * @param {String} $image L'image
-     * @param {Integer} $type Le type d'image (thumbnail, mini, moyen, gros, ...)
-     * @return unknown
+     * Crée une image en décalant d'un nombre de dégrés donnés vers la droite
+     * @param string $nom_fichier : Le fichier à pivoter
+     * @param int $degres : [OPT] Le nombre de degrés, par défaut 90
+     * @todo : Voir le fonctionnement
      */
-    public static function getImage($image, $type, $params)
+    public static function pivoterImage ($nom_fichier, $degres = 90)
     {
-        if (isset ($params["campagne"])) {
-            $campagne = $params["campagne"];
-            $id = $campagne -> getId();
-        }
-        if (isset ($params["id_campagne"])) {
-            $id = $params["id_campagne"];
-        }
-
-        $stock = true;
-        if (isset($params["stock"])) {
-            if ($params["stock"] <= 0) {
-                $stock = false;
-            }
-        }
-
-        if ('' == $image) {
-            $image_reduite = Constantes::getImagePasDImage()."_$type.png";
-            $image =  Constantes::getImagePasDImage().".png";
-        } else {
-            //$image_temp = explode('.', $image);
-            //$image_temp = $image_temp[0];
-            if (!(is_dir(Constantes::getDossierPhotosCache().$id."/produits/tmp/"))) {
-                mkdir(Constantes::getDossierPhotosCache().$id."/produits/tmp/", 0777);
-            }
-            if ($stock) {
-                $image_reduite = Constantes::getDossierPhotosCache().$id."/produits/tmp/".str_replace('/', '_', $image)."_$type.png";
-            } else {
-                $image_reduite = Constantes::getDossierPhotosCache().$id."/produits/tmp/".str_replace('/', '_', $image)."_epuise_$type.png";
-            }
-            $image = Constantes::getDossierPhotos().$id."/produits/".$image;
-
-        }
-
-        if (!file_exists($image_reduite)) {
-
-            $im = ImageHelper::resizeImage($image, Constantes::getResizeL($type), Constantes::getResizeH($type), $stock);
-
-            // on enregistre l'image créée
-            imagepng($im, $image_reduite);
-            imagedestroy($im);
-        }
-        $image_reduite = str_replace('../back', AppFront::getImagePath(), $image_reduite);
-        return $image_reduite;
-    }
-
-    public static function getImageNavigation($image, $type, $params = array())
-    {
-        $image = explode('/', $image);
-        $image = $image[count($image) - 1];
-        if (isset ($_GET['sous_dossier'])) {
-            $sous_dossier = $_GET['sous_dossier'];
-        } else {
-            $sous_dossier = "";
-        }
-        if ('' == $image) {
-            $image_reduite = Constantes::getImagePasDImage()."_$type.png";
-            $image =  Constantes::getImagePasDImage().".png";
-        } else {
-            if ($sous_dossier != "") {
-                if (!(is_dir(Constantes::getDossierPhotosCache().$sous_dossier."/tmp"))) {
-                    mkdir(Constantes::getDossierPhotosCache().$sous_dossier."/tmp", 0777);
-                }
-            $image_reduite = Constantes::getDossierPhotosCache().$sous_dossier."/tmp/".str_replace('/', '_', $image)."_$type.png";
-            $image = Constantes::getDossierPhotos().$sous_dossier."/".$image;
-            } else {
-                if (!(is_dir(Constantes::getDossierPhotosCache()."/tmp"))) {
-                    mkdir(Constantes::getDossierPhotosCache()."/tmp", 0777);
-                }
-            $image_reduite = Constantes::getDossierPhotosCache()."/tmp/".str_replace('/', '_', $image)."_$type.png";
-            $image = Constantes::getDossierPhotos()."/".$image;
-            }
-
-        }
-
-        if (!file_exists($image_reduite)) {
-
-            $im = ImageHelper::resizeImage($image, Constantes::getResizeL($type), Constantes::getResizeH($type));
-
-            // on enregistre l'image créée
-            imagepng($im, $image_reduite);
-            imagedestroy($im);
-        }
-        $image_reduite = str_replace('../back', AppFront::getImagePath(), $image_reduite);
-        return $image_reduite;
-    }
-    /**
-     * Redimentionne une image
-     *
-     * @param {String} $filename L'url de l'image
-     * @param {Integer} $width La largeur cible
-     * @param {Integer} $height La hauteur cible
-     * @param {Boolean} $stock Si il y a encore un produit en stock (car sinon on affiche une image épuisée)
-      * @return unknown
-     */
-    public static function resizeImage($filename, $width, $height, $stock = 1)
-    {
-        if ($width <= 0 && $height <= 0) {
-            throw new Error("Les dimensions de l'image doivent être des nombres positifs.");
-        }
-
-        if (! file_exists($filename)) {
-            $filename = Constantes::getImagePasDImage().".png";
-        }
-
-        // dimentions réelles de l'image
-        list($image_width, $image_height) = getimagesize($filename);
-
-        // est-ce que l'image à une taille correcte
-        if (! $image_height * $image_width) {
-            throw new Error("Mauvais format d'image.");
-        }
-
-        // on récupère l'extension
-        $ext = substr($filename, -4);
-        $ext = strtolower($ext);
-
-        // création d'une image
-        if ($ext == ".gif") {
-            $source = imagecreatefromgif($filename);
-        } elseif ($ext == ".jpg") {
-            $source = imagecreatefromjpeg($filename);
-        } elseif ($ext == ".jpeg") {
-            $source = imagecreatefromjpeg($filename);
-        } elseif ($ext == ".png") {
-            $source = imagecreatefrompng($filename);
-        } else {
-            $filename = Constantes::getImagePasDImage().".png";
-        }
-
-        $ratio_width  = $image_width / $width;
-        $ratio_height = $image_height / $height;
-
-        // Calcul des nouvelles dimentions
-        if ($ratio_width > $ratio_height) {
-            $newwidth = $image_width / $ratio_width;
-            $newheight = $image_height / $ratio_width;
-        } else {
-            $newwidth = $image_width / $ratio_height;
-            $newheight = $image_height / $ratio_height;
-        }
-
-        // Centre l'image et lui donne une taille fixe (hauteur et largeur donnés en paramètres)
-        $a = 0;
-        $b = 0;
-        if ($newwidth < $newheight) {
-            $a = $newheight - $newwidth;
-            $a = $a/2;
-            $t = $newheight;
-
-        } else {
-            $b = $newwidth - $newheight;
-            $b = $b/2;
-            $t = $newwidth;
-        }
-
-        $im = imagecreatetruecolor($t, $t);
-
-        imagesavealpha($im, true);
-        //$trans_colour = imagecolorallocatealpha($im, 0, 0, 0, 127);
-        $colour = imagecolorallocate($im, 255, 255, 255);
-        imagefill($im, 0, 0, $colour);
-
-        imageCopyResampled($im, $source, $a, $b, 0, 0, $newwidth, $newheight, $image_width, $image_height);
-        if (!$stock) {
-            $im = ImageHelper::ajouterFinigraneNoStock($im, $width, $newheight);
-        }
-
-        return $im;
-    }
-
-    /**
-     * Ajoute le filigrane : épuisé sur une image
-     * @param {Image} $image L'image sur laquelle ajouter le filigrane
-     * @param {Integer} $width La largeur de l'image
-     * @param {Integer} $height La hauteur de l'image
-     **/
-    public static function ajouterFinigraneNoStock($image, $width, $height)
-    {
-        $filigrane = imagecreatefrompng(Constantes::getFiligraneEpuise());
-        // 500x500 est la taille du filigrane
-        imageCopyResampled($image, $filigrane, 0, 0, 0, 0, $width, $height, 500, 500);
-        return $image;
-    }
-
-    /**
-     * Génère les images d'en-tête pour les espaces
-     **/
-    public static function getImageEspaceDroitsTournee($alt)
-    {
-        $rep = "../../public/back/images/droits/"; //repertoire ou se trouve les boutons
-        $alt = FileHelper::sanitize($alt);
-
-        $nom = $rep."espace_$alt.png";
-        ImageHelper::genererImageEspaceDroitsTournee($alt, $nom, $rep);
-
-        return "<img class=\"image_rotate\" src='./images/droits/espace_$alt.png' alt='$alt' /><canvas class=\"canvas_rortate\" /></canvas>";
-    }
-    public static function genererImageEspaceDroitsTournee($alt, $nom, $rep)
-    {
-        if (is_file($nom)) { // Si le bouton existe déja, on renvoie les dimensions
-            $taille = getimagesize($nom);
-            $largeur = $taille[0];
-            $hauteur = $taille[1];
-        } else { // Sinon on va le créer
-            // Utilisation des ressources graphiques
-            $fond = $rep.'fond.png';
-            $taille_fond = getimagesize($fond);
-            $img_fond = ImageCreateFromPng($fond);
-
-            // Paramêtres du bouton
-            $hauteur = $taille_fond[1];
-            $largeur = (strlen($alt)+1)*imagefontwidth(3);
-
-            // Création de l'image vierge + choix de la couleur
-            $img = imageCreate($largeur, $hauteur);
-            $couleur = ImageColorAllocate($img, 0, 0, 0);
-
-            // Elémente graphiques du bouton
-            @imageCopyMerge($img, $img_fond, 0, 0, 0, 0, $largeur, $hauteur, 100);
-
-            // Texte
-            imageString($img, 3, 0, ($hauteur-imagefontheight(3))/2, ' '.stripslashes(trim($alt)), $couleur);
-
-            Imagepng($img, $nom);
-            //ImageHelper::rotation($nom);
-        }
-    }
-
-    // rotation de l'image a 90 degré vers la droite
-    public static function rotation($img)
-    {
-        $degres	= "90";
-        if (file_exists($img)) {
-            $image = getimagesize($img);
-            $image_type = $image['2'];
-
-            $source = imagecreatefrompng($img);
+        if (file_exists($nom_fichier)) {
+            $source = imagecreatefrompng($nom_fichier);
 
             //rotation de l'image
-            $rotation = imagerotate($source, $degres, 255) or die("Erreur lors de la rotation de ".$file);
+            $rotation = imagerotate($source, $degres, 255);
 
             // sauvegarde de l'image
-            imagepng($rotation, $img);
+            imagepng($rotation, $nom_fichier);
         }
     }
-    
+
 	/**
      * Génère une image sous forme de code barre à partir du paramètre
      * Le format utilisé est le "code 39"
@@ -364,6 +127,69 @@ class ImageHelper
             
             return $image;
         }
+    }
+    
+    /**
+     * Crée une image plus petite d'une image en PNG, JPG ou GIF
+     * @param string $nom_fichier : Le nom du fichier complet avec son chemin
+     * @param int $largeur : Largeur voulue de la vignette
+     * @param int $hauteur : Hauteur voulue de la vignette
+     * @param bool $respecter_echelle : [OPT] Respecter ou non les proportions de l'image parente, par défaut non
+     * @return bool|resource : L'image sous forme de ressource
+     */
+    public static function creerVignette ($nom_fichier, $largeur, $hauteur, $respecter_echelle = false) {
+         
+        if ($largeur <= 0 || $hauteur <= 0) {
+            throw new Error("Les dimensions de l'image doivent être des nombres positifs.");
+        }
+        
+        if (!file_exists($nom_fichier)) {
+            throw new Error("Le fichier n'existe pas.");
+        }
+        
+        $extension = explode('.', $nom_fichier);
+        $extension = strtolower($extension[count($extension) - 1]);
+         
+        if ($extension == 'png') {
+            $image = imagecreatefrompng($nom_fichier);
+        } elseif ($extension == 'jpeg' || $extension == 'jpg') {
+            $image = imagecreatefromjpeg($nom_fichier);
+        } elseif ($extension == 'gif') {
+            $image = imagecreatefromgif($nom_fichier);
+        } else {
+            //new Error('Erreur extension introuvable', E_WARNING);
+            return false;
+        }
+        
+        $taille = getimagesize($nom_fichier);
+        $image_copie = imagecreate($largeur, $hauteur);
+        
+        $depart_largeur = 0;
+        $depart_hauteur = 0;
+        if ($respecter_echelle) {
+            $ratio_largeur  = $taille[0] / $largeur;
+            $ratio_hauteur = $taille[1] / $hauteur;
+            
+            // Calcul des nouvelles dimensions
+            if ($ratio_largeur > $ratio_hauteur) {
+                $largeur /= $ratio_largeur;
+                $hauteur /= $ratio_largeur;
+            } else {
+                $largeur /= $ratio_hauteur;
+                $hauteur /= $ratio_hauteur;
+            }
+            
+            // Centrer l'image
+            if ($newwidth < $newheight) {
+                $depart_largeur = ($hauteur - $largeur) / 2;
+            } else {
+                $depart_hauteur = ($largeur - $hauteur) / 2;
+            }
+        }
+        
+        imagecopyresized($image_copie, $image, $depart_largeur, $depart_hauteur, 0, 0, $largeur, $hauteur, $taille[0], $taille[1]);
+         
+        return $image_copie;
     }
 }
 

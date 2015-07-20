@@ -17,14 +17,14 @@ function __autoload($class_name)
 
     //liste des repertoires pouvant contenir une classe à include
     $classes_path = array(
-        __DIR__,
-        __DIR__ . '/helper',
-        __DIR__ . '/component',
         __DIR__ . '/../../../../application',
         __DIR__ . '/../../../../application/model',
         __DIR__ . '/../../../../application/model/base',
         __DIR__ . '/../../../../application/' . APPLICATION . '/controller',
         __DIR__ . '/../../../../application/' . APPLICATION . '/controller/component',
+        __DIR__,
+        __DIR__ . '/helper',
+        __DIR__ . '/component',
     );
 
     //recherche de la classe
