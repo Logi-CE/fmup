@@ -133,14 +133,14 @@ class FiltreListe
     protected $unique_id;
     protected $classe;
     protected $classe_filtre;
-    protected $chemin = '/system/component/filtre_liste/view/';
+    protected $chemin = '/filtre_liste/view/';
     public $timestamp_expiration;
     
     public function __construct($params)
     {
         $this->initialiserAttributs($params);
         
-        $this->chemin = BASE_PATH.$this->chemin;
+        $this->chemin = __DIR__.$this->chemin;
         
         $this->classe_filtre = '';
         
