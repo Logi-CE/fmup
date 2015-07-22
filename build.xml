@@ -39,7 +39,7 @@
             </fileset>
         </coverage-setup>
 
-        <phpunit haltonfailure="true" printsummary="true" codecoverage="true" haltonerror="true" haltonincomplete="true" haltonskipped="true">
+        <phpunit>
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
                   <include name="**/*.php"/>
