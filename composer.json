@@ -3,7 +3,6 @@
     "version":"dev-master",
     "require": {
         "php": "~5.3",
-        "ext-pdo_mysql": "~1.0",
         "ext-json": "~1.2",
         "ext-pcre": "0.0.0.*",
         "ext-mbstring": "0.0.0.*",
@@ -21,6 +20,11 @@
       "sebastian/phpcpd": "~2.0",
       "phploc/phploc": "~2.1",
       "mayflower/php-codebrowser": "~1.1"
+    },
+    "suggest" {
+      "ext-pdo_mysql": "To use Mysql connections",
+      "ext-pdo_sqlite": "To use Sqlite connections",
+      "ext-sqlite3": "To use Sqlite connections",
     },
     "autoload": {
         "psr-4": {
