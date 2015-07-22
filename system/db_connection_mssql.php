@@ -189,7 +189,7 @@ class DbConnectionMssql
         if (!$stmt) {
             throw new Error(Error::erreurRequete($sql));
         }
-        if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != 'phpunit') {
+        if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] != 'phpunit') {
             switch ($type_execute) {
                 case 'INSERT':
                     // Nouvel id cree

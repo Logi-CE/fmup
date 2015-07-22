@@ -10,7 +10,7 @@ class DbHelper
     /**
      * Returns current database driver
      * @param array $params
-     * @return DbConnection|DbConnectionMysql|\FMUP\Db
+     * @return DbConnectionMssql|DbConnectionMysql
      */
     public static function get($params = array())
     {
