@@ -1,7 +1,7 @@
 <?php
 	define('APPLICATION', '');
-	define('BASE_PATH', dirname(dirname(dirname(dirname(__FILE__).'..').'..').'..'));
-	require_once(BASE_PATH."/system/framework.php");
+	define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', '..')));
+	require_once(BASE_PATH."/vendor/autoload.php");
 ?>	 
 <html>
 <head>

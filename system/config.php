@@ -110,8 +110,8 @@ class Config extends ConfigApplication
             } else {
                 $nom_fichier_config = 'config.php';
             }
-            if (file_exists(dirname(__FILE__) . '/../' . $nom_fichier_config)) {
-                include_once(dirname(__FILE__) . '/../' . $nom_fichier_config);
+            if (file_exists(BASE_PATH.'/' . $nom_fichier_config)) {
+                include_once(BASE_PATH.'/' . $nom_fichier_config);
             }
 
             if (empty($params['mail_envoi_test'])) {

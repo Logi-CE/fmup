@@ -1,9 +1,9 @@
 <?php
     set_time_limit(-1);
     define('APPLICATION', '');
-	define('BASE_PATH', dirname(dirname(dirname(dirname(__FILE__).'..').'..').'..'));
-    require_once(BASE_PATH."/system/framework.php");
-    require_once(BASE_PATH."/system/component/generateur/generateur.php");
+	define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', '..')));
+    require_once(BASE_PATH."/vendor/autoload.php");
+    require_once( __DIR__ .'/generateur.php');
 
     $generateur = new Generateur();
     $tables = $generateur->getTables();

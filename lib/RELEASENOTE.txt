@@ -1,4 +1,17 @@
 /*********/
+/* 2.0.1 */
+/*********/
+
+Compliance with old FMU 1.0.0.6 components
+
+#Fix
+ - Component generateur to load correct PATH
+ - Component console to load correct PATH
+ - Component filtre_liste to load correct PATH
+ - DbConnectionMssql to be usable in CLI
+ - DbHelper can load DbConnectionMssql driver
+
+/*********/
 /* 2.0.0 */
 /*********/
 
