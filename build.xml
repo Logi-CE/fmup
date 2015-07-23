@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="FMUP" default="ci" basedir=".">
+    <property name="isUnix" value="0" />
+    <condition property="isUnix" value="1">
+        <os family="Unix" />
+    </condition>
+
     <target name="ci"
         description="Tâche principale d'intégration continue"
         depends="clean,quality_assurance"
@@ -20,7 +25,7 @@
     </target>
 
     <target name="quality_assurance" description="Lance les outils d'analyse" depends="clean">
-        <phingcall target="phpunit" />
+        <!--phingcall target="phpunit" /-->
         <phingcall target="phpcs" />
         <phingcall target="phpdoc" />
         <phingcall target="phpmd" />
@@ -102,7 +107,7 @@
     </target>
     
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' --exclude='${project.basedir}/build' --exclude='${project.basedir}/tests' --exclude='${project.basedir}/vendor' '${project.basedir}'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="${project.basedir}/vendor/bin/phploc --log-csv ${project.basedir}/build/logs/phploc.csv --exclude='build' --exclude='tests' --exclude='vendor' ." escape="false" />
     </target>
     
     <target name="pdepend">
