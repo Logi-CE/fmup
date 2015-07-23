@@ -46,7 +46,7 @@
                   <include name="*.php"/>
                 </fileset>
             </batchtest>
-            <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml"></formatter>
+            <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml" />
         </phpunit>
 
         <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
@@ -78,39 +78,44 @@
     </target>
            
     <target name="phpmd">
-        <phpmd file="${project.basedir}/lib">
+        <phpmd>
+            <fileset dir="${project.basedir}">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
             <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
-        </phpmd>
-        <phpmd file="${project.basedir}/system">
-            <formatter type="xml" outfile="${project.basedir}/build/logs/fmu-phpmd.xml" />
         </phpmd>
     </target>
 
     <target name="phpcpd">
-        <phpcpd file="${project.basedir}/lib/">
+        <phpcpd>
+            <fileset dir="${project.basedir}">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
             <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
-        </phpcpd>
-        <phpcpd file="${project.basedir}/system/">
-            <formatter type="pmd" outfile="${project.basedir}/build/logs/fmu-cpd.xml"/>
         </phpcpd>
     </target>
     
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/lib'" escape="false" />
-        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/fmu-phploc.csv' '${project.basedir}/system'" escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' --exclude='${project.basedir}/build' --exclude='${project.basedir}/tests' --exclude='${project.basedir}/vendor' '${project.basedir}'" escape="false" />
     </target>
     
     <target name="pdepend">
-      <phpdepend file="${project.basedir}/lib">
+      <phpdepend>
+          <fileset dir="${project.basedir}">
+              <include name="lib/**/*.php"/>
+              <include name="lib/*.php"/>
+              <include name="system/**/*.php"/>
+              <include name="system/*.php"/>
+          </fileset>
           <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
           <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
           <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
-      </phpdepend>
-      
-      <phpdepend file="${project.basedir}/system">
-          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/fmu-jdepend.xml" />
-          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/fmu-dependencies.svg" />
-          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/fmu-overview-pyramid.svg" />
       </phpdepend>
     </target>
     
