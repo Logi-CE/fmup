@@ -105,11 +105,11 @@
             <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
         </phpcpd>
     </target>
-    
+
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command="${project.basedir}/vendor/bin/phploc --log-csv ${project.basedir}/build/logs/phploc.csv --exclude='build' --exclude='tests' --exclude='vendor' ." escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command="${project.basedir}/vendor/bin/phploc --log-csv ${project.basedir}/build/logs/phploc.csv system lib" escape="false" />
     </target>
-    
+
     <target name="pdepend">
       <phpdepend>
           <fileset dir="${project.basedir}">
