@@ -8,7 +8,7 @@ class EmailHelper
 {
     /**
      * Envoi un mail avec ou sans pièces jointes
-     * @param $identifiant id du template à utiliser
+     * @param $template template à utiliser
      * @param $send_to Destinataire
      * @param $tokens Tokens à remplacer dans le message
      * @param $files tableau de fichier sous la forme path, name et mime
@@ -18,13 +18,18 @@ class EmailHelper
      * @param $options ajouts de paramètres complémentaires tel que le forçage de l'objet ou du message, malgré l'utilisation d'un template de mail.
      * @return retour de la fonction mail
      */
-    public static function sendEmail($identifiant, $send_to, $tokens = array(), $files = array(), $handle = false, $email_cache = "", $params = array(), $options = array())
+    public static function sendEmail($template, $send_to, $tokens = array(), $files = array(), $handle = false, $email_cache = "", $params = array(), $options = array())
     {
         $my_mail = new PHPMailer(true);
 
-        if (preg_match('|^(?:[^<]*<)?([^>]*)(?:>)?$|i', $send_to, $matches) || !Config::isEnvoiMailPossible($identifiant)) {
+        if (preg_match('|^(?:[^<]*<)?([^>]*)(?:>)?$|i', $send_to, $matches) || !Config::isEnvoiMailPossible($template)) {
             $adresse_mail = $matches[1];
-            $email = Email::findOne($identifiant);
+            $email = Email::findByTypeAndChannel($template);
+
+            if(empty($email))
+                throw new Error(Error::emailTemplateAbsent($template));
+
+            $identifiant = $email->getId();
 
             // on va vérifier que tous les emails ont bien un bon format
             // séparateur d'email, le ';'
@@ -120,12 +125,10 @@ class EmailHelper
                     if ($handle) {
                         FileHelper::fLog('mail', $e->errorMessage());
                     }
-                    //emailHelper::sendEmailErreur($identifiant, $e->getMessage(), $log_adress, $objet, $message);
                 } catch (Exception $e) {
                     if ($handle) {
                         FileHelper::fLog('mail', $e->getMessage());
                     }
-                    //emailHelper::sendEmailErreur($identifiant, $e->getMessage(), $log_adress, $objet, $message);
                 }
             } else {
                 throw new Error(Error::emailTemplateAbsent($identifiant));
