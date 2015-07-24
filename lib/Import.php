@@ -1,5 +1,5 @@
 <?php
-namespace FMU;
+namespace FMUP;
 
 use FMUP\Import\Iterator\FieldValideIterator;
 use FMUP\Import\Iterator\LineFilterIterator;
@@ -7,12 +7,12 @@ use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\FileIterator;
 use FMUP\Import\Iterator\DoublonIterator;
 
-class Import
+abstract class Import
 {
 
-    private $fileIterator;
+    protected $fileIterator;
 
-    private $config;
+    protected $config;
 
     public function __construct($file_name, \FMUP\Import\Config $config)
     {
@@ -20,20 +20,6 @@ class Import
         $this->config = $config;
     }
 
-    public function parse ()
-    {
-        $lci = new LineToConfigIterator($this->fileIterator, $this->config);
-        $di = new DoublonIterator($lci);
-        $lvi = new LineFilterIterator($lci);
-        
-        foreach ($di as $key => $value) {
-            echo "key : ".$key."\n";
-            echo "config : ".$value."\n";
-            if ($value) {
-                echo $value->validateLine();
-                echo "\n doublon ligne : ".$value->getDoublonLigne() . "\n";
-            }
-        }
-    }
+    public abstract function parse ();
 }
 ?>

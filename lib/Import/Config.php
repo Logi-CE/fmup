@@ -206,7 +206,9 @@ class Config
             // pour tous les champs renseignés
             foreach ($config_objet->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objet->setAttribute($this->getField($index) ->getChampCible(), $this->getField($index) ->getValue());
+                $objet->setAttribute($this->getField($index)
+                    ->getChampCible(), $this->getField($index)
+                    ->getValue());
                 // et on prépare le filtre
                 $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%" . $this->getField($index)->getValue() . "%'";
             }
@@ -256,7 +258,9 @@ class Config
             // pour tous les champs obligatoires renseignés
             foreach ($config_objet->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objet->setAttribute($this->getField($index) ->getChampCible(), $this->getField($index) ->getValue());
+                $objet->setAttribute($this->getField($index)
+                    ->getChampCible(), $this->getField($index)
+                    ->getValue());
                 // et on prépare le filtre
                 $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%" . $this->getField($index)->getValue() . "%'";
             }

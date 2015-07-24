@@ -1,5 +1,5 @@
 <?php
-namespace FMU;
+namespace FMUP;
 
 use FMUP\Import\Iterator\ValidatorIterator;
 use FMUP\Import\Iterator\LineFilterIterator;
@@ -17,21 +17,12 @@ use FMUP\Import\Iterator\FMUP\Import\Iterator;
 class ImportLancer extends \FMUP\Import
 {
 
-    private $fileIterator;
-
-    private $config;
 
     private $total_insert;
 
     private $total_update;
 
     private $total_errors;
-
-    public function __construct($file_name, \FMUP\Import\Config $config)
-    {
-        $this->fileIterator = new FileIterator($file_name);
-        $this->config = $config;
-    }
 
     /**
      *
