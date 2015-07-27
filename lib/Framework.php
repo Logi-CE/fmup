@@ -146,8 +146,8 @@ class Framework extends \Framework
         /* @var $controllerInstance \Controller */
         $controllerInstance = new $controllerName();
         $controllerInstance->setDb(Helper\Db::getInstance()); //to be compliant with old system - DB should not be in controller @todo
-
         $sys_controller_instance = $controllerInstance; //to be compliant with old system @todo
+
         if ($controllerInstance instanceof Controller) {
             /* @var $controllerInstance Controller */
             $controllerInstance
@@ -243,7 +243,10 @@ class Framework extends \Framework
      */
     public function registerErrorHandler()
     {
-        if (\Config::isDebug() || !\Config::useDailyAlert()) {
+        if (
+            $this->getBootstrap()->getConfig()->get('is_debug') ||
+            !$this->getBootstrap()->getConfig()->get('use_daily_alert')
+        ) {
             parent::registerErrorHandler();
         }
         return $this;
@@ -254,18 +257,15 @@ class Framework extends \Framework
      */
     public function shutDown()
     {
-        if (!\Config::useDailyAlert()) {
+        if (!$this->getBootstrap()->getConfig()->get('use_daily_alert')) {
             parent::shutDown();
         } else {
-            if (\Config::consoleActive()) {
-                \Console::finaliser();
-            }
             if (($error = error_get_last()) !== null) {
                 Error::addContextToErrorLog();
                 $isUrgentError = in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR));
                 if ($isUrgentError) {
                     Error::sendMail();
-                    if (!\Config::isDebug()) {
+                    if (!$this->getBootstrap()->getConfig()->get('is_debug')) {
                         echo \Constantes::getMessageErreurApplication();
                     }
                 }
@@ -345,6 +345,8 @@ class Framework extends \Framework
         $this->getBootstrap()
             ->setRequest($this->getRequest())
             ->warmUp();
+        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
+        Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
         parent::initialize();
     }
 }

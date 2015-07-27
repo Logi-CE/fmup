@@ -8,6 +8,7 @@ class Bootstrap
     private $logger;
     private $request;
     private $session;
+    private $config;
     private $flashMessenger;
 
     /**
@@ -19,8 +20,18 @@ class Bootstrap
      */
     public function warmUp()
     {
-        $this->getLogger();
+        $this->initHelperDb()->getLogger();
         //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and errorhandler before
+        return $this;
+    }
+
+    /**
+     * Initialize Config in helper db
+     * @return $this
+     */
+    private function initHelperDb()
+    {
+        Helper\Db::setConfig($this->getConfig());
         return $this;
     }
 
@@ -30,7 +41,7 @@ class Bootstrap
     public function getSession()
     {
         if (!$this->session) {
-            $this->session = \FMUP\Session::getInstance();
+            $this->session = Session::getInstance();
         }
         return $this->session;
     }
@@ -40,7 +51,7 @@ class Bootstrap
      * @param Session $session
      * @return $this
      */
-    public function setSession(\FMUP\Session $session)
+    public function setSession(Session $session)
     {
         $this->session = $session;
         return $this;
@@ -110,7 +121,7 @@ class Bootstrap
     public function getFlashMessenger()
     {
         if ($this->flashMessenger === null) {
-            $this->flashMessenger = \FMUP\FlashMessenger::getInstance();
+            $this->flashMessenger = FlashMessenger::getInstance();
         }
         return $this->flashMessenger;
     }
@@ -119,9 +130,30 @@ class Bootstrap
      * @param FlashMessenger $flashMessenger
      * @return $this
      */
-    public function setFlashMessenger(\FMUP\FlashMessenger $flashMessenger)
+    public function setFlashMessenger(FlashMessenger $flashMessenger)
     {
         $this->flashMessenger = $flashMessenger;
+        return $this;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        if (!$this->config) {
+            $this->config = new Config();
+        }
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
         return $this;
     }
 }

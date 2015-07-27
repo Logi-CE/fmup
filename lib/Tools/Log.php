@@ -7,6 +7,10 @@ class Log
      * @var \PHPMailer
      */
     protected $mailerInstance = NULL;
+    /**
+     * @var \FMUP\Config
+     */
+    protected $config = NULL;
 
     /**
      * Sends log file for a specified date to support team
@@ -15,7 +19,7 @@ class Log
      */
     public function sendErrorLog($date = NULL)
     {
-        $mailAddresses = explode(';', \Config::paramsVariables('mail_support'));
+        $mailAddresses = explode(';', $this->getConfig()->get('mail_support'));
         return $this->sendFileToMail(\Config::pathToPhpErrorLog($date), $mailAddresses);
     }
 
@@ -36,7 +40,7 @@ class Log
         }
         $mailer = $this->getMailer();
         $mailer->IsHTML(false);
-        $mailer->Subject = "[" . \Config::paramsVariables('version') . "] Daily log alert";
+        $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
         $mailer->Body = $body;
         $mailer->AltBody = $body;
         foreach ((array) $mailAddresses as $mail) {
@@ -55,7 +59,7 @@ class Log
             $mailer = new \PHPMailer(true);
             $mailer->IsHTML(false);
             $mailer->CharSet = "UTF-8";
-            $mailer->SetFrom(\Config::paramsVariables('mail_robot'), \Config::paramsVariables('mail_robot_name'));
+            $mailer->SetFrom($this->getConfig()->get('mail_robot'), $this->getConfig()->get('mail_robot_name'));
             $this->mailerInstance = $mailer;
         }
         return $this->mailerInstance;
@@ -70,5 +74,27 @@ class Log
     {
         $this->mailerInstance = $mailer;
         return $this;
+    }
+
+    /**
+     * @param \FMUP\Config $config
+     * @return $this
+     */
+    public function setConfig(\FMUP\Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return \FMUP\Config
+     * @throws \LogicException
+     */
+    public function getConfig()
+    {
+        if (!$this->config) {
+            throw new \LogicException("This object needs config!");
+        }
+        return $this->config;
     }
 }

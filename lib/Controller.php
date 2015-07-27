@@ -88,8 +88,8 @@ abstract class Controller extends \Controller
         if (!$this->view) {
             $this->view = new View();
             $this->view
-                ->setParam('styles', \Config::paramsVariables('styles'))
-                ->setParam('javascripts', \Config::paramsVariables('javascripts'))
+                ->setParam('styles', $this->getBootstrap()->getConfig()->get('styles'))
+                ->setParam('javascripts', $this->getBootstrap()->getConfig()->get('javascripts'))
             ;
         }
         return $this->view;

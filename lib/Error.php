@@ -9,29 +9,52 @@ namespace FMUP;
 class Error
 {
     private static $session;
+    /**
+     * @var Config
+     */
+    private static $config;
 
     /**
-     * @return \FMUP\Session
+     * @return Session
      */
     public static function getSession()
     {
         if (!self::$session) {
-            self::$session = \FMUP\Session::getInstance();
+            self::$session = Session::getInstance();
         }
         return self::$session;
     }
 
     /**
-     * @param \FMUP\Session $session
+     * @param Session $session
      */
-    public static function setSession(\FMUP\Session $session)
+    public static function setSession(Session $session)
     {
         self::$session = $session;
     }
 
     /**
+     * @return Config
+     */
+    public static function getConfig()
+    {
+        if (!self::$config) {
+            throw new \LogicException('Config must be set');
+        }
+        return self::$config;
+    }
+
+    /**
+     * @param Config $config
+     */
+    public static function setConfig(Config $config)
+    {
+        self::$config = $config;
+    }
+
+    /**
      * @todo : rewrite this since this is really dirty
-     * @todo : think SOLID : this function must not Format AND Write + access to superglobals that might not exit
+     * @todo : think SOLID : this function must not Format AND Write + access to super globals that might not exit
      */
     public static function addContextToErrorLog()
     {
@@ -84,37 +107,37 @@ class Error
 
     static public function sendMail()
     {
+        $config = self::getConfig();
         if (!\Config::isEnvoiMailPossible()) {
             return false;
         }
         $mailBody = self::mailContent();
-        //require_once __DIR__ .'/../../../../lib/PHPMailer_v5.0.2/class.phpmailer.php';
 
         $mail = new \PHPMailer();
-        if (\Config::paramsVariables('smtp_serveur') != 'localhost') {
+        if ($config->get('smtp_serveur') != 'localhost') {
             $mail->IsSMTP();
         }
         $mail->CharSet = "UTF-8";
-        $mail->SMTPAuth   = \Config::paramsVariables('smtp_authentification');
-        $mail->SMTPSecure = \Config::paramsVariables('smtp_secure');
+        $mail->SMTPAuth   = $config->get('smtp_authentification');
+        $mail->SMTPSecure = $config->get('smtp_secure');
 
-        $mail->Host   = \Config::paramsVariables('smtp_serveur');
-        $mail->Port   = \Config::paramsVariables('smtp_port');
+        $mail->Host   = $config->get('smtp_serveur');
+        $mail->Port   = $config->get('smtp_port');
 
-        if (\Config::paramsVariables('smtp_authentification')) {
-            $mail->Username   = \Config::paramsVariables('smtp_username');     // Gmail identifiant
-            $mail->Password   = \Config::paramsVariables('smtp_password');		// Gmail mot de passe
+        if ($config->get('smtp_authentification')) {
+            $mail->Username   = $config->get('smtp_username');      // Gmail identifiant
+            $mail->Password   = $config->get('smtp_password');      // Gmail mot de passe
         }
 
-        $mail->From       = \Config::paramsVariables('mail_robot');
-        $mail->FromName   = \Config::paramsVariables('erreur_mail_from_name');
+        $mail->From       = $config->get('mail_robot');
+        $mail->FromName   = $config->get('erreur_mail_from_name');
         $mail->Subject    = '[Erreur] '.$_SERVER['SERVER_NAME'];
         $mail->AltBody    = $mailBody;
         $mail->WordWrap   = 50; // set word wrap
 
         $mail->Body = $mailBody;
 
-        $recipients = \Config::paramsVariables('mail_support');
+        $recipients = $config->get('mail_support');
         if (strpos($recipients, ',') === false) {
             $mail->AddAddress($recipients, "Support");
         } else {

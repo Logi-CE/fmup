@@ -9,6 +9,7 @@ abstract class Db
 {
     const DEFAULT_NAME = 'DEFAULT_NAME';
     protected static $instances = array();
+    protected static $config = null;
 
     /**
      * @param string $name
@@ -25,9 +26,9 @@ abstract class Db
         $name = (string)$name;
         if (!isset(self::$instances[$name])) {
             if ($name == self::DEFAULT_NAME) {
-                $params = \Config::parametresConnexionDb();
+                $params = self::getConfig()->get('parametres_connexion_db');
             } else {
-                $dbSettings = \Config::paramsVariables('db');
+                $dbSettings = self::getConfig()->get('db');
                 if (isset($dbSettings[$name])) {
                     $params = $dbSettings[$name];
                 } else {
@@ -46,5 +47,25 @@ abstract class Db
     private function __construct()
     {
 
+    }
+
+    /**
+     * @param \FMUP\Config $config
+     */
+    static public function setConfig(\FMUP\Config $config)
+    {
+        self::$config = $config;
+    }
+
+    /**
+     * @return \FMUP\Config
+     * @throws \LogicException
+     */
+    static public function getConfig()
+    {
+        if (!self::$config) {
+            throw new \LogicException('Config is not defined and required!');
+        }
+        return self::$config;
     }
 }

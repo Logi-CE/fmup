@@ -61,7 +61,10 @@ abstract class Error extends \FMUP\Controller
      */
     protected function sendMailOnException()
     {
-        if (!\Config::useDailyAlert() && !\Config::isDebug()) {
+        if (
+            !$this->getBootstrap()->getConfig()->get('use_daily_alert') &&
+            !$this->getBootstrap()->getConfig()->get('is_debug')
+        ) {
             try {
                 throw new \Error($this->getException()->getMessage(), E_WARNING);
             } catch (\Exception $e) {
