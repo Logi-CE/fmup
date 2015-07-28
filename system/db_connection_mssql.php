@@ -165,6 +165,7 @@ class DbConnectionMssql
             throw new Error(Error::typeDeRequeteInconnue());
         }
 
+        $retour = false;
         try {
             $stmt = $this->conn->prepare($sql);
 
@@ -172,7 +173,29 @@ class DbConnectionMssql
             $memoire = memory_get_usage();
 
             $stmt->execute();
-
+            if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] != 'phpunit') {
+                switch ($type_execute) {
+                    case 'INSERT':
+                        // Nouvel id cree
+                        $ressource = $this->requeteUneLigne('SELECT @@IDENTITY AS id', '', false);
+                        $retour = round($ressource['id']);
+                        break;
+                    case 'UPDATE':
+                    case 'DELETE':
+                        // Nb lignes affectees
+                        $ressource = $this->requeteUneLigne('SELECT @@ROWCOUNT AS nb', '', false);
+                        $retour = round($ressource['nb']);
+                        break;
+                    case 'CREATE TABLE':
+                    case 'TRUNCATE TABLE':
+                    case 'DROP TABLE';
+                    case 'ALTER':
+                        $retour = true;
+                        break;
+                    default:
+                        throw new Error(Error::erreurInconnue());
+                }
+            }
             $duree -= microtime(1);
             $memoire -= memory_get_usage();
             $stockage_data = array(
@@ -183,36 +206,13 @@ class DbConnectionMssql
             );
             HistoriqueHelper::logRequete($stockage_data, 'fct_execute');
             Console::enregistrer($stockage_data, LOG_SQL);
+            return $retour;
         } catch (Exception $e) {
             new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
         }
+
         if (!$stmt) {
             throw new Error(Error::erreurRequete($sql));
-        }
-        if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] != 'phpunit') {
-            switch ($type_execute) {
-                case 'INSERT':
-                    // Nouvel id cree
-                    $ressource = $this->requeteUneLigne('SELECT @@IDENTITY AS id', '', false);
-                    $nouvel_id = round($ressource['id']);
-                    return $nouvel_id;
-                    break;
-                case 'UPDATE':
-                case 'DELETE':
-                    // Nb lignes affectees
-                    $ressource = $this->requeteUneLigne('SELECT @@ROWCOUNT AS nb', '', false);
-                    $nb_lignes_affectees = round($ressource['nb']);
-                    return $nb_lignes_affectees;
-                    break;
-                case 'CREATE TABLE':
-                case 'TRUNCATE TABLE':
-                case 'DROP TABLE';
-                case 'ALTER':
-                    return true;
-                    break;
-                default:
-                    throw new Error(Error::erreurInconnue());
-            }
         }
     }
 
