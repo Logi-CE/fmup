@@ -1,19 +1,16 @@
 <?php
-namespace FMUP;
+namespace FMUP\Import;
 
 use FMUP\Import\Iterator\ValidatorIterator;
-use FMUP\Import\Iterator\LineFilterIterator;
 use FMUP\Import\Iterator\LineToConfigIterator;
-use FMUP\Import\Iterator\FileIterator;
 use FMUP\Import\Iterator\DoublonIterator;
-use FMUP\Import\Iterator\FMUP\Import\Iterator;
 
 /**
  *
  * @author csanz
  *        
  */
-abstract class ImportAffichage extends \FMUP\Import
+abstract class Display extends \FMUP\Import
 {
 
 
@@ -58,7 +55,7 @@ abstract class ImportAffichage extends \FMUP\Import
             $vi = new ValidatorIterator($di);
             foreach ($vi as $key => $value) {
                 if ($value) {
-                    $this->afficherImport($value, $vi, $di, $lci, $key);
+                    $this->displayImport($value, $vi, $di, $lci, $key);
                 }
             }
             $this->total_errors = $vi->getTotalErrors();
@@ -78,6 +75,11 @@ abstract class ImportAffichage extends \FMUP\Import
      * @param LineToConfigIterator $lci  
      * @param integer $key          
      */
-    public abstract function afficherImport($value, $vi, $di, $lci, $key);
+    public abstract function displayImport(
+        Config $value,
+        ValidatorIterator $vi,
+        DoublonIterator $di,
+        LineToConfigIterator $lci,
+        $key
+    );
 }
-?>

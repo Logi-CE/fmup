@@ -9,7 +9,7 @@ class LiaisonBase
     public function __construct(Config $config)
     {
         foreach ($config->getListeField() as $field) {
-            $nom_objet = String::to_Case($field->getTableCible());
+            $nom_objet = \String::to_Case($field->getTableCible());
             if (array_key_exists($nom_objet, $this->liste_objet)) {
                 
             }

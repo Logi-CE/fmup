@@ -1,11 +1,7 @@
 <?php
 namespace FMUP;
 
-use FMUP\Import\Iterator\FieldValideIterator;
-use FMUP\Import\Iterator\LineFilterIterator;
-use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\FileIterator;
-use FMUP\Import\Iterator\DoublonIterator;
 
 abstract class Import
 {
@@ -22,4 +18,3 @@ abstract class Import
 
     public abstract function parse ();
 }
-?>

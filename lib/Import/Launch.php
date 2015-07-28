@@ -1,12 +1,9 @@
 <?php
-namespace FMUP;
+namespace FMUP\Import;
 
 use FMUP\Import\Iterator\ValidatorIterator;
-use FMUP\Import\Iterator\LineFilterIterator;
 use FMUP\Import\Iterator\LineToConfigIterator;
-use FMUP\Import\Iterator\FileIterator;
 use FMUP\Import\Iterator\DoublonIterator;
-use FMUP\Import\Iterator\FMUP\Import\Iterator;
 
 /**
  * Lance l'import effectif
@@ -14,7 +11,7 @@ use FMUP\Import\Iterator\FMUP\Import\Iterator;
  * @author csanz
  *        
  */
-class ImportLancer extends \FMUP\Import
+class Launch extends \FMUP\Import
 {
 
 
@@ -78,4 +75,3 @@ class ImportLancer extends \FMUP\Import
         }
     }
 }
-?>
