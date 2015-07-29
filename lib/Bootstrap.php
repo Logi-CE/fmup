@@ -10,6 +10,7 @@ class Bootstrap
     private $session;
     private $config;
     private $flashMessenger;
+    private $isWarmed;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -20,8 +21,11 @@ class Bootstrap
      */
     public function warmUp()
     {
-        $this->initHelperDb()->getLogger();
-        //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and errorhandler before
+        if (!$this->isWarmed) {
+            $this->initHelperDb()->getLogger();
+            //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and error handler before
+            $this->isWarmed = true;
+        }
         return $this;
     }
 
@@ -31,7 +35,7 @@ class Bootstrap
      */
     private function initHelperDb()
     {
-        Helper\Db::setConfig($this->getConfig());
+        Helper\Db::setConfig($this->getConfig());//@todo find a better solution
         return $this;
     }
 
@@ -108,11 +112,21 @@ class Bootstrap
      */
     public function getRequest()
     {
-        if (!$this->request) {
+        if (!$this->hasRequest()) {
             throw new \LogicException('Request is not defined');
         }
         return $this->request;
     }
+
+    /**
+     * Check if request is defined
+     * @return bool
+     */
+    public function hasRequest()
+    {
+        return !is_null($this->request);
+    }
+
 
     /**
      * Get flashMessenger
@@ -141,8 +155,8 @@ class Bootstrap
      */
     public function getConfig()
     {
-        if (!$this->config) {
-            $this->config = new Config();
+        if (!$this->hasConfig()) {
+            throw new \LogicException('Config is not defined');
         }
         return $this->config;
     }
@@ -155,5 +169,10 @@ class Bootstrap
     {
         $this->config = $config;
         return $this;
+    }
+
+    public function hasConfig()
+    {
+        return !is_null($this->config);
     }
 }

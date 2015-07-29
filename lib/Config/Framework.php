@@ -1,6 +1,10 @@
 <?php
 namespace FMUP\Config;
 
+/**
+ * Class Framework
+ * @package FMUP\Config
+ */
 class Framework extends \FMUP\Config
 {
     private static $instance;
@@ -23,6 +27,4 @@ class Framework extends \FMUP\Config
     {
 
     }
-
-
 }

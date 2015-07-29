@@ -28,6 +28,7 @@ $sys_controller_instance = null;
 
 /**
  * Classe d'initialisation du framework
+ * @deprecated use \FMUP\Framework instead
  */
 class Framework
 {
@@ -70,7 +71,6 @@ class Framework
                 FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
             }
         }
-        $this->preDispatch();
         $this->dispatch();
 
         // historisation
@@ -92,7 +92,6 @@ class Framework
     {
         list($controllerName, $action) = $this->getRoute();
         $this->instantiate($controllerName, $action);
-        $this->postDispatch();
         return $this;
     }
 
@@ -120,7 +119,7 @@ class Framework
         }
         
         // Préfiltre
-        $sys_controller_instance->preFiltre($sys_function);
+        $sys_controller_instance->preFilter($sys_function);
 
         
         // Si la fonction peut être appelée on l'appelle
@@ -133,7 +132,7 @@ class Framework
         }
 
         // Postfiltre
-        $sys_controller_instance->postFiltre();
+        $sys_controller_instance->postFilter();
         return $sys_controller_instance;
     }
 

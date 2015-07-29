@@ -42,6 +42,10 @@ class Framework extends \Framework
      * @var Bootstrap
      */
     private $bootstrap;
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
      * @param Routing $routingSystem
@@ -107,6 +111,29 @@ class Framework extends \Framework
     }
 
     /**
+     * Define a config to use
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * Retrieve defined config
+     * @return Config
+     */
+    public function getConfig()
+    {
+        if (!$this->config) {
+            $this->config = new Config;
+        }
+        return $this->config;
+    }
+
+    /**
      * @return array
      * @throws \NotFoundError
      */
@@ -139,14 +166,14 @@ class Framework extends \Framework
     protected function instantiate($controllerName, $action)
     {
         //To be compliant with old system @todo
-        global $sys_controller_instance;
+        //global $sys_controller_instance;
         if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }
         /* @var $controllerInstance \Controller */
         $controllerInstance = new $controllerName();
-        $controllerInstance->setDb(Helper\Db::getInstance()); //to be compliant with old system - DB should not be in controller @todo
-        $sys_controller_instance = $controllerInstance; //to be compliant with old system @todo
+        //$controllerInstance->setDb(Helper\Db::getInstance()); //to be compliant with old system - DB should not be in controller @todo
+        //$sys_controller_instance = $controllerInstance; //to be compliant with old system @todo
 
         if ($controllerInstance instanceof Controller) {
             /* @var $controllerInstance Controller */
@@ -158,14 +185,14 @@ class Framework extends \Framework
             $action = $action . 'Action'; //we force action to be a xxxAction
         }
 
-        $controllerInstance->preFiltre($action);
+        $controllerInstance->preFilter($action);
         $actionReturn = null;
         if (method_exists($controllerInstance, $action)) {
-            $actionReturn = call_user_func(array($controllerInstance, $action));
+            $actionReturn = $controllerInstance->$action();
         } else {
             throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($action));
         }
-        $controllerInstance->postFiltre();
+        $controllerInstance->postFilter($action);
 
         if ($controllerInstance instanceof Controller && !is_null($actionReturn)) {
             $controllerInstance->getResponse()
@@ -182,7 +209,13 @@ class Framework extends \Framework
     protected function dispatch()
     {
         try {
-            return parent::dispatch();
+            $this->preDispatch();
+            parent::dispatch();
+        } catch (Exception\Location $exception) {
+            $this->getResponse()
+                ->addHeader(
+                    new Response\Header\Location($exception->getLocation())
+                );
         } catch (\Exception $exception) {
             $controller = $this->getErrorController()
                 ->setBootstrap($this->getBootstrap())
@@ -190,8 +223,8 @@ class Framework extends \Framework
                 ->setResponse($this->getResponse())
                 ->setException($exception);
             $controller->indexAction();
-            $this->postDispatch();
         }
+        $this->postDispatch();
         return $this;
     }
 
@@ -342,11 +375,17 @@ class Framework extends \Framework
      */
     public function initialize()
     {
-        $this->getBootstrap()
-            ->setRequest($this->getRequest())
-            ->warmUp();
+        if (!$this->getBootstrap()->hasRequest()) {
+            $this->getBootstrap()->setRequest($this->getRequest());
+        }
+        if (!$this->getBootstrap()->hasConfig()) {
+            $this->getBootstrap()->setConfig($this->getConfig());
+        }
+        $this->getBootstrap()->warmUp();
+
         \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
         Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
+
         parent::initialize();
     }
 }

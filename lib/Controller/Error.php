@@ -18,7 +18,7 @@ abstract class Error extends \FMUP\Controller
      * rewrite to tell everybody can access error controller
      * @param string $calledAction
      */
-    public function preFiltre($calledAction = NULL)
+    public function preFilter($calledAction = NULL)
     {
     }
 
@@ -57,7 +57,7 @@ abstract class Error extends \FMUP\Controller
      * @todo rewrite to avoid use of Error
      * @uses \Config
      * @uses \Error
-     * @return $this
+     * @return self
      */
     protected function sendMailOnException()
     {

@@ -1,12 +1,11 @@
 <?php
 namespace FMUP;
-use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * Class Controller
  * @package FMUP
  */
-abstract class Controller extends \Controller
+abstract class Controller
 {
     private $bootstrap;
     private $request;
@@ -18,12 +17,21 @@ abstract class Controller extends \Controller
      * this method is called before each action
      * @param string $calledAction
      */
-    public function preFiltre($calledAction = NULL)
+    public function preFilter($calledAction = NULL)
     {
     }
 
     /**
-     * @throws LogicException
+     * this method is called after each action
+     * @param string $calledAction
+     */
+    public function postFilter($calledAction = NULL)
+    {
+
+    }
+
+    /**
+     * @throws \LogicException
      * @return Request
      */
     public function getRequest()
@@ -45,7 +53,7 @@ abstract class Controller extends \Controller
     }
 
     /**
-     * @throws LogicException
+     * @throws \LogicException
      * @return Response
      */
     public function getResponse()
@@ -87,10 +95,6 @@ abstract class Controller extends \Controller
     {
         if (!$this->view) {
             $this->view = new View();
-            $this->view
-                ->setParam('styles', $this->getBootstrap()->getConfig()->get('styles'))
-                ->setParam('javascripts', $this->getBootstrap()->getConfig()->get('javascripts'))
-            ;
         }
         return $this->view;
     }
@@ -107,6 +111,7 @@ abstract class Controller extends \Controller
     }
 
     /**
+     * @throws \LogicException
      * @return Bootstrap
      */
     protected function getBootstrap()
