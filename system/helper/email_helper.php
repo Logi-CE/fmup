@@ -33,9 +33,9 @@ class EmailHelper
             foreach ($liste_mail as $e) {
                 if (!Is::courriel($e) && Config::isEnvoiMailPossible($identifiant)) {
                     if ($handle) {
-                        FileHelper::fLog('mail', 'problème adresse mail : "'.$e.'" - '.$send_to);
+                        FileHelper::fLog('mail', 'problème adresse mail : "' . $e . '" - ' . $send_to);
                     } else {
-                        throw new Error('adresse email incorrecte : "'.$e.'"');
+                        throw new Error('adresse email incorrecte : "' . $e . '"');
                     }
                     $no_problem = true;
                 }
@@ -45,7 +45,7 @@ class EmailHelper
                 try {
                     //TODO : en attendant de faire mieux avec le nom et prénom de la personne
                     $to = $adresse_mail;
-                    
+
                     // Remplacement du message de l'email par un message particulier si ce paramètre éxiste
                     if (isset($options['message_foce'])) {
                         $message = $options['message_foce'];
@@ -64,7 +64,7 @@ class EmailHelper
 
                     $adress_caches = Config::paramsVariables('mail_cache');
                     $my_mail = self::addBCC($my_mail, $adress_caches);
-                    
+
                     // Pareil pour l'objet du message
                     if (isset($options['objet_foce'])) {
                         $objet = $options['objet_foce'];
@@ -72,18 +72,18 @@ class EmailHelper
                         $objet = $email->getObjet();
                     }
                     $objet = emailHelper::remplaceToken($objet, $tokens);
-                    
+
                     if (!Config::isEnvoiMailPossible($identifiant)) {
-                        $objet .= ' ## '.$send_to;
+                        $objet .= ' ## ' . $send_to;
                     }
                     if (Config::paramsVariables('version') == 'dev') {
-                        $objet  = ' ** DEV ** '.$objet;
+                        $objet = ' ** DEV ** ' . $objet;
                     }
                     $my_mail->Subject = $objet;
 
                     foreach ($files as $files_infos) {
-                        $nom_fichier = (isset($files_infos['name']))? $files_infos['name'] : '';
-                        if(file_exists($files_infos['path'])){
+                        $nom_fichier = (isset($files_infos['name'])) ? $files_infos['name'] : '';
+                        if (file_exists($files_infos['path'])) {
                             $my_mail->AddAttachment($files_infos['path'], $nom_fichier);
                         }
                     }
@@ -91,16 +91,16 @@ class EmailHelper
                     $adress = emailHelper::rempAdresse($send_to, $identifiant);
                     $log_adress = $adress;
                     $my_mail = self::addAddress($my_mail, $adress);
-                    
+
                     /* Log des envois de mail */
                     $log_mail = new EmailLog(array('id_email' => $identifiant,
-                                    'objet' => $objet,
-                                    'message' => $message,
-                                    'destinataire' => $log_adress,
-                                    'destinataire_cache' => $adress_caches));
+                        'objet' => $objet,
+                        'message' => $message,
+                        'destinataire' => $log_adress,
+                        'destinataire_cache' => $adress_caches));
                     if (!$log_mail->save()) {
                         if ($handle) {
-                            FileHelper::fLog('mail', "Problème rencontré dans l'enregistrement email_log : ".print_r($log_mail));
+                            FileHelper::fLog('mail', "Problème rencontré dans l'enregistrement email_log : " . print_r($log_mail));
                         }
                     } elseif (!empty($params['accuse'])) {
                         // gestion des accusés de reception
@@ -131,7 +131,7 @@ class EmailHelper
                 throw new Error(Error::emailTemplateAbsent($identifiant));
             }
         } else {
-            if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : '.$send_to);
+            if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);
         }
     }
 
@@ -140,24 +140,24 @@ class EmailHelper
      * @return PHPMailer
      * @throws Error
      */
-    public static function parametrerHeaders (PHPMailer $my_mail)
+    public static function parametrerHeaders(PHPMailer $my_mail)
     {
         if (Config::paramsVariables('smtp_serveur') != 'localhost') {
             $my_mail->IsSMTP();
         }
         $my_mail->IsHTML(true);
         $my_mail->CharSet = "UTF-8";
-        $my_mail->SMTPAuth   = Config::paramsVariables('smtp_authentification');
+        $my_mail->SMTPAuth = Config::paramsVariables('smtp_authentification');
         $my_mail->SMTPSecure = Config::paramsVariables('smtp_secure');
-        
-        $my_mail->Host   = Config::paramsVariables('smtp_serveur');
-        $my_mail->Port   = Config::paramsVariables('smtp_port');
-        
+
+        $my_mail->Host = Config::paramsVariables('smtp_serveur');
+        $my_mail->Port = Config::paramsVariables('smtp_port');
+
         if (Config::paramsVariables('smtp_authentification')) {
-            $my_mail->Username   = Config::paramsVariables('smtp_username'); // Gmail identifiant
-            $my_mail->Password   = Config::paramsVariables('smtp_password'); // Gmail mot de passe
+            $my_mail->Username = Config::paramsVariables('smtp_username'); // Gmail identifiant
+            $my_mail->Password = Config::paramsVariables('smtp_password'); // Gmail mot de passe
         }
-        
+
         return $my_mail;
     }
 
@@ -170,7 +170,7 @@ class EmailHelper
         $erreur_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
         $erreur_mail = self::addReplyTo($erreur_mail, Config::paramsVariables('mail_reply'), Config::paramsVariables('mail_reply_name'));
 
-        $objet= "";
+        $objet = "";
         if (Config::paramsVariables('version') != 'prod') {
             $objet .= "** " . strtoupper(Config::paramsVariables('version')) . " ** ";
         }
@@ -182,14 +182,14 @@ class EmailHelper
                     <br>
                     <hr>
                     <br>
-                    <b>Erreur rencontrée : </b>".$erreur."
+                    <b>Erreur rencontrée : </b>" . $erreur . "
                     <br>
-                    <b>Objet : </b>".$objet_origine."
+                    <b>Objet : </b>" . $objet_origine . "
                     <br><br>
                     <b>Destinataire(s) : </b><br>";
         $adresses = explode(';', $destinataire_origine);
         foreach ($adresses as $adress) {
-            $message .= "&nbsp;&nbsp;&nbsp; - ".trim($adress)."<br>";
+            $message .= "&nbsp;&nbsp;&nbsp; - " . trim($adress) . "<br>";
         }
 
         $message .= "<br><hr><br>
@@ -219,7 +219,7 @@ class EmailHelper
         $search = array_map(create_function('$o', 'return "{".$o."}";'), $search);
         return str_replace($search, $replace, $message);
     }
-    
+
     /**
      * Remplace l'adresse mail en debug
      */
@@ -239,13 +239,13 @@ class EmailHelper
     public static function sendEmailSimple($objet, $to, $message)
     {
         $my_mail = new PHPMailer(true);
-        
+
         $my_mail = self::parametrerHeaders($my_mail);
         $my_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
         $my_mail = self::addReplyTo($my_mail, Config::paramsVariables('mail_reply'), Config::paramsVariables('mail_reply_name'));
 
-        if(Config::paramsVariables('version') == 'dev')
-            $objet  = ' ** DEV ** '.$objet;
+        if (Config::paramsVariables('version') == 'dev')
+            $objet = ' ** DEV ** ' . $objet;
 
         $my_mail->Subject = $objet;
         $my_mail->MsgHTML($message);
@@ -259,14 +259,14 @@ class EmailHelper
         return $my_mail->Send();
     }
 
-/****************************************************************************************
- *  fonctions à utiliser pour décoder les adresses mails contenants des ';' ou des ','  *
- ****************************************************************************************/
+    /****************************************************************************************
+     *  fonctions à utiliser pour décoder les adresses mails contenants des ';' ou des ','  *
+     ****************************************************************************************/
 
     public static function addReplyTo($my_mail, $adresses = '', $nom_adresse = '')
     {
-        if ($adresses='') 		$adresses = Config::paramsVariables('mail_reply');
-        if ($nom_adresse='') 	$nom_adresse = Config::paramsVariables('mail_reply_name');
+        if ($adresses = '') $adresses = Config::paramsVariables('mail_reply');
+        if ($nom_adresse = '') $nom_adresse = Config::paramsVariables('mail_reply_name');
         $tmp = self::explodeListEmails($adresses);
         foreach ($tmp as $adress) {
             if ($adress != "" && Is::courriel($adress)) {
@@ -297,6 +297,7 @@ class EmailHelper
         }
         return $my_mail;
     }
+
     /*
      * transforme une liste d'email de String en tableau
      * @param string  ex: shuet@castelis.com;jha@castelis.com
@@ -304,7 +305,7 @@ class EmailHelper
      */
     public static function explodeListEmails($adresses = '')
     {
-        if (strpos($adresses, ';')===false) {
+        if (strpos($adresses, ';') === false) {
             return explode(',', $adresses);
         } else {
             return explode(';', $adresses);

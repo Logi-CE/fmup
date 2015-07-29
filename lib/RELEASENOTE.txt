@@ -1,4 +1,26 @@
 /*********/
+/* 2.1.1 */
+/*********/
+
+Fix EmailHelper
+
+#Fix
+ - EmailHelper back to its previous behaviour. Fix should be applied in your project
+ 
+/*********/
+/* 2.1.0 */
+/*********/
+
+Add import component
+
+#Fix
+ - Component DbConnectionMssql return id in update
+ - EmailHelper is now based on template name instead of id
+ 
+#New
+ - Component Import
+
+/*********/
 /* 2.0.1 */
 /*********/
 
