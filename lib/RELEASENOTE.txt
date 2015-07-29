@@ -1,4 +1,13 @@
 /*********/
+/* 2.1.1 */
+/*********/
+
+Fix EmailHelper
+
+#Fix
+ - EmailHelper back to its previous behaviour. Fix should be applied in your project
+ 
+/*********/
 /* 2.1.0 */
 /*********/
 
