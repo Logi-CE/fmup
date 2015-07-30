@@ -75,18 +75,6 @@ abstract class Controller
     }
 
     /**
-     * @return Helper\Db
-     * @deprecated use Helper\Db::getInstance() if REALLY needed. But you'd prefer use of Dependency Injection instead
-     */
-    public function getDb()
-    {
-        if (!$this->dbInstance) {
-            $this->dbInstance = Helper\Db::getInstance();
-        }
-        return $this->dbInstance;
-    }
-
-    /**
      * Retrieve current view system
      * @return View
      * @throws \Error
