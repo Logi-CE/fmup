@@ -77,7 +77,6 @@ abstract class Controller
     /**
      * Retrieve current view system
      * @return View
-     * @throws \Error
      */
     public function getView()
     {
