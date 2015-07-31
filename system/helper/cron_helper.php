@@ -4,6 +4,8 @@
  * Un cron appellera la fonction executer une fois par minute, qui déterminera les crons à lancer
  * @version 6.0
  * @author afalaise
+ * @deprecated cannot work without Cron Model / Datatable, You might want to use cron/cron instead (see link below)
+ * @link https://packagist.org/packages/cron/cron
  */
 abstract class CronHelper
 {
