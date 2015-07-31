@@ -1,12 +1,4 @@
 <?php
-// FPDF
-new Component('pdf/fpdf/fpdf');
-new Component('pdf/fpdi/fpdi');
-
-// TCPDF
-//new Component('tcpdf/tcpdf');
-//require_once('../config/lang/fra.php');
-
 class PdfHelper
 {
     public static function InitializePdf($template = '')
@@ -27,6 +19,9 @@ class TCPdfHelper
 {
     public static function InitializePdf($title = '', $subject = '', $keywords = '', $author = 'ODAC3E')
     {
+        if (!class_exists('TCPDF')) {
+            throw new \LogicException('TCPDF must be installed');
+        }
         $pdf = new TCPDF("P", "mm", "A4", true, 'UTF-8', false);
 
         // set document information

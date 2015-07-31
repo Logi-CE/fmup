@@ -1,6 +1,4 @@
 <?php
-new Component('tcpdf/config/lang/fra');
-new Component('tcpdf/tcpdf');
 /**
  * Classe générant un PDF grâce à la bibliothèque TCPDF
  * @author afalaise

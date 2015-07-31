@@ -25,19 +25,21 @@ class Generateur
             // On emploie l'alias '0' pour la boucle suivante afin de ne pas dupliquer le code
             $SQL = "SELECT DISTINCT TABLE_NAME AS '0' FROM INFORMATION_SCHEMA.TABLES;";
         }
-        $tables = $this->db->requete($SQL);
         $tableau_log = array();
         $tableau_table = array();
-        foreach ( $tables as $table ) {
-            $table = array_shift($table);
-            if (strtoupper(substr($table, 0, 5)) == 'LOG__') {
-                $tableau_log[] = substr($table, 5);
+        if ($this->db) {
+            $tables = $this->db->requete($SQL);
+            foreach ( $tables as $table ) {
+                $table = array_shift($table);
+                if (strtoupper(substr($table, 0, 5)) == 'LOG__') {
+                    $tableau_log[] = substr($table, 5);
+                }
+                if ( (strtoupper(substr($table[0], 0, 5)) != 'LOG__')
+                    && (strtoupper(substr($table, 0, 8)) != 'DROITS__')
+                    && (strtoupper(substr($table, 0, 14)) != 'HISTORISATIONS')) {
+                    $tableau_table[] = $table;
+                }
             }
-    		if ( (strtoupper(substr($table[0], 0, 5)) != 'LOG__')
-            		&& (strtoupper(substr($table, 0, 8)) != 'DROITS__')
-            		&& (strtoupper(substr($table, 0, 14)) != 'HISTORISATIONS')) {
-        		$tableau_table[] = $table;
-    		}
         }
         return array('tableau_table' => $tableau_table, 'tableau_log' => $tableau_log);
     }
@@ -97,7 +99,7 @@ class Generateur
         
         echo '<pre class="code">'.str_replace('<', '&lt;', $buffer).'</pre>';
         
-        file_put_contents(BASE_PATH."/public/_admin_/temp/view/$chemin_vues/filtrer.php", $buffer);
+        file_put_contents(BASE_PATH."/public/_admin_/temp/view/$chemin_vues/filtrer.phtml", $buffer);
         
         ob_start();
         include './template_vue_editer.php';
