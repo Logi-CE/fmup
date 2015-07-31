@@ -10,18 +10,20 @@
 
 $colonnes =
     array(
-<?php foreach ($champs as $libelle => $filtre) :	?>
-<?php if (!empty($filtre['presence_filtre'])) : ?>
-        array(
-              'libelle' 	=> LangueHelper::display('<?php echo $filtre['nom']; ?>')
-            , 'nom' 		=> '<?php echo $libelle; ?>'
-            , 'largeur' 	=> '200px'
-            , 'titre' 		=> true
-            , 'lien' 		=> true
-            , 'type'		=> '<?php echo $filtre['type']; ?>'
-        ),
-<?php endif; ?>
-<?php endforeach; ?>
+    <?php if (is_array($champs)) :?>
+        <?php foreach ($champs as $libelle => $filtre) :	?>
+            <?php if (!empty($filtre['presence_filtre'])) : ?>
+                    array(
+                          'libelle' 	=> LangueHelper::display('<?php echo $filtre['nom']; ?>')
+                        , 'nom' 		=> '<?php echo $libelle; ?>'
+                        , 'largeur' 	=> '200px'
+                        , 'titre' 		=> true
+                        , 'lien' 		=> true
+                        , 'type'		=> '<?php echo $filtre['type']; ?>'
+                    ),
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
     );
 
 $params =
