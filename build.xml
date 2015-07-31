@@ -35,14 +35,14 @@
     </target>
     
     <target name="phpunit">
-        <!--coverage-setup database="${project.basedir}/build/coverage/database">
+        <coverage-setup database="${project.basedir}/build/coverage/database">
             <fileset dir="${project.basedir}/">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
                 <include name="system/**/*.php"/>
                 <include name="system/*.php"/>
             </fileset>
-        </coverage-setup-->
+        </coverage-setup>
 
         <phpunit>
             <batchtest>
@@ -54,9 +54,9 @@
             <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml" />
         </phpunit>
 
-        <!--coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
+        <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
             <report styleDir="${project.basedir}/build/coverage/report/style" toDir="${project.basedir}/build/coverage/report/" />
-        </coverage-report-->
+        </coverage-report>
     </target>
     
     <target name="phpcs">

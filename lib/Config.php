@@ -43,12 +43,12 @@ class Config
      * @param bool $before Merge before (default : false)
      * @return $this
      */
-    public function mergeConfig($paramArray = array(), $before = false)
+    public function mergeConfig(array $paramArray = array(), $before = false)
     {
         if ($before) {
-            $this->params = array_merge($paramArray, $this->params);
+            $this->params = $this->params + $paramArray;
         } else {
-            $this->params = array_merge($this->params, $paramArray);
+            $this->params = $paramArray + $this->params;
         }
         return $this;
     }
