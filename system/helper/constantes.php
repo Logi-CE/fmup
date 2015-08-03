@@ -3,7 +3,7 @@
  * Définit un jeu de constantes pour le site
  * @version 1.0
  */
-class Constantes extends ConstantesApplication
+class Constantes
 {
     public static function getMessageErreurApplication ()
     {
