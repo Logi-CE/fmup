@@ -87,54 +87,56 @@ class TCPdfHelper
     }
 }
 
-class PDF extends FPDI
-{
-    public $adresse_OCAD3E_1 = '95 rue de la Boétie';
-    public $adresse_OCAD3E_2 = '75008 Paris';
-    public $telephone = '0811 007 260';
-    public $email = 'secretariat@ocad3e.com';
-
-    public function Header()
+if (class_exists('FPDI') && !class_exists('PDF')) {
+    class PDF extends FPDI
     {
-        $this->SetLeftMargin(28);
+        public $adresse_OCAD3E_1 = '95 rue de la Boétie';
+        public $adresse_OCAD3E_2 = '75008 Paris';
+        public $telephone = '0811 007 260';
+        public $email = 'secretariat@ocad3e.com';
 
-        //OCAD3E
-        $this->SetFont('helvetica', 'b', 12);
-        $this->setY(14);
-        $this->Cell(39, 3, utf8_decode('OCAD3E'), 0, 1, 'C');
+        public function Header()
+        {
+            $this->SetLeftMargin(28);
 
-        //Séparateur
-        $this->SetLineWidth(0.5);
-        $this->Line(28, 18, 67, 18);
+            //OCAD3E
+            $this->SetFont('helvetica', 'b', 12);
+            $this->setY(14);
+            $this->Cell(39, 3, utf8_decode('OCAD3E'), 0, 1, 'C');
 
-        //titre et adresse
-        $text = 'Organisme Coordonnateur Agréé'."\n";
-        $text .= 'Par Arrêté du 23 décembre 2009'."\n";
-        $text .= $this->adresse_OCAD3E_1."\n".$this->adresse_OCAD3E_2;
-        $this->SetFont('helvetica', '', 7);
-        $this->Ln(2);
-        $this->MultiCell(39, 3, utf8_decode($text), 0, 'C');
-    }
+            //Séparateur
+            $this->SetLineWidth(0.5);
+            $this->Line(28, 18, 67, 18);
 
-    public function Footer()
-    {
-        //Séparateur
-        $this->SetLineWidth(0.4);
-        $this->Line(25, 268, 186, 268);
+            //titre et adresse
+            $text = 'Organisme Coordonnateur Agréé' . "\n";
+            $text .= 'Par Arrêté du 23 décembre 2009' . "\n";
+            $text .= $this->adresse_OCAD3E_1 . "\n" . $this->adresse_OCAD3E_2;
+            $this->SetFont('helvetica', '', 7);
+            $this->Ln(2);
+            $this->MultiCell(39, 3, utf8_decode($text), 0, 'C');
+        }
 
-        //titre
-        $text = 'Etat trimestriel des versements';
-        $this->SetFont('helvetica', '', 11);
-        $this->SetY(-28);
-        $this->Cell(0, 4, utf8_decode($text), 0, 1, 'C');
-        $this->SetXY(-24, -28);
-        $this->Cell(5, 5, $this->PageNo().' / {nb}', 0, 0, 'R');
+        public function Footer()
+        {
+            //Séparateur
+            $this->SetLineWidth(0.4);
+            $this->Line(25, 268, 186, 268);
 
-        //Adresse
-        $this->SetY(-19);
-        $this->SetFont('helvetica', '', 10);
-        $text = 'OCAD3E - '.$this->adresse_OCAD3E_1.' - '.$this->adresse_OCAD3E_2."\n";
-        $text .= 'Tél : '.$this->telephone.'. Email : '.$this->email;
-        $this->MultiCell(0, 5, utf8_decode($text), 0, 'C');
+            //titre
+            $text = 'Etat trimestriel des versements';
+            $this->SetFont('helvetica', '', 11);
+            $this->SetY(-28);
+            $this->Cell(0, 4, utf8_decode($text), 0, 1, 'C');
+            $this->SetXY(-24, -28);
+            $this->Cell(5, 5, $this->PageNo() . ' / {nb}', 0, 0, 'R');
+
+            //Adresse
+            $this->SetY(-19);
+            $this->SetFont('helvetica', '', 10);
+            $text = 'OCAD3E - ' . $this->adresse_OCAD3E_1 . ' - ' . $this->adresse_OCAD3E_2 . "\n";
+            $text .= 'Tél : ' . $this->telephone . '. Email : ' . $this->email;
+            $this->MultiCell(0, 5, utf8_decode($text), 0, 'C');
+        }
     }
 }

@@ -19,6 +19,7 @@
 
         <mkdir dir="${project.basedir}/build/api" />
         <mkdir dir="${project.basedir}/build/coverage" />
+        <mkdir dir="${project.basedir}/build/coverage/report" />
         <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
@@ -55,7 +56,7 @@
         </phpunit>
 
         <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
-            <report styleDir="${project.basedir}/build/coverage/report/style" toDir="${project.basedir}/build/coverage/report/" />
+            <report styleDir="${project.basedir}/vendor/phing/phing/etc/" toDir="${project.basedir}/build/coverage/report/" />
         </coverage-report>
     </target>
     
