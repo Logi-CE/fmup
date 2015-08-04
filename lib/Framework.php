@@ -166,14 +166,11 @@ class Framework extends \Framework
     protected function instantiate($controllerName, $action)
     {
         //To be compliant with old system @todo
-        //global $sys_controller_instance;
-        if (!class_exists($controllerName)) {
+                if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }
         /* @var $controllerInstance \Controller */
         $controllerInstance = new $controllerName();
-        //$controllerInstance->setDb(Helper\Db::getInstance()); //to be compliant with old system - DB should not be in controller @todo
-        //$sys_controller_instance = $controllerInstance; //to be compliant with old system @todo
 
         if ($controllerInstance instanceof Controller) {
             /* @var $controllerInstance Controller */
@@ -380,8 +377,9 @@ class Framework extends \Framework
         }
         $this->getBootstrap()->warmUp();
 
-        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
-        Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo
+        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
+        Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
+        \Model::setDb(Helper\Db::getInstance()); //@todo find a better solution
 
         parent::initialize();
     }

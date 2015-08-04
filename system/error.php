@@ -138,7 +138,12 @@ class Error extends Exception
 
         $date = date('Y-m-d H-i');
         $sql = 'SELECT nb_mails, date_envoi FROM compteur_mail WHERE date_envoi = "'.$date.'-00"';
-        $resultat = Model::getDb()->requeteUneLigne($sql);
+        $db = Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $resultat = $db->requeteUneLigne($sql);
+        } else {
+            $resultat = $db->fetchRow($sql);
+        }
 
         if (!isset($resultat['nb_mails'])) {
             $resultat['nb_mails'] = 0;

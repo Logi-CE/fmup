@@ -11,30 +11,29 @@ class ParametreHelper
 	protected $liste;
 	protected $db;
 	
-	/**
-	 * On instancie une connexion avec la base puisque cette classe est appelée très tôt dans le framework
-	 */
-	protected function __construct()
-	{
-	    $param = Config::parametresConnexionDb();
-        switch ($param['driver']) {
-            case 'mysql':
-                $this->db = DbConnectionMysql::getInstance(Config::parametresConnexionDb());
-                break;
-            case 'mssql':
-                $this->db = new DbConnectionMssql(Config::parametresConnexionDb());
-                break;
-            default:
-                new Error('Moteur de base de données non paramétré');
-        }
-	}
-	
 	public static function getInstance ()
 	{
 	    if (!isset(self::$instance)) {
-	        self::$instance = new ParametreHelper();
+	        self::$instance = new self();
 	    }
 	    return self::$instance;
+	}
+
+	/**
+	 * @return DbConnectionMssql|DbConnectionMysql
+	 */
+	public function getDb()
+	{
+		if (!$this->db) {
+			$this->db = DbHelper::get();
+		}
+		return $this->db;
+	}
+
+	public function setDb($db)
+	{
+		$this->db = $db;
+		return $this;
 	}
 
 	/**
@@ -44,7 +43,12 @@ class ParametreHelper
 	protected function charger ()
 	{
 		$sql = 'SELECT nom, valeur FROM parametre';
-		$result = $this->db->requete($sql);
+		$db = \Model::getDb();
+		if (!$db instanceof \FMUP\Db) {
+			$result = $db->requete($sql);
+		} else {
+			$result = $db->fetchAll($sql);
+		}
 		$this->liste = array();
 		foreach ($result as $liste) {
 			$this->liste[$liste['nom']] = $liste['valeur'];
@@ -81,7 +85,7 @@ class ParametreHelper
 					, id_modificateur = '.Sql::secureId($_SESSION['id_utilisateur']).'
     			WHERE nom = '.Sql::secure($libelle).'
     				AND modifiable = 1';
-		$result = $this->db->execute($sql);
+		$result = $this->getDb()->execute($sql);
 		// Mise à jour dans le tampon
 		if ( !empty($this->liste) ) {
 			$this->liste[$libelle] = $valeur;

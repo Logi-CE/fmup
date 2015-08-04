@@ -16,7 +16,7 @@ class Db
     /**
      * @param array $params
      */
-    public function __construct($params = array())
+    public function __construct(array $params = array())
     {
         $this->driver = isset($params['db_driver']) ? $params['db_driver'] : Factory::DRIVER_PDO;
         $this->params = $params;
@@ -38,11 +38,11 @@ class Db
     }
 
     /**
-     * @param $sql
+     * @param string $sql
      * @param array $params
      * @return bool
      */
-    public function query($sql, $params = array())
+    public function query($sql, array $params = array())
     {
         $statement = $this->getDriver()->prepare($sql);
 
@@ -50,12 +50,12 @@ class Db
     }
 
     /**
-     * @param $sql
+     * @param string $sql
      * @param array $params
      * @return mixed
      * @throws Db\Exception
      */
-    public function fetchAll($sql, $params = array())
+    public function fetchAll($sql, array $params = array())
     {
         $statement = $this->getDriver()->prepare($sql);
         $this->getDriver()->execute($statement, $params);
@@ -67,11 +67,11 @@ class Db
     }
 
     /**
-     * @param $sql
-     * @param $params
+     * @param string $sql
+     * @param array $params
      * @return array
      */
-    public function fetchRow($sql, $params)
+    public function fetchRow($sql, array $params = array())
     {
         $statement = $this->getDriver()->prepare($sql);
         $this->getDriver()->execute($statement, $params);

@@ -2,6 +2,7 @@
 /**
  * Classe fornissant des fonctions de protection des injections SQL et d'autres fonctions liées aux requetes
  * @version 1.0
+ * @deprecated use \FMUP\Db instead
  */
 class Sql
 {

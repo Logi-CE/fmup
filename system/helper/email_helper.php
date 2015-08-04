@@ -35,7 +35,7 @@ class EmailHelper
                     if ($handle) {
                         FileHelper::fLog('mail', 'problème adresse mail : "' . $e . '" - ' . $send_to);
                     } else {
-                        throw new Error('adresse email incorrecte : "' . $e . '"');
+                        throw new \Exception('adresse email incorrecte : "' . $e . '"');
                     }
                     $no_problem = true;
                 }

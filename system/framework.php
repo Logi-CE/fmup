@@ -257,6 +257,8 @@ class Framework
     }
 
     /**
+     * @param string $sys_directory
+     * @param string $sys_controller
      * @throws NotFoundError
      */
     protected function getRouteError()

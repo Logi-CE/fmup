@@ -64,7 +64,12 @@ class Historisation extends Model
             }
 
             // Exécution de la requète
-            $result = Model::getDb()->requete($SQL);
+            $db = \Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $result = $db->requete($SQL);
+            } else {
+                $result = $db->fetchAll($SQL);
+            }
             return $result[0]["nb"];
         }
 
