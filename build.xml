@@ -6,9 +6,9 @@
     </condition>
 
     <target name="ci"
-        description="Tâche principale d'intégration continue"
-        depends="clean,quality_assurance"
-    />
+            description="Tâche principale d'intégration continue"
+            depends="clean,quality_assurance"
+            />
 
     <target name="clean" description="Vide les répertoires d'artefacts">
         <delete dir="${project.basedir}/build/api" />
@@ -19,6 +19,7 @@
 
         <mkdir dir="${project.basedir}/build/api" />
         <mkdir dir="${project.basedir}/build/coverage" />
+        <mkdir dir="${project.basedir}/build/coverage/report" />
         <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
@@ -33,32 +34,33 @@
         <phingcall target="phploc" />
         <phingcall target="pdepend" />
     </target>
-    
+
     <target name="phpunit">
-        <!--coverage-setup database="${project.basedir}/build/coverage/database">
+        <coverage-setup database="${project.basedir}/build/coverage/database">
             <fileset dir="${project.basedir}/">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
                 <include name="system/**/*.php"/>
                 <include name="system/*.php"/>
             </fileset>
-        </coverage-setup-->
+        </coverage-setup>
 
-        <phpunit>
+        <phpunit codecoverage="true">
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
-                  <include name="**/*.php"/>
-                  <include name="*.php"/>
+                    <include name="**/*.php"/>
+                    <include name="*.php"/>
                 </fileset>
             </batchtest>
             <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml" />
+            <formatter type="clover" usefile="false" />
         </phpunit>
 
-        <!--coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
-            <report styleDir="${project.basedir}/build/coverage/report/style" toDir="${project.basedir}/build/coverage/report/" />
-        </coverage-report-->
+        <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
+            <report styleDir="${project.basedir}/vendor/phing/phing/etc/" toDir="${project.basedir}/build/coverage/report/" />
+        </coverage-report>
     </target>
-    
+
     <target name="phpcs">
         <phpcodesniffer standard="PSR2">
             <fileset dir="${project.basedir}/">
@@ -70,7 +72,7 @@
             <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
         </phpcodesniffer>
     </target>
-    
+
     <target name="phpdoc">
         <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
             <fileset dir="${project.basedir}">
@@ -81,7 +83,7 @@
             </fileset>
         </phpdoc2>
     </target>
-           
+
     <target name="phpmd">
         <phpmd>
             <fileset dir="${project.basedir}">
@@ -111,17 +113,17 @@
     </target>
 
     <target name="pdepend">
-      <phpdepend>
-          <fileset dir="${project.basedir}">
-              <include name="lib/**/*.php"/>
-              <include name="lib/*.php"/>
-              <include name="system/**/*.php"/>
-              <include name="system/*.php"/>
-          </fileset>
-          <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
-          <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
-          <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
-      </phpdepend>
+        <phpdepend>
+            <fileset dir="${project.basedir}">
+                <include name="lib/**/*.php"/>
+                <include name="lib/*.php"/>
+                <include name="system/**/*.php"/>
+                <include name="system/*.php"/>
+            </fileset>
+            <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
+            <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
+            <logger type="overview-pyramid" outfile="${project.basedir}/build/pdepend/overview-pyramid.svg" />
+        </phpdepend>
     </target>
-    
+
 </project>
