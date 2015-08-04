@@ -45,14 +45,14 @@
             </fileset>
         </coverage-setup>
 
-        <phpunit>
+        <phpunit codecoverage="true">
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
                   <include name="**/*.php"/>
                   <include name="*.php"/>
                 </fileset>
             </batchtest>
-            <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml" />
+            <formatter type="clover" todir="${project.basedir}/build/coverage/report/" outfile="coverage.xml" />
         </phpunit>
 
         <coverage-report outfile="${project.basedir}/build/coverage/report/coverage.xml">
