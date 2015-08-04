@@ -370,9 +370,6 @@ class Framework extends \Framework
         return $this;
     }
 
-    /**
-     * @throws \Error
-     */
     public function initialize()
     {
         if (!$this->getBootstrap()->hasRequest()) {

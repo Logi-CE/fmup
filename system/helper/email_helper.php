@@ -128,7 +128,7 @@ class EmailHelper
                     //emailHelper::sendEmailErreur($identifiant, $e->getMessage(), $log_adress, $objet, $message);
                 }
             } else {
-                throw new Error(Error::emailTemplateAbsent($identifiant));
+                throw new Error('Template email absent : ' . $identifiant);
             }
         } else {
             if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);

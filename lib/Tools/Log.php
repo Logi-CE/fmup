@@ -28,7 +28,6 @@ class Log
      * @param $filePath
      * @param array $mailAddresses
      * @return bool
-     * @throws \Error
      * @throws \Exception
      * @throws \phpmailerException
      */
