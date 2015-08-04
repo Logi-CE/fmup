@@ -52,6 +52,7 @@
                   <include name="*.php"/>
                 </fileset>
             </batchtest>
+            <formatter type="xml" todir="${project.basedir}/build/logs/" outfile="junit.xml" />
             <formatter type="clover" todir="${project.basedir}/build/coverage/report/" outfile="coverage.xml" />
         </phpunit>
 
