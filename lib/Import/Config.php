@@ -240,6 +240,7 @@ class Config
         foreach ($liste_config as $config_objet) {
             $nom_objet = $config_objet->getNomObjet();
             // On créé un objet du type donnée
+            /* @var $objet \Model */
             $objet = new $nom_objet();
             $where = array();
             
@@ -279,7 +280,7 @@ class Config
                 if ($result) {
                     $tableau_id[$nom_objet] = $result;
                 } else {
-                    throw new \Exception($objet->getErrors());
+                    throw new \Exception(implode(';', $objet->getErrors()));
                 }
             } else {
                 // sinon on récupère directement l'id
@@ -287,7 +288,7 @@ class Config
                 
                 // puis on met à jours
                 $objet->setAttribute("Id", $objet_trouve->getId());
-                // $objet->save();
+                $objet->save();
             }
         }
     }
