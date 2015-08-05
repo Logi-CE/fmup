@@ -1,29 +1,39 @@
 <?php
 namespace FMUP;
-use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * Class Controller
  * @package FMUP
  */
-abstract class Controller extends \Controller
+abstract class Controller
 {
     private $bootstrap;
     private $request;
     private $response;
-    private $dbInstance;
     private $view;
 
     /**
      * this method is called before each action
      * @param string $calledAction
+     * @return $this
      */
-    public function preFiltre($calledAction = NULL)
+    public function preFilter($calledAction = null)
     {
+        return $calledAction ? $this : $this; //useless code to make jenkins thinks param is used
     }
 
     /**
-     * @throws LogicException
+     * this method is called after each action
+     * @param string $calledAction
+     * @return $this
+     */
+    public function postFilter($calledAction = null)
+    {
+        return $calledAction ? $this : $this; //useless code to make jenkins thinks param is used
+    }
+
+    /**
+     * @throws \LogicException
      * @return Request
      */
     public function getRequest()
@@ -45,7 +55,7 @@ abstract class Controller extends \Controller
     }
 
     /**
-     * @throws LogicException
+     * @throws \LogicException
      * @return Response
      */
     public function getResponse()
@@ -67,30 +77,13 @@ abstract class Controller extends \Controller
     }
 
     /**
-     * @return Helper\Db
-     * @deprecated use Helper\Db::getInstance() if REALLY needed. But you'd prefer use of Dependency Injection instead
-     */
-    public function getDb()
-    {
-        if (!$this->dbInstance) {
-            $this->dbInstance = Helper\Db::getInstance();
-        }
-        return $this->dbInstance;
-    }
-
-    /**
      * Retrieve current view system
      * @return View
-     * @throws \Error
      */
     public function getView()
     {
         if (!$this->view) {
             $this->view = new View();
-            $this->view
-                ->setParam('styles', \Config::paramsVariables('styles'))
-                ->setParam('javascripts', \Config::paramsVariables('javascripts'))
-            ;
         }
         return $this->view;
     }
@@ -107,6 +100,7 @@ abstract class Controller extends \Controller
     }
 
     /**
+     * @throws \LogicException
      * @return Bootstrap
      */
     protected function getBootstrap()

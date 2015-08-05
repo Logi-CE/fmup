@@ -1,8 +1,10 @@
 <?php
 	define('APPLICATION', '');
 	define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', '..')));
-	require_once(BASE_PATH."/vendor/autoload.php");
-?>	 
+	if (file_exists(BASE_PATH."/vendor/autoload.php")) {
+		require_once(BASE_PATH . "/vendor/autoload.php");
+	}
+?>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />

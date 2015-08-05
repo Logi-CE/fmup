@@ -1,15 +1,15 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Iterator\ValidatorIterator;
-use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\DoublonIterator;
+use FMUP\Import\Iterator\LineToConfigIterator;
+use FMUP\Import\Iterator\ValidatorIterator;
 
 /**
  * Lance l'import effectif
  *
  * @author csanz
- *        
+ *
  */
 class Launch extends \FMUP\Import
 {
@@ -50,7 +50,12 @@ class Launch extends \FMUP\Import
 
     public function parse()
     {
-        \Model::getDb()->beginTrans();
+        $db = \Model::getDb();
+        if ($db instanceof \FMUP\Db) {
+            $db->beginTransaction();
+        } else {
+            $db->beginTrans();
+        }
         try {
             $lci = new LineToConfigIterator($this->fileIterator, $this->config);
             $di = new DoublonIterator($lci);
@@ -58,7 +63,7 @@ class Launch extends \FMUP\Import
             foreach ($vi as $key => $value) {
                 if ($value) {
                     $valid = $vi->getValid();
-                    if ($valid && ! $value->getDoublonLigne()) {
+                    if ($valid && !$value->getDoublonLigne()) {
                         $value->insertLine();
                     }
                 }
@@ -67,11 +72,19 @@ class Launch extends \FMUP\Import
             $this->total_insert = $vi->getTotalInsert();
             $this->total_update = $vi->getTotalUpdate();
             echo "Import terminé .\n";
-            \Model::getDb()->commitTrans();
+            if ($db instanceof \FMUP\Db) {
+                $db->commit();
+            } else {
+                $db->commitTrans();
+            }
         } catch (\Exception $e) {
             echo "Une erreur a été détecté lors de l'import.";
             echo $e->getMessage();
-            \Model::getDb()->rollbackTrans();
+            if ($db instanceof \FMUP\Db) {
+                $db->rollback();
+            } else {
+                $db->rollbackTrans();
+            }
         }
     }
 }

@@ -5,9 +5,9 @@ use FMUP\Import\Config;
 
 /**
  * Ne retourne que les lignes validées
- * 
+ *
  * @author csanz
- *        
+ *
  */
 class LineFilterIterator extends \FilterIterator
 {
@@ -27,7 +27,7 @@ class LineFilterIterator extends \FilterIterator
     public function accept()
     {
         $config = $this->getInnerIterator()->current();
-        if (! $config) {
+        if (!$config) {
             return false;
         }
         return $config->validateLine();

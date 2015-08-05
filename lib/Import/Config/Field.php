@@ -5,7 +5,7 @@ namespace FMUP\Import\Config;
  * Représente un champ importé dans le fichier
  *
  * @author csanz
- *        
+ *
  */
 class Field
 {
@@ -95,7 +95,7 @@ class Field
 
     /**
      *
-     * @param \Import\Config\Field\Validator\Validator $validator            
+     * @param \Import\Config\Field\Validator\Validator $validator
      */
     public function addValidator(\FMUP\Import\Config\Field\Validator $validator)
     {
@@ -104,7 +104,7 @@ class Field
 
     /**
      *
-     * @param \Import\Config\Field\Formatter\Formatter $formatter            
+     * @param \Import\Config\Field\Formatter\Formatter $formatter
      */
     public function addFormatterFin(\FMUP\Import\Config\Field\Formatter $formatter)
     {
@@ -113,7 +113,7 @@ class Field
 
     /**
      *
-     * @param \Import\Config\Field\Formatter\Formatter $formatter            
+     * @param \Import\Config\Field\Formatter\Formatter $formatter
      */
     public function addFormatterDebut(\FMUP\Import\Config\Field\Formatter $formatter)
     {
@@ -125,7 +125,7 @@ class Field
         $valid = true;
         if (count($this->liste_validator) > 0) {
             foreach ($this->liste_validator as $validator) {
-                if (! $validator->validate($this->value)) {
+                if (!$validator->validate($this->value)) {
                     $valid = false;
                     $this->liste_erreur[get_class($validator)] = $validator->getErrorMessage();
                 }
@@ -138,7 +138,7 @@ class Field
     {
         if (count($this->liste_formatter) > 0) {
             foreach ($this->liste_formatter as $formatter) {
-                $this->value = $formatter->format($this->value) ? : "";
+                $this->value = $formatter->format($this->value) ?: "";
                 if ($formatter->hasError()) {
                     $this->liste_erreur[get_class($formatter)] = $formatter->getErrorMessage();
                 }

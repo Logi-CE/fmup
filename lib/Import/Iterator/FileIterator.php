@@ -3,9 +3,9 @@ namespace FMUP\Import\Iterator;
 
 /**
  * Permet de parcourir un fichier ligne par ligne
- * 
+ *
  * @author csanz
- *        
+ *
  */
 class FileIterator implements \Iterator
 {
@@ -30,7 +30,7 @@ class FileIterator implements \Iterator
 
     public function rewind()
     {
-        if (! file_exists($this->path)) {
+        if (!file_exists($this->path)) {
             throw new \Exception("Le fichier specifie n'existe pas ou est introuvable");
         }
         $this->ligne = 0;
@@ -46,7 +46,7 @@ class FileIterator implements \Iterator
     public function next()
     {
         $this->current = fgets($this->fHandle);
-        $this->ligne ++;
+        $this->ligne++;
         return $this->current;
     }
 

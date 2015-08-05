@@ -48,6 +48,7 @@ interface DbInterface
      * @throws \Exception
      */
     public function commit();
+
     /**
      * Execute an sql string directly
      * @param string $sql

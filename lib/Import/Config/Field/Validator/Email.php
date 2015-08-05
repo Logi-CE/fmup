@@ -9,7 +9,7 @@ class Email implements Validator
     public function validate($value)
     {
         $valid = true;
-        if (! \Is::courriel($value)) {
+        if (!\Is::courriel($value)) {
             $valid = false;
         }
         return $valid;

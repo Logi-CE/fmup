@@ -1,14 +1,15 @@
 <?php
 namespace FMUP;
 
-
 class Bootstrap
 {
     private $isErrorHandlerRegistered = false;
     private $logger;
     private $request;
     private $session;
+    private $config;
     private $flashMessenger;
+    private $isWarmed;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -19,8 +20,21 @@ class Bootstrap
      */
     public function warmUp()
     {
-        $this->getLogger();
-        //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and errorhandler before
+        if (!$this->isWarmed) {
+            $this->initHelperDb()->getLogger();
+            //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and error handler before
+            $this->isWarmed = true;
+        }
+        return $this;
+    }
+
+    /**
+     * Initialize Config in helper db
+     * @return $this
+     */
+    private function initHelperDb()
+    {
+        Helper\Db::setConfig($this->getConfig());//@todo find a better solution
         return $this;
     }
 
@@ -30,7 +44,7 @@ class Bootstrap
     public function getSession()
     {
         if (!$this->session) {
-            $this->session = \FMUP\Session::getInstance();
+            $this->session = Session::getInstance();
         }
         return $this->session;
     }
@@ -40,7 +54,7 @@ class Bootstrap
      * @param Session $session
      * @return $this
      */
-    public function setSession(\FMUP\Session $session)
+    public function setSession(Session $session)
     {
         $this->session = $session;
         return $this;
@@ -97,11 +111,21 @@ class Bootstrap
      */
     public function getRequest()
     {
-        if (!$this->request) {
+        if (!$this->hasRequest()) {
             throw new \LogicException('Request is not defined');
         }
         return $this->request;
     }
+
+    /**
+     * Check if request is defined
+     * @return bool
+     */
+    public function hasRequest()
+    {
+        return !is_null($this->request);
+    }
+
 
     /**
      * Get flashMessenger
@@ -110,7 +134,7 @@ class Bootstrap
     public function getFlashMessenger()
     {
         if ($this->flashMessenger === null) {
-            $this->flashMessenger = \FMUP\FlashMessenger::getInstance();
+            $this->flashMessenger = FlashMessenger::getInstance();
         }
         return $this->flashMessenger;
     }
@@ -119,9 +143,35 @@ class Bootstrap
      * @param FlashMessenger $flashMessenger
      * @return $this
      */
-    public function setFlashMessenger(\FMUP\FlashMessenger $flashMessenger)
+    public function setFlashMessenger(FlashMessenger $flashMessenger)
     {
         $this->flashMessenger = $flashMessenger;
         return $this;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        if (!$this->hasConfig()) {
+            throw new \LogicException('Config is not defined');
+        }
+        return $this->config;
+    }
+
+    /**
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    public function hasConfig()
+    {
+        return !is_null($this->config);
     }
 }

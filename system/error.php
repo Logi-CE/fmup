@@ -4,6 +4,7 @@
  * Elle est etendue d'Exception et est donc appelée lorsqu'une erreur survient
  * @author afalaise
  * @version 1.0
+ * @deprecated use any exception + \FMUP\Controller\Error instead
  */
 class Error extends Exception
 {
@@ -31,6 +32,15 @@ class Error extends Exception
             , 99 				=> 'Erreur de requête PDO'
     );
 
+    /**
+     * @param string $message
+     * @param int $code
+     * @param null $fichier
+     * @param null $ligne
+     * @param null $contexte
+     * @throws Error
+     * @deprecated use any exception + \FMUP\Controller\Error instead
+     */
     public function __construct($message, $code = E_ERROR, $fichier = null, $ligne = null, $contexte = null)
     {
         $this->message = $message;
@@ -128,7 +138,12 @@ class Error extends Exception
 
         $date = date('Y-m-d H-i');
         $sql = 'SELECT nb_mails, date_envoi FROM compteur_mail WHERE date_envoi = "'.$date.'-00"';
-        $resultat = Model::getDb()->requeteUneLigne($sql);
+        $db = Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $resultat = $db->requeteUneLigne($sql);
+        } else {
+            $resultat = $db->fetchRow($sql);
+        }
 
         if (!isset($resultat['nb_mails'])) {
             $resultat['nb_mails'] = 0;

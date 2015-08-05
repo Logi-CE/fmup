@@ -164,8 +164,8 @@ class Console
                         echo '<div class="log_sql" '.$style.'>'
                             . '<br/>'
                             . preg_replace(
-                                array('#(SELECT|UPDATE|INSERT|INTO|DELETE|FROM|INNER|JOIN|LEFT|ASC|DESC|WHERE|ORDER BY|GROUP BY|TOP|ISNULL|YEAR|MONTH|IDENTITY|'.
-                                                        'IFNULL|AND |MIN|MAX|COUNT|SUM|ON |IN |OR |IS |NOT |NULL|null|CONCAT|GROUP_CONCAT|HAVING|BETWEEN|'.
+                                array('#(SELECT|UPDATE|INSERT|INTO|DELETE|FROM|INNER|JOIN|LEFT|ASC|DESC|WHERE|ORDER BY|GROUP BY|TOP|ISnull|YEAR|MONTH|IDENTITY|'.
+                                                        'IFnull|AND |MIN|MAX|COUNT|SUM|ON |IN |OR |IS |NOT |null|null|CONCAT|GROUP_CONCAT|HAVING|BETWEEN|'.
                                                         'CASE|WHEN|THEN|ELSE|END|AS |SEPARATOR|SQL_CALC_FOUND_ROWS|LIMIT|DISTINCT|CURRENT_TIMESTAMP|CURRENT_DATE|'.
                                                         'DATE_FORMAT|IF\(|UNION|FOUND_ROWS|NOW|INTERVAL|DAY|MONTH|MINUTE|SECOND|VALUES|SET|LIKE|DATE_ADD)#'),
                                 '<span style="color: blue;">$1</span>',

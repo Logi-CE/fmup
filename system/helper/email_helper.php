@@ -35,7 +35,7 @@ class EmailHelper
                     if ($handle) {
                         FileHelper::fLog('mail', 'problème adresse mail : "' . $e . '" - ' . $send_to);
                     } else {
-                        throw new Error('adresse email incorrecte : "' . $e . '"');
+                        throw new \Exception('adresse email incorrecte : "' . $e . '"');
                     }
                     $no_problem = true;
                 }
@@ -128,7 +128,7 @@ class EmailHelper
                     //emailHelper::sendEmailErreur($identifiant, $e->getMessage(), $log_adress, $objet, $message);
                 }
             } else {
-                throw new Error(Error::emailTemplateAbsent($identifiant));
+                throw new Error('Template email absent : ' . $identifiant);
             }
         } else {
             if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);

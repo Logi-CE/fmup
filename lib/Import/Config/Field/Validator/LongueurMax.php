@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Import\Config\Field\Validator;
 
-use FMUP\Import\Config\Field\Field;
+use FMUP\Import\Config\Field\Validator;
 
 class LongueurMax implements Validator
 {

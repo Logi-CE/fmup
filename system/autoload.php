@@ -1,4 +1,7 @@
 <?php
+if(!defined('APPLICATION')) {
+    define('APPLICATION', 'application');
+}
 // pour la manipulation des urls
 require_once 'string.php';
 

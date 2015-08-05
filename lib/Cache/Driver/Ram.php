@@ -22,35 +22,39 @@ class Ram implements CacheInterface
      * @param mixed $value
      * @return \FMUP\Cache\Driver\Ram
      */
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $this->params[$key] = $value;
         return $this;
     }
-    
+
     /**
      * get a param
      * @param string $key
      * @return mixed|null
      */
-    public function get($key) {
-        return isset($this->params[$key])? $this->params[$key] : null;
+    public function get($key)
+    {
+        return isset($this->params[$key]) ? $this->params[$key] : null;
     }
-    
+
     /**
      * has a param
      * @param string $key
      * @return bool
      */
-    public function has($key) {
-        return isset($this->params[$key])? true : false;
+    public function has($key)
+    {
+        return isset($this->params[$key]) ? true : false;
     }
-    
+
     /**
      * remove a param in object
      * @param string $key
      * @return \FMUP\Cache\Driver\Ram
      */
-    public function remove($key) {
+    public function remove($key)
+    {
         unset($this->params[$key]);
         return $this;
     }

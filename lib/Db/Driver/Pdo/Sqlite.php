@@ -1,12 +1,12 @@
 <?php
 namespace FMUP\Db\Driver\Pdo;
 
-use FMUP\Db\Exception;
 use FMUP\Db\Driver\Pdo;
+use FMUP\Db\Exception;
 
 class Sqlite extends Pdo
 {
-    protected $instance = NULL;
+    protected $instance = null;
 
     public function getDriver()
     {

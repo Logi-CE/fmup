@@ -9,7 +9,7 @@ class Date implements Validator
     public function validate($value)
     {
         $valid = true;
-        if (! \Is::date($value) && ! \Is::dateUk($value)) {
+        if (!\Is::date($value) && !\Is::dateUk($value)) {
             $valid = false;
         }
         return $valid;

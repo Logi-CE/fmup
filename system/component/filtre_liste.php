@@ -283,7 +283,7 @@ class FiltreListe
         $script = "filtre('".$this->unique_id."');";
 
         ob_start();
-        require $this->chemin.'filtrer.php';
+        require $this->chemin.'filtrer.phtml';
         $html = ob_get_clean();
         
         if ($this->chargement_demarrage) {
@@ -433,9 +433,9 @@ class FiltreListe
         }
         
         if ($export) {
-            $page = 'exporter.php';
+            $page = 'exporter.phtml';
         } else {
-            $page = 'lister.php';
+            $page = 'lister.phtml';
         }
         
         ob_start();

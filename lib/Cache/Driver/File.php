@@ -103,10 +103,10 @@ class File implements CacheInterface
      */
     private function getPathByKey($key)
     {
-        $path = $this->getSetting(self::SETTING_PATH) . '/';
+        $path = $this->getSetting(self::SETTING_PATH);
         if (is_null($path)) {
-            $path = __DIR__ . '/../../../../../data/cache/';
+            $path = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', 'data', 'cache'));
         }
-        return $path . $key;
+        return $path . DIRECTORY_SEPARATOR . $key;
     }
 }

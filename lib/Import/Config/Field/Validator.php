@@ -4,7 +4,7 @@ namespace FMUP\Import\Config\Field;
 /**
  *
  * @author csanz
- *        
+ *
  */
 interface Validator
 {
@@ -12,7 +12,7 @@ interface Validator
     /**
      * Valide la valeur reçue en paramètre
      *
-     * @param unknown $value            
+     * @param unknown $value
      * @return boolean
      */
     public function validate($value);

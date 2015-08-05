@@ -30,7 +30,7 @@ class LdapHelper
         }
         
         // Option pour décrire les erreurs au maximum
-        ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+        ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, 7);
         
         // Connection au serveur spécifié
         $ds = ldap_connect($server, $port);

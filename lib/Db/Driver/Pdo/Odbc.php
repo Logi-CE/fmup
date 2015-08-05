@@ -5,7 +5,7 @@ use FMUP\Db\Exception;
 
 class Odbc extends \FMUP\Db\Driver\Pdo
 {
-    protected $instance = NULL;
+    protected $instance = null;
 
     public function getDriver()
     {
@@ -16,15 +16,15 @@ class Odbc extends \FMUP\Db\Driver\Pdo
         $driver = isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
         $host = isset($this->params['host']) ? $this->params['host'] : 'localhost';
         $database = isset($this->params['database']) ? $this->params['database'] : null;
-        $dsn = 'odbc:Driver={' . $driver.'}';
-        $dsn .= ';Server={' . $host.'}';
-        $dsn .= ';Database={' . $database.'}';
+        $dsn = 'odbc:Driver={' . $driver . '}';
+        $dsn .= ';Server={' . $host . '}';
+        $dsn .= ';Database={' . $database . '}';
 
         //$charset = isset($params['charset']) ? $params['charset'] : 'utf8';
         $login = isset($this->params['login']) ? $this->params['login'] : '';
         $password = isset($this->params['password']) ? $this->params['password'] : '';
         $options = array(
-            \PDO::ATTR_PERSISTENT => (bool) (isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
+            \PDO::ATTR_PERSISTENT => (bool)(isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
         $this->instance = new \PDO($dsn, $login, $password, $options);

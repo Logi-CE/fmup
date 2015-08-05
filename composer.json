@@ -1,6 +1,6 @@
 {
     "name":"castelis/fmup",
-    "version":"dev-master",
+    "version":"3.0.0",
     "require": {
         "php": "~5.3",
         "ext-json": "~1.2",
@@ -28,8 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FMUP\\": "lib",
-            "FMU\\": "system/FMU"
+            "FMUP\\": "lib"
         },
         "files": ["system/autoload.php"]
     }

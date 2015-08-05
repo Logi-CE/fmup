@@ -11,9 +11,11 @@
 <?php endif; ?>
 
 <select name="<?php echo $nom_filtre; ?>[nom]" class="select_nom <?php if (count($liste_champs) == 1) echo 'desactive'; ?>"  onchange="<?php echo $evenement; ?>">
-	<?php foreach ($liste_champs as $champ_choisi) : ?>
-		<option value="<?php echo $champ_choisi; ?>" <?php if ($champ_choisi == $valeur_par_defaut['nom']) echo 'selected="selected"'; ?>><?php echo LangueHelper::display($champ_choisi); ?></option>
-	<?php endforeach; ?>
+	<?php if (is_array($liste_champs)) : ?>
+        <?php foreach ($liste_champs as $champ_choisi) : ?>
+            <option value="<?php echo $champ_choisi; ?>" <?php if ($champ_choisi == $valeur_par_defaut['nom']) echo 'selected="selected"'; ?>><?php echo LangueHelper::display($champ_choisi); ?></option>
+        <?php endforeach; ?>
+	<?php endif; ?>
 </select>
 
 <?php if (!$combo) : ?>

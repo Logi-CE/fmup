@@ -13,7 +13,14 @@ class Logger
     const SYSTEM = 'SYSTEM';
 
     private $instances = array();
+    /**
+     * @var Request
+     */
     private $request;
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
      * @param string $instanceName
@@ -56,9 +63,9 @@ class Logger
                 break;
             case self::ERROR:
                 $handler = new NativeMailerHandler(
-                    explode(',', \Config::paramsVariables('mail_support')),
+                    explode(',', $this->getConfig()->get('mail_support')),
                     '[Erreur] ' . $this->getRequest()->getServer(Request::SERVER_NAME),
-                    \Config::paramsVariables('mail_robot'),
+                    $this->getConfig()->get('mail_robot'),
                     \Monolog\Logger::CRITICAL
                 );
                 $handler->setFormatter(new HtmlFormatter());
@@ -92,5 +99,26 @@ class Logger
             throw new \LogicException('Request is not defined');
         }
         return $this->request;
+    }
+
+    /**
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        if (!$this->config) {
+            $this->config = new Config();
+        }
+        return $this->config;
     }
 }

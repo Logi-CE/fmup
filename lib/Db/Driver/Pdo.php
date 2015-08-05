@@ -6,7 +6,7 @@ use FMUP\Db\Exception;
 
 class Pdo implements DbInterface
 {
-    protected $instance = NULL;
+    protected $instance = null;
     protected $params = array();
 
     public function __construct($params = array())
@@ -35,7 +35,7 @@ class Pdo implements DbInterface
         $login = isset($this->params['login']) ? $this->params['login'] : '';
         $password = isset($this->params['password']) ? $this->params['password'] : '';
         $options = array(
-            \PDO::ATTR_PERSISTENT => (bool) (isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
+            \PDO::ATTR_PERSISTENT => (bool)(isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
         $this->instance = new \PDO($dsn, $login, $password, $options);
@@ -45,7 +45,7 @@ class Pdo implements DbInterface
         $this->instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->instance->setAttribute(\PDO::ATTR_TIMEOUT, 10.0);
         $this->instance->exec('SET NAMES ' . $charset);
-        $this->instance->exec('SET CHARACTER SET '. $charset);
+        $this->instance->exec('SET CHARACTER SET ' . $charset);
 
         return $this->instance;
     }

@@ -1,14 +1,14 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Iterator\ValidatorIterator;
-use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\DoublonIterator;
+use FMUP\Import\Iterator\LineToConfigIterator;
+use FMUP\Import\Iterator\ValidatorIterator;
 
 /**
  *
  * @author csanz
- *        
+ *
  */
 abstract class Display extends \FMUP\Import
 {
@@ -68,12 +68,12 @@ abstract class Display extends \FMUP\Import
 
     /**
      * Affiche l'import
-     * 
-     * @param Config $value            
-     * @param ValidatorIterator $vi            
-     * @param DoublonIterator $di            
-     * @param LineToConfigIterator $lci  
-     * @param integer $key          
+     *
+     * @param Config $value
+     * @param ValidatorIterator $vi
+     * @param DoublonIterator $di
+     * @param LineToConfigIterator $lci
+     * @param integer $key
      */
     public abstract function displayImport(
         Config $value,

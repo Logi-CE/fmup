@@ -16,5 +16,5 @@ abstract class Import
         $this->config = $config;
     }
 
-    public abstract function parse ();
+    public abstract function parse();
 }

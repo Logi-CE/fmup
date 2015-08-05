@@ -1,23 +1,53 @@
 <?php
 if (!defined('BASE_PATH')) {
-    define('BASE_PATH', dirname(dirname(__FILE__) . '..'));
+    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
 }
 
 /**
  * Classe comprenant les paramètres de configuration de l'application
+ * @deprecated use \FMUP\Config\Framework instead
  */
-class Config extends ConfigApplication
+class Config
 {
-    protected static $instanceParams = array();
+    private static $instance;
+    private $fmupConfig = null;
+    private $inited = false;
 
-    /**
-     * Constantes pouvant varier suivant le site
-     * @param string $index : [OPT] Paramètre demandé, laisser à FAUX pour avoir tous les paramètres
-     * @return mixed|array : Le paramètre de retour OU un tableau contenant tous les paramètres
-     */
-    public static function paramsVariables($index = false)
+    public static function getInstance()
     {
-        if (empty(self::$instanceParams)) {
+        if (!self::$instance) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
+
+    private function __construct()
+    {
+
+    }
+
+    private function __clone()
+    {
+
+    }
+
+    public function getFmupConfig()
+    {
+        if (!$this->fmupConfig) {
+            $this->fmupConfig = new \FMUP\Config;
+        }
+        return $this->fmupConfig;
+    }
+
+    public function setFmupConfig(\FMUP\Config $config)
+    {
+        $this->fmupConfig = $config;
+        return $this;
+    }
+
+    private function initDefault()
+    {
+        if (!$this->inited) {
             $param_defaut = array();
             // port par défaut.
             $param_defaut['app_port'] = '80';
@@ -93,13 +123,12 @@ class Config extends ConfigApplication
             $param_defaut['nom_version'] = '';
             //Path vers le fichier de log d'erreur de PHP
             $param_defaut['php_error_log'] = BASE_PATH . '/logs/php/error/%date%.log';
-
-            // LDAP :
-            // serveur_ldap - port_connexion_ldap - user_connexion_ldap - mdp_connexion_ldap - domaine_racine_ldap - nom_domaine_racine_ldap
-
-            // On ajoute ensuite les paramètres de ConfigApplication, qui vont surcharger les paramètres par défaut
-            $params = parent::setVariables($param_defaut);
-
+            if (class_exists('ConfigApplication') && is_callable(array('ConfigApplication', 'setVariables'))) {
+                $confApp = new ConfigApplication();
+                $params = $confApp->setVariables($param_defaut);
+            } else {
+                $params = $param_defaut;
+            }
             /* fichier config.ini est obligatoire (placé à la racine du site) mais ne doit surtout pas être intégré dans le SVN; il doit contenir les paramétrage d'accès à la BDD
             * un fichier d'exemple nommé config_exemple.ini indique les paramètres obligatoires à renseigner dans le fichier config.ini
             * Dans le cas des tests unitaires, le serveur aura pour nom 'phpunit' et nécessitera une connexion particulière.
@@ -113,7 +142,6 @@ class Config extends ConfigApplication
             if (file_exists(BASE_PATH.'/' . $nom_fichier_config)) {
                 include_once(BASE_PATH.'/' . $nom_fichier_config);
             }
-
             if (empty($params['mail_envoi_test'])) {
                 // email à qui on envoie les mails dans le cas de TEST et de non envoi d'email de l'application
                 // si non renseigné alors on envoie au support
@@ -123,15 +151,38 @@ class Config extends ConfigApplication
              * FMUP daily alert
              */
             if (isset($params['use_daily_alert']) && $params['use_daily_alert']) {
-                $param_defaut['affichage_erreurs'] = false;
+                $params['affichage_erreurs'] = false;
             }
-            self::$instanceParams = $params;
+            $this->getFmupConfig()->mergeConfig($params, true);
+            $this->inited = true;
         }
+        return $this;
+    }
 
+    protected static $instanceParams = array();
+
+    public function get($name = null)
+    {
+        return $this->initDefault()->getFmupConfig()->get($name);
+    }
+
+    public function has($name)
+    {
+        return $this->initDefault()->getFmupConfig()->has($name);
+    }
+
+    /**
+     * Constantes pouvant varier suivant le site
+     * @param bool|false $index Paramètre demandé, laisser à FAUX pour avoir tous les paramètres
+     * @return array|null|mixed Le paramètre de retour OU un tableau contenant tous les paramètres
+     * @throws Error
+     */
+    public static function paramsVariables($index = false)
+    {
         if ($index === false || empty($index)) {
-            return self::$instanceParams;
-        } elseif (array_key_exists($index, self::$instanceParams)) {
-            return self::$instanceParams[$index];
+            return self::getInstance()->get();
+        } elseif (self::getInstance()->has($index)) {
+            return self::getInstance()->get($index);
         } else {
             throw new Error(Error::configParamAbsent($index));
         }
@@ -148,9 +199,9 @@ class Config extends ConfigApplication
      */
     public static function isEnvoiMailPossible()
     {
-        if (!Config::paramsVariables('envoi_mail') && (Config::paramsVariables('version') == 'prod')) {
+        if (!self::getInstance()->get('envoi_mail') && (self::getInstance()->get('version') == 'prod')) {
             return true;
-        } elseif (!Config::paramsVariables('envoi_mail')) {
+        } elseif (!self::getInstance()->get('envoi_mail')) {
             return false;
         } else {
             return true;
@@ -172,12 +223,12 @@ class Config extends ConfigApplication
      */
     public static function consoleActive()
     {
-        return Config::isDebug() || (!empty($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur'] == Config::paramsVariables('id_castelis'));
+        return self::isDebug() || (!empty($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur'] == self::getInstance()->get('id_castelis'));
     }
 
     public static function isDebug()
     {
-        return Config::paramsVariables('is_debug');
+        return self::getInstance()->get('is_debug');
     }
 
 
@@ -186,12 +237,12 @@ class Config extends ConfigApplication
      */
     public static function siteWWWRoot()
     {
-        return call_user_func(array(APP, "defaultWWWroot")) . ":" . Config::getAppPort();
+        return call_user_func(array(APP, "defaultWWWroot")) . ":" . self::getAppPort();
     }
 
     public static function getAppPort()
     {
-        return Config::paramsVariables('app_port') . "/";
+        return self::getInstance()->get('app_port') . "/";
     }
 
     /**
@@ -208,7 +259,7 @@ class Config extends ConfigApplication
      */
     public static function errorReporting()
     {
-        if (Config::isDebug()) {
+        if (self::isDebug()) {
             return E_ALL;
         } else {
             return 0;
@@ -217,18 +268,18 @@ class Config extends ConfigApplication
 
     /**
      * Défini si le site est ouvert au public
-     * @return booleen
+     * @return boolean
      */
     public static function siteOuvert()
     {
         $retour = true;
-        if (Config::paramsVariables('maintenance_forcee')) {
+        if (self::getInstance()->get('maintenance_forcee')) {
             $retour = false;
         }
 
         $day_number = date('w');
         $heure = date('H');
-        foreach (Config::paramsVariables('maintenance_plages') as $plage) {
+        foreach (self::getInstance()->get('maintenance_plages') as $plage) {
             list($var_jour, $var_heure_debut, $var_heure_fin) = $plage;
             if ($var_jour == -1) $var_jour = $day_number;
             if ($var_heure_debut == -1) $var_heure_debut = $heure;
@@ -238,7 +289,7 @@ class Config extends ConfigApplication
             }
         }
 
-        if (Config::paramsVariables('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance')) {
+        if (self::getInstance()->get('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance')) {
             $retour = false;
         }
 
@@ -252,7 +303,7 @@ class Config extends ConfigApplication
      */
     public static function parametresConnexionDb($libelle = false)
     {
-        $params = Config::paramsVariables('parametres_connexion_db');
+        $params = self::getInstance()->get('parametres_connexion_db');
         if ($libelle) {
             $params = $params[$libelle];
         }
@@ -264,7 +315,7 @@ class Config extends ConfigApplication
      */
     public static function getGestionSession()
     {
-        $config = Config::paramsVariables();
+        $config = self::getInstance()->get();
         if (isset($config['gestion_session_' . APPLICATION])) {
             return $config['gestion_session_' . APPLICATION];
         } elseif (isset($config['gestion_session'])) {
@@ -278,21 +329,21 @@ class Config extends ConfigApplication
      */
     public static function getGestionMultiOnglet()
     {
-        $config = Config::paramsVariables();
+        $config = self::getInstance()->get();
         if (isset($config['mode_multi_onglet'])) {
             return $config['mode_multi_onglet'];
         }
         return false;
     }
 
-    public static function pathToPhpErrorLog($date = NULL)
+    public static function pathToPhpErrorLog($date = null)
     {
         $date = !is_null($date) ? strtotime($date) : time();
-        return str_replace('%date%', date('Ymd', $date), self::paramsVariables('php_error_log'));
+        return str_replace('%date%', date('Ymd', $date), self::getInstance()->get('php_error_log'));
     }
 
     public static function useDailyAlert()
     {
-        return (bool) self::paramsVariables('use_daily_alert');
+        return (bool) self::getInstance()->get('use_daily_alert');
     }
 }

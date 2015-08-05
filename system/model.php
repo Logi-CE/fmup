@@ -208,7 +208,7 @@ abstract class Model
                 if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
                     if (!isset ($where['date_suppression']) ) {
                         if ($driver == 'mssql') {
-                            $where['date_suppression'] = "ISNULL(date_suppression, '') = ''";
+                            $where['date_suppression'] = "ISnull(date_suppression, '') = ''";
                         } else {
                             $where['supprime'] = "supprime = 0";
                         }
@@ -221,7 +221,7 @@ abstract class Model
                 if (call_user_func(array($classe_appelante, 'afficherParDefautDataVisibles'))) {
                     if (!isset($where['visible']) && !isset($where['identifiant'])) {
                         if ($driver == 'mssql') {
-                            $where['visible'] = 'ISNULL(visible, 0) = 1';
+                            $where['visible'] = 'ISnull(visible, 0) = 1';
                         } else {
                             $where['visible'] = 'visible = 1';
                         }
@@ -277,7 +277,12 @@ abstract class Model
             // debug::output($SQL, true);
 
             // Exécution de la requète
-            $result = Model::getDb()->requete($SQL);
+            $db = \Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $result = $db->requete($SQL);
+            } else {
+                $result = $db->fetchAll($SQL);
+            }
         } else {
             if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
                 if (!isset ($where['supprime']) && (!isset($options['fonction']) || $options['fonction'] != 'findOne' )) {
@@ -290,7 +295,12 @@ abstract class Model
         
         // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit (pour la pagination)
         if ($driver == 'mysql') {
-            self::$nb_elements = Model::getDb()->requeteUneLigne('SELECT FOUND_ROWS()');
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                self::$nb_elements = $db->requeteUneLigne('SELECT FOUND_ROWS()');
+            } else {
+                self::$nb_elements = $db->fetchRow('SELECT FOUND_ROWS()');
+            }
             self::$nb_elements = self::$nb_elements['FOUND_ROWS()'];
         }
 
@@ -416,7 +426,12 @@ abstract class Model
         }
 
         // Exécution de la requète
-        $result = Model::getDb()->requete($SQL);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $result = $db->requete($SQL);
+        } else {
+            $result = $db->fetchAll($SQL);
+        }
         return $result;
     }
 
@@ -443,8 +458,12 @@ abstract class Model
         }
         //echo($SQL);
         // Exécution de la requète
-        $result = Model::getDb()->requete($SQL);
-
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $result = $db->requete($SQL);
+        } else {
+            $result = $db->fetchAll($SQL);
+        }
         return $result;
     }
 
@@ -463,7 +482,12 @@ abstract class Model
         }
         //debug::output($SQL);
         // Exécution de la requète
-        $result = Model::getDb()->requete($SQL);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $result = $db->requete($SQL);
+        } else {
+            $result = $db->fetchAll($SQL);
+        }
         return $result;
     }
 
@@ -480,7 +504,12 @@ abstract class Model
             $SQL .= " group by ".$options["group_by"];
         }
         // Exécution de la requète
-        $result = Model::getDb()->requete($SQL);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $result = $db->requete($SQL);
+        } else {
+            $result = $db->fetchAll($SQL);
+        }
         return $result[0]["nb"];
     }
 
@@ -504,7 +533,12 @@ abstract class Model
         $sql .= sql::ParseWhere($where);
         $sql .= $group_by;
         // Exécution de la requête
-        $result = Model::getDb()->requete($sql);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $result = $db->requete($sql);
+        } else {
+            $result = $db->fetchAll($sql);
+        }
         if ($group_by != "") $retour = $result;
         else $retour = $result[0]["somme"];
         return $retour;
@@ -564,7 +598,7 @@ abstract class Model
 
     /**
      * Retourne l'instance de base de données du controlleur actif
-     * @return DbConnectionMysql|DbConnectionMssql
+     * @return DbConnectionMysql|DbConnectionMssql|\FMUP\Db
      */
     public static function getDb()
     {
@@ -868,7 +902,7 @@ abstract class Model
      * Retourne ou modifie la valeur d'un attribut
      * @param string $function : L'attribut auquel accéder
      * @param string $argument : [OPT] La valeur à affecter dans le cas d'une affectation
-     * @return mixed|bool|null : L'argument demandée pour une lecture, VRAI si affectation réussie, NULL sinon
+     * @return mixed|bool|null : L'argument demandée pour une lecture, VRAI si affectation réussie, null sinon
      */
     public function __call($function, $argument = array())
     {
@@ -1109,7 +1143,12 @@ abstract class Model
         if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog'))) {
             // données de la table courante
             $sql = $this->getSqlLog();
-            $res = Model::getDb()->requeteUneLigne($sql);
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $res = $db->requeteUneLigne($sql);
+            } else {
+                $res = $db->fetchRow($sql);
+            }
 
             if ($res) {
                 foreach ($res as $index => $value) {
@@ -1127,7 +1166,11 @@ abstract class Model
 
             // données de la table de log
             $sql = $this->getSqlLog('log');
-            $res = Model::getDb()->requeteUneLigne($sql);
+            if (!$db instanceof \FMUP\Db) {
+                $res = $db->requeteUneLigne($sql);
+            } else {
+                $res = $db->fetchRow($sql);
+            }
 
             if ($res) {
                 foreach ($res as $index => $value) {
@@ -1206,8 +1249,12 @@ abstract class Model
                 FROM log__".$this->getTableName()."
                 WHERE id_objet_log = ".Sql::secureId($this->id)."
                 ORDER BY id";
-        $res = Model::getDb()->requete($sql);
-
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $res = $db->requete($sql);
+        } else {
+            $res = $db->fetchAll($sql);
+        }
         return $res;
     }
 
@@ -1220,8 +1267,12 @@ abstract class Model
                 FROM log__".$this->getTableName()."
                 WHERE id_objet_log = ".Sql::secureId($this->id)."
                 ORDER BY id";
-        $res = Model::getDb()->requete($sql);
-
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $res = $db->requete($sql);
+        } else {
+            $res = $db->fetchAll($sql);
+        }
         return $res;
     }
 
@@ -1235,7 +1286,12 @@ abstract class Model
                 FROM log__".$this->getTableName()."
                 WHERE id_objet_log = ".Sql::secureId($this->id)."
                 ORDER BY id";
-        $res = Model::getDb()->requete($sql);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $res = $db->requete($sql);
+        } else {
+            $res = $db->fetchAll($sql);
+        }
 
         foreach ($res as $rs) {
             $array[$rs["id"]] = array(
@@ -1273,12 +1329,12 @@ abstract class Model
     {
         if (is_array($attribut)) {
             foreach ($attribut as $current_attribut) {
-                $where[$current_attribut] = 'IFNULL('.$current_attribut.', 0) = IFNULL('.sql::Secure($this->$current_attribut).', 0)';
+                $where[$current_attribut] = 'IFnull('.$current_attribut.', 0) = IFnull('.sql::Secure($this->$current_attribut).', 0)';
             }
         } else {
-            $where[$attribut] = 'IFNULL('.$attribut.', 0) = IFNULL('.sql::Secure($this->$attribut).', 0)';
+            $where[$attribut] = 'IFnull('.$attribut.', 0) = IFnull('.sql::Secure($this->$attribut).', 0)';
         }
-        $where['id'] = "IFNULL(id, 0) <> IFNULL(".sql::secureId($this->id).", 0)";
+        $where['id'] = "IFnull(id, 0) <> IFnull(".sql::secureId($this->id).", 0)";
         $doublon = call_user_func(array(get_class($this), 'FindFirst'), $where);
 
         if ($doublon) {

@@ -5,9 +5,9 @@ use FMUP\Import\Config;
 
 /**
  * Permet de repérer les éventuels doublons présents dans le fichier
- * 
+ *
  * @author csanz
- *        
+ *
  */
 class DoublonIterator extends \IteratorIterator
 {
@@ -44,7 +44,7 @@ class DoublonIterator extends \IteratorIterator
     /**
      * Vérifie l'unicité des objets de la ligne
      *
-     * @param Config $current            
+     * @param Config $current
      * @return string
      */
     public function VerificationDoublon(Config $current)
@@ -59,7 +59,7 @@ class DoublonIterator extends \IteratorIterator
         $cle_unicite = sha1($str);
         // on cherche le sha1 dans le tableau
         $key = array_search($cle_unicite, $this->liste_cle);
-        if (! $key) {
+        if (!$key) {
             // si on ne le trouve pas, on l'ajoute dans le tableau
             $this->liste_cle[$this->getInnerIterator()->key()] = $cle_unicite;
             $current->setDoublonLigne(false);
