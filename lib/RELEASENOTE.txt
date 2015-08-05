@@ -1,4 +1,48 @@
 /*********/
+/* 3.0.0 */
+/*********/
+
+Continuous integration refactoring
+
+#New
+  - Component \FMUP\Exception\Location
+  - Component \FMUP\Response\Header\Location
+  - Unit test for \FMUP\Config
+  - added PHPdoc + strong typing
+  - added code coverage
+
+#Fix
+  - postDispatch is now called everytime even in case of error
+  - session can change its name if not started
+  - code coverage now set
+  - continuous integration can now compute logs
+  - system components can now be loaded
+  - Validator Import\Config\Field\Validator\LongueurMax
+  - deleted LogiCE reference
+  - strong typing in view params
+  - removed DbConnectionMysql hard referencies
+  - Import will send Exception instead of crash in case of error
+  - Import on update
+  - cleanup some code style
+
+#Deprecated
+ - Redirect method in controller - use \FMUP\Exception\Location instead
+ - Framework - use \FMUP\Framework instead
+ - CronHelper - use package cron/cron instead (do not need mysql database)
+ - Error - use any exception + \FMUP\Controller\Error instead
+ - DbConnectionMysql - use \FMUP\Db instead
+ 
+#Incompatible
+  - renamed preFiltre and postFiltre in preFilter and postFilter in controller
+  - preFilter and postFilter in controller have optional parameter of called action
+  - Session component do not take session name in session instance anymore
+  - deleted deprecated method Controller::getDb()
+  - deleted system/component/pdf/fpdf
+  - renamed component php views in phtml views
+  - component PDFHelper now throws LogicException if TCPDF is missing
+  - Constantes do not extends ConstantesApplication anymore
+
+/*********/
 /* 2.1.1 */
 /*********/
 
