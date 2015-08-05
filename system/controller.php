@@ -136,7 +136,7 @@ class Controller
     /**
      * Fonction exécutée avant chaque accès au controlleur.
      */
-    public function preFilter($calledAction = NULL)
+    public function preFilter($calledAction = null)
     {
         // Si l'application nécéssite une connexion on vérifie les droits
         if (call_user_func(array(APP, "hasAuthentification"))) {
@@ -151,7 +151,7 @@ class Controller
      * Contrairement au préfiltre il n'est pas toujours exécuté.
      * (En cas de redirection dans le controlleur, de die(), d'erreur, ...)
      */
-    public function postFilter($calledAction = NULL)
+    public function postFilter($calledAction = null)
     {
         if (class_exists('Historisation')) Historisation::destroy();
         Controller::clearFlash();

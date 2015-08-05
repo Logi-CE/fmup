@@ -1,5 +1,4 @@
 <?php
-
 namespace FMUP\FlashMessenger;
 
 /**
@@ -78,13 +77,13 @@ class Message
     private function checkType($type)
     {
         if ($type !== self::TYPE_DANGER &&
-                $type !== self::TYPE_DEFAULT &&
-                $type !== self::TYPE_INFO &&
-                $type !== self::TYPE_SUCCESS &&
-                $type !== self::TYPE_WARNING
-        ){
+            $type !== self::TYPE_DEFAULT &&
+            $type !== self::TYPE_INFO &&
+            $type !== self::TYPE_SUCCESS &&
+            $type !== self::TYPE_WARNING
+        ) {
             return ($this->getType() !== null) ? $this->getType() : self::TYPE_DEFAULT;
-        }else{
+        } else {
             return $type;
         }
     }

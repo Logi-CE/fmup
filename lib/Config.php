@@ -17,21 +17,21 @@ class Config
      * @param string $paramName
      * @return array|null
      */
-    public function get($paramName = NULL)
+    public function get($paramName = null)
     {
         if (true == is_null($paramName)) {
             return $this->params;
         }
-        return $this->has($paramName) ? $this->params[$paramName] : NULL;
+        return $this->has($paramName) ? $this->params[$paramName] : null;
     }
 
     /**
      * Define a param
      * @param string $paramName
-     * @param mixed $value default NULL
+     * @param mixed $value default null
      * @return $this
      */
-    public function set($paramName, $value = NULL)
+    public function set($paramName, $value = null)
     {
         $this->params[$paramName] = $value;
         return $this;

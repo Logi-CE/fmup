@@ -93,7 +93,7 @@ class Request
     {
         return $this->hasServer($name) ? $this->server[$name] : $defaultValue;
     }
-    
+
     /**
      * Retrieve a value defined on files
      * @param int $name
@@ -196,7 +196,7 @@ class Request
     {
         return array_key_exists($name, $this->server);
     }
-    
+
     /**
      * Check whether selected files value exists
      * @param string $name

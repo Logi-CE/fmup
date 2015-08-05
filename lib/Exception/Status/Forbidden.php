@@ -2,7 +2,7 @@
 namespace FMUP\Exception\Status;
 
 /**
- * Class NotFound - Exception to explain to framework that this page cannot be handled
+ * Class Forbidden - Exception to explain to framework that this page cannot be handled due to rights
  * @package FMUP\Exception
  */
 class Forbidden extends \FMUP\Exception\Status

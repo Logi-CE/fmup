@@ -5,9 +5,9 @@ use FMUP\Import\Config;
 
 /**
  * Valide une ligne et compte le nombre de ligne MAJ ou CRÉÉ
- * 
+ *
  * @author csanz
- *        
+ *
  */
 class ValidatorIterator extends \IteratorIterator
 {
@@ -49,7 +49,7 @@ class ValidatorIterator extends \IteratorIterator
      * GETTERS
      * ***************************
      */
-    
+
     /**
      *
      * @return boolean
@@ -101,7 +101,7 @@ class ValidatorIterator extends \IteratorIterator
     public function next()
     {
         parent::next();
-        if (! $this->current()) {
+        if (!$this->current()) {
             return $this;
         }
         $this->valid = $this->current()->validateLine();
@@ -113,14 +113,14 @@ class ValidatorIterator extends \IteratorIterator
                 $type = "update";
             }
         }
-        if ($this->valid && ! $this->current()->getDoublonLigne()) {
+        if ($this->valid && !$this->current()->getDoublonLigne()) {
             if ($type == "insert") {
-                $this->total_insert ++;
+                $this->total_insert++;
             } elseif ($type == "update") {
-                $this->total_update ++;
+                $this->total_update++;
             }
         } else {
-            $this->total_errors ++;
+            $this->total_errors++;
         }
         $this->type_ligne = $type;
     }

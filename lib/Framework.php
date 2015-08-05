@@ -166,7 +166,7 @@ class Framework extends \Framework
     protected function instantiate($controllerName, $action)
     {
         //To be compliant with old system @todo
-                if (!class_exists($controllerName)) {
+        if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }
         /* @var $controllerInstance \Controller */
@@ -177,8 +177,7 @@ class Framework extends \Framework
             $controllerInstance
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
-                ->setBootstrap($this->getBootstrap())
-            ;
+                ->setBootstrap($this->getBootstrap());
             $action = $action . 'Action'; //we force action to be a xxxAction
         }
 

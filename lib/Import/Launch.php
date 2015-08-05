@@ -1,15 +1,15 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Iterator\ValidatorIterator;
-use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\DoublonIterator;
+use FMUP\Import\Iterator\LineToConfigIterator;
+use FMUP\Import\Iterator\ValidatorIterator;
 
 /**
  * Lance l'import effectif
  *
  * @author csanz
- *        
+ *
  */
 class Launch extends \FMUP\Import
 {
@@ -63,7 +63,7 @@ class Launch extends \FMUP\Import
             foreach ($vi as $key => $value) {
                 if ($value) {
                     $valid = $vi->getValid();
-                    if ($valid && ! $value->getDoublonLigne()) {
+                    if ($valid && !$value->getDoublonLigne()) {
                         $value->insertLine();
                     }
                 }

@@ -1,7 +1,6 @@
 <?php
 namespace FMUP;
 
-
 class Bootstrap
 {
     private $isErrorHandlerRegistered = false;

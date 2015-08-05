@@ -3,9 +3,9 @@ namespace FMUP\Import\Iterator;
 
 /**
  * Remplie les valeurs d'une Config à partir d'une ligne du fichier
- * 
+ *
  * @author csanz
- *        
+ *
  */
 class LineToConfigIterator extends \IteratorIterator
 {
@@ -22,7 +22,6 @@ class LineToConfigIterator extends \IteratorIterator
     {
         $liste_champ = explode(";", $this->getInnerIterator()->current());
         if (count($liste_champ) > 1) {
-            $valid = true;
             foreach ($liste_champ as $key => $champ) {
                 $field = $this->config->getField($key);
                 $field->setValue($champ);

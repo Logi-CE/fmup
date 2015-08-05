@@ -8,7 +8,7 @@ namespace FMUP;
 class Cookie
 {
     private static $instance;
- 
+
     private function __construct()
     {
     }

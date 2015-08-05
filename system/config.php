@@ -336,7 +336,7 @@ class Config
         return false;
     }
 
-    public static function pathToPhpErrorLog($date = NULL)
+    public static function pathToPhpErrorLog($date = null)
     {
         $date = !is_null($date) ? strtotime($date) : time();
         return str_replace('%date%', date('Ymd', $date), self::getInstance()->get('php_error_log'));

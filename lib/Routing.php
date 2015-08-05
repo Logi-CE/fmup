@@ -47,7 +47,7 @@ class Routing
                     break;
                 }
             }
-        } while($redispatch);
+        } while ($redispatch);
         return $routeSelected;
     }
 

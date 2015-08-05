@@ -13,13 +13,13 @@ interface DriverInterface
      * @return $this
      */
     public function add(Message $flash);
-    
+
     /**
      * Get all the messages in the driver
      * @return array|null $flashes
      */
     public function get();
-    
+
     /**
      * Clear the driver from messages
      * @return $this

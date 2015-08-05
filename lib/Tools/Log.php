@@ -6,18 +6,18 @@ class Log
     /**
      * @var \PHPMailer
      */
-    protected $mailerInstance = NULL;
+    protected $mailerInstance = null;
     /**
      * @var \FMUP\Config
      */
-    protected $config = NULL;
+    protected $config = null;
 
     /**
      * Sends log file for a specified date to support team
      * @param string $date
      * @return bool
      */
-    public function sendErrorLog($date = NULL)
+    public function sendErrorLog($date = null)
     {
         $mailAddresses = explode(';', $this->getConfig()->get('mail_support'));
         return $this->sendFileToMail(\Config::pathToPhpErrorLog($date), $mailAddresses);
@@ -42,7 +42,7 @@ class Log
         $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
         $mailer->Body = $body;
         $mailer->AltBody = $body;
-        foreach ((array) $mailAddresses as $mail) {
+        foreach ((array)$mailAddresses as $mail) {
             $mailer->AddAddress($mail);
         }
         return $mailer->Send();

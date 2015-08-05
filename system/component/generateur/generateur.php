@@ -157,16 +157,16 @@ class Generateur
 			if (count ($champs_logs) > 0) {
 				if (!$primary_key) {
 					$this->db->execute('ALTER TABLE `log__'.$table.'` ADD PRIMARY KEY(`id`)');
-					$this->db->execute('ALTER TABLE `log__'.$table.'` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT');
+					$this->db->execute('ALTER TABLE `log__'.$table.'` CHANGE `id` `id` INT( 11 ) NOT null AUTO_INCREMENT');
 				}
-				if (!$id_objet_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_objet_log` INT NOT NULL AFTER `id`");
-				if (!$id_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_historisation` INT NOT NULL AFTER `id_objet_log`");
-				if (!$libelle_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `libelle_historisation` TEXT NOT NULL AFTER `id_historisation`");
-				if (!$contenu_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `contenu_log` TEXT NOT NULL AFTER `libelle_historisation`");
-				if (!$id_log_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_$table` INT NOT NULL AFTER `contenu_log`");
-				if (!$user_action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_utilisateur_log` INT NOT NULL");
-				if (!$date_action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `date_action_log` DATETIME NOT NULL");
-				if (!$action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `action_log` VARCHAR( 10 ) NOT NULL ");
+				if (!$id_objet_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_objet_log` INT NOT null AFTER `id`");
+				if (!$id_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_historisation` INT NOT null AFTER `id_objet_log`");
+				if (!$libelle_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `libelle_historisation` TEXT NOT null AFTER `id_historisation`");
+				if (!$contenu_histo_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `contenu_log` TEXT NOT null AFTER `libelle_historisation`");
+				if (!$id_log_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_$table` INT NOT null AFTER `contenu_log`");
+				if (!$user_action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `id_utilisateur_log` INT NOT null");
+				if (!$date_action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `date_action_log` DATETIME NOT null");
+				if (!$action_exists) $this->db->execute("ALTER TABLE `log__$table` ADD `action_log` VARCHAR( 10 ) NOT null ");
 			}
 		}
         $champs = array();
@@ -214,7 +214,7 @@ class Generateur
                 $SQL = "SELECT  COLUMN_NAME as Field
                                 , DATA_TYPE as Type
                                 , COLUMN_DEFAULT as 'Default'
-                                , IS_NULLABLE as 'Null'
+                                , IS_nullABLE as 'Null'
                         FROM INFORMATION_SCHEMA.COLUMNS
                         WHERE TABLE_NAME = '$table'";
                 $champs_tableau = $this->db->requete($SQL);
@@ -248,7 +248,7 @@ class Generateur
                         $champs_temp = $this->db->requete("SELECT  COLUMN_NAME as Field
                                                             , DATA_TYPE as Type
                                                             , COLUMN_DEFAULT as 'Default'
-                                                            , IS_NULLABLE as 'Null'
+                                                            , IS_nullABLE as 'Null'
                                                     FROM INFORMATION_SCHEMA.COLUMNS
                                                     WHERE TABLE_NAME = '$nom_table[0]'");
                         foreach ($champs_temp as $champ) {

@@ -5,7 +5,7 @@ use FMUP\Db\DbInterface;
 
 class Mock implements DbInterface
 {
-    protected $instance = NULL;
+    protected $instance = null;
     protected $params = array();
 
     public function __construct($params = array())

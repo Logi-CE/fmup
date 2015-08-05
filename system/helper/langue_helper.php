@@ -146,7 +146,7 @@ class LangueHelper
     {        
         $sql = "SELECT DISTINCT fichier, code
                 FROM ".self::$langue_name."
-                WHERE IFNULL(fichier, '') <> ''";				
+                WHERE IFnull(fichier, '') <> ''";
         $db = \Model::getDb();
         if (!$db instanceof \FMUP\Db) {
             $rsliste = $db->requete($sql);

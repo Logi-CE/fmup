@@ -17,7 +17,7 @@ abstract class Controller
      * this method is called before each action
      * @param string $calledAction
      */
-    public function preFilter($calledAction = NULL)
+    public function preFilter($calledAction = null)
     {
     }
 
@@ -25,7 +25,7 @@ abstract class Controller
      * this method is called after each action
      * @param string $calledAction
      */
-    public function postFilter($calledAction = NULL)
+    public function postFilter($calledAction = null)
     {
 
     }

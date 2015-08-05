@@ -38,7 +38,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $config->set('2', '3');
         $this->assertNotEquals($config, $config2, "set 2 to string 3");
         $config2 = clone $config;
-        $config->set('test', NULL);
+        $config->set('test', null);
         $this->assertNotEquals($config, $config2, "set test to null");
         $config2 = clone $config;
         $config->set('notexist');

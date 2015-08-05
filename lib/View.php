@@ -18,7 +18,7 @@ class View
      */
     public function __construct(array $params = array())
     {
-        $this->addParams((array) $params);
+        $this->addParams((array)$params);
     }
 
     /**
@@ -73,7 +73,7 @@ class View
         ob_start();
         $vars = $this->getParams();
         extract($vars); //for compliance only - @todo remove this line
-        require ($this->getViewPath());
+        require($this->getViewPath());
         return ob_get_clean();
     }
 
