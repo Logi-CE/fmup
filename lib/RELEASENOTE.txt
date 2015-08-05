@@ -43,6 +43,16 @@ Continuous integration refactoring
   - Constantes do not extends ConstantesApplication anymore
 
 /*********/
+/* 2.1.2 */
+/*********/
+
+Fix Import
+
+#Fix
+ - Import will send Exception instead of crash in case of error
+ - Import on update
+ 
+/*********/
 /* 2.1.1 */
 /*********/
 
