@@ -152,7 +152,12 @@ class Error extends Exception
         } else {
             $sql = 'UPDATE compteur_mail SET nb_mails = nb_mails + 1, '.$champ.' = '.$champ.' + 1 WHERE date_envoi = "'.$date.'-00"';
         }
-        Model::getDb()->execute($sql);
+        $db = Model::getDb();
+        if ($db instanceof \FMUP\Db) {
+            $db->query($sql);
+        } else {
+            $db->execute($sql);
+        }
 
         return $resultat;
     }

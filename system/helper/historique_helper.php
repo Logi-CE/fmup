@@ -67,8 +67,12 @@ class HistoriqueHelper
                         " . Sql::secure($commentaire) . "
                     )";
             //debug::output($controller);
-            $controller = new Controller();
-            $controller->getDb()->execute($sql);
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $db->execute($sql);
+            } else {
+                $db->query($sql);
+            }
             return true;
         } else {
             //la config de l'application ne permet pas d'historiser cette donnée
@@ -164,8 +168,12 @@ class HistoriqueHelper
                         " . Sql::secure($commentaire) . "
                     )";
 
-            $controller = new Controller();
-            $controller->getDb()->execute($sql);
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $db->execute($sql);
+            } else {
+                $db->query($sql);
+            }
             return true;
         } else {
             //la config de l'application ne permet pas d'historiser cette donnée

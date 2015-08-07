@@ -109,7 +109,12 @@ class Historisation extends Model
                         ".Sql::secureDate($this->date_action)."
                     )";
             Controller::setFlash(Model::getMessageInsertionOK());
-            return Model::getDb()->execute($SQL);
+            $db = Model::getDb();
+            if ($db instanceof \FMUP\Db) {
+                return $db->query($SQL);
+            } else {
+                return $db->execute($SQL);
+            }
         }
 
         /**
@@ -124,7 +129,12 @@ class Historisation extends Model
                         date_action    = ".Sql::secureDate($this->date_action)."
                     WHERE id = ".$this->id;
             Controller::setFlash(Model::getMessageUpdateOK());
-            return Model::getDb()->execute($SQL);
+            $db = Model::getDb();
+            if ($db instanceof \FMUP\Db) {
+                return $db->query($SQL);
+            } else {
+                return $db->execute($SQL);
+            }
         }
 
         /**

@@ -573,18 +573,25 @@ abstract class Model
                 $SQL = "UPDATE $table
                         SET supprime = 1
                         $infos_suppression
-                        WHERE id = ".$this->id;
-                if (Model::getDb()->execute($SQL)) {
-                    return true;
+                        WHERE id = ".$this->id
+                $db = Model::getDb();
+                if ($db instanceof \FMUP\Db) {
+                    return (bool)$db->query($SQL);
                 } else {
-                    return false;
+                    return (bool)$db->execute($SQL);
                 }
             // Cas de la suppression physique
             } else {
                 // Loger le changement
                 $this->logerChangement("delete");
                 $SQL = "DELETE FROM $table WHERE id = ".$this->id;
-                if (Model::getDb()->execute($SQL)) {
+                $db = Model::getDb();
+                if ($db instanceof \FMUP\Db) {
+                    $return = (bool)$db->query($SQL);
+                } else {
+                    $return = (bool)$db->execute($SQL);
+                }
+                if ($return) {
                     $this->id = "";
                     return true;
                 } else {
@@ -1114,7 +1121,12 @@ abstract class Model
                         FROM '.$this->getTableName().' T
                         WHERE id = '.Sql::secureId($this->id).'
                     ';
-            $this->log_id = Model::getDb()->execute($SQL, '', false);
+            $db = Model::getDb();
+            if ($db instanceof \FMUP\Db) {
+                $this->log_id = (bool)$db->query($SQL);
+            } else {
+                $this->log_id = $db->execute($SQL, '', false);
+            }
         }
     }
 
@@ -1208,7 +1220,12 @@ abstract class Model
                         SET libelle_historisation = ".Sql::secure(($libelle))."
                         , contenu_log = ".Sql::secure($contenu)."
                         WHERE id = ".Sql::secureId($this->log_id);
-                Model::getDb()->execute($sql);
+                $db = Model::getDb();
+                if (!$db instanceof \FMUP\Db) {
+                    $db->execute($sql);
+                } else {
+                    $db->query($sql);
+                }
             }
         }
     }

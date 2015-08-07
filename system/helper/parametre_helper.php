@@ -85,7 +85,12 @@ class ParametreHelper
 					, id_modificateur = '.Sql::secureId($_SESSION['id_utilisateur']).'
     			WHERE nom = '.Sql::secure($libelle).'
     				AND modifiable = 1';
-		$result = $this->getDb()->execute($sql);
+		$db = Model::getDb();
+		if (!$db instanceof \FMUP\Db) {
+			$db->execute($sql);
+		} else {
+			$db->query($sql);
+		}
 		// Mise à jour dans le tampon
 		if ( !empty($this->liste) ) {
 			$this->liste[$libelle] = $valeur;
