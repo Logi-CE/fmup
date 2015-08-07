@@ -1205,7 +1205,7 @@ abstract class Model
 
                 foreach ($tab_diff as $index => $value) {
                     $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
-                    $libelle .= "Le champ '".$field."' a été modifié : '".$tab_champs_log[$index]."' a été remplacé par '".$value."'\n";
+                    $libelle .= "Le champ '".$field."' a été modifié : '".$field."' a été remplacé par '".$value."'\n";
 
                     $tab_contenu[$index] = array(
                                                     "old_value"	=> ($tab_champs_log[$index]),
