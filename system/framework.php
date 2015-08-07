@@ -140,39 +140,50 @@ class Framework
     {
         if (Config::getGestionSession()) {
             $session = new HlpSessions('BACK');
-            session_set_save_handler(array(&$session, 'open'), array(&$session, 'close'), array(&$session, 'read'), array(&$session, 'write'), array(&$session, 'destroy'), array(&$session, 'gc'));
-        }
-
-        /*
-         * bloc utilisé pour l'activation de session crée sur un autre domaine
-         * --> reprise d'une session forcée
-         */
-        if (isset($_REQUEST['psid']) && $_REQUEST['psid'] != '') {
-            $multi_onglet = Config::getGestionMultiOnglet();
-
-            //on recharge la session par celle en parametre
-            session_id($_REQUEST['psid']);
-            session_start();
-            $old_session = $_SESSION;
-            if ($multi_onglet) $old_session["window.name"] = date('YmdHis');
-
-            session_regenerate_id();
-            $_SESSION = $old_session;
-
-            if ($multi_onglet) {
-                //specifique
-                if (isset($_SESSION['utilisateur'])) {
-                    $_SESSION['utilisateur']->setCookie($_SESSION['utilisateur']->getMatricule(), $_SESSION['utilisateur']->getId(), $_SESSION['utilisateur']->getPassword());
-                }
-            }
-
-            $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
-            $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
-
-            header('Location: '.$uri);
-            exit();
+            session_set_save_handler(
+                array(&$session, 'open'),
+                array(&$session, 'close'),
+                array(&$session, 'read'),
+                array(&$session, 'write'),
+                array(&$session, 'destroy'),
+                array(&$session, 'gc')
+            );
         } else {
-            session_start();
+            /*
+             * bloc utilisé pour l'activation de session crée sur un autre domaine
+             * --> reprise d'une session forcée
+             */
+            if (isset($_REQUEST['psid']) && $_REQUEST['psid'] != '') {
+                $multi_onglet = Config::getGestionMultiOnglet();
+
+                //on recharge la session par celle en parametre
+                session_id($_REQUEST['psid']);
+                session_start();
+                $old_session = $_SESSION;
+                if ($multi_onglet) $old_session["window.name"] = date('YmdHis');
+
+                session_regenerate_id();
+                $_SESSION = $old_session;
+
+                if ($multi_onglet) {
+                    //specifique
+                    if (isset($_SESSION['utilisateur'])) {
+                        $_SESSION['utilisateur']->setCookie(
+                            $_SESSION['utilisateur']->getMatricule(),
+                            $_SESSION['utilisateur']->getId(),
+                            $_SESSION['utilisateur']->getPassword()
+                        );
+                    }
+                }
+
+                $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
+                $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
+
+                header('Location: '.$uri);
+                exit();
+            } else {
+                \FMUP\Session::getInstance()->start();
+            }
         }
     }
 

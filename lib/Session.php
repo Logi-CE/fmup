@@ -12,6 +12,7 @@ class Session
 
     private $sessionState;
     private $name;
+    private $id;
     private static $instance;
 
     private function __construct()
@@ -21,6 +22,16 @@ class Session
     private function __clone()
     {
 
+    }
+
+    /**
+     * @param bool $deleteOldSession
+     * @return $this
+     */
+    public function regenerate($deleteOldSession = false)
+    {
+        session_regenerate_id((bool) $deleteOldSession);
+        return $this;
     }
 
     /**
@@ -62,6 +73,34 @@ class Session
             $this->name = session_name();
         }
         return $this->name;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     * @throws Exception
+     */
+    public function setId($id)
+    {
+        if (!$this->isStarted()) {
+            if (preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
+                throw new \FMUP\Exception('Session name could not anything but letters + numbers');
+            }
+            $this->id = (string)$id;
+        }
+        return $this;
+    }
+
+    /**
+     * Retrieve session name
+     * @return string|null
+     */
+    public function getId()
+    {
+        if ($this->isStarted()) {
+            $this->id = session_id();
+        }
+        return $this->id;
     }
 
     /**
