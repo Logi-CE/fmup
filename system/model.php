@@ -573,7 +573,7 @@ abstract class Model
                 $SQL = "UPDATE $table
                         SET supprime = 1
                         $infos_suppression
-                        WHERE id = ".$this->id
+                        WHERE id = ".$this->id;
                 $db = Model::getDb();
                 if ($db instanceof \FMUP\Db) {
                     return (bool)$db->query($SQL);
