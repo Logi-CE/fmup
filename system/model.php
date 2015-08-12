@@ -1123,7 +1123,8 @@ abstract class Model
                     ';
             $db = Model::getDb();
             if ($db instanceof \FMUP\Db) {
-                $this->log_id = (bool)$db->query($SQL);
+                $db->query($SQL);
+                $this->log_id = $db->lastInsertId();
             } else {
                 $this->log_id = $db->execute($SQL, '', false);
             }
