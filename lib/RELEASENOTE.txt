@@ -1,4 +1,17 @@
 /*********/
+/* 3.1.0 */
+/*********/
+
+#Fix
+  - Can use \FMUP\Db in helpers
+
+#New
+  - Crypt component
+  - Crypt\Md5 component
+  - Session can regenerate
+  - Db::lastInsertId can now accept a param
+
+/*********/
 /* 3.0.0 */
 /*********/
 
