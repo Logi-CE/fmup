@@ -104,10 +104,11 @@ class Db
     }
 
     /**
+     * @param string $name
      * @return string
      */
-    public function lastInsertId()
+    public function lastInsertId($name = null)
     {
-        return $this->getDriver()->lastInsertId();
+        return $this->getDriver()->lastInsertId($name);
     }
 }
