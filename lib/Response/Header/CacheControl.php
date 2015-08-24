@@ -41,7 +41,7 @@ class CacheControl extends Header
     private function getExpireDateInSec()
     {
         $now = new \DateTime();
-        return $now->getTimestamp() - $this->getExpireDate()->getTimestamp();
+        return $this->getExpireDate()->getTimestamp() - $now->getTimestamp();
     }
 
     /**

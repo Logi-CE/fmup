@@ -7,7 +7,9 @@ class ContentType extends Header
 {
     const TYPE = 'Content-Type';
 
-    const MIME_TEXT_HTML = 'text/html;';
+    const MIME_TEXT_HTML = 'text/html';
+    const MIME_TEXT_CSS = 'text/html';
+    const MIME_APPLICATION_JS = 'application/javascript';
     const CHARSET_UTF_8 = 'utf-8';
 
     private $mime;
