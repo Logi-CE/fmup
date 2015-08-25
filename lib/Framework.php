@@ -183,7 +183,7 @@ class Framework extends \Framework
 
         $controllerInstance->preFilter($action);
         $actionReturn = null;
-        if (method_exists($controllerInstance, $action)) {
+        if (is_callable(array($controllerInstance, $action))) {
             $actionReturn = $controllerInstance->$action();
         } else {
             throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($action));
