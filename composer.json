@@ -24,7 +24,9 @@
     "suggest": {
       "ext-pdo_mysql": "To use Mysql connections",
       "ext-pdo_sqlite": "To use Sqlite connections",
-      "ext-sqlite3": "To use Sqlite connections"
+      "ext-sqlite3": "To use Sqlite connections",
+      "natxet/cssmin": "^3.0 To use CSS Compression (AssetCompressor)",
+      "tedivm/jshrink": "^1.0 To use JS Compression (AssetCompressor)"
     },
     "autoload": {
         "psr-4": {
