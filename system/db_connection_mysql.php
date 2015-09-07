@@ -224,17 +224,17 @@ class DbConnectionMysql
         }
     }
 
-    public function beginTrans()
+    public function beginTransaction()
     {
         $this->conn->beginTransaction();
     }
 
-    public function commitTrans()
+    public function commit()
     {
         $this->conn->commit();
     }
 
-    public function rollbackTrans()
+    public function rollBack()
     {
         $this->conn->rollBack();
     }
