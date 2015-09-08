@@ -1,4 +1,11 @@
 /*********/
+/* 3.1.2 */
+/*********/
+
+#Fix
+  - Fix DbConnectionMysql transaction methods
+  
+/*********/
 /* 3.1.1 */
 /*********/
 
