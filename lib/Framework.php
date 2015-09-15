@@ -290,16 +290,13 @@ class Framework extends \Framework
             parent::shutDown();
         } else {
             if (($error = error_get_last()) !== null) {
-                Error::addContextToErrorLog();
                 $isUrgentError = in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR));
                 if ($isUrgentError) {
-                    Error::sendMail();
                     if (!$this->getBootstrap()->getConfig()->get('is_debug')) {
                         echo \Constantes::getMessageErreurApplication();
                     }
                 }
             }
-            exit();
         }
     }
 
@@ -365,6 +362,23 @@ class Framework extends \Framework
         $this->bootstrap = $bootstrap;
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    protected function definePhpIni()
+    {
+        if ($this->getBootstrap()->getConfig()->get('use_daily_alert')) {
+            ini_set('error_reporting', E_ALL);
+            ini_set('display_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
+            ini_set('display_startup_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
+            ini_set('html_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
+        } else {
+            parent::definePhpIni();
+        }
+        return $this;
+    }
+
 
     public function initialize()
     {

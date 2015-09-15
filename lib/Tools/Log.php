@@ -33,19 +33,24 @@ class Log
      */
     public function sendFileToMail($filePath, array $mailAddresses)
     {
-        $body = file_exists($filePath) ? file_get_contents($filePath) : 'File ' . $filePath . ' seems not to exist';
-        if (empty($body)) {
-            $body = 'No log for today!';
+        try {
+            $body = file_exists($filePath) ? file_get_contents($filePath) : null;
+            if (empty($body)) {
+                $body = 'No log for today!';
+            }
+            $mailer = $this->getMailer();
+            $mailer->IsHTML(false);
+            $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
+            $mailer->Body = $body;
+            $mailer->AltBody = $body;
+            foreach ((array)$mailAddresses as $mail) {
+                $mailer->AddAddress($mail);
+            }
+            return $mailer->Send();
+        } catch (\Exception $e) {
+            var_dump($e);die;
+            return false;
         }
-        $mailer = $this->getMailer();
-        $mailer->IsHTML(false);
-        $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
-        $mailer->Body = $body;
-        $mailer->AltBody = $body;
-        foreach ((array)$mailAddresses as $mail) {
-            $mailer->AddAddress($mail);
-        }
-        return $mailer->Send();
     }
 
     /**
