@@ -12,6 +12,8 @@ abstract class Controller
     private $response;
     private $view;
 
+    const ACTION_SUFFIX = 'Action';
+
     /**
      * this method is called before each action
      * @param string $calledAction
@@ -127,5 +129,15 @@ abstract class Controller
     protected function getSession()
     {
         return $this->getBootstrap()->getSession();
+    }
+
+    /**
+     * Return the action method to call for a given action name
+     * @param string $action
+     * @return string
+     */
+    public function getActionMethod($action)
+    {
+        return $action . self::ACTION_SUFFIX;
     }
 }
