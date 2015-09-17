@@ -6,15 +6,19 @@ use FMUP\Response\Header;
 class CacheControl extends Header
 {
     const TYPE = 'Cache-Control';
+    const CACHE_TYPE_PUBLIC = 'public';
+    const CACHE_TYPE_PRIVATE = 'private';
 
     private $expireDate;
+    private $cacheType;
 
     /**
      * @param \DateTime $dateTime
      */
-    public function __construct(\DateTime $dateTime)
+    public function __construct(\DateTime $dateTime, $cacheType = self::CACHE_TYPE_PUBLIC)
     {
         $this->setExpireDate($dateTime);
+        $this->setCacheType($cacheType);
     }
 
     /**
@@ -45,12 +49,31 @@ class CacheControl extends Header
     }
 
     /**
+     * Define the cacheType (public or private)
+     * @param string $cacheType
+     */
+    public function setCacheType($cacheType = self::CACHE_TYPE_PUBLIC)
+    {
+        $this->cacheType = $cacheType;
+        return $this;
+    }
+
+    /**
+     * Get cacheType
+     * @return string
+     */
+    public function getCacheType()
+    {
+        return $this->cacheType;
+    }
+
+    /**
      * Value returned in the header
      * @return string
      */
     public function getValue()
     {
-        return 'max-age=' . $this->getExpireDateInSec();
+        return $this->getCacheType() . ', max-age=' . $this->getExpireDateInSec() . ', must-revalidate';
     }
 
     /**
