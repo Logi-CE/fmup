@@ -5,6 +5,7 @@ final class Factory
 {
     const DRIVER_RAM = 'Ram';
     const DRIVER_FILE = 'File';
+    const DRIVER_SHM = 'Shm';
 
     private function __construct()
     {
