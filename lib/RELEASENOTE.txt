@@ -70,6 +70,17 @@ Continuous integration refactoring
   - Constantes do not extends ConstantesApplication anymore
 
 /*********/
+/* 2.1.3 */
+/*********/
+
+Fix Some accent
+
+#Fix
+ - MathHelper::getPourcentageEvolution now returns something without number_format
+ - FiltreListe attribute now encodes in utf-8
+ - \Date::getTableauLibelleMois() fix Août encoding
+ 
+/*********/
 /* 2.1.2 */
 /*********/
 

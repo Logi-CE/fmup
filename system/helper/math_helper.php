@@ -34,6 +34,6 @@ class MathHelper
         if ($format_pourcentage) {
             return UniteHelper::getFormatPourcentage($evolution);
         }
-        return number_format($evolution, $nb_chiffres_arrondi);
+        return $evolution;
     }
 }
