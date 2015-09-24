@@ -178,15 +178,15 @@ class Framework extends \Framework
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
                 ->setBootstrap($this->getBootstrap());
-            $action = $action . 'Action'; //we force action to be a xxxAction
         }
 
         $controllerInstance->preFilter($action);
+        $callable = ($controllerInstance instanceof Controller) ? $controllerInstance->getActionMethod($action) : $action;
         $actionReturn = null;
-        if (method_exists($controllerInstance, $action)) {
-            $actionReturn = $controllerInstance->$action();
+        if (is_callable(array($controllerInstance, $callable))) {
+            $actionReturn = call_user_func(array($controllerInstance, $callable));
         } else {
-            throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($action));
+            throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($callable));
         }
         $controllerInstance->postFilter($action);
 
