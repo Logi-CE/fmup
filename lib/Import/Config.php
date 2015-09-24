@@ -243,7 +243,7 @@ class Config
             /* @var $objet \Model */
             $objet = new $nom_objet();
             $where = array();
-            
+
             // Si on a besoin d'un id, on va le chercher dans le tableau
             if (count($config_objet->getIdNecessaire()) > 0 && count($config_objet->getNomAttribut()) > 0) {
                 $liste_attribut = $config_objet->getNomAttribut();
@@ -285,7 +285,7 @@ class Config
             } else {
                 // sinon on récupère directement l'id
                 $tableau_id[$nom_objet] = $objet_trouve->getId();
-                
+
                 // puis on met à jours
                 $objet->setAttribute("Id", $objet_trouve->getId());
                 $objet->save();
