@@ -48,7 +48,6 @@ class Log
             }
             return $mailer->Send();
         } catch (\Exception $e) {
-            var_dump($e);die;
             return false;
         }
     }

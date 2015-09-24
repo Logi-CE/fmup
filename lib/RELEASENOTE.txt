@@ -1,4 +1,27 @@
 /*********/
+/* 3.2.0 */
+/*********/
+
+Add support of some SystemV features
+
+#Fix
+  - Driver Cache\File
+
+#Compatible
+  - Framework uses is_callable instead of method_exists (can not call private/protected methods)
+  
+#New
+  - Component Response\Header\CacheControl
+  - Component Response\Header\ContentLength
+  - Component Response\Header\Expires
+  - Component Response\Header\LastModified
+  - Component Response\Header\Pragma
+  - Component Queue
+  - Component Cache\Driver\Shm
+  - New controllers allow to modify their action suffix  
+  - Daily error message uses correct error_log system to have exception logs
+  
+/*********/
 /* 3.1.2 */
 /*********/
 
