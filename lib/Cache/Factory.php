@@ -27,7 +27,6 @@ final class Factory
         if (!$instance instanceof CacheInterface) {
             throw new \FMUP\Exception('Unable to create ' . $class);
         }
-
         return $instance;
     }
 }
