@@ -41,6 +41,7 @@ class CsvIterator implements \Iterator
         $this->ligne = 0;
         $this->fHandle = fopen($this->path, "r");
         rewind($this->fHandle);
+        $this->next();
     }
 
     public function current()

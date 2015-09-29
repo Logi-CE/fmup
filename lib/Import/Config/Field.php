@@ -103,6 +103,30 @@ class Field
     }
 
     /**
+     * Set validator with specific key
+     * @param \FMUP\Import\Config\Field\Validator $validator
+     * @param string                              $key
+     */
+    public function setValidator(\FMUP\Import\Config\Field\Validator $validator, $key)
+    {
+        $this->liste_validator[$key] = $validator;
+        return $this;
+    }
+
+    /**
+     * Retrieve a specific validator
+     * @param  string $key
+     * @return \FMUP\Import\Config\Field\Validator|null
+     */
+    public function getValidator($key)
+    {
+        if (isset($this->liste_validator[$key])) {
+            return $this->liste_validator[$key];
+        }
+        return null;
+    }
+
+    /**
      *
      * @param \Import\Config\Field\Formatter\Formatter $formatter
      */
