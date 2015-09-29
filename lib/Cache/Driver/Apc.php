@@ -15,6 +15,7 @@ class Apc implements CacheInterface
      * @var array
      */
     private $settings = array();
+    private $isAvailable = null;
 
     const SETTING_CACHE_TYPE = 'SETTING_CACHE_TYPE';
     const SETTING_CACHE_TTL = 'SETTING_CACHE_TTL';
@@ -48,9 +49,13 @@ class Apc implements CacheInterface
      * Get defined value for specified cache key
      * @param string $key
      * @return mixed
+     * @throws Exception
      */
     public function get($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         return apc_fetch($key);
     }
 
@@ -58,9 +63,13 @@ class Apc implements CacheInterface
      * Check whether key exists or not
      * @param string $key
      * @return bool
+     * @throws Exception
      */
     public function has($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         return (bool)apc_exists($key);
     }
 
@@ -72,6 +81,9 @@ class Apc implements CacheInterface
      */
     public function remove($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         if ($this->getCacheType() == self::CACHE_TYPE_OP_CODE) {
             $success = apc_delete_file($key);
         } else {
@@ -92,6 +104,9 @@ class Apc implements CacheInterface
      */
     public function set($key, $value)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         if (!apc_store($key, $value)) {
             throw new Exception('Unable to set key into cache APC');
         }
@@ -101,9 +116,13 @@ class Apc implements CacheInterface
     /**
      * Clear specified cache type
      * @return bool
+     * @throws Exception
      */
     public function clear()
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         return apc_clear_cache($this->getCacheType());
     }
 
@@ -113,9 +132,13 @@ class Apc implements CacheInterface
      *                                      This is useful when trying to optimize calls for statistics gathering.
 
      * @return array|bool
+     * @throws Exception
      */
     public function info($limited = false)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('APC is not available');
+        }
         return apc_cache_info($this->getCacheType(), (bool)$limited);
     }
 
@@ -152,5 +175,17 @@ class Apc implements CacheInterface
             return self::CACHE_TYPE_OP_CODE;
         }
         return $type;
+    }
+
+    /**
+     * Check whether apc is available
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        if (is_null($this->isAvailable)) {
+            $this->isAvailable = function_exists('apc_clear_cache');
+        }
+        return $this->isAvailable;
     }
 }
