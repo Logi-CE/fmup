@@ -2,6 +2,7 @@
 namespace FMUP\Cache\Driver;
 
 use FMUP\Cache\CacheInterface;
+use FMUP\Cache\Exception;
 
 class Shm implements CacheInterface
 {
@@ -79,14 +80,14 @@ class Shm implements CacheInterface
     private function stringToUniqueId($string)
     {
         if (is_numeric($string)) {
-            return (int) $string;
+            return (int)$string;
         }
         $length = strlen($string);
         $return = 0;
         for ($i = 0; $i < $length; $i++) {
             $return += ord($string{$i});
         }
-        return (int) $length . '1' . $return;
+        return (int)$length . '1' . $return;
     }
 
     /**
@@ -129,11 +130,14 @@ class Shm implements CacheInterface
      * Remove a stored key if exists
      * @param string $key
      * @return $this
+     * @throws Exception
      */
     public function remove($key)
     {
         if ($this->has($key)) {
-            shm_remove_var($this->getShm(), $key);
+            if (!shm_remove_var($this->getShm(), $key)) {
+                throw new Exception('Unable to delete key from cache Shm');
+            }
         }
         return $this;
     }
@@ -142,11 +146,14 @@ class Shm implements CacheInterface
      * Define a key in SHM
      * @param string $key
      * @param mixed $value
+     * @throws Exception
      * @return $this
      */
     public function set($key, $value)
     {
-        shm_put_var($this->getShm(), $key, $value);
+        if (!shm_put_var($this->getShm(), $key, $value)) {
+            throw new Exception('Unable to define key into cache Shm');
+        }
         return $this;
     }
 }
