@@ -34,7 +34,9 @@ class Cache
     public static function getInstance($instanceKey)
     {
         if (!isset(self::$instance[$instanceKey])) {
-            $instance = new self();
+            $class = get_called_class();
+            /* @var $instance $this */
+            $instance = new $class;
             self::$instance[$instanceKey] = $instance->setDriver($instanceKey);
         }
         return self::$instance[$instanceKey];
