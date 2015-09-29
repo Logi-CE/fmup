@@ -78,6 +78,11 @@ class Native implements DriverInterface
         return $message;
     }
 
+    /**
+     * Retrieve message maximum size for a given queue
+     * @param resource $queueResource
+     * @return int
+     */
     private function getMessageSize($queueResource)
     {
         $messageSize = $this->getSetting(self::PARAM_MAX_MESSAGE_SIZE);
@@ -86,7 +91,7 @@ class Native implements DriverInterface
             $messageSize = (int)$configuration[self::CONFIGURATION_MESSAGE_SIZE];
             $this->setSetting(self::PARAM_MAX_MESSAGE_SIZE, $messageSize);
         }
-        return $this;
+        return $messageSize;
     }
 
     /**
