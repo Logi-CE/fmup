@@ -38,10 +38,10 @@ class CsvIterator implements \Iterator
         if (!file_exists($this->path)) {
             throw new \Exception("Le fichier specifie n'existe pas ou est introuvable");
         }
-        $this->ligne = 0;
         $this->fHandle = fopen($this->path, "r");
         rewind($this->fHandle);
         $this->next();
+        $this->ligne = 0;
     }
 
     public function current()
