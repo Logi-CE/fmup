@@ -12,7 +12,10 @@ use FMUP\Cache\Exception;
 class Memcached implements CacheInterface
 {
     const SETTINGS_MEMCACHED = 'SETTINGS_MEMCACHED';
-    const SETTINGS_TTL = 'SETTINGS_TTL';
+    /**
+     * @see http://php.net/manual/fr/memcached.expiration.php
+     */
+    const SETTINGS_TTL_IN_SECOND = 'SETTINGS_TTL_IN_SECOND';
 
     private $isAvailable = null;
     private $memcachedInstance = null;
@@ -109,7 +112,7 @@ class Memcached implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('Memcached is not available');
         }
-        $ttl = (int)$this->getSetting(self::SETTINGS_TTL);
+        $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
         if (!$this->getMemcachedInstance()->set($key, $value, $ttl)) {
             throw new Exception('Error while inserting value in memcached');
         }
