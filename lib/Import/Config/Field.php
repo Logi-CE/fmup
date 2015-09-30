@@ -107,9 +107,13 @@ class Field
      * @param \FMUP\Import\Config\Field\Validator $validator
      * @param string                              $key
      */
-    public function setValidator(\FMUP\Import\Config\Field\Validator $validator, $key)
+    public function setValidator(\FMUP\Import\Config\Field\Validator $validator, $key = null)
     {
-        $this->liste_validator[$key] = $validator;
+        if ($key === null) {
+            $this->addValidator($validator);
+        } else {
+            $this->liste_validator[$key] = $validator;
+        }
         return $this;
     }
 
