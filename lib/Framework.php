@@ -160,7 +160,7 @@ class Framework extends \Framework
     /**
      * @param string $controllerName
      * @param string $action
-     * @return \Controller|Controller
+     * @return Controller
      * @throws Exception\Status\NotFound
      */
     protected function instantiate($controllerName, $action)

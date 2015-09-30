@@ -24,7 +24,6 @@ require_once('autoload.php');
 $sys_directory = null;
 $sys_controller = null;
 $sys_function = null;
-$sys_controller_instance = null;
 
 /**
  * Classe d'initialisation du framework
@@ -99,36 +98,20 @@ class Framework
 
     protected function instantiate($sys_controller, $sys_function)
     {
-        global $sys_controller_instance;
         // Création d'une instance du controlleur
-        $controller_name = String::toCamlCase($sys_controller);
+        $controllerName = String::toCamlCase($sys_controller);
 
-        $db = null;
-        if (!is_null($sys_controller_instance)) {
-            $db = $sys_controller_instance->getDb();
-        }
-        /** @var $sys_controller_instance Controller */
-        $sys_controller_instance = new $controller_name();
-        if (!is_null($db)) {
-            $sys_controller_instance->setDb($db);
-        }
-        
-        // Préfiltre
-        $sys_controller_instance->preFilter($sys_function);
+        /** @var $controllerInstance \FMUP\Controller */
+        $controllerInstance = new $controllerName();
+        $controllerInstance->preFilter($sys_function);
 
-        
-        // Si la fonction peut être appelée on l'appelle
-        if (method_exists($sys_controller_instance, $sys_function)) {
-
-            call_user_func(array($sys_controller_instance, $sys_function));
-        // Sinon on appelle la page 404
+        if (method_exists($controllerInstance, $sys_function)) {
+            call_user_func(array($controllerInstance, $sys_function));
         } else {
             throw new NotFoundError(Error::fonctionIntrouvable($sys_function));
         }
-
-        // Postfiltre
-        $sys_controller_instance->postFilter();
-        return $sys_controller_instance;
+        $controllerInstance->postFilter();
+        return $controllerInstance;
     }
 
     protected function instantiateSession()
@@ -240,10 +223,10 @@ class Framework
             if ((!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
                 || $sys == call_user_func(array(APP, "authController"))
             ) {
-                Controller::clearFlash();
+                \FMUP\FlashMessenger::getInstance()->clear();
                 $sys = call_user_func(array(APP, "closedAppController"));
             } else {
-                Controller::setFlash(Constantes::getMessageFlashMaintenance());
+                \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageFlashMaintenance()));
             }
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
@@ -311,33 +294,5 @@ class Framework
         ini_set('display_errors', Config::isDebug());
         ini_set('display_startup_errors', Config::isDebug());
         return $this;
-    }
-
-    /**
-     * @deprecated not needed anymore in FMUP
-     * @throws Error
-     */
-    public function executerCron ()
-    {
-        global $sys_controller_instance;
-
-        if (!defined('APPLICATION')) {
-            throw new Error("La variable APPLICATION doit être définie.");
-        } else {
-            define('APP', "App".String::toCamlCase(APPLICATION));
-        }
-
-        // On détermine le niveau d'erreur
-        error_reporting(Config::errorReporting());
-
-        $this->defineErrorLog();
-        $this->registerErrorHandler();
-        $this->registerShutdownFunction();
-        $this->instantiateSession();
-
-        // Création d'une instance du controlleur
-        $sys_controller_instance = new Controller();
-        $cron = new CronApplication();
-        $cron->executer();
     }
 }

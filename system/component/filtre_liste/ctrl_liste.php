@@ -1,6 +1,11 @@
 <?php
-class CtrlListe extends Controller
+class CtrlListe extends \FMUP\Controller
 {
+    public function getActionMethod($action)
+    {
+        return $action;
+    }
+
     public function lister()
     {
         ini_set('max_execution_time', 40);

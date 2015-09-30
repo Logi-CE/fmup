@@ -2,8 +2,13 @@
 /**
  * Controleur gérant les retours AJAX de la console
  */
-class CtrlConsole extends Controller
+class CtrlConsole extends \FMUP\Controller
 {
+    public function getActionMethod($action)
+    {
+        return $action;
+    }
+
     public function afficherConsole ()
     {
         echo '<style type="text/css">';

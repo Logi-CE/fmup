@@ -108,7 +108,7 @@ class Historisation extends Model
                         ".Sql::secure($this->libelle).",
                         ".Sql::secureDate($this->date_action)."
                     )";
-            Controller::setFlash(Model::getMessageInsertionOK());
+            \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Model::getMessageInsertionOK()));
             $db = Model::getDb();
             if ($db instanceof \FMUP\Db) {
                 return $db->query($SQL);
@@ -128,7 +128,7 @@ class Historisation extends Model
                         libelle        = ".Sql::secure($this->libelle).",
                         date_action    = ".Sql::secureDate($this->date_action)."
                     WHERE id = ".$this->id;
-            Controller::setFlash(Model::getMessageUpdateOK());
+            \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Model::getMessageUpdateOK()));
             $db = Model::getDb();
             if ($db instanceof \FMUP\Db) {
                 return $db->query($SQL);

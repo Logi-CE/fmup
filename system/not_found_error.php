@@ -19,7 +19,7 @@ class NotFoundError extends Error
 
         // Si on est sur la page, on ne redirige plus
         if ($_SERVER['REQUEST_URI'] != call_user_func(array(APP, "page404"))) {
-            Controller::redirect(call_user_func(array(APP, "page404")));
+            throw new \FMUP\Exception\Location(call_user_func(array(APP, "page404")));
         } else {
             throw new Error('La page 404 est introuvable.');
         }

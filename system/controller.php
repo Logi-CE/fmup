@@ -98,7 +98,7 @@ class Controller
 
     /**
      * @param DbConnectionMssql|DbConnectionMysql|\FMUP\Db $dbConnection
-     * @return Controller
+     * @return $this
      */
     public function setDb($dbConnection)
     {
@@ -153,7 +153,7 @@ class Controller
     public function postFilter($calledAction = null)
     {
         if (class_exists('Historisation')) Historisation::destroy();
-        Controller::clearFlash();
+        \FMUP\FlashMessenger::getInstance()->clear();
     }
 
     /**
