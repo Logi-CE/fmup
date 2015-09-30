@@ -169,19 +169,15 @@ class Framework extends \Framework
         if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }
-        /* @var $controllerInstance \Controller */
+        /* @var $controllerInstance Controller */
         $controllerInstance = new $controllerName();
-
-        if ($controllerInstance instanceof Controller) {
-            /* @var $controllerInstance Controller */
-            $controllerInstance
-                ->setRequest($this->getRequest())
-                ->setResponse($this->getResponse())
-                ->setBootstrap($this->getBootstrap());
-        }
+        $controllerInstance
+            ->setRequest($this->getRequest())
+            ->setResponse($this->getResponse())
+            ->setBootstrap($this->getBootstrap());
 
         $controllerInstance->preFilter($action);
-        $callable = ($controllerInstance instanceof Controller) ? $controllerInstance->getActionMethod($action) : $action;
+        $callable = $controllerInstance->getActionMethod($action);
         $actionReturn = null;
         if (is_callable(array($controllerInstance, $callable))) {
             $actionReturn = call_user_func(array($controllerInstance, $callable));
@@ -190,7 +186,7 @@ class Framework extends \Framework
         }
         $controllerInstance->postFilter($action);
 
-        if ($controllerInstance instanceof Controller && !is_null($actionReturn)) {
+        if (!is_null($actionReturn)) {
             $controllerInstance->getResponse()
                 ->setBody(
                     $actionReturn instanceof View ? $actionReturn->render() : $actionReturn

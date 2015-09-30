@@ -11,26 +11,27 @@ class Controller
      * Une instance de la classe de connexions aux bases de données
      */
     private $db_connection;
+    /**
+     * Session instance
+     * @var \FMUP\Session
+     */
+    private $session;
+    private $bootstrap;
+    /**
+     * @var \FMUP\Request
+     */
+    private $request;
+
+    /**
+     * @var \FMUP\View
+     */
+    private $view;
 
     /**
      * Allow construct rewrite
      */
     public function __construct()
     {
-    }
-
-
-    /**
-     * Précharge une vue mais ne l'affiche pas (intéressant pour les sous-vues)
-     * @param string $vue : Nom de la vue
-     * @param array $params : Paramètres et variables à passer dans la vue
-     */
-    public function chargerVue ($vue, $params)
-    {
-        $params['popup'] = true;
-        ob_start();
-        new View($vue, $params);
-        return ob_get_clean();
     }
 
     /**
@@ -165,5 +166,135 @@ class Controller
         global $sys_directory;
 
         DroitHelperApplication::authorizeRead($sys_controller, $calledAction, $sys_directory);
+    }
+
+    /**
+     * @return \FMUP\Session
+     */
+    public function getSession()
+    {
+        if (!$this->session) {
+            $this->session = \FMUP\Session::getInstance();
+        }
+        return $this->session;
+    }
+
+    /**
+     * @param \FMUP\Session $session
+     * @return $this
+     */
+    public function setSession(\FMUP\Session $session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
+    /**
+     * @param String $vue
+     * @param Array $params
+     * @return string
+     */
+    public function chargerVue ($vue, $params)
+    {
+        $params['popup'] = true;
+        foreach (array('php', 'phtml') as $ext) {
+            $viewPath = implode(
+                    DIRECTORY_SEPARATOR,
+                    array(__DIR__, '..', '..', '..', '..', 'application', APPLICATION, 'view')
+                ) . DIRECTORY_SEPARATOR . $vue . '.' . $ext;
+            if (file_exists($viewPath)) {
+                $view = new \FMUP\View($params);
+                return $view->setViewPath($viewPath)->render();
+            }
+        }
+        throw new \FMUP\Exception('View ' . $vue . ' does not exist');
+    }
+
+    /**
+     * @return \FMUP\Bootstrap
+     */
+    public function getBootstrap()
+    {
+        if (!$this->bootstrap) {
+            $this->bootstrap = new \FMUP\Bootstrap();
+            $this->bootstrap
+                ->setRequest($this->getRequest())
+                ->warmUp();
+        }
+        return $this->bootstrap;
+    }
+
+    /**
+     * @return \FMUP\Request
+     */
+    public function getRequest()
+    {
+        if (!$this->request) {
+            $this->request = new \FMUP\Request();
+        }
+        return $this->request;
+    }
+
+    /**
+     * @param \FMUP\Request $request
+     * @return $this
+     */
+    public function setRequest(\FMUP\Request $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * @throws \Exception
+     * @return \FMUP\View
+     */
+    public function getView()
+    {
+        if (!$this->view) {
+            $this->view = new \FMUP\View();
+        }
+        foreach (array('php', 'phtml') as $ext) {
+            $view = implode(
+                DIRECTORY_SEPARATOR,
+                array(__DIR__, '..', '..', '..', '..', 'application', APPLICATION, 'view', 'layout', 'default')
+            );
+            $view .= '.' . $ext;
+            if (file_exists($view)) {
+                return $this->view->setViewPath($view);
+            }
+        }
+        throw new \LogicException('View does not exist');
+    }
+
+    /**
+     * @param string $viewPath
+     * @param array $params
+     * @param array $options
+     * @throws \Exception
+     * @deprecated use \FMUP\View instead
+     */
+    public function oldRendering($viewPath, array $params = array(), array $options = array())
+    {
+        if (!isset($params['popup'])) {
+            $params['popup'] = false;
+        }
+
+        $view = new \FMUP\View($params);
+
+        $basePaths = array(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')),);
+        foreach ($basePaths as $basePath) {
+            $filePath = implode(DIRECTORY_SEPARATOR, array($basePath, 'application', APPLICATION, 'view', $viewPath . '.php'));
+            if (file_exists($filePath)) {
+                $view->setViewPath($filePath);
+                break;
+            }
+        }
+
+        if ($params['popup']) {
+            echo $view->render();
+        } else {
+            echo $this->getView()->addParams($params)->addParams($options)->setParam('vue', $view)->render();
+        }
     }
 }
