@@ -289,13 +289,10 @@ class Framework extends \Framework
         if (!$this->getBootstrap()->getConfig()->get('use_daily_alert')) {
             parent::shutDown();
         } else {
-            if (($error = error_get_last()) !== null) {
-                $isUrgentError = in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR));
-                if ($isUrgentError) {
-                    if (!$this->getBootstrap()->getConfig()->get('is_debug')) {
-                        echo \Constantes::getMessageErreurApplication();
-                    }
-                }
+            $error = error_get_last();
+            $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
+            if ($error !== null && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR)) && !$isDebug) {
+                echo \Constantes::getMessageErreurApplication();
             }
         }
     }
@@ -391,7 +388,6 @@ class Framework extends \Framework
         $this->getBootstrap()->warmUp();
 
         \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
-        Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
         \Model::setDb(Helper\Db::getInstance()); //@todo find a better solution
 
         parent::initialize();

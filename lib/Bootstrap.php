@@ -20,10 +20,10 @@ class Bootstrap
      */
     public function warmUp()
     {
-        if (!$this->isWarmed) {
+        if (!$this->isWarmed()) {
             $this->initHelperDb()->getLogger();
             //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and error handler before
-            $this->isWarmed = true;
+            $this->setIsWarmed();
         }
         return $this;
     }
@@ -173,5 +173,22 @@ class Bootstrap
     public function hasConfig()
     {
         return !is_null($this->config);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWarmed()
+    {
+        return (bool)$this->isWarmed;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setIsWarmed()
+    {
+        $this->isWarmed = true;
+        return $this;
     }
 }
