@@ -5,8 +5,12 @@
  * @version 1.0
  * @deprecated use \FMUP\Controller instead
  */
-class Controller
+class Controller extends \FMUP\Controller
 {
+    public function getActionName($action) {
+        return $action;
+    }
+
     /**
      * Une instance de la classe de connexions aux bases de données
      */
