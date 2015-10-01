@@ -213,15 +213,20 @@ class Framework
 
         if (isset($_REQUEST["sys"]) && preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])) {
             $sys = $_REQUEST["sys"];
-        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !call_user_func(array(APP,"hasAuthentification"))) {
-            $sys = call_user_func(array(APP, "defaultController"));
+        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !is_callable(array(APP,"hasAuthentification")) || !call_user_func(array(APP,"hasAuthentification"))) {
+            $sys = is_callable(array(APP, "defaultController")) ? call_user_func(array(APP, "defaultController")) : null;
         } else {
-            $sys = call_user_func(array(APP,"authController"));
+            $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP,"authController")) : null;
         }
 
         if (!Config::siteOuvert()) {
-            if ((!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
+            $callables = is_callable(array(APP, "hasAuthentification")) && is_callable(array(APP, "defaultController")) &&
+                is_callable(array(APP, "authController")) && is_callable(array(APP, "closedAppController"));
+            if ($callables &&
+                (
+                    (!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
                 || $sys == call_user_func(array(APP, "authController"))
+                )
             ) {
                 \FMUP\FlashMessenger::getInstance()->clear();
                 $sys = call_user_func(array(APP, "closedAppController"));
@@ -230,6 +235,9 @@ class Framework
             }
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
+        if (is_null($sys) || count($matches) < 3) {
+            $this->getRouteError();
+        }
 
         $sys_directory = $matches[1];
         $sys_controller = "ctrl_".$matches[2];

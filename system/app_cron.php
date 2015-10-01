@@ -3,6 +3,10 @@
  * Classe comprenant les paramètres de configuration de l'application
  **/
 
+/**
+ * Class AppCron
+ * @deprecated not used anymore in FMUP
+ */
 class AppCron
 {
     /**
