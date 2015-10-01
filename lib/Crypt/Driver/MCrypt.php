@@ -21,7 +21,7 @@ class MCrypt implements CryptInterface
     private function getKey()
     {
         if (!$this->key) {
-            $this->key = pack('H*', "bcb04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a00a3");
+            $this->key = 'test';
         }
         return $this->key;
     }
@@ -33,7 +33,7 @@ class MCrypt implements CryptInterface
      */
     public function hash($password)
     {
-        return mcrypt_encrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_CBC);
+        return mcrypt_encrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_ECB);
     }
 
     /**
@@ -43,7 +43,7 @@ class MCrypt implements CryptInterface
      */
     public function unHash($password)
     {
-        return mcrypt_decrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_CBC);
+        return mcrypt_decrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_ECB);
     }
 
 }
