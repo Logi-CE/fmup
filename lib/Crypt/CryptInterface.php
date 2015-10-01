@@ -9,6 +9,13 @@ interface CryptInterface
 	 * @return string 
 	 */
 	public function hash($password);
+        
+        /**
+         * UnHash the given password
+         * @param type $password
+         * @return string 
+         */
+        public function unHash($password);
 
 	
 }

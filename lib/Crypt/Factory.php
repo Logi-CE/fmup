@@ -4,6 +4,7 @@ namespace FMUP\Crypt;
 final class Factory
 {
 	const DRIVER_MD5 = "Md5";
+	const DRIVER_MCRYPT = "MCrypt";
 
 	private function __construct()
 	{
