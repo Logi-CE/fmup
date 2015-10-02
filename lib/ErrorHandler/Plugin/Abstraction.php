@@ -1,5 +1,5 @@
 <?php
-namespace FMUP\ErrorHandler;
+namespace FMUP\ErrorHandler\Plugin;
 
 use FMUP\Response;
 use FMUP\Request;

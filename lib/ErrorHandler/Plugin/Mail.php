@@ -1,5 +1,5 @@
 <?php
-namespace FMUP\ErrorHandler;
+namespace FMUP\ErrorHandler\Plugin;
 
 class Mail extends Abstraction
 {
