@@ -4,7 +4,7 @@
  * Elle gère notamment la connexion à la base de données et la vérification des droits
  * @version 1.0
  * @deprecated use \FMUP\Controller instead
- */
+  */
 class Controller extends \FMUP\Controller
 {
     public function getActionName($action) {

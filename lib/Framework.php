@@ -25,9 +25,9 @@ class Framework extends \Framework
      */
     private $routingSystem;
     /**
-     * @var Controller\Error
+     * @var ErrorHandler
      */
-    private $errorController;
+    private $errorHandler;
 
     /**
      * @var Dispatcher
@@ -209,35 +209,34 @@ class Framework extends \Framework
                     new Response\Header\Location($exception->getLocation())
                 );
         } catch (\Exception $exception) {
-            $controller = $this->getErrorController()
+            $this->getErrorHandler()
                 ->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
-                ->setException($exception);
-            $controller->indexAction();
+                ->handle($exception);
         }
         $this->postDispatch();
         return $this;
     }
 
     /**
-     * @return Controller\Error
+     * @return ErrorHandler
      */
-    public function getErrorController()
+    public function getErrorHandler()
     {
-        if (!$this->errorController) {
-            throw new \LogicException('Error controller must be defined');
+        if (!$this->errorHandler) {
+            $this->errorHandler = new ErrorHandler();
         }
-        return $this->errorController;
+        return $this->errorHandler;
     }
 
     /**
-     * @param Controller\Error $errorController
+     * @param ErrorHandler $errorHandler
      * @return $this
      */
-    public function setErrorController(Controller\Error $errorController)
+    public function setErrorHandler(ErrorHandler $errorHandler)
     {
-        $this->errorController = $errorController;
+        $this->errorHandler = $errorHandler;
         return $this;
     }
 
