@@ -13,10 +13,10 @@ class ErrorHandler
     private $bootstrap;
 
     /**
-     * @param ErrorHandler\Abstraction $handler
+     * @param ErrorHandler\Plugin\Abstraction $handler
      * @return $this
      */
-    public function add(ErrorHandler\Abstraction $handler)
+    public function add(ErrorHandler\Plugin\Abstraction $handler)
     {
         array_push($this->handlers, $handler);
         return $this;
@@ -51,7 +51,7 @@ class ErrorHandler
             throw $e;
         }
         foreach ($this->get() as $handler) {
-            /* @var $handler ErrorHandler\Abstraction */
+            /* @var $handler ErrorHandler\Plugin\Abstraction */
             $handler->setResponse($this->getResponse())
                 ->setRequest($this->getRequest())
                 ->setBootstrap($this->getBootstrap())

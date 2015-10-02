@@ -224,7 +224,7 @@ class Framework extends \Framework
     public function getErrorHandler()
     {
         if (!$this->errorHandler) {
-            $this->errorHandler = new ErrorHandler();
+            $this->errorHandler = new ErrorHandler\Base();
         }
         return $this->errorHandler;
     }
