@@ -68,7 +68,7 @@ class ParametreHelper
         if ( isset($this->liste[$libelle]) ) {
             $retour = $this->liste[$libelle];
         } else {
-            throw new Error(Error::configParamAbsent($libelle));
+            throw new \FMUP\Exception("Paramètre de Config absent : ".$libelle);
         }
         return $retour;
     }

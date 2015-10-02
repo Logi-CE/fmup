@@ -38,7 +38,7 @@ class Framework
         global $sys_function;
 
         if (!defined('APPLICATION')) {
-            throw new Error("La variable APPLICATION doit être définie.");
+            throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
         } else {
             define('APP', "App".String::toCamlCase(APPLICATION));
         }
@@ -80,7 +80,6 @@ class Framework
 
     /**
      * @return $this
-     * @throws NotFoundError
      */
     protected function dispatch()
     {
@@ -108,7 +107,7 @@ class Framework
         if (method_exists($controllerInstance, $sys_function)) {
             call_user_func(array($controllerInstance, $sys_function));
         } else {
-            throw new NotFoundError(Error::fonctionIntrouvable($sys_function));
+            throw new \FMUP\Exception\Status\NotFound("Fonction introuvable : $sys_function");
         }
         $controllerInstance->postFilter();
         return $controllerInstance;
@@ -166,38 +165,24 @@ class Framework
     }
 
     /**
-     * On déclare la fonction permettant de remplacer une erreur par une exception
-     * Cette méthode permet de gérer de la même manière des erreurs et les exceptions
+     * Sends exception in case of error
      * @param int $code
      * @param string $msg
-     * @param string $file
-     * @param int $line
-     * @param mixed $context
+     * @throws \FMUP\Exception
      */
-    public function errorToException($code, $msg, $file, $line, $context)
+    public function errorToException($code, $msg)
     {
-        try {
-            throw new Error($msg, $code, $file, $line, $context);
-        } catch (Error $e) {
-            // nothing
-        }
+        throw new \FMUP\Exception($msg, $code);
     }
 
     /**
      * Cette fonction sera lancée à la fin du script quel que soit la cause (fin normale ou erreur)
      * Elle nous permet de récupérer les erreurs fatales qui sont ignorées par la fonction précédente
+     * @deprecated maybe you want to override this
      */
     public function shutDown()
     {
         if (Config::consoleActive()) Console::finaliser();
-        if (($error = error_get_last()) !== null) {
-            try {
-                throw new Error($error['message'], $error['type'], $error['file'], $error['line']);
-            } catch (Error $e) {
-                // nothing
-            }
-        }
-        exit();
     }
 
     /**
@@ -256,13 +241,16 @@ class Framework
     /**
      * @param string $sys_directory
      * @param string $sys_controller
-     * @throws NotFoundError
+     * @throws \FMUP\Exception\Status\NotFound
      */
     protected function getRouteError()
     {
         global $sys_directory;
         global $sys_controller;
-        throw new NotFoundError(Error::contolleurIntrouvable($sys_directory.$sys_controller.' ('.BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php".')'));
+        throw new \FMUP\Exception\Status\NotFound(
+            "Controlleur introuvable : " . $sys_directory.$sys_controller.
+            ' ('.BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php".')'
+        );
     }
 
     /**

@@ -490,8 +490,7 @@ class FiltreListe
                         $filtrer = false;
                     }
                 } else {
-                    $filtrer = false;
-                    new Error('Appel à un champ non présent dans le champ de colonne.', E_WARNING);
+                    throw new \FMUP\Exception('Appel à un champ non présent dans le champ de colonne.', E_WARNING);
                 }
                 if (!empty($champ['partiellement_obligatoire'])) {
                     if (!isset($filtrer_partiellement)) {

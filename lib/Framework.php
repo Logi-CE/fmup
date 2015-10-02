@@ -135,7 +135,6 @@ class Framework extends \Framework
 
     /**
      * @return array
-     * @throws \NotFoundError
      */
     public function getRoute()
     {
@@ -182,7 +181,7 @@ class Framework extends \Framework
         if (is_callable(array($controllerInstance, $callable))) {
             $actionReturn = call_user_func(array($controllerInstance, $callable));
         } else {
-            throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($callable));
+            throw new Exception\Status\NotFound("Undefined function $callable");
         }
         $controllerInstance->postFilter($action);
 

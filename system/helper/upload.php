@@ -28,7 +28,7 @@ class Upload
             $this->taille = $_FILES[$nom_upload]['size'];
             $this->types_mimes_autorises = $types_mimes_autorises;
         } else {
-            new Error('Upload impossible du champ '.$nom_upload.' : '.$this->getUploadError());
+            throw new \FMUP\Exception('Upload impossible du champ '.$nom_upload.' : '.$this->getUploadError());
         }
     }
     

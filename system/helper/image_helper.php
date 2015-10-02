@@ -34,7 +34,7 @@ class ImageHelper
     {
         // Vérification de la chaine
         if (!preg_match('/^[a-zA-Z0-9\-\.\ \$\/\+%\*]+$/', $chaine)) {
-            new Error('Format incorrect pour la génération de code barre.', E_WARNING);
+            throw new \FMUP\Exception('Format incorrect pour la génération de code barre.', E_WARNING);
         } else {
             // Correspondances
             $correspondances = array(
@@ -140,11 +140,11 @@ class ImageHelper
     public static function creerVignette ($nom_fichier, $largeur, $hauteur, $respecter_echelle = false) {
          
         if ($largeur <= 0 || $hauteur <= 0) {
-            throw new Error("Les dimensions de l'image doivent être des nombres positifs.");
+            throw new \FMUP\Exception("Les dimensions de l'image doivent être des nombres positifs.");
         }
         
         if (!file_exists($nom_fichier)) {
-            throw new Error("Le fichier n'existe pas.");
+            throw new \FMUP\Exception("Le fichier n'existe pas.");
         }
         
         $extension = explode('.', $nom_fichier);

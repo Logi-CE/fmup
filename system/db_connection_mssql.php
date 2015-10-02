@@ -30,23 +30,17 @@ class DbConnectionMssql
 
             // Connexion à la base de données
             if (MSSQL === $this->driver) {
-                try {
-                    $this->conn = new PDO('odbc:Driver={SQL Server};Server={'.$params['host'].'};Database={'.$params['database'].'};charset=UTF-8;', $params['login'], $params['password']);
-                    $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // les erreurs lanceront des exceptions
-                    $this->conn->setAttribute(PDO::ATTR_TIMEOUT, 10.0);
-
-                } catch (Exception $e) {
-                    new Error($e->getMessage(), 99, $e->getFile(), $e->getLine());
-                }
-
+                $this->conn = new PDO('odbc:Driver={SQL Server};Server={'.$params['host'].'};Database={'.$params['database'].'};charset=UTF-8;', $params['login'], $params['password']);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // les erreurs lanceront des exceptions
+                $this->conn->setAttribute(PDO::ATTR_TIMEOUT, 10.0);
             }
             if (!$this->conn) {
-                throw new Error(Error::connexionBDD());
+                throw new \FMUP\Db\Exception('Erreur de connexion à la base de données.');
             } else {
                 Console::enregistrer($params['host'].'/'.$params['database'].' ('.$params['driver'].')', LOG_CONNEXION);
             }
         } else {
-            throw new Error(Error::connexionBDD());
+            throw new \FMUP\Db\Exception('Erreur de connexion à la base de données.');
         }
     }
 
@@ -61,15 +55,11 @@ class DbConnectionMssql
         $duree = microtime(1);
         $memoire = memory_get_usage();
 
-        try {
-            $stmt = $this->conn->prepare(utf8_decode($sql));
-            $stmt->execute();
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
-        }
+        $stmt = $this->conn->prepare(utf8_decode($sql));
+        $stmt->execute();
 
         if (!$stmt) {
-            throw new Error(Error::erreurRequete($sql));
+            throw new \FMUP\Db\Exception("Erreur de requète : " . $sql);
         }
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $duree -= microtime(1);
@@ -108,23 +98,20 @@ class DbConnectionMssql
 
     public function exportQuery($sql)
     {
-        try {
-            $rows = array();
-            $stmt = $this->conn->prepare($sql);
-
-
-            $duree = microtime(1);
-            $memoire = memory_get_usage();
-            
-            $stmt->execute();
-            
-            $duree -= microtime(1);
-            $memoire -= memory_get_usage();
-            Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
-
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
+        $rows = array();
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new \FMUP\Db\EXception("Erreur de requète : ".$sql);
         }
+
+        $duree = microtime(1);
+        $memoire = memory_get_usage();
+
+        $stmt->execute();
+
+        $duree -= microtime(1);
+        $memoire -= memory_get_usage();
+        Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
 
         return $stmt;
     }
@@ -162,58 +149,53 @@ class DbConnectionMssql
         } elseif (strtoupper(substr($sql, 0, 11)) == 'DROP TABLE ' && Utilisateur::isCastelis()) {
             $type_execute = 'DROP TABLE';
         } else {
-            throw new Error(Error::typeDeRequeteInconnue());
+            throw new \FMUP\Db\Exception('Erreur : type de requète inconnue.');
         }
 
         $retour = false;
-        try {
-            $stmt = $this->conn->prepare($sql);
-
-            $duree = microtime(1);
-            $memoire = memory_get_usage();
-
-            $stmt->execute();
-            if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] != 'phpunit') {
-                switch ($type_execute) {
-                    case 'INSERT':
-                        // Nouvel id cree
-                        $ressource = $this->requeteUneLigne('SELECT @@IDENTITY AS id', '', false);
-                        $retour = round($ressource['id']);
-                        break;
-                    case 'UPDATE':
-                    case 'DELETE':
-                        // Nb lignes affectees
-                        $ressource = $this->requeteUneLigne('SELECT @@ROWCOUNT AS nb', '', false);
-                        $retour = round($ressource['nb']);
-                        break;
-                    case 'CREATE TABLE':
-                    case 'TRUNCATE TABLE':
-                    case 'DROP TABLE';
-                    case 'ALTER':
-                        $retour = true;
-                        break;
-                    default:
-                        throw new Error(Error::erreurInconnue());
-                }
-            }
-            $duree -= microtime(1);
-            $memoire -= memory_get_usage();
-            $stockage_data = array(
-            	'requete' => $sql,
-                'duree' => round(abs($duree), 4),
-                'memoire' => round(abs($memoire) / 1000000, 3),
-                'resultat' => $stmt->rowCount()
-            );
-            HistoriqueHelper::logRequete($stockage_data, 'fct_execute');
-            Console::enregistrer($stockage_data, LOG_SQL);
-            return $retour;
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
-        }
-
+        $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
-            throw new Error(Error::erreurRequete($sql));
+            throw new \FMUP\Db\Exception("Erreur de requète : ".$sql);
         }
+
+        $duree = microtime(1);
+        $memoire = memory_get_usage();
+
+        $stmt->execute();
+        if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] != 'phpunit') {
+            switch ($type_execute) {
+                case 'INSERT':
+                    // Nouvel id cree
+                    $ressource = $this->requeteUneLigne('SELECT @@IDENTITY AS id', '', false);
+                    $retour = round($ressource['id']);
+                    break;
+                case 'UPDATE':
+                case 'DELETE':
+                    // Nb lignes affectees
+                    $ressource = $this->requeteUneLigne('SELECT @@ROWCOUNT AS nb', '', false);
+                    $retour = round($ressource['nb']);
+                    break;
+                case 'CREATE TABLE':
+                case 'TRUNCATE TABLE':
+                case 'DROP TABLE';
+                case 'ALTER':
+                    $retour = true;
+                    break;
+                default:
+                    throw new \FMUP\Db\Exception('Erreur : type de requète inconnue.');
+            }
+        }
+        $duree -= microtime(1);
+        $memoire -= memory_get_usage();
+        $stockage_data = array(
+            'requete' => $sql,
+            'duree' => round(abs($duree), 4),
+            'memoire' => round(abs($memoire) / 1000000, 3),
+            'resultat' => $stmt->rowCount()
+        );
+        HistoriqueHelper::logRequete($stockage_data, 'fct_execute');
+        Console::enregistrer($stockage_data, LOG_SQL);
+        return $retour;
     }
 
     /**
@@ -225,13 +207,13 @@ class DbConnectionMssql
     {
         $this->nb_execute++;
         if (!strtoupper(substr($sql, 0, 15)) == 'OPTIMIZE TABLE ') {
-            throw new Error(Error::typeDeRequeteInconnue());
+            throw new \FMUP\Db\Exception('Erreur : type de requète inconnue.');
         }
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         if (!$stmt) {
-            throw new Error(Error::erreurRequete($sql));
+            throw new \FMUP\Db\Exception("Erreur de requète : " . $sql);
         }
         // Nb lignes affectees
         $ressource = $this->requeteUneLigne('SELECT @@ROWCOUNT', '', false);

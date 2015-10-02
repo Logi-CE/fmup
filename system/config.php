@@ -175,7 +175,7 @@ class Config
      * Constantes pouvant varier suivant le site
      * @param bool|false $index Paramètre demandé, laisser à FAUX pour avoir tous les paramètres
      * @return array|null|mixed Le paramètre de retour OU un tableau contenant tous les paramètres
-     * @throws Error
+     * @throws \FMUP\Exception
      */
     public static function paramsVariables($index = false)
     {
@@ -184,7 +184,7 @@ class Config
         } elseif (self::getInstance()->has($index)) {
             return self::getInstance()->get($index);
         } else {
-            throw new Error(Error::configParamAbsent($index));
+            throw new \FMUP\Exception("Paramètre de Config absent : $index");
         }
     }
 

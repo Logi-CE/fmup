@@ -38,7 +38,6 @@ class Error extends Exception
      * @param null $fichier
      * @param null $ligne
      * @param null $contexte
-     * @throws Error
      * @deprecated use any exception + \FMUP\Controller\Error instead
      */
     public function __construct($message, $code = E_ERROR, $fichier = null, $ligne = null, $contexte = null)

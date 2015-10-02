@@ -172,7 +172,7 @@ class Sql
     {
         $select = self::replaceXFields($select_alias, $class, $option, $join);
         if (!is_array($select)) {
-            throw new Error("Erreur à l'utilisation de sqlParseSelect : tableau attendu. Reçu : " . var_dump($select));
+            throw new \FMUP\Exception("Erreur à l'utilisation de sqlParseSelect : tableau attendu. Reçu : " . serialize($select));
         }
 
         $select = array_filter($select, function($i) { return $i <> "";});
@@ -201,7 +201,7 @@ class Sql
         $where = self::replaceXFields($where, $class, $option);
 
         if (! is_array($where)) {
-            throw new Error("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".var_dump($where));
+            throw new \FMUP\Exception("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".serialize($where));
         }
 
         $where = array_filter($where, create_function('$i', 'return $i <> "";'));

@@ -101,7 +101,7 @@ class DownloadHelper
             }
             fclose($pfic);
         } else {
-            new NotFoundError('Document introuvable : '.$filename);
+            throw new \FMUP\Exception\Status\NotFound('Document introuvable : '.$filename);
         }
     }
 
