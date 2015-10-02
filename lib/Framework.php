@@ -285,8 +285,12 @@ class Framework extends \Framework
         } else {
             $error = error_get_last();
             $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
-            if ($error !== null && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR)) && !$isDebug) {
-                echo \Constantes::getMessageErreurApplication();
+            if ($error !== null && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR))) {
+                $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+                $errorHeader->render();
+                if (!$isDebug) {
+                    echo \Constantes::getMessageErreurApplication();
+                }
             }
         }
     }
