@@ -29,9 +29,13 @@ class Sqlite extends Pdo
 
     protected function getDsn()
     {
-        return 'sqlite:' . $this->getHost() . DIRECTORY_SEPARATOR . $this->getDatabase() . '.sqlite';
+        return $this->getDsnDriver() . ':' . $this->getHost() . DIRECTORY_SEPARATOR . $this->getDatabase() . '.sqlite';
     }
 
+    protected function getDsnDriver()
+    {
+        return 'sqlite';
+    }
 
     protected function getHost()
     {
