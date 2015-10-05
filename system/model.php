@@ -1176,7 +1176,6 @@ abstract class Model
                     }
                 }
             }
-
             // données de la table de log
             $sql = $this->getSqlLog('log');
             if (!$db instanceof \FMUP\Db) {
@@ -1199,7 +1198,6 @@ abstract class Model
                 }
             }
             $tab_diff = array_diff_assoc($tab_champs_base, $tab_champs_log);
-            
             // insertion de la différence dans la table de log
             if (count($tab_diff) > 0) {
                 $libelle = "";
@@ -1209,7 +1207,7 @@ abstract class Model
                     $libelle .= "Le champ '".$field."' a été modifié : '".$field."' a été remplacé par '".$value."'\n";
 
                     $tab_contenu[$index] = array(
-                                                    "old_value"	=> ($tab_champs_log[$index]),
+                                                    "old_value"	=> isset($tab_champs_log[$index]) ? $tab_champs_log[$index] : null,
                                                     "new_value"	=> ($value)
                                                 );
                 }
