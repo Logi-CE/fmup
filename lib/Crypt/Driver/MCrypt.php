@@ -11,6 +11,7 @@ use \FMUP\Crypt\CryptInterface;
 
 class MCrypt implements CryptInterface
 {
+    const KEY = 'secret_test_key';
 
     private $key = null;
     private $iv = null;
@@ -22,9 +23,20 @@ class MCrypt implements CryptInterface
     private function getKey()
     {
         if (!$this->key) {
-            $this->key = 'secret_test_key';
+            $this->key = self::KEY;
         }
         return $this->key;
+    }
+    
+    /**
+     * 
+     * @param strinh $key
+     * @return \FMUP\Crypt\Driver\MCrypt
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+        return $this;
     }
     
     /**
