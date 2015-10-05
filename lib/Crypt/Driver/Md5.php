@@ -22,7 +22,7 @@ class Md5 implements CryptInterface
      */
     public function unHash($password)
     {
-        throw new \LogiCE\Exception('Invalid driver for this method');
+        throw new \LogiCE\Exception('Invalid method for this driver');
     }
 
 }

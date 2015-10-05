@@ -13,6 +13,7 @@ class MCrypt implements CryptInterface
 {
 
     private $key = null;
+    private $iv = null;
 
     /**
      * 
@@ -21,9 +22,21 @@ class MCrypt implements CryptInterface
     private function getKey()
     {
         if (!$this->key) {
-            $this->key = 'test';
+            $this->key = 'secret_test_key';
         }
         return $this->key;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getIv()
+    {
+        if (!$this->iv) {
+            $this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+        }
+        return $this->iv;
     }
 
     /**
@@ -33,7 +46,7 @@ class MCrypt implements CryptInterface
      */
     public function hash($password)
     {
-        return mcrypt_encrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_ECB);
+        return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $password, MCRYPT_MODE_ECB, $this->getIv());
     }
 
     /**
@@ -43,7 +56,7 @@ class MCrypt implements CryptInterface
      */
     public function unHash($password)
     {
-        return mcrypt_decrypt(MCRYPT_3DES, $this->getKey(), $password, MCRYPT_MODE_ECB);
+        return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $password, MCRYPT_MODE_ECB, $this->getIv());
     }
 
 }
