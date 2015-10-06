@@ -18,7 +18,8 @@ class FlashMessenger
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+            $class = get_called_class();
+            self::$instance = new $class;
         }
         return self::$instance;
     }

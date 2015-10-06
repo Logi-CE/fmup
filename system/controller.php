@@ -3,8 +3,7 @@
  * Classe dont dérivent tous les contolleurs.
  * Elle gère notamment la connexion à la base de données et la vérification des droits
  * @version 1.0
- * @deprecated
- * @see \FMUP\Controller
+ * @deprecated use \FMUP\Controller instead
  */
 class Controller
 {
