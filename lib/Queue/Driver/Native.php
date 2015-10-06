@@ -6,7 +6,20 @@ use \FMUP\Queue\Exception;
 
 class Native implements DriverInterface
 {
-    const MAX_MESSAGE_SIZE = 512;
+    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE';
+
+    const CONFIGURATION_PERM_UID = 'msg_perm.uid';
+    const CONFIGURATION_PERM_GID = 'msg_perm.gid';
+    const CONFIGURATION_PERM_MODE = 'msg_perm.mode';
+    const CONFIGURATION_SENT_TIME = 'msg_stime';
+    const CONFIGURATION_RECEIVED_TIME = 'msg_rtime';
+    const CONFIGURATION_UPDATE_TIME = 'msg_ctime';
+    const CONFIGURATION_MESSAGE_NUMBER = 'msg_qnum';
+    const CONFIGURATION_MESSAGE_SIZE = 'msg_qbytes';
+    const CONFIGURATION_SENDER_PID = 'msg_lspid';
+    const CONFIGURATION_RECEIVER_PID = 'msg_lrpid';
+
+    private $settings = array();
 
     /**
      * Connect to specified queue
@@ -48,11 +61,37 @@ class Native implements DriverInterface
         $receivedMessageType = 0;
         $message = null;
         $error = 0;
-        $success = msg_receive($queueResource, $messageType, $receivedMessageType, self::MAX_MESSAGE_SIZE, $message, true, 0, $error);
+        $messageSize = $this->getMessageSize($queueResource);
+        $success = msg_receive(
+            $queueResource,
+            $messageType,
+            $receivedMessageType,
+            $messageSize,
+            $message,
+            true,
+            0,
+            $error
+        );
         if (!$success) {
             throw new Exception("Error while receiving message", $error);
         }
         return $message;
+    }
+
+    /**
+     * Retrieve message maximum size for a given queue
+     * @param resource $queueResource
+     * @return int
+     */
+    private function getMessageSize($queueResource)
+    {
+        $messageSize = $this->getSetting(self::PARAM_MAX_MESSAGE_SIZE);
+        if (!$messageSize) {
+            $configuration = $this->getConfiguration($queueResource);
+            $messageSize = (int)$configuration[self::CONFIGURATION_MESSAGE_SIZE];
+            $this->setSetting(self::PARAM_MAX_MESSAGE_SIZE, $messageSize);
+        }
+        return $messageSize;
     }
 
     /**
@@ -123,5 +162,61 @@ class Native implements DriverInterface
             $return += ord($string{$i});
         }
         return (int) $length . '0' . $return;
+    }
+
+    /**
+     * Define a setting
+     * @param $paramName
+     * @param null $value
+     * @return $this
+     */
+    public function setSetting($paramName, $value = null)
+    {
+        $this->settings[$paramName] = $value;
+        return $this;
+    }
+
+    /**
+     * Get Setting Name value
+     * @param string $paramName
+     * @return mixed
+     */
+    public function getSetting($paramName)
+    {
+        return isset($this->settings[$paramName]) ? $this->settings[$paramName] : null;
+    }
+
+    /**
+     * Get queue configuration
+     * @param resource $queueResource
+     * @return array
+     */
+    public function getConfiguration($queueResource)
+    {
+        return msg_stat_queue($queueResource);
+    }
+
+    /**
+     * Define queue configuration
+     * @param resource $queueResource
+     * @param array $params
+     * @return bool
+     */
+    public function setConfiguration($queueResource, $params)
+    {
+        if (isset($params[self::CONFIGURATION_MESSAGE_SIZE])) {
+            $this->setSetting(self::PARAM_MAX_MESSAGE_SIZE, (int)$params[self::CONFIGURATION_MESSAGE_SIZE]);
+        }
+        return msg_set_queue($queueResource, (array)$params);
+    }
+
+    /**
+     * Destroy a queue
+     * @param resource $queueResource
+     * @return bool
+     */
+    public function destroy($queueResource)
+    {
+        return msg_remove_queue($queueResource);
     }
 }
