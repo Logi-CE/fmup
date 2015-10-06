@@ -2,6 +2,7 @@
 namespace FMUP\Crypt\Driver;
 
 use \FMUP\Crypt\CryptInterface;
+use \FMUP\Crypt\Exception;
 
 class Md5 implements CryptInterface
 {
@@ -17,12 +18,13 @@ class Md5 implements CryptInterface
     
     /**
      * 
-     * @param type $password
-     * @throws \LogiCE\Exception
+     * @param string $password
+     * @throws Exception
+     * @return string
      */
     public function unHash($password)
     {
-        throw new \LogiCE\Exception('Invalid method for this driver');
+        throw new Exception('Invalid method for this driver');
     }
 
 }

@@ -7,7 +7,7 @@ namespace FMUP\Crypt\Driver;
  *
  * @author sweffling
  */
-use \FMUP\Crypt\CryptInterface;
+use FMUP\Crypt\CryptInterface;
 
 class MCrypt implements CryptInterface
 {
@@ -17,7 +17,7 @@ class MCrypt implements CryptInterface
     private $iv = null;
 
     /**
-     * 
+     *
      * @return string
      */
     private function getKey()
@@ -27,10 +27,10 @@ class MCrypt implements CryptInterface
         }
         return $this->key;
     }
-    
+
     /**
-     * 
-     * @param strinh $key
+     *
+     * @param string $key
      * @return \FMUP\Crypt\Driver\MCrypt
      */
     public function setKey($key)
@@ -38,9 +38,9 @@ class MCrypt implements CryptInterface
         $this->key = $key;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getIv()
@@ -52,23 +52,23 @@ class MCrypt implements CryptInterface
     }
 
     /**
-     * Hash the given password
-     * @param string $password
-     * @return string 
+     * Hash the given string
+     * @param string $string
+     * @return string
      */
-    public function hash($password)
+    public function hash($string)
     {
-        return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $password, MCRYPT_MODE_ECB, $this->getIv());
+        return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $string, MCRYPT_MODE_ECB, $this->getIv());
     }
 
     /**
-     * 
-     * @param type $password
-     * @return type
+     * unhash
+     * @param string $string
+     * @return string
      */
-    public function unHash($password)
+    public function unHash($string)
     {
-        return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $password, MCRYPT_MODE_ECB, $this->getIv());
+        return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $string, MCRYPT_MODE_ECB, $this->getIv());
     }
 
 }

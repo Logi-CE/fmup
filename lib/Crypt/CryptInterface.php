@@ -3,19 +3,17 @@ namespace FMUP\Crypt;
 
 interface CryptInterface
 {
-	/**
-	 * Hash the given password
-	 * @param string $password
-	 * @return string 
-	 */
-	public function hash($password);
+    /**
+     * Hash the given string
+     * @param string $string
+     * @return string 
+     */
+    public function hash($string);
         
-        /**
-         * UnHash the given password
-         * @param type $password
-         * @return string 
-         */
-        public function unHash($password);
-
-	
+    /**
+     * UnHash the given string
+     * @param string $string
+     * @return string
+     */
+    public function unHash($string);
 }
