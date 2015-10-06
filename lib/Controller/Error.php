@@ -90,7 +90,7 @@ abstract class Error extends \FMUP\Controller
 
     protected function writeContextToLog()
     {
-        \FMUP\Error::addContextToErrorLog();
+        error_log($this->getException());
         return $this;
     }
 

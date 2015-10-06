@@ -802,7 +802,7 @@ class FiltreListe
                     $valeur = ($valeur) ? '<input class="checkbox_'.$this->unique_id.'_'.$instance->champHTML['nom'].'" type="checkbox" value="'.$value_check.'" checked="checked" '.$disabled.'>': '<input class="checkbox_'.$this->unique_id.'_'.$instance->champHTML['nom'].'" type="checkbox" value="'.$value_check.'" '.$disabled.'>';
                     break;
                 default:
-                    $valeur = htmlentities($valeur);
+                    $valeur = htmlentities($valeur, ENT_QUOTES | ENT_IGNORE, 'UTF-8');
                     break;
             }
         }

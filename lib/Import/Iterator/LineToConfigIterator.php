@@ -9,7 +9,6 @@ namespace FMUP\Import\Iterator;
  */
 class LineToConfigIterator extends \IteratorIterator
 {
-
     private $config;
 
     public function __construct(\Iterator $fIterator, \FMUP\Import\Config $config)
