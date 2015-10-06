@@ -8,6 +8,7 @@ class Pdo implements DbInterface
 {
     protected $instance = null;
     protected $params = array();
+    const CHARSET_UTF8 = 'utf8';
 
     public function __construct($params = array())
     {
@@ -20,34 +21,110 @@ class Pdo implements DbInterface
      */
     public function getDriver()
     {
-        if (!is_null($this->instance)) {
-            return $this->instance;
+        if (is_null($this->instance)) {
+            $this->instance = new \PDO($this->getDsn(), $this->getLogin(), $this->getPassword(), $this->getOptions());
+            if (!$this->instance) {
+                throw new Exception('Unable to connect database');
+            }
+            $this->defaultConfiguration($this->instance);
         }
+        return $this->instance;
+    }
 
-        $driver = isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
-        $host = isset($this->params['host']) ? $this->params['host'] : 'localhost';
-        $database = isset($this->params['database']) ? $this->params['database'] : null;
+    /**
+     * @param \Pdo $instance
+     * @return $this
+     */
+    protected function defaultConfiguration(\Pdo $instance)
+    {
+        $charset = $this->getCharset();
+        $instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $instance->setAttribute(\PDO::ATTR_TIMEOUT, 10.0);
+        $instance->exec('SET NAMES ' . $charset);
+        $instance->exec('SET CHARACTER SET ' . $charset);
+        return $this;
+    }
+
+    /**
+     * Get string for dsn construction
+     * @return string
+     */
+    protected function getDsn()
+    {
+        $driver = $this->getDsnDriver();
+        $host = $this->getHost();
+        $database = $this->getDatabase();
         $dsn = $driver . ":host=" . $host;
         if (!is_null($database)) {
             $dsn .= ";dbname=" . $database;
         }
-        $charset = isset($params['charset']) ? $params['charset'] : 'utf8';
-        $login = isset($this->params['login']) ? $this->params['login'] : '';
-        $password = isset($this->params['password']) ? $this->params['password'] : '';
-        $options = array(
+        return $dsn;
+    }
+
+    /**
+     * Database to connect to
+     * @return string|null
+     */
+    protected function getDatabase()
+    {
+        return isset($this->params['database']) ? $this->params['database'] : null;
+    }
+
+    /**
+     * Host to connect to
+     * @return string
+     */
+    protected function getHost()
+    {
+        return isset($this->params['host']) ? $this->params['host'] : 'localhost';
+    }
+
+    /**
+     * Dsn Driver to use
+     * @return string
+     */
+    protected function getDsnDriver()
+    {
+        return isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
+    }
+
+    /**
+     * Options for PDO Settings
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array(
             \PDO::ATTR_PERSISTENT => (bool)(isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
-        $this->instance = new \PDO($dsn, $login, $password, $options);
-        if (!$this->instance) {
-            throw new Exception('Unable to connect database');
-        }
-        $this->instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->instance->setAttribute(\PDO::ATTR_TIMEOUT, 10.0);
-        $this->instance->exec('SET NAMES ' . $charset);
-        $this->instance->exec('SET CHARACTER SET ' . $charset);
+    }
 
-        return $this->instance;
+    /**
+     * Charset to use
+     * @return string
+     */
+    protected function getCharset()
+    {
+        return isset($params['charset']) ? $params['charset'] : self::CHARSET_UTF8;
+    }
+
+    /**
+     * Login to use
+     * @return string
+     */
+    protected function getLogin()
+    {
+        return isset($this->params['login']) ? $this->params['login'] : '';
+    }
+
+    /**
+     * Password to use
+     * @return string
+     */
+    protected function getPassword()
+    {
+        return isset($this->params['password']) ? $this->params['password'] : '';
     }
 
 

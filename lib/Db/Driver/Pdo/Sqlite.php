@@ -10,21 +10,40 @@ class Sqlite extends Pdo
 
     public function getDriver()
     {
-        if (!is_null($this->instance)) {
-            return $this->instance;
+        if (is_null($this->instance)) {
+            $this->instance = new \PDO($this->getDsn());
+            if (!$this->instance) {
+                throw new Exception('Unable to connect database');
+            }
+            $this->defaultConfiguration($this->instance);
         }
-
-        //$driver = isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
-        $host = isset($this->params['host']) ? $this->params['host'] : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
-        $database = isset($this->params['database']) ? $this->params['database'] : 'pdo_sqlite';
-        $dsn = 'sqlite:' . $host . DIRECTORY_SEPARATOR . $database . '.sqlite';
-        $this->instance = new \PDO($dsn);
-        if (!$this->instance) {
-            throw new Exception('Unable to connect database');
-        }
-        $this->instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->instance->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-
         return $this->instance;
+    }
+
+    protected function defaultConfiguration(\Pdo $instance)
+    {
+        $instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $instance->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        return $this;
+    }
+
+    protected function getDsn()
+    {
+        return $this->getDsnDriver() . ':' . $this->getHost() . DIRECTORY_SEPARATOR . $this->getDatabase() . '.sqlite';
+    }
+
+    protected function getDsnDriver()
+    {
+        return 'sqlite';
+    }
+
+    protected function getHost()
+    {
+        return isset($this->params['host']) ? $this->params['host'] : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
+    }
+
+    protected function getDatabase()
+    {
+        return isset($this->params['database']) ? $this->params['database'] : 'pdo_sqlite';
     }
 }
