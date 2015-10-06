@@ -1,4 +1,34 @@
 /*********/
+/* 3.3.0 */
+/*********/
+
+#New
+  - component Cache\Apc
+  - component Cache\Memcached
+  - component Response\Header\ContentDisposition
+  - component Response\Header\ContentLength
+  - component Response\Header\Expires
+  - component Response\Header\LastModified
+  - component Response\Header\Pragma
+  - component Import\Config\Field\Validator\Enum
+  - component Import\Config\Field\Validator\RegExp
+  - component Import\Iterator\CsvIterator
+  - component Import\Iterator\CsvToConfigIterator
+  - component Crypt\Driver\MCrypt
+  - \FMUP\Controller can now change their action suffix
+  - \Import\Config\Field can now add Validator with defined name
+  - \Queue\Driver\Native can now be configured
+  
+#Fix
+  - \Import\Config\Field\Date allow now empty date setting
+  - Model do not throw notice anymore when comparing objects on save
+  - Queue\Driver\Native uses SystemV default size (probably 16ko) instead of 512o
+  
+#Compatible
+  - Rearchitectured FMUP\Db\Pdo\Drivers to be more SOLID
+  - Singletons are now mostly overridable
+
+/*********/
 /* 3.2.0 */
 /*********/
 
