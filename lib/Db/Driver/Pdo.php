@@ -96,7 +96,7 @@ class Pdo implements DbInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-                isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false
+            isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
@@ -137,10 +137,14 @@ class Pdo implements DbInterface
      */
     public function beginTransaction()
     {
-        if ($this->getDriver()->inTransaction()) {
-            throw new Exception('Transaction already opened');
+        try {
+            if ($this->getDriver()->inTransaction()) {
+                throw new Exception('Transaction already opened');
+            }
+            return $this->getDriver()->beginTransaction();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
-        return $this->getDriver()->beginTransaction();
     }
 
     /**
@@ -149,7 +153,11 @@ class Pdo implements DbInterface
      */
     public function rollback()
     {
-        return $this->getDriver()->rollBack();
+        try {
+            return $this->getDriver()->rollBack();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -158,7 +166,11 @@ class Pdo implements DbInterface
      */
     public function errorCode()
     {
-        return $this->getDriver()->errorCode();
+        try {
+            return $this->getDriver()->errorCode();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -167,7 +179,11 @@ class Pdo implements DbInterface
      */
     public function errorInfo()
     {
-        return $this->getDriver()->errorInfo();
+        try {
+            return $this->getDriver()->errorInfo();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -176,7 +192,11 @@ class Pdo implements DbInterface
      */
     public function commit()
     {
-        return $this->getDriver()->commit();
+        try {
+            return $this->getDriver()->commit();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -186,7 +206,11 @@ class Pdo implements DbInterface
      */
     public function rawExecute($sql)
     {
-        return $this->getDriver()->prepare($sql)->execute();
+        try {
+            return $this->getDriver()->prepare($sql)->execute();
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -203,7 +227,11 @@ class Pdo implements DbInterface
             throw new Exception('Statement not in right format');
         }
 
-        return $statement->execute($values);
+        try {
+            return $statement->execute($values);
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -215,7 +243,11 @@ class Pdo implements DbInterface
      */
     public function prepare($sql)
     {
-        return $this->getDriver()->prepare($sql);
+        try {
+            return $this->getDriver()->prepare($sql);
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -227,7 +259,11 @@ class Pdo implements DbInterface
      */
     public function lastInsertId($name = null)
     {
-        return $this->getDriver()->lastInsertId($name);
+        try {
+            return $this->getDriver()->lastInsertId($name);
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -243,7 +279,11 @@ class Pdo implements DbInterface
             throw new Exception('Statement not in right format');
         }
 
-        return $statement->fetch(\PDO::FETCH_ASSOC);
+        try {
+            return $statement->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -259,6 +299,10 @@ class Pdo implements DbInterface
             throw new Exception('Statement not in right format');
         }
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

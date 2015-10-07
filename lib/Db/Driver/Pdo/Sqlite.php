@@ -8,6 +8,10 @@ class Sqlite extends Pdo
 {
     protected $instance = null;
 
+    /**
+     * @return null|\PDO
+     * @throws Exception
+     */
     public function getDriver()
     {
         if (is_null($this->instance)) {
