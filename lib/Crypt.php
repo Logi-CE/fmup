@@ -29,7 +29,7 @@ class Crypt
 
     /**
      * 
-     * @param  string $password
+     * @param string $password
      * @return string
      */
     public function hash($password)
@@ -39,7 +39,7 @@ class Crypt
     
     /**
      * 
-     * @param type $password
+     * @param string $password
      * @return string
      */
     public function unHash($password)
