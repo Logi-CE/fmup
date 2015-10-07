@@ -1,6 +1,9 @@
 <?php
 namespace FMUP\ErrorHandler\Plugin;
 
+use \FMUP\Controller\Error;
+use \FMUP\Exception;
+
 /**
  * Class ErrorController
  * @package FMUP\ErrorHandler
@@ -10,31 +13,31 @@ class ErrorController extends Abstraction
     private $errorController;
 
     /**
-     * @param \FMUP\Controller\Error $errorController
+     * @param Error $errorController
      */
-    public function __construct(\FMUP\Controller\Error $errorController)
+    public function __construct(Error $errorController)
     {
         $this->setErrorController($errorController);
     }
 
     /**
-     * @param \FMUP\Controller\Error $errorController
+     * @param Error $errorController
      * @return $this
      */
-    public function setErrorController(\FMUP\Controller\Error $errorController)
+    public function setErrorController(Error $errorController)
     {
         $this->errorController = $errorController;
         return $this;
     }
 
     /**
-     * @return \FMUP\Controller\Error
-     * @throws \FMUP\Exception
+     * @return Error
+     * @throws Exception
      */
     public function getErrorController()
     {
         if (!$this->errorController) {
-            throw new \FMUP\Exception('Error Controller must be set');
+            throw new Exception('Error Controller must be set');
         }
         return $this->errorController;
     }
