@@ -24,7 +24,7 @@ class Field
 
     private $liste_validator = array();
 
-    private $liste_formatter = array();
+    private $formatters = array();
 
     private $liste_erreur = array();
 
@@ -42,7 +42,7 @@ class Field
         $this->required = $required;
         $this->type = $type;
         if ($type != "ignored" && $type != "") {
-            $classe = "\FMUP\Import\Config\Field\Validator\\" . ucfirst($type);
+            $classe = '\FMUP\Import\Config\Field\Validator\\' . ucfirst($type);
             $validator = new $classe();
             $this->addValidator($validator);
         }
@@ -95,19 +95,22 @@ class Field
 
     /**
      *
-     * @param \Import\Config\Field\Validator\Validator $validator
+     * @param Field\Validator $validator
+     * @return $this
      */
-    public function addValidator(\FMUP\Import\Config\Field\Validator $validator)
+    public function addValidator(Field\Validator $validator)
     {
         array_push($this->liste_validator, $validator);
+        return $this;
     }
 
     /**
      * Set validator with specific key
-     * @param \FMUP\Import\Config\Field\Validator $validator
-     * @param string                              $key
+     * @param Field\Validator $validator
+     * @param string|null $key
+     * @return $this
      */
-    public function setValidator(\FMUP\Import\Config\Field\Validator $validator, $key = null)
+    public function setValidator(Field\Validator $validator, $key = null)
     {
         if ($key === null) {
             $this->addValidator($validator);
@@ -132,20 +135,37 @@ class Field
 
     /**
      *
-     * @param \Import\Config\Field\Formatter\Formatter $formatter
+     * @param Field\Formatter $formatter
+     * @deprecated use self::addFormatter instead
+     * @see self::addFormatter
+     * @return $this
      */
-    public function addFormatterFin(\FMUP\Import\Config\Field\Formatter $formatter)
+    public function addFormatterFin(Field\Formatter $formatter)
     {
-        array_push($this->liste_formatter, $formatter);
+        return $this->addFormatter($formatter);
     }
 
     /**
      *
-     * @param \Import\Config\Field\Formatter\Formatter $formatter
+     * @param Field\Formatter $formatter
+     * @deprecated use self::addFormatter instead
+     * @see self::addFormatter
+     * @return $this
      */
-    public function addFormatterDebut(\FMUP\Import\Config\Field\Formatter $formatter)
+    public function addFormatterDebut(Field\Formatter $formatter)
     {
-        array_push($this->liste_formatter, $formatter);
+        return $this->addFormatter($formatter);
+    }
+
+    /**
+     * Add a formatter for this field
+     * @param Field\Formatter $formatter
+     * @return $this
+     */
+    public function addFormatter(Field\Formatter $formatter)
+    {
+        array_push($this->formatters, $formatter);
+        return $this;
     }
 
     public function validateField()
@@ -164,8 +184,8 @@ class Field
 
     public function formatField()
     {
-        if (count($this->liste_formatter) > 0) {
-            foreach ($this->liste_formatter as $formatter) {
+        if (count($this->formatters) > 0) {
+            foreach ($this->formatters as $formatter) {
                 $this->value = $formatter->format($this->value) ?: "";
                 if ($formatter->hasError()) {
                     $this->liste_erreur[get_class($formatter)] = $formatter->getErrorMessage();

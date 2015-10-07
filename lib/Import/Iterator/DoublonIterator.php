@@ -20,7 +20,7 @@ class DoublonIterator extends \IteratorIterator
 
     /**
      *
-     * @return Map<integer, string>
+     * @return array associate key (int) to string
      */
     public function getListeCle()
     {

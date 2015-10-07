@@ -29,6 +29,7 @@ class LastModified extends Header
     /**
      * Define the modified date
      * @param string $modifiedDate
+     * @return $this
      */
     public function setModifiedDate($modifiedDate)
     {

@@ -30,7 +30,7 @@ class Session
      */
     public function regenerate($deleteOldSession = false)
     {
-        session_regenerate_id((bool) $deleteOldSession);
+        session_regenerate_id((bool)$deleteOldSession);
         return $this;
     }
 
@@ -110,7 +110,7 @@ class Session
      */
     public function isStarted()
     {
-        if (is_null($this->sessionState)){
+        if (is_null($this->sessionState)) {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
             } else {

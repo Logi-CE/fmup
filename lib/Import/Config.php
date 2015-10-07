@@ -130,7 +130,7 @@ class Config
 
     /**
      *
-     * @return multitype:string
+     * @return array[string]
      */
     public function getErrors()
     {

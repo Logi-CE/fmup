@@ -14,6 +14,7 @@ class CacheControl extends Header
 
     /**
      * @param \DateTime $dateTime
+     * @param string $cacheType
      */
     public function __construct(\DateTime $dateTime, $cacheType = self::CACHE_TYPE_PUBLIC)
     {
@@ -51,6 +52,7 @@ class CacheControl extends Header
     /**
      * Define the cacheType (public or private)
      * @param string $cacheType
+     * @return $this
      */
     public function setCacheType($cacheType = self::CACHE_TYPE_PUBLIC)
     {

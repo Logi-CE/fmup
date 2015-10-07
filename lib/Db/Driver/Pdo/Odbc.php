@@ -1,8 +1,6 @@
 <?php
 namespace FMUP\Db\Driver\Pdo;
 
-use FMUP\Db\Exception;
-
 class Odbc extends \FMUP\Db\Driver\Pdo
 {
     protected $instance = null;

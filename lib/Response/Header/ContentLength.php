@@ -29,6 +29,7 @@ class ContentLength extends Header
     /**
      * Define the content length
      * @param int $contentLength
+     * @return $this
      */
     public function setContentLength($contentLength)
     {

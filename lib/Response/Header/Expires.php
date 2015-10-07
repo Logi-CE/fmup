@@ -29,6 +29,7 @@ class Expires extends Header
     /**
      * Define the expire date
      * @param \DateTime $expireDate
+     * @return $this
      */
     public function setExpireDate(\DateTime $expireDate)
     {

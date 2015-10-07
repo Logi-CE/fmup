@@ -44,7 +44,7 @@ class ConfigObjet
     /**
      * liste des index correspondant aux champs associés à l'objet
      *
-     * @var Integer
+     * @var array[int]
      */
     private $liste_index_champ = array();
 
@@ -52,6 +52,10 @@ class ConfigObjet
      * ***************************
      * GETTERS
      * ***************************
+     */
+
+    /**
+     * @return array[int]
      */
     public function getListeIndexChamp()
     {
@@ -108,9 +112,14 @@ class ConfigObjet
         $this->nom_attribut[$nom_objet] = $nom_attribut;
     }
 
+    /**
+     * @param int $index
+     * @return $this
+     */
     public function addIndex($index)
     {
         array_push($this->liste_index_champ, $index);
+        return $this;
     }
 
     /**
