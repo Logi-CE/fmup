@@ -95,7 +95,9 @@ class Pdo implements DbInterface
     protected function getOptions()
     {
         return array(
-            \PDO::ATTR_PERSISTENT => (bool)(isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
+            \PDO::ATTR_PERSISTENT => (bool)(
+                isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false
+            ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
     }

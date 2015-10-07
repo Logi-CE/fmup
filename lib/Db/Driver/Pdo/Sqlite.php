@@ -39,7 +39,9 @@ class Sqlite extends Pdo
 
     protected function getHost()
     {
-        return isset($this->params['host']) ? $this->params['host'] : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
+        return isset($this->params['host'])
+            ? $this->params['host']
+            : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
     }
 
     protected function getDatabase()

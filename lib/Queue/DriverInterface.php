@@ -1,7 +1,10 @@
 <?php
 namespace FMUP\Queue;
 
-
+/**
+ * Interface DriverInterface
+ * @package FMUP\Queue
+ */
 interface DriverInterface
 {
     /**

@@ -128,9 +128,9 @@ class Apc implements CacheInterface
 
     /**
      * Get information for specified cache type
-     * @param bool $limited (default false) If limited is TRUE, the return value will exclude the individual list of cache entries.
+     * @param bool $limited (default false) If limited is TRUE, the return value will exclude the individual list
+     *                                      of cache entries.
      *                                      This is useful when trying to optimize calls for statistics gathering.
-
      * @return array|bool
      * @throws Exception
      */
