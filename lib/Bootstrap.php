@@ -22,7 +22,7 @@ class Bootstrap
     {
         if (!$this->isWarmed()) {
             $this->initHelperDb()->getLogger();
-            //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and error handler before
+            //$this->registerErrorHandler(); //@todo activation of this might be very useful
             $this->setIsWarmed();
         }
         return $this;

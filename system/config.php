@@ -5,7 +5,7 @@ if (!defined('BASE_PATH')) {
 
 /**
  * Classe comprenant les paramètres de configuration de l'application
- * @deprecated use \FMUP\Config\Framework instead
+ * @deprecated override \FMUP\Config instead and set in your \FMUP\Bootstrap
  */
 class Config
 {
