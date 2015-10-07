@@ -28,33 +28,33 @@ class Crypt
     }
 
     /**
-     * 
-     * @param string $password
+     * Hash a string
+     * @param string $string
      * @return string
      */
-    public function hash($password)
+    public function hash($string)
     {
-        return $this->getDriver()->hash($password);
+        return $this->getDriver()->hash($string);
     }
     
     /**
-     * 
-     * @param string $password
+     * Unhash a string
+     * @param string $string
      * @return string
      */
-    public function unHash($password)
+    public function unHash($string)
     {
-        return $this->getDriver()->unHash($password);
+        return $this->getDriver()->unHash($string);
     }
     
     /**
-     * 
+     * Check if a clear string is equivalent to a hashed one
      * @param  string $password
-     * @param  string $hashed_password
+     * @param  string $hashedPassword
      * @return boolean
      */
-    public function verify($password, $hashed_password)
+    public function verify($password, $hashedPassword)
     {
-        return (bool)($this->hash($password) == $hashed_password);
+        return (bool)($this->hash($password) == $hashedPassword);
     }
 }

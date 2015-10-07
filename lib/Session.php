@@ -112,7 +112,9 @@ class Session
     {
         if (is_null($this->sessionState)) {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
-                $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
+                $this->sessionState = (
+                    session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
+                );
             } else {
                 $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
             }
