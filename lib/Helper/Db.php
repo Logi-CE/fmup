@@ -51,7 +51,7 @@ abstract class Db
     /**
      * @param \FMUP\Config $config
      */
-    static public function setConfig(\FMUP\Config $config)
+    public static function setConfig(\FMUP\Config $config)
     {
         self::$config = $config;
     }
@@ -60,7 +60,7 @@ abstract class Db
      * @return \FMUP\Config
      * @throws \LogicException
      */
-    static public function getConfig()
+    public static function getConfig()
     {
         if (!self::$config) {
             throw new \LogicException('Config is not defined and required!');

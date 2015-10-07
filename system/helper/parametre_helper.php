@@ -6,7 +6,7 @@
 class ParametreHelper
 {
     
-    static protected $instance;
+    protected static $instance;
     
     protected $liste;
     protected $db;

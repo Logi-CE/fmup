@@ -9,13 +9,13 @@ class LangueHelper
      * Nom de la table de référence des traductions en base de données
      * @var string
      */
-    static protected $traduction_name = 'traduction';
+    protected static $traduction_name = 'traduction';
     
     /**
      * Nom de la table de référence des langues en base de données
      * @var string
      */
-    static protected $langue_name = 'langue';
+    protected static $langue_name = 'langue';
     
     /**
      * Récupère les traductions directement depuis la base pour la langue donnée des mots demandés

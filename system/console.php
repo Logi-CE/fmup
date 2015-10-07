@@ -15,13 +15,13 @@ define('LOG_PARAMS', 7);
  */
 class Console
 {
-    static public $statut_console = 'eteinte';
-    static public $compteur_page = null;
-    static public $nb_requetes;
-    static public $duree_script;
-    static public $memoire_utilisee;
-    static public $compteur_interne;
-    static public $options_console = array(
+    public static $statut_console = 'eteinte';
+    public static $compteur_page = null;
+    public static $nb_requetes;
+    public static $duree_script;
+    public static $memoire_utilisee;
+    public static $compteur_interne;
+    public static $options_console = array(
           'sql'			=> 'les logs SQL'
         , 'contenu'		=> 'les logs de contenu'
         , 'erreur'		=> 'les logs d\'erreur'
