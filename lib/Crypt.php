@@ -36,7 +36,17 @@ class Crypt
     {
         return $this->getDriver()->hash($password);
     }
-
+    
+    /**
+     * 
+     * @param type $password
+     * @return string
+     */
+    public function unHash($password)
+    {
+        return $this->getDriver()->unHash($password);
+    }
+    
     /**
      * 
      * @param  string $password
