@@ -1,27 +1,19 @@
 <?php
 namespace FMUP\Controller;
 
+use FMUP\Controller;
 use FMUP\Response\Header\Status;
 
 /**
  * Class Error
  * @package FMUP\Controller
  */
-abstract class Error extends \FMUP\Controller
+abstract class Error extends Controller
 {
     /**
      * @var \Exception
      */
     private $exception;
-
-    /**
-     * rewrite to tell everybody can access error controller
-     * @param string $calledAction
-     * @return $this
-     */
-    public function preFilter($calledAction = null)
-    {
-    }
 
     /**
      * Define exception
@@ -35,7 +27,7 @@ abstract class Error extends \FMUP\Controller
     }
 
     /**
-     * Url call for each 404
+     * Url call for each Exception status
      */
     public function indexAction()
     {
@@ -55,16 +47,7 @@ abstract class Error extends \FMUP\Controller
      */
     protected function errorStatus($status)
     {
-        error_log($status);
-        $this->writeContextToLog()
-            ->getResponse()
-            ->setHeader(new Status($status));
-        return $this;
-    }
-
-    protected function writeContextToLog()
-    {
-        error_log($this->getException());
+        $this->getResponse()->setHeader(new Status($status));
         return $this;
     }
 
