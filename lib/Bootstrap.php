@@ -68,7 +68,7 @@ class Bootstrap
     {
         if (!$this->logger) {
             $this->logger = new Logger();
-            $this->logger->setRequest($this->getRequest());
+            $this->logger->setRequest($this->getRequest())->setConfig($this->getConfig());
         }
         return $this->logger;
     }
@@ -87,7 +87,7 @@ class Bootstrap
     public function registerErrorHandler()
     {
         if (!$this->isErrorHandlerRegistered) {
-            \Monolog\ErrorHandler::register($this->getLogger()->get(Logger::SYSTEM));
+            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME));
             $this->isErrorHandlerRegistered = true;
         }
         return $this;
