@@ -118,6 +118,10 @@ class Logger
      */
     public function log($channel, $level, $message, array $context = array())
     {
-        return $this->get($channel)->addRecord((int) $level, $message, (array) $context);
+        $channelType = $this->get($channel);
+        if ($channelType->getName() === \FMUP\Logger\Channel\Standard::NAME) {
+            $message = "[Channel $channel] $message";
+        }
+        return $channelType->addRecord((int) $level, $message, (array) $context);
     }
 }
