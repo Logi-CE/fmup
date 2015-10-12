@@ -157,4 +157,16 @@ abstract class Channel
         }
         return $this->response;
     }
+
+    /**
+     * Add a message in logger
+     * @param $level
+     * @param $message
+     * @param array $context
+     * @return bool
+     */
+    public function addRecord($level, $message, array $context = array())
+    {
+        return $this->getLogger()->addRecord((int) $level,(string) $message, (array)$context);
+    }
 }
