@@ -17,7 +17,7 @@ class Standard extends Channel
 
     public function configure()
     {
-        if ($this->getEnvironment()->get() == Environment::DEV) {
+        if ($this->getEnvironment()->get() == Environment::DEV && !headers_sent()) {
             $this->getLogger()
                 ->pushHandler(new FirePHPHandler())
                 ->pushHandler(new ChromePHPHandler());
