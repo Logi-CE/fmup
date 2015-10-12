@@ -2,6 +2,8 @@
 /**
  * Classe permettant le débogage de l'application
  * @version 1.0
+ * @deprecated use \FMUP\Logger with channel Debug instead
+ * @see \FMUP\Logger
  */
 class Debug
 {
