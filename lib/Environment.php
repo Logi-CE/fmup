@@ -63,13 +63,17 @@ class Environment
         return $this->config;
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function get()
     {
         if (defined('ENVIRONMENT')) {
             return ENVIRONMENT;
         }
         if ($this->getConfig()->has('version')) {
-            return $this->getConfig()->get('version');
+            return (string) $this->getConfig()->get('version');
         }
         throw new Exception('No environment detected');
     }

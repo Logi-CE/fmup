@@ -1,6 +1,7 @@
 <?php
 namespace FMUP\Logger\Channel;
 
+use FMUP\Environment;
 use FMUP\Logger\Channel;
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\ChromePHPHandler;
@@ -16,7 +17,7 @@ class Standard extends Channel
 
     public function configure()
     {
-        if ($this->getConfig()->get('version') == 'dev') { //@todo something clean
+        if ($this->getEnvironment()->get() == Environment::DEV) {
             $this->getLogger()
                 ->pushHandler(new FirePHPHandler())
                 ->pushHandler(new ChromePHPHandler());

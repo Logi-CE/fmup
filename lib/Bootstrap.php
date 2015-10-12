@@ -71,7 +71,9 @@ class Bootstrap
     {
         if (!$this->logger) {
             $this->logger = new Logger();
-            $this->logger->setRequest($this->getRequest())->setConfig($this->getConfig());
+            $this->logger->setRequest($this->getRequest())
+                ->setConfig($this->getConfig())
+                ->setEnvironement($this->getEnvironment());
         }
         return $this->logger;
     }

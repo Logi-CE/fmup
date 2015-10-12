@@ -1,15 +1,16 @@
 <?php
 namespace FMUP\Logger;
 
-use Monolog\Logger;
+use Monolog\Logger as MonologLogger;
 use FMUP\Config;
 use FMUP\Request;
 use FMUP\Response;
+use FMUP\Environment;
 
 abstract class Channel
 {
     /**
-     * @var Logger
+     * @var MonologLogger
      */
     private $logger;
 
@@ -29,6 +30,11 @@ abstract class Channel
     private $response;
 
     /**
+     * @var Environment
+     */
+    private $environment;
+
+    /**
      * Name of the channel
      * @return string
      */
@@ -36,28 +42,28 @@ abstract class Channel
 
     /**
      * Must configure the logger channel
-     * @return Logger
+     * @return MonologLogger
      */
     abstract public function configure();
 
     /**
      * Retrieve defined logger
-     * @return Logger
+     * @return MonologLogger
      */
     public function getLogger()
     {
         if (!isset($this->logger)) {
-            $this->logger = new Logger($this->getName());
+            $this->logger = new MonologLogger($this->getName());
             $this->configure();
         }
         return $this->logger;
     }
 
     /**
-     * @param Logger $logger
+     * @param MonologLogger $logger
      * @return $this
      */
-    public function setLogger(Logger $logger)
+    public function setLogger(MonologLogger $logger)
     {
         $this->logger = $logger;
         return $this;
@@ -83,6 +89,41 @@ abstract class Channel
     {
         $this->config = $config;
         return $this;
+    }
+
+    /**
+     * Check whether config exists
+     * @return bool
+     */
+    public function hasConfig()
+    {
+        return (bool) $this->config;
+    }
+
+    /**
+     * Define environment
+     * @param Environment $environment
+     * @return $this
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+    /**
+     * @return Environment
+     * @throws Exception
+     */
+    public function getEnvironment()
+    {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+            if ($this->hasConfig()) {
+                $this->environment->setConfig($this->getConfig());
+            }
+        }
+        return $this->environment;
     }
 
     /**

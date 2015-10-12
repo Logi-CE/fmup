@@ -13,6 +13,11 @@ class Logger
      */
     private $config;
 
+    /**
+     * @var Environment
+     */
+    private $environment;
+
     protected $factory;
 
     /**
@@ -44,7 +49,7 @@ class Logger
     {
         if (!isset($this->instances[$instanceName])) {
             $channel = $this->getFactory()->getChannel($instanceName);
-            $channel->setConfig($this->getConfig());
+            $channel->setConfig($this->getConfig())->setEnvironment($this->getEnvironment());
             $this->instances[$instanceName] = $channel;
         }
         return $this->instances[$instanceName];
@@ -106,6 +111,28 @@ class Logger
             $this->config = new Config();
         }
         return $this->config;
+    }
+
+    /**
+     * @param Environment $environment
+     * @return $this
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+    /**
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+            $this->environment->setConfig($this->getConfig());
+        }
+        return $this->environment;
     }
 
     /**
