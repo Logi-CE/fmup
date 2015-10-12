@@ -10,6 +10,7 @@ class Bootstrap
     private $config;
     private $flashMessenger;
     private $isWarmed;
+    private $environment;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -21,7 +22,9 @@ class Bootstrap
     public function warmUp()
     {
         if (!$this->isWarmed()) {
-            $this->initHelperDb()->getLogger();
+            $this->initHelperDb();
+            $this->getLogger();
+            $this->getEnvironment();
             //$this->registerErrorHandler(); //@todo activation of this might be very useful
             $this->setIsWarmed();
         }
@@ -173,6 +176,24 @@ class Bootstrap
     public function hasConfig()
     {
         return !is_null($this->config);
+    }
+
+    public function getEnvironment()
+    {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+            $this->environment->setConfig($this->getConfig());
+        }
+        return $this->environment;
+    }
+
+    public function setEnvironment(Environment $environment)
+    {
+        if (!$environment->hasConfig()) {
+            $environment->setConfig($this->getConfig());
+        }
+        $this->environment = $environment;
+        return $this;
     }
 
     /**
