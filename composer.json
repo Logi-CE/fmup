@@ -25,7 +25,7 @@
       "ext-pdo_mysql": "To use Mysql connections",
       "ext-pdo_sqlite": "To use Sqlite connections",
       "ext-sqlite3": "To use Sqlite connections",
-      "zendframework/zend-config": "Use Zend_Config_Ini to load extendable ini files",
+      "zendframework/zend-config": "Use Zend_Config_Ini to load extendable ini files"
     },
     "autoload": {
         "psr-4": {
