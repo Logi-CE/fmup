@@ -73,7 +73,7 @@ class Bootstrap
             $this->logger = new Logger();
             $this->logger->setRequest($this->getRequest())
                 ->setConfig($this->getConfig())
-                ->setEnvironement($this->getEnvironment());
+                ->setEnvironment($this->getEnvironment());
         }
         return $this->logger;
     }
@@ -86,6 +86,9 @@ class Bootstrap
     public function setLogger(Logger $logger)
     {
         $this->logger = $logger;
+        if (!$logger->hasEnvironment()) {
+            $logger->setEnvironment($this->getEnvironment());
+        }
         return $this;
     }
 

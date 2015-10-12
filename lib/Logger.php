@@ -124,6 +124,15 @@ class Logger
     }
 
     /**
+     * Check whether environment exists
+     * @return bool
+     */
+    public function hasEnvironment()
+    {
+        return (bool) $this->environment;
+    }
+
+    /**
      * @return Environment
      */
     public function getEnvironment()
