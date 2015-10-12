@@ -21,6 +21,9 @@ class Environment
 
     }
 
+    /**
+     * @return self
+     */
     public static function getInstance()
     {
         if (!self::$instance) {
@@ -38,6 +41,14 @@ class Environment
     {
         $this->config = $config;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasConfig()
+    {
+        return (bool)$this->config;
     }
 
     /**
