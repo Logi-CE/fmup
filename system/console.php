@@ -12,6 +12,7 @@ define('LOG_PARAMS', 7);
  * Elle se sert de variables de session
  * @author afalaise
  * @version 1.0
+ * @deprecated you might want to use \FMUP\Logger and a FirePHP/ChromePHP Plugin
  */
 class Console
 {

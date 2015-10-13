@@ -2,7 +2,7 @@
 /**
  * Classe permettant le débogage de l'application
  * @version 1.0
- * @deprecated use \FMUP\Logger with channel Debug instead
+ * @deprecated use \FMUP\Logger with a FirePHP/ChromePHP plugin instead
  * @see \FMUP\Logger
  */
 class Debug
