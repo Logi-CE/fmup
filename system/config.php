@@ -39,7 +39,7 @@ class Config
         return $this->fmupConfig;
     }
 
-    public function setFmupConfig(\FMUP\Config $config)
+    public function setFmupConfig(\FMUP\Config\ConfigInterface $config)
     {
         $this->fmupConfig = $config;
         return $this;

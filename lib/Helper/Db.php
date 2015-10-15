@@ -49,15 +49,15 @@ abstract class Db
     }
 
     /**
-     * @param \FMUP\Config $config
+     * @param \FMUP\Config\ConfigInterface $config
      */
-    public static function setConfig(\FMUP\Config $config)
+    public static function setConfig(\FMUP\Config\ConfigInterface $config)
     {
         self::$config = $config;
     }
 
     /**
-     * @return \FMUP\Config
+     * @return \FMUP\Config\ConfigInterface
      * @throws \LogicException
      */
     public static function getConfig()

@@ -3,7 +3,7 @@ namespace FMUP\Config;
 
 use FMUP\Config;
 
-class Ini extends Config
+class Ini implements ConfigInterface
 {
     private $filePath;
     private $environment;
@@ -47,14 +47,14 @@ class Ini extends Config
     }
 
     /**
-     * @param string $key
+     * @param string|null $key
      * @return mixed|null
      */
-    public function get($key)
+    public function get($key = null)
     {
-        if ($this->has($key)) {
+        if ($this->has($key) || is_null($key)) {
             $config = $this->getConfig();
-            return $config[$key];
+            return is_null($key) ? $config : $config[$key];
         }
         return null;
     }

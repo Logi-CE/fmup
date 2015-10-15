@@ -8,7 +8,7 @@ class Log
      */
     protected $mailerInstance = null;
     /**
-     * @var \FMUP\Config
+     * @var \FMUP\Config\ConfigInterface
      */
     protected $config = null;
 
@@ -80,17 +80,17 @@ class Log
     }
 
     /**
-     * @param \FMUP\Config $config
+     * @param \FMUP\Config\ConfigInterface $config
      * @return $this
      */
-    public function setConfig(\FMUP\Config $config)
+    public function setConfig(\FMUP\Config\ConfigInterface $config)
     {
         $this->config = $config;
         return $this;
     }
 
     /**
-     * @return \FMUP\Config
+     * @return \FMUP\Config\ConfigInterface
      * @throws \LogicException
      */
     public function getConfig()
