@@ -23,7 +23,7 @@ class Crypt
             return $this->driverInterface;
         }
 
-        $this->driverInterface = Factory::create($this->driver);
+        $this->driverInterface = Factory::getInstance()->create($this->driver);
         return $this->driverInterface;
     }
 

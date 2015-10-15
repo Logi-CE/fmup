@@ -52,7 +52,7 @@ class Cache
             return $this->cacheInstance;
         }
 
-        $this->cacheInstance = Factory::create($this->driver, $this->params);
+        $this->cacheInstance = Factory::getInstance()->create($this->driver, $this->params);
 
         return $this->cacheInstance;
     }

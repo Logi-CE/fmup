@@ -1,14 +1,31 @@
 <?php
 namespace FMUP\Cache;
 
-final class Factory
+class Factory
 {
     const DRIVER_RAM = 'Ram';
     const DRIVER_FILE = 'File';
     const DRIVER_SHM = 'Shm';
+    private static $instance;
 
-    private function __construct()
+    protected function __construct()
     {
+    }
+
+    private function __clone()
+    {
+    }
+
+    /**
+     * @return self
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            $class = get_called_class();
+            self::$instance = new $class();
+        }
+        return self::$instance;
     }
     
     /**
@@ -17,7 +34,7 @@ final class Factory
      * @return CacheInterface
      * @throws Exception
      */
-    public static function create($driver = self::DRIVER_RAM, $params = array())
+    public function create($driver = self::DRIVER_RAM, $params = array())
     {
         $class = 'FMUP\\Cache\\Driver\\' . $driver;
         if (!class_exists($class)) {

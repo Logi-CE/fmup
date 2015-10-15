@@ -32,7 +32,7 @@ class Db
             return $this->driverInstance;
         }
 
-        $this->driverInstance = Factory::create($this->driver, $this->params);
+        $this->driverInstance = Factory::getInstance()->create($this->driver, $this->params);
 
         return $this->driverInstance;
     }
