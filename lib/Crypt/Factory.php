@@ -1,13 +1,31 @@
 <?php
 namespace FMUP\Crypt;
 
-final class Factory
+class Factory
 {
     const DRIVER_MD5 = "Md5";
     const DRIVER_MCRYPT = "MCrypt";
 
-    private function __construct()
+    private static $instance;
+
+    protected function __construct()
     {
+    }
+
+    private function __clone()
+    {
+    }
+
+    /**
+     * @return self
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            $class = get_called_class();
+            self::$instance = new $class();
+        }
+        return self::$instance;
     }
 
     /**
