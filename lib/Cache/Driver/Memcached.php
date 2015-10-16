@@ -16,6 +16,7 @@ class Memcached implements CacheInterface
      * @see http://php.net/manual/fr/memcached.expiration.php
      */
     const SETTINGS_TTL_IN_SECOND = 'SETTINGS_TTL_IN_SECOND';
+    const SETTINGS_CACHE_PREFIX = 'SETTINGS_CACHE_PREFIX';
 
     private $isAvailable = null;
     private $memcachedInstance = null;
@@ -71,6 +72,16 @@ class Memcached implements CacheInterface
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @return string
+     */
+    private function getCacheKey($key)
+    {
+        $prefix = (string)$this->getSetting(self::SETTINGS_CACHE_PREFIX);
+        return $prefix . $key;
+    }
+
 
     /**
      * Check whether a key exists
@@ -83,6 +94,7 @@ class Memcached implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('Memcached is not available');
         }
+        $key = $this->getCacheKey($key);
         $keys = array_flip($this->getMemcachedInstance()->getAllKeys());
         return isset($keys[$key]);
     }
@@ -97,6 +109,7 @@ class Memcached implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('Memcached is not available');
         }
+        $key = $this->getCacheKey($key);
         return $this->getMemcachedInstance()->get($key);
     }
 
@@ -113,6 +126,7 @@ class Memcached implements CacheInterface
             throw new Exception('Memcached is not available');
         }
         $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
+        $key = $this->getCacheKey($key);
         if (!$this->getMemcachedInstance()->set($key, $value, $ttl)) {
             throw new Exception('Error while inserting value in memcached');
         }
@@ -130,6 +144,7 @@ class Memcached implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('Memcached is not available');
         }
+        $key = $this->getCacheKey($key);
         if (!$this->getMemcachedInstance()->delete($key)) {
             throw new Exception('Error while deleting key in memcached');
         }
