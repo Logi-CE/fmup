@@ -1,15 +1,15 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Config\Field\Validator\Required;
 use FMUP\Import\Config\ConfigObjet;
 use FMUP\Import\Config\Field;
+use FMUP\Import\Config\Field\Validator\Required;
 
 /**
  * Répresente une ligne d'un fichier
  *
  * @author csanz
- *        
+ *
  */
 class Config
 {
@@ -52,11 +52,11 @@ class Config
      * SETTERS
      * ***************************
      */
-    
+
     /**
      * Ajoute un Field à la liste de la config
      *
-     * @param Field $field            
+     * @param Field $field
      */
     public function addField(Field $field)
     {
@@ -69,7 +69,7 @@ class Config
     /**
      * Ajoute un ConfigObjet
      *
-     * @param ConfigObjet $config_objet            
+     * @param ConfigObjet $config_objet
      */
     public function addConfigObjet(ConfigObjet $config_objet)
     {
@@ -78,7 +78,7 @@ class Config
 
     /**
      *
-     * @param integer $ligne            
+     * @param integer $ligne
      */
     public function setDoublonLigne($ligne)
     {
@@ -90,7 +90,7 @@ class Config
      * GETTERS
      * ***************************
      */
-    
+
     /**
      *
      * @return \FMUP\Import\Config\Field[]
@@ -102,7 +102,7 @@ class Config
 
     /**
      *
-     * @param Integer $index            
+     * @param Integer $index
      * @return \FMUP\Import\Config\Field
      */
     public function getField($index)
@@ -142,7 +142,7 @@ class Config
      * FONCTIONS SPECIFIQUES
      * ***************************
      */
-    
+
     /**
      * Appelle tous les formatters et validators de chaque champ
      * Renvoi true si tous les champs sont valides, false sinon
@@ -155,11 +155,11 @@ class Config
     {
         // Réinitialisation du tableau d'erreur
         $this->errors = array();
-        
+
         foreach ($this->getListeField() as $key => $field) {
             $field->formatField();
             $valid_field = $field->validateField();
-            if (! $valid_field) {
+            if (!$valid_field) {
                 $this->errors[$field->getName()] = "non valide";
             }
         }
@@ -175,7 +175,7 @@ class Config
         if ($a->getPriorite() == $b->getPriorite()) {
             return 0;
         }
-        return ($a->getPriorite() < $b->getPriorite()) ? - 1 : 1;
+        return ($a->getPriorite() < $b->getPriorite()) ? -1 : 1;
     }
 
     /**
@@ -214,7 +214,7 @@ class Config
             }
             // on va chercher l'objet en base
             $objet_trouve = $nom_objet::findFirst($where);
-            if (! $objet_trouve) {
+            if (!$objet_trouve) {
                 // si on l'a pas trouvé, il va falloir l'insérer
                 $config_objet->setStatutInsertion();
             } else {
@@ -273,8 +273,8 @@ class Config
             }
             // on va chercher l'objet en base
             $objet_trouve = $nom_objet::findFirst($where);
-            
-            if (! $objet_trouve) {
+
+            if (!$objet_trouve) {
                 // si on l'a pas trouvé, on l'enregiste et on récupère l'id
                 $result = $objet->save();
                 if ($result) {

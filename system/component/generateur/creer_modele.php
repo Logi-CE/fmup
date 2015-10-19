@@ -1,7 +1,9 @@
 <?php
 	define('APPLICATION', '');
 	define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', '..')));
-	require_once(BASE_PATH."/vendor/autoload.php");
+	if (file_exists(BASE_PATH."/vendor/autoload.php")) {
+		require_once(BASE_PATH . "/vendor/autoload.php");
+	}
 	require_once(__DIR__."/generateur.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">	 

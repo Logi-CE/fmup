@@ -8,7 +8,7 @@ namespace FMUP;
 class Cookie
 {
     private static $instance;
- 
+
     private function __construct()
     {
     }
@@ -19,13 +19,13 @@ class Cookie
 
     /**
      * Retrieve cookie system - start cookie if not started
-     * @param string $name
      * @return Cookie
      */
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self;
+            $class = get_called_class();
+            self::$instance = new $class;
         }
         return self::$instance;
     }
@@ -48,16 +48,16 @@ class Cookie
      * @param string $path
      * @param string $domain
      * @param bool $secure
-     * @param bool $httponly
+     * @param bool $httpOnly
      * @return $this
      */
-    public function set($name, $value, $expire = 0, $path = "/", $domain = "", $secure = false, $httponly = false)
+    public function set($name, $value, $expire = 0, $path = "/", $domain = "", $secure = false, $httpOnly = false)
     {
         $time = time();
         if ($expire < $time) {
             $expire = $time + $expire;
         }
-        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+        setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         return $this;
     }
 

@@ -89,9 +89,16 @@ class File implements CacheInterface
      * @param string $key
      * @param string $value
      * @return $this
+     * @throws \Exception if unable to create cache folder
      */
     public function set($key, $value)
     {
+        $dirName = dirname($this->getPathByKey($key));
+        if (!file_exists($dirName)) {
+            if (!mkdir($dirName, 0755, true)) {
+                throw new \Exception('Error while trying to create cache folder ' . $dirName);
+            }
+        }
         file_put_contents($this->getPathByKey($key), $value);
         return $this;
     }
@@ -103,10 +110,10 @@ class File implements CacheInterface
      */
     private function getPathByKey($key)
     {
-        $path = $this->getSetting(self::SETTING_PATH) . '/';
+        $path = $this->getSetting(self::SETTING_PATH);
         if (is_null($path)) {
-            $path = __DIR__ . '/../../../../../data/cache/';
+            $path = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', 'data', 'cache'));
         }
-        return $path . $key;
+        return $path . DIRECTORY_SEPARATOR . $key;
     }
 }

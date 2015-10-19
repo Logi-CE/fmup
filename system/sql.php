@@ -2,6 +2,7 @@
 /**
  * Classe fornissant des fonctions de protection des injections SQL et d'autres fonctions liées aux requetes
  * @version 1.0
+ * @deprecated use \FMUP\Db instead
  */
 class Sql
 {
@@ -99,7 +100,7 @@ class Sql
         }
     }
     /**
-     * Protège des injections de date SQL en remplaçant les "" par des NULL
+     * Protège des injections de date SQL en remplaçant les "" par des null
      * @param {date} lea date à sécuriser
      **/
     public static function secureDate($value)
@@ -267,10 +268,10 @@ class Sql
                     $where[$champ] = "$champ LIKE '".Sql::sanitize(trim($valeur))."%'";
                 }
             } else {
-                if ($valeur == "NULL") {
-                    $where[$champ] = "$champ IS NULL";
-                } elseif ($valeur == "IS NOT NULL") {
-                    $where[$champ] = "$champ IS NOT NULL";
+                if ($valeur == "null") {
+                    $where[$champ] = "$champ IS null";
+                } elseif ($valeur == "IS NOT null") {
+                    $where[$champ] = "$champ IS NOT null";
                 } elseif ($valeur != '') {
                     if (0 === strpos($champ, 'equal_')) {
                         $champ = substr($champ, 6);

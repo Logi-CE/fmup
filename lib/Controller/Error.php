@@ -18,7 +18,7 @@ abstract class Error extends \FMUP\Controller
      * rewrite to tell everybody can access error controller
      * @param string $calledAction
      */
-    public function preFiltre($calledAction = NULL)
+    public function preFilter($calledAction = null)
     {
     }
 
@@ -57,11 +57,14 @@ abstract class Error extends \FMUP\Controller
      * @todo rewrite to avoid use of Error
      * @uses \Config
      * @uses \Error
-     * @return $this
+     * @return self
      */
     protected function sendMailOnException()
     {
-        if (!\Config::useDailyAlert() && !\Config::isDebug()) {
+        if (
+            !$this->getBootstrap()->getConfig()->get('use_daily_alert') &&
+            !$this->getBootstrap()->getConfig()->get('is_debug')
+        ) {
             try {
                 throw new \Error($this->getException()->getMessage(), E_WARNING);
             } catch (\Exception $e) {
@@ -87,7 +90,7 @@ abstract class Error extends \FMUP\Controller
 
     protected function writeContextToLog()
     {
-        \FMUP\Error::addContextToErrorLog();
+        error_log($this->getException());
         return $this;
     }
 

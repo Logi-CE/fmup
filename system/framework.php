@@ -28,6 +28,7 @@ $sys_controller_instance = null;
 
 /**
  * Classe d'initialisation du framework
+ * @deprecated use \FMUP\Framework instead
  */
 class Framework
 {
@@ -43,13 +44,8 @@ class Framework
             define('APP', "App".String::toCamlCase(APPLICATION));
         }
 
-        // On détermine le niveau d'erreur
-        error_reporting(Config::errorReporting());
-        ini_set('display_errors', Config::isDebug());
-        ini_set('display_startup_errors', Config::isDebug());
-
-
         // On fixe les fonctions appelées lors d'une erreur
+        $this->definePhpIni();
         $this->defineErrorLog();
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
@@ -70,7 +66,6 @@ class Framework
                 FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
             }
         }
-        $this->preDispatch();
         $this->dispatch();
 
         // historisation
@@ -92,7 +87,6 @@ class Framework
     {
         list($controllerName, $action) = $this->getRoute();
         $this->instantiate($controllerName, $action);
-        $this->postDispatch();
         return $this;
     }
 
@@ -120,7 +114,7 @@ class Framework
         }
         
         // Préfiltre
-        $sys_controller_instance->preFiltre($sys_function);
+        $sys_controller_instance->preFilter($sys_function);
 
         
         // Si la fonction peut être appelée on l'appelle
@@ -133,7 +127,7 @@ class Framework
         }
 
         // Postfiltre
-        $sys_controller_instance->postFiltre();
+        $sys_controller_instance->postFilter();
         return $sys_controller_instance;
     }
 
@@ -141,39 +135,50 @@ class Framework
     {
         if (Config::getGestionSession()) {
             $session = new HlpSessions('BACK');
-            session_set_save_handler(array(&$session, 'open'), array(&$session, 'close'), array(&$session, 'read'), array(&$session, 'write'), array(&$session, 'destroy'), array(&$session, 'gc'));
-        }
-
-        /*
-         * bloc utilisé pour l'activation de session crée sur un autre domaine
-         * --> reprise d'une session forcée
-         */
-        if (isset($_REQUEST['psid']) && $_REQUEST['psid'] != '') {
-            $multi_onglet = Config::getGestionMultiOnglet();
-
-            //on recharge la session par celle en parametre
-            session_id($_REQUEST['psid']);
-            session_start();
-            $old_session = $_SESSION;
-            if ($multi_onglet) $old_session["window.name"] = date('YmdHis');
-
-            session_regenerate_id();
-            $_SESSION = $old_session;
-
-            if ($multi_onglet) {
-                //specifique
-                if (isset($_SESSION['utilisateur'])) {
-                    $_SESSION['utilisateur']->setCookie($_SESSION['utilisateur']->getMatricule(), $_SESSION['utilisateur']->getId(), $_SESSION['utilisateur']->getPassword());
-                }
-            }
-
-            $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
-            $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
-
-            header('Location: '.$uri);
-            exit();
+            session_set_save_handler(
+                array(&$session, 'open'),
+                array(&$session, 'close'),
+                array(&$session, 'read'),
+                array(&$session, 'write'),
+                array(&$session, 'destroy'),
+                array(&$session, 'gc')
+            );
         } else {
-            session_start();
+            /*
+             * bloc utilisé pour l'activation de session crée sur un autre domaine
+             * --> reprise d'une session forcée
+             */
+            if (isset($_REQUEST['psid']) && $_REQUEST['psid'] != '') {
+                $multi_onglet = Config::getGestionMultiOnglet();
+
+                //on recharge la session par celle en parametre
+                session_id($_REQUEST['psid']);
+                session_start();
+                $old_session = $_SESSION;
+                if ($multi_onglet) $old_session["window.name"] = date('YmdHis');
+
+                session_regenerate_id();
+                $_SESSION = $old_session;
+
+                if ($multi_onglet) {
+                    //specifique
+                    if (isset($_SESSION['utilisateur'])) {
+                        $_SESSION['utilisateur']->setCookie(
+                            $_SESSION['utilisateur']->getMatricule(),
+                            $_SESSION['utilisateur']->getId(),
+                            $_SESSION['utilisateur']->getPassword()
+                        );
+                    }
+                }
+
+                $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
+                $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
+
+                header('Location: '.$uri);
+                exit();
+            } else {
+                \FMUP\Session::getInstance()->start();
+            }
         }
     }
 
@@ -258,6 +263,8 @@ class Framework
     }
 
     /**
+     * @param string $sys_directory
+     * @param string $sys_controller
      * @throws NotFoundError
      */
     protected function getRouteError()
@@ -291,6 +298,18 @@ class Framework
     protected function defineErrorLog()
     {
         ini_set('error_log', Config::pathToPhpErrorLog());
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function definePhpIni()
+    {
+        // On détermine le niveau d'erreur
+        error_reporting(Config::errorReporting());
+        ini_set('display_errors', Config::isDebug());
+        ini_set('display_startup_errors', Config::isDebug());
         return $this;
     }
 

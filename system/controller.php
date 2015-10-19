@@ -3,8 +3,7 @@
  * Classe dont dérivent tous les contolleurs.
  * Elle gère notamment la connexion à la base de données et la vérification des droits
  * @version 1.0
- * @deprecated
- * @see \FMUP\Controller
+ * @deprecated use \FMUP\Controller instead
  */
 class Controller
 {
@@ -38,6 +37,7 @@ class Controller
      * Redirige vers une autre page
      * @param string $controlleur : l'URL interne sous la forme controlleur/fonction à laquelle accéder
      * @param bool $adresse : [OPT] VRAI si le paramètre précédent est une adresse externe, FAUX par défaut
+     * @deprecated use \FMUP\Exception\Location instead
      */
     public static function redirect($controlleur = "", $adresse = false)
     {
@@ -135,7 +135,7 @@ class Controller
     /**
      * Fonction exécutée avant chaque accès au controlleur.
      */
-    public function preFiltre($calledAction = NULL)
+    public function preFilter($calledAction = null)
     {
         // Si l'application nécéssite une connexion on vérifie les droits
         if (call_user_func(array(APP, "hasAuthentification"))) {
@@ -150,7 +150,7 @@ class Controller
      * Contrairement au préfiltre il n'est pas toujours exécuté.
      * (En cas de redirection dans le controlleur, de die(), d'erreur, ...)
      */
-    public function postFiltre()
+    public function postFilter($calledAction = null)
     {
         if (class_exists('Historisation')) Historisation::destroy();
         Controller::clearFlash();

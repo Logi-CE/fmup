@@ -9,7 +9,7 @@ class Telephone implements Validator
     public function validate($value)
     {
         $valid = true;
-        if (! \Is::telephone($value) && ! \Is::telephonePortable($value)) {
+        if (!\Is::telephone($value) && !\Is::telephonePortable($value)) {
             $valid = false;
         }
         return $valid;

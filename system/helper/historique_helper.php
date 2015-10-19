@@ -67,8 +67,12 @@ class HistoriqueHelper
                         " . Sql::secure($commentaire) . "
                     )";
             //debug::output($controller);
-            $controller = new Controller();
-            $controller->getDb()->execute($sql);
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $db->execute($sql);
+            } else {
+                $db->query($sql);
+            }
             return true;
         } else {
             //la config de l'application ne permet pas d'historiser cette donnée
@@ -90,16 +94,16 @@ class HistoriqueHelper
         /* REQUETE DE CREATION DE TABLE (SQL SERVEUR) :
 
 			CREATE TABLE [historique_requetes](
-				[id] [int] IDENTITY(1,1) NOT NULL,
-				[requete] [text] NULL,
-				[temps_execution] [float] NULL,
-				[memoire_utilisee] [float] NULL,
-				[nb_lignes_retournees] [int] NULL,
-				[date_execution] [datetime] NULL,
-				[hostname] [text] NULL,
-				[url_appelle] [text] NULL,
-				[id_utilisateur_connecte] [int] NULL,
-				[commentaire] [text] NULL,
+				[id] [int] IDENTITY(1,1) NOT null,
+				[requete] [text] null,
+				[temps_execution] [float] null,
+				[memoire_utilisee] [float] null,
+				[nb_lignes_retournees] [int] null,
+				[date_execution] [datetime] null,
+				[hostname] [text] null,
+				[url_appelle] [text] null,
+				[id_utilisateur_connecte] [int] null,
+				[commentaire] [text] null,
 			 CONSTRAINT [PK_historique_requetes2] PRIMARY KEY CLUSTERED
 			(
 				[id] ASC
@@ -164,8 +168,12 @@ class HistoriqueHelper
                         " . Sql::secure($commentaire) . "
                     )";
 
-            $controller = new Controller();
-            $controller->getDb()->execute($sql);
+            $db = Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $db->execute($sql);
+            } else {
+                $db->query($sql);
+            }
             return true;
         } else {
             //la config de l'application ne permet pas d'historiser cette donnée

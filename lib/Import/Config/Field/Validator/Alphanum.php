@@ -9,7 +9,7 @@ class Alphanum implements Validator
     public function validate($value)
     {
         $valid = true;
-        if (! \Is::alphaNumerique($value)) {
+        if (!\Is::alphaNumerique($value)) {
             $valid = false;
         }
         return $valid;

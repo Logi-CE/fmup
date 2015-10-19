@@ -100,8 +100,7 @@ class View
             $params['exporter'] = false;
         }
 
-        $basePath = file_exists(__DIR__ . '/../../logi-ce/sandbox') ? __DIR__ . '/../../logi-ce/sandbox' : BASE_PATH;
-        $this->vue	 = $basePath.'/application/'.APPLICATION.'/view/'.$vue.'.php';
+        $this->vue	 = BASE_PATH.'/application/'.APPLICATION.'/view/'.$vue.'.php';
         
         $this->withoutBandeau = false;
         if(isset($options['withoutBandeau'])){
@@ -113,9 +112,9 @@ class View
 
             // récupération de l'option layout
             if (isset($options['layout'])) {
-                $this->layout = $basePath."/application/".APPLICATION."/layout/".$options["layout"].".php";
+                $this->layout = BASE_PATH."/application/".APPLICATION."/layout/".$options["layout"].".php";
             } else {
-                $this->layout = $basePath."/application/".APPLICATION."/layout/".$layout.".php";
+                $this->layout = BASE_PATH."/application/".APPLICATION."/layout/".$layout.".php";
             }
 
             // récupération de l'option styles

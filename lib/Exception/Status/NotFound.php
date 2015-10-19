@@ -2,7 +2,7 @@
 namespace FMUP\Exception\Status;
 
 /**
- * Class NotFound - Exception to explain to framework that this page cannot be handled
+ * Class NotFound - Exception to explain to framework that this page cannot be handled due to invalid resource
  * @package FMUP\Exception
  */
 class NotFound extends \FMUP\Exception\Status

@@ -5,7 +5,7 @@ namespace FMUP\Import\Config;
  * Permet de générer un objet voulu à partir du fichier
  *
  * @author csanz
- *        
+ *
  */
 class ConfigObjet
 {

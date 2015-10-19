@@ -42,7 +42,12 @@ class LangueHelper
                         ON L.id = LT.id_langue
                     WHERE LT.cle IN (".implode(',', $liste_cles).")
                     AND L.code = '".$code_langue."'";
-            $traductions = Model::getDb()->requete($sql);
+            $db = \Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $traductions = $db->requete($sql);
+            } else {
+                $traductions = $db->fetchAll($sql);
+            }
             foreach ($traductions as $trad) {
                 $tabretour[$trad["cle"]] = $trad["traduction"];
             }
@@ -112,7 +117,12 @@ class LangueHelper
                     ON L.id = LT.id_langue
                 WHERE fichier = ".Sql::secure($nom_fichier)."
                     AND L.code = ".Sql::secure($code_langue);
-        $traductions = Model::getDb()->requete($sql);
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $traductions = $db->requete($sql);
+        } else {
+            $traductions = $db->fetchAll($sql);
+        }
         foreach ($traductions as $trad) {
             $chaine .= "\$GLOBALS['TRAD'][\"".trim($trad["cle"])."\"]";
             $chaine .= " = \"".str_replace("\"", "\\\"", $trad["traduction"])."\";\n";
@@ -136,8 +146,13 @@ class LangueHelper
     {        
         $sql = "SELECT DISTINCT fichier, code
                 FROM ".self::$langue_name."
-                WHERE IFNULL(fichier, '') <> ''";				
-        $rsliste = Model::getDb()->requete($sql);
+                WHERE IFnull(fichier, '') <> ''";
+        $db = \Model::getDb();
+        if (!$db instanceof \FMUP\Db) {
+            $rsliste = $db->requete($sql);
+        } else {
+            $rsliste = $db->fetchAll($sql);
+        }
         foreach ($rsliste as $rs) {
             self::genererFichierTraductions($rs["fichier"], $rs["code"]);		
         }

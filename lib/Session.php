@@ -11,6 +11,8 @@ class Session
     const SESSION_NOT_STARTED = false;
 
     private $sessionState;
+    private $name;
+    private $id;
     private static $instance;
 
     private function __construct()
@@ -23,19 +25,83 @@ class Session
     }
 
     /**
+     * @param bool $deleteOldSession
+     * @return $this
+     */
+    public function regenerate($deleteOldSession = false)
+    {
+        session_regenerate_id((bool) $deleteOldSession);
+        return $this;
+    }
+
+    /**
      * Retrieve session system - start session if not started
-     * @param string $name
      * @return Session
      */
-    public static function getInstance($name = null)
+    public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self;
+            $class = get_called_class();
+            self::$instance = new $class;
         }
-
-        self::$instance->start($name);
-
         return self::$instance;
+    }
+
+    /**
+     * Define session name
+     * @param string $name
+     * @throws \FMUP\Exception if session name defined contain only numbers
+     * @return $this
+     */
+    public function setName($name)
+    {
+        if (!$this->isStarted()) {
+            if (is_numeric($name)) {
+                throw new \FMUP\Exception('Session name could not contain only numbers');
+            }
+            $this->name = (string)$name;
+        }
+        return $this;
+    }
+
+    /**
+     * Retrieve session name
+     * @return string|null
+     */
+    public function getName()
+    {
+        if ($this->isStarted()) {
+            $this->name = session_name();
+        }
+        return $this->name;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     * @throws Exception
+     */
+    public function setId($id)
+    {
+        if (!$this->isStarted()) {
+            if (preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
+                throw new \FMUP\Exception('Session name could not anything but letters + numbers');
+            }
+            $this->id = (string)$id;
+        }
+        return $this;
+    }
+
+    /**
+     * Retrieve session name
+     * @return string|null
+     */
+    public function getId()
+    {
+        if ($this->isStarted()) {
+            $this->id = session_id();
+        }
+        return $this->id;
     }
 
     /**
@@ -56,14 +122,13 @@ class Session
 
     /**
      * Start session if not started and return if session is started
-     * @param string $name
      * @return bool
      */
-    public function start($name = null)
+    public function start()
     {
         if (!$this->isStarted()) {
-            if (!is_null($name)) {
-                session_name($name);
+            if ($this->getName()) {
+                session_name($this->getName());
             }
             $this->sessionState = session_start();
         }
@@ -88,6 +153,7 @@ class Session
      */
     public function has($name)
     {
+        $this->start();
         return array_key_exists($name, $_SESSION);
     }
 
@@ -99,6 +165,7 @@ class Session
      */
     public function set($name, $value)
     {
+        $this->start();
         $_SESSION[$name] = $value;
         return $this;
     }
@@ -109,6 +176,7 @@ class Session
      */
     public function clear()
     {
+        $this->start();
         $_SESSION = array();
         return $this;
     }

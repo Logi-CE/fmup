@@ -29,7 +29,12 @@ class IdFromField implements Formatter
             FROM " . $this->table_origine . "
             WHERE " . $this->champ_origine . " LIKE '%" . $value . "%'    
             ";
-            $result = \Model::getDb()->requete($sql);
+            $db = \Model::getDb();
+            if (!$db instanceof \FMUP\Db) {
+                $result = $db->requete($sql);
+            } else {
+                $result = $db->fetchAll($sql);
+            }
             if ($result) {
                 return $result[0]['id'];
             } else {

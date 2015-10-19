@@ -1,4 +1,135 @@
 /*********/
+/* 3.3.1 */
+/*********/
+
+#Deleted
+  - Import\test.php - fails continuous integration
+  
+/*********/
+/* 3.3.0 */
+/*********/
+
+#New
+  - component Cache\Apc
+  - component Cache\Memcached
+  - component Response\Header\ContentDisposition
+  - component Response\Header\ContentLength
+  - component Response\Header\Expires
+  - component Response\Header\LastModified
+  - component Response\Header\Pragma
+  - component Import\Config\Field\Validator\Enum
+  - component Import\Config\Field\Validator\RegExp
+  - component Import\Iterator\CsvIterator
+  - component Import\Iterator\CsvToConfigIterator
+  - component Crypt\Driver\MCrypt
+  - \FMUP\Controller can now change their action suffix
+  - \Import\Config\Field can now add Validator with defined name
+  - \Queue\Driver\Native can now be configured
+  
+#Fix
+  - \Import\Config\Field\Date allow now empty date setting
+  - Model do not throw notice anymore when comparing objects on save
+  - Queue\Driver\Native uses SystemV default size (probably 16ko) instead of 512o
+  
+#Compatible
+  - Rearchitectured FMUP\Db\Pdo\Drivers to be more SOLID
+  - Singletons are now mostly overridable
+
+/*********/
+/* 3.2.0 */
+/*********/
+
+Add support of some SystemV features
+
+#Fix
+  - Driver Cache\File
+
+#Compatible
+  - Framework uses is_callable instead of method_exists (can not call private/protected methods)
+  
+#New
+  - Component Response\Header\CacheControl
+  - Component Response\Header\ContentLength
+  - Component Response\Header\Expires
+  - Component Response\Header\LastModified
+  - Component Response\Header\Pragma
+  - Component Queue
+  - Component Cache\Driver\Shm
+  - New controllers allow to modify their action suffix  
+  - Daily error message uses correct error_log system to have exception logs
+  
+/*********/
+/* 3.1.2 */
+/*********/
+
+#Fix
+  - Fix DbConnectionMysql transaction methods
+  
+/*********/
+/* 3.1.1 */
+/*********/
+
+#Fix
+  - Fix DbConnectionMysql transaction
+  
+/*********/
+/* 3.1.0 */
+/*********/
+
+#Fix
+  - Can use \FMUP\Db in helpers
+
+#New
+  - Crypt component
+  - Crypt\Md5 component
+  - Session can regenerate
+  - Db::lastInsertId can now accept a param
+
+/*********/
+/* 3.0.0 */
+/*********/
+
+Continuous integration refactoring
+
+#New
+  - Component \FMUP\Exception\Location
+  - Component \FMUP\Response\Header\Location
+  - Unit test for \FMUP\Config
+  - added PHPdoc + strong typing
+  - added code coverage
+
+#Fix
+  - postDispatch is now called everytime even in case of error
+  - session can change its name if not started
+  - code coverage now set
+  - continuous integration can now compute logs
+  - system components can now be loaded
+  - Validator Import\Config\Field\Validator\LongueurMax
+  - deleted LogiCE reference
+  - strong typing in view params
+  - removed DbConnectionMysql hard referencies
+  - Import will send Exception instead of crash in case of error
+  - Import on update
+  - cleanup some code style
+
+#Deprecated
+ - Redirect method in controller - use \FMUP\Exception\Location instead
+ - Framework - use \FMUP\Framework instead
+ - CronHelper - use package cron/cron instead (do not need mysql database)
+ - Error - use any exception + \FMUP\Controller\Error instead
+ - DbConnectionMysql - use \FMUP\Db instead
+ 
+#Incompatible
+  - renamed preFiltre and postFiltre in preFilter and postFilter in controller
+  - preFilter and postFilter in controller have optional parameter of called action
+  - Session component do not take session name in session instance anymore
+  - deleted deprecated method Controller::getDb()
+  - deleted system/component/pdf/fpdf
+  - renamed component php views in phtml views
+  - component PDFHelper now throws LogicException if TCPDF is missing
+  - Constantes do not extends ConstantesApplication anymore
+
+/*********/
 /* 2.1.3 */
 /*********/
 
