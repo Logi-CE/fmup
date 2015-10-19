@@ -35,7 +35,7 @@ class Memcached implements CacheInterface
     }
 
     /**
-     * constructor of File
+     * constructor of Memcached
      * @param array $settings
      */
     public function __construct($settings = array())
@@ -43,6 +43,7 @@ class Memcached implements CacheInterface
         if (isset($settings[self::SETTINGS_MEMCACHED])) {
             $this->setMemcachedInstance($settings[self::SETTINGS_MEMCACHED]);
         }
+        $this->settings = $settings;
     }
 
     /**
@@ -128,7 +129,10 @@ class Memcached implements CacheInterface
         $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
         $key = $this->getCacheKey($key);
         if (!$this->getMemcachedInstance()->set($key, $value, $ttl)) {
-            throw new Exception('Error while inserting value in memcached');
+            throw new Exception(
+                'Error while inserting value in memcached : ' . $this->getMemcachedInstance()->getResultMessage(),
+                $this->getMemcachedInstance()->getResultCode()
+            );
         }
         return $this;
     }

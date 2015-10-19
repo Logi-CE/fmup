@@ -19,6 +19,11 @@ class Factory extends \PHPUnit_Framework_TestCase
         return $factory;
     }
 
+    /**
+     * @depends testConstruct
+     * @param \FMUP\Cache\Factory $factory
+     * @throws \FMUP\Cache\Exception
+     */
     public function testCreate(\FMUP\Cache\Factory $factory)
     {
         try {
