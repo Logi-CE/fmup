@@ -36,7 +36,7 @@ class Factory
      */
     public function create($driver = self::DRIVER_RAM, $params = array())
     {
-        $class = 'FMUP\\Cache\\Driver\\' . $driver;
+        $class = 'FMUP\\Cache\\Driver\\' . ucfirst($driver);
         if (!class_exists($class)) {
             throw new Exception('Unable to create ' . $class);
         }

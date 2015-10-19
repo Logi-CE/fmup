@@ -19,6 +19,7 @@ class Cache
     protected $driver = Factory::DRIVER_RAM;
     protected $cacheInstance = null;
     protected $params = array();
+    protected $factory;
 
     /**
      * Multiton - private construct
@@ -52,9 +53,32 @@ class Cache
             return $this->cacheInstance;
         }
 
-        $this->cacheInstance = Factory::getInstance()->create($this->driver, $this->params);
+        $this->cacheInstance = $this->getFactory()->create($this->driver, $this->params);
 
         return $this->cacheInstance;
+    }
+
+    /**
+     * Define a factory
+     * @param Factory $factory
+     * @return $this
+     */
+    public function setFactory(Factory $factory)
+    {
+        $this->factory = $factory;
+        return $this;
+    }
+
+    /**
+     * Get factory instance
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        if (!$this->factory) {
+            $this->factory = Factory::getInstance();
+        }
+        return $this->factory;
     }
 
     /**
