@@ -1,4 +1,13 @@
 /*********/
+/* 1.2.1 */
+/*********/
+
+ErrorController now calls its preFiltre
+
+# Fix
+ - ErrorController now calls its preFiltre
+ 
+/*********/
 /* 1.2.0 */
 /*********/
 
