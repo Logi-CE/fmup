@@ -218,7 +218,9 @@ class Framework extends \Framework
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
                 ->setException($exception);
+            $controller->preFilter('index');
             $controller->indexAction();
+            $controller->postFilter();
         }
         $this->postDispatch();
         return $this;
