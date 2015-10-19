@@ -57,12 +57,15 @@ class ErrorController extends Abstraction
      */
     public function handle()
     {
-        $this->getErrorController()
+        $errorController = $this->getErrorController();
+        $errorController
             ->setBootstrap($this->getBootstrap())
             ->setRequest($this->getRequest())
             ->setResponse($this->getResponse())
-            ->setException($this->getException())
-            ->indexAction();
+            ->setException($this->getException());
+        $errorController->preFilter('index');
+        $errorController->indexAction();
+        $errorController->postFilter('index');
         return $this;
     }
 }
