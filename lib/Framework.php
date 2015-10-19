@@ -189,7 +189,9 @@ class Framework extends \Framework
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
                 ->setException($exception);
+            $controller->preFiltre('indexAction');
             $controller->indexAction();
+            $controller->postFiltre();
             $this->postDispatch();
         }
         return $this;
