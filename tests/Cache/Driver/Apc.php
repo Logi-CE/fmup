@@ -16,16 +16,22 @@ class ApcTest extends \PHPUnit_Framework_TestCase
         $cache2 = new \FMUP\Cache\Driver\Apc(array(''));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped('APC is not available for testing');
+        }
         return $cache;
     }
 
     /**
      * @depends testConstruct
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Apc $cache
      * @return \FMUP\Cache
      */
-    public function testSetGet(\FMUP\Cache\CacheInterface $cache)
+    public function testSetGet(\FMUP\Cache\Driver\Apc $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped('APC is not available for testing');
+        }
 
         $test = array(
             array('test', 'test'),
@@ -49,10 +55,14 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Apc $cache
      */
-    public function testHas(\FMUP\Cache\CacheInterface $cache)
+    public function testHas(\FMUP\Cache\Driver\Apc $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped('APC is not available for testing');
+        }
+
         $test = array(
             array('test', true),
             array('bob', true),
@@ -68,10 +78,14 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Apc $cache
      */
-    public function testRemove(\FMUP\Cache\CacheInterface $cache)
+    public function testRemove(\FMUP\Cache\Driver\Apc $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped('APC is not available for testing');
+        }
+
         $this->assertTrue($cache->has('test'), 'Test should exist');
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');

@@ -21,12 +21,11 @@ class RamTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Ram $cache
      * @return \FMUP\Cache
      */
-    public function testSetGet(\FMUP\Cache\CacheInterface $cache)
+    public function testSetGet(\FMUP\Cache\Driver\Ram $cache)
     {
-
         $test = array(
             array('test', 'test'),
             array('test', 'bob'),
@@ -49,9 +48,9 @@ class RamTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Ram $cache
      */
-    public function testHas(\FMUP\Cache\CacheInterface $cache)
+    public function testHas(\FMUP\Cache\Driver\Ram $cache)
     {
         $test = array(
             array('test', true),
@@ -68,9 +67,9 @@ class RamTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\CacheInterface $cache
+     * @param \FMUP\Cache\Driver\Ram $cache
      */
-    public function testRemove(\FMUP\Cache\CacheInterface $cache)
+    public function testRemove(\FMUP\Cache\Driver\Ram $cache)
     {
         $this->assertTrue($cache->has('test'), 'Test should exist');
         $return = $cache->remove('test');
