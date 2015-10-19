@@ -1,18 +1,15 @@
 <?php
 namespace Tests\Cache\Driver;
 
-/**
- * @todo check if this work
- * @todo must test settings (TTL)
- */
-class ApcTest extends \PHPUnit_Framework_TestCase
+
+class MemcachedTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $this->markTestIncomplete('Must test settings');
-        $cache = new \FMUP\Cache\Driver\Apc();
+        $cache = new \FMUP\Cache\Driver\Memcached();
         $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
-        $cache2 = new \FMUP\Cache\Driver\Apc(array(\FMUP\Cache\Driver\Apc::SETTING_CACHE_TYPE => \FMUP\Cache\Driver\Apc::CACHE_TYPE_USER));
+        $this->assertInstanceOf('\FMUP\Cache\Driver\Memcached', $cache, 'Instance of \FMUP\Cache\Driver\Memcached');
+        $cache2 = new \FMUP\Cache\Driver\Memcached(array(\FMUP\Cache\Driver\Memcached::SETTINGS_CACHE_PREFIX => 'TestCase'));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
         return $cache2;
@@ -20,14 +17,23 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Memcached $cache
      * @return \FMUP\Cache
      */
-    public function testSetGet(\FMUP\Cache\Driver\Apc $cache)
+    public function testSetGet(\FMUP\Cache\Driver\Memcached $cache)
     {
         if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
+            $this->markTestSkipped('Memcached is not available for testing');
         }
+
+        try {
+            $return = $cache->set('testError', 'testError');
+            $this->assertTrue(false, 'You might not be able to define value in memcached without setting server');
+        } catch (\FMUP\Cache\Exception $e) {
+            $this->assertEquals(20, $e->getCode(), 'Unable to store testError because no server is defined // code');
+            $this->assertTrue(true, 'Unable to store testError because no server is defined');
+        }
+        $cache->getMemcachedInstance()->addServer('127.0.0.1', 11211);
 
         $test = array(
             array('test', 'test'),
@@ -55,12 +61,12 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Memcached $cache
      */
-    public function testHas(\FMUP\Cache\Driver\Apc $cache)
+    public function testHas(\FMUP\Cache\Driver\Memcached $cache)
     {
         if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
+            $this->markTestSkipped('Memcached is not available for testing');
         }
 
         $test = array(
@@ -78,12 +84,12 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Memcached $cache
      */
-    public function testRemove(\FMUP\Cache\Driver\Apc $cache)
+    public function testRemove(\FMUP\Cache\Driver\Memcached $cache)
     {
         if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
+            $this->markTestSkipped('Memcached is not available for testing');
         }
 
         $this->assertTrue($cache->has('test'), 'Test should exist');

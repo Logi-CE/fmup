@@ -40,7 +40,7 @@ class RamTest extends \PHPUnit_Framework_TestCase
         );
         foreach ($test as $case) {
             $return = $cache->set($case[0], $case[1]);
-            $this->assertSame($case[1], $cache->get($case[0]), 'Set settings must return its instance');
+            $this->assertEquals($case[1], $cache->get($case[0]), 'Set settings must return its instance');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
         }
         return $cache;
