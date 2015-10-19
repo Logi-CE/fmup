@@ -36,16 +36,27 @@ class Factory
      * @return Channel
      * @throws Exception
      */
-    public function getChannel($channel)
+    final public function getChannel($channel)
     {
-        $className = '\FMUP\Logger\Channel\\' . ucfirst($channel);
-        if (!class_exists($className)) {
-            $className = '\FMUP\Logger\Channel\Standard';
-        }
+        $className = $this->getClassNameForChannel($channel);
         $instance = new $className();
         if (!$instance instanceof Channel) {
             throw new Exception('Channel ' . $channel . ' is not correctly formatted');
         }
         return $instance;
+    }
+
+    /**
+     * Get channel full class name for a given channel
+     * @param string $channel
+     * @return string
+     */
+    protected function getClassNameForChannel($channel)
+    {
+        $className = '\FMUP\Logger\Channel\\' . ucfirst($channel);
+        if (!class_exists($className)) {
+            $className = '\FMUP\Logger\Channel\Standard';
+        }
+        return $className;
     }
 }

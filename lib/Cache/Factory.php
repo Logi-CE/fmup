@@ -19,7 +19,7 @@ class Factory
     /**
      * @return self
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             $class = get_called_class();
@@ -34,9 +34,9 @@ class Factory
      * @return CacheInterface
      * @throws Exception
      */
-    public function create($driver = self::DRIVER_RAM, $params = array())
+    final public function create($driver = self::DRIVER_RAM, $params = array())
     {
-        $class = 'FMUP\\Cache\\Driver\\' . ucfirst($driver);
+        $class = $this->getClassForName($driver);
         if (!class_exists($class)) {
             throw new Exception('Unable to create ' . $class);
         }
@@ -45,5 +45,15 @@ class Factory
             throw new Exception('Unable to create ' . $class);
         }
         return $instance;
+    }
+
+    /**
+     * Must return full class name for specified driver name
+     * @param string $driver
+     * @return string
+     */
+    protected function getClassForName($driver)
+    {
+        return 'FMUP\\Cache\\Driver\\' . ucfirst($driver);
     }
 }

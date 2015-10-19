@@ -14,12 +14,12 @@ class Cache
      * Cache instance
      * @var Cache
      */
-    protected static $instance = array();
+    private static $instance = array();
 
-    protected $driver = Factory::DRIVER_RAM;
-    protected $cacheInstance = null;
-    protected $params = array();
-    protected $factory;
+    private $driver = Factory::DRIVER_RAM;
+    private $cacheInstance = null;
+    private $params = array();
+    private $factory;
 
     /**
      * Multiton - private construct
@@ -32,7 +32,7 @@ class Cache
      * @param string $instanceKey
      * @return $this
      */
-    public static function getInstance($instanceKey)
+    final public static function getInstance($instanceKey)
     {
         if (!isset(self::$instance[$instanceKey])) {
             $class = get_called_class();
@@ -47,7 +47,7 @@ class Cache
      * @return Cache\CacheInterface
      * @throws Cache\Exception
      */
-    public function getCacheInstance()
+    final public function getCacheInstance()
     {
         if (!is_null($this->cacheInstance)) {
             return $this->cacheInstance;

@@ -8,7 +8,7 @@ class Factory
 
     private static $instance;
 
-    protected function __construct()
+    private function __construct()
     {
     }
 
@@ -19,7 +19,7 @@ class Factory
     /**
      * @return self
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             $class = get_called_class();
@@ -34,9 +34,9 @@ class Factory
      * @return \FMUP\Crypt\CryptInterface
      * @throws Exception
      */
-    public static function create($driver = self::DRIVER_MD5)
+    final public function create($driver = self::DRIVER_MD5)
     {
-        $class = 'FMUP\\Crypt\\Driver\\' . $driver;
+        $class = $this->getClassNameForDriver($driver);
         if (!class_exists($class)) {
             throw new Exception('Unable to create ' . $class);
         }
@@ -45,5 +45,15 @@ class Factory
             throw new Exception('Unable to create ' . $class);
         }
         return $instance;
+    }
+
+    /**
+     * Get full name for class to create
+     * @param string $driver
+     * @return string
+     */
+    protected function getClassNameForDriver($driver)
+    {
+        return 'FMUP\\Crypt\\Driver\\' . $driver;
     }
 }

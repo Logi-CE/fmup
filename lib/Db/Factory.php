@@ -37,9 +37,9 @@ class Factory
      * @return DbInterface
      * @throws Exception
      */
-    public static function create($driver = self::DRIVER_PDO, $params = array())
+    final public function create($driver = self::DRIVER_PDO, $params = array())
     {
-        $class = 'FMUP\\Db\\Driver\\' . $driver;
+        $class = $this->getClassNameForDriver($driver);
         if (!class_exists($class)) {
             throw new Exception('Unable to create ' . $class);
         }
@@ -48,5 +48,15 @@ class Factory
             throw new Exception('Unable to create ' . $class);
         }
         return $instance;
+    }
+
+    /**
+     * Get full class name to create
+     * @param string $driver
+     * @return string
+     */
+    protected function getClassNameForDriver($driver)
+    {
+        return 'FMUP\\Db\\Driver\\' . $driver;
     }
 }

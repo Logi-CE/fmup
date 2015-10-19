@@ -38,7 +38,7 @@ class Session
      * Retrieve session system - start session if not started
      * @return Session
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!isset(self::$instance)) {
             $class = get_called_class();
