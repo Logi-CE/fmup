@@ -1,5 +1,7 @@
 <?php
-class CacheTest extends PHPUnit_Framework_TestCase
+namespace Tests;
+
+class CacheTest extends \PHPUnit_Framework_TestCase
 {
     private $driverMock;
 
