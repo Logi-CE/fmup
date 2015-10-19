@@ -2,33 +2,32 @@
 namespace Tests\Cache\Driver;
 
 /**
- * @todo check if this work
- * @todo must test settings (TTL)
+ * Created by PhpStorm.
+ * User: jmoulin
+ * Date: 19/10/2015
+ * Time: 10:17
  */
-class ApcTest extends \PHPUnit_Framework_TestCase
+class ShmTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $this->markTestIncomplete('Must test settings'); //@todo remove this
-        $cache = new \FMUP\Cache\Driver\Apc();
+        //$this->markTestIncomplete('Must test settings'); //@todo remove this
+        $cache = new \FMUP\Cache\Driver\Shm();
         $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
-        $cache2 = new \FMUP\Cache\Driver\Apc(array(\FMUP\Cache\Driver\Apc::SETTING_CACHE_TYPE => \FMUP\Cache\Driver\Apc::CACHE_TYPE_USER));
+        $this->assertInstanceOf('\FMUP\Cache\Driver\Shm', $cache, 'Instance of \FMUP\Cache\Driver\Shm');
+        $cache2 = new \FMUP\Cache\Driver\Shm(array(''));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
-        return $cache2;
+        return $cache;
     }
 
     /**
      * @depends testConstruct
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Shm $cache
      * @return \FMUP\Cache
      */
-    public function testSetGet(\FMUP\Cache\Driver\Apc $cache)
+    public function testSetGet(\FMUP\Cache\Driver\Shm $cache)
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
-        }
-
         $test = array(
             array('test', 'test'),
             array('test', 'bob'),
@@ -42,11 +41,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
             array('1', $this->getMockBuilder('\stdClass')->getMock()),
         );
         foreach ($test as $case) {
-            try {
-                $return = $cache->set($case[0], $case[1]);
-            } catch (\FMUP\Cache\Exception $e) {
-                $this->assertTrue(false, 'Unable to store ' . $case[1] . ' in ' . $case[0] . ' : ' . $e->getMessage());
-            }
+            $return = $cache->set($case[0], $case[1]);
             $this->assertEquals($case[1], $cache->get($case[0]), 'Set settings must return its instance');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
         }
@@ -55,14 +50,10 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Shm $cache
      */
-    public function testHas(\FMUP\Cache\Driver\Apc $cache)
+    public function testHas(\FMUP\Cache\Driver\Shm $cache)
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
-        }
-
         $test = array(
             array('test', true),
             array('bob', true),
@@ -78,14 +69,10 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Apc $cache
+     * @param \FMUP\Cache\Driver\Shm $cache
      */
-    public function testRemove(\FMUP\Cache\Driver\Apc $cache)
+    public function testRemove(\FMUP\Cache\Driver\Shm $cache)
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('APC is not available for testing');
-        }
-
         $this->assertTrue($cache->has('test'), 'Test should exist');
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');

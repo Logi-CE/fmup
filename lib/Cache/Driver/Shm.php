@@ -8,6 +8,7 @@ class Shm implements CacheInterface
 {
     const SETTING_NAME = 'SETTING_NAME';
     const SETTING_SIZE = 'SETTING_SIZE';
+
     private $shmInstance = null;
     private $isAvailable = null;
 
@@ -122,6 +123,7 @@ class Shm implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('SHM is not available');
         }
+        $key = $this->secureName($key);
         return ($this->has($key)) ? shm_get_var($this->getShm(), $key) : null;
     }
 
@@ -136,6 +138,7 @@ class Shm implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('SHM is not available');
         }
+        $key = $this->secureName($key);
         return shm_has_var($this->getShm(), $key);
     }
 
@@ -150,7 +153,7 @@ class Shm implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('SHM is not available');
         }
-
+        $key = $this->secureName($key);
         if ($this->has($key)) {
             if (!shm_remove_var($this->getShm(), $key)) {
                 throw new Exception('Unable to delete key from cache Shm');
@@ -171,7 +174,7 @@ class Shm implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('SHM is not available');
         }
-
+        $key = $this->secureName($key);
         if (!shm_put_var($this->getShm(), $key, $value)) {
             throw new Exception('Unable to define key into cache Shm');
         }

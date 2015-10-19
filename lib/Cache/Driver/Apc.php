@@ -198,7 +198,9 @@ class Apc implements CacheInterface
     public function isAvailable()
     {
         if (is_null($this->isAvailable)) {
-            $this->isAvailable = function_exists('apc_clear_cache');
+            $iniValue = ini_get('apc.enabled');
+            $iniEnabled = (strtolower($iniValue) == 'on' || $iniValue == 1);
+            $this->isAvailable = function_exists('apc_clear_cache') && $iniEnabled;
         }
         return $this->isAvailable;
     }

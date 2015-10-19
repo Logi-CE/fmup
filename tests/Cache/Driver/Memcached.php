@@ -2,10 +2,15 @@
 namespace Tests\Cache\Driver;
 
 
+/**
+ * Class MemcachedTest
+ * @package Tests\Cache\Driver
+ */
 class MemcachedTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
+        $this->markTestIncomplete('Must test settings'); //@todo remove this
         $cache = new \FMUP\Cache\Driver\Memcached();
         $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
         $this->assertInstanceOf('\FMUP\Cache\Driver\Memcached', $cache, 'Instance of \FMUP\Cache\Driver\Memcached');
