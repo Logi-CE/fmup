@@ -1,10 +1,13 @@
 <?php
+/**
+ * Controleur gérant les retours AJAX de la console
+ */
 class CtrlConsole extends Controller
 {
     public function afficherConsole ()
     {
         echo '<style type="text/css">';
-        include BASE_PATH.'/system/component/console/console.css';
+        include __DIR__ .'/console.css';
         echo '</style>
         <pre id="debug-zone" style="left: 1em; bottom: 1em; width: auto; height: auto;">
             <span id="debug-contenu">';

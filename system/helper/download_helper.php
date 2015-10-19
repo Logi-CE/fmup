@@ -1,18 +1,34 @@
 <?php
+/**
+ * Classe gérant le téléchargement de fichiers
+ */
 class DownloadHelper
 {
-    public static function telechargerDocument($id_document)
+    public static function telechargerDocument($id_document, $ouverture_navigateur = false)
     {
         $document 	= Document::findOne($id_document);
         if ($document) {
-            $chemin		= Config::getCheminData()."documents/";
-            $chemin		.= "document_".$document->getId().TypeFichierHelper::getExtensionDocument($document->getLibelle());
+            $chemin		= Config::paramsVariables('data_path');
+            $chemin		.= "document_".$document->getId().self::getExtensionDocument($document->getLibelle());
 
-            DownloadHelper::telechargerFichier($chemin, $document->getLibelle(), $document->getTypeMime());
+            DownloadHelper::telechargerFichier($chemin, $document->getLibelle(), $document->getTypeMime(), $ouverture_navigateur);
 
         } else {
             echo 'Document introuvable';
         }
+    }
+    
+    public static function getExtensionDocument($value)
+    {
+        //Julien : J'aime pas trop la ...
+        /*if (strrpos($value, ".") !== false) {
+         return substr($value, strrpos($value, "."));
+         }*/
+        if (preg_match('/\.([^\.]*)$/', $value, $matches)) {
+            return '.' . $matches[1];
+        }
+    
+        return "";
     }
 
     /**
@@ -40,8 +56,11 @@ class DownloadHelper
         }
         return $fichier;
     }
-
-    public static function telechargerFichier($chemin, $filename, $type_mime = '')
+    
+    /**
+     * @param {ouverture_navigateur} : Spécifie si le fichier sera ouvert par firefox (true), ou qu'une boite de dialogue s'ouvrira proposant de télécharger le fichier (false par défaut)
+     */
+    public static function telechargerFichier($chemin, $filename, $type_mime = '', $ouverture_navigateur = false)
     {
         if (is_file($chemin)) {
             /*
@@ -62,7 +81,11 @@ class DownloadHelper
             header("Expires: 0");
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
             header("Cache-Control: private", false);
-            header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
+            if ($ouverture_navigateur) {
+                header("Content-Disposition: filename=\"" . $filename . "\"");
+            } else {
+                header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
+            }
             header("Content-Type: \"$type_mime\"");
             //if (!empty($type_mime)) header("Content-Type: " . $type_mime);
             header("Content-Transfer-Encoding:­ binary");

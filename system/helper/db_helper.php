@@ -10,7 +10,7 @@ class DbHelper
     /**
      * Returns current database driver
      * @param array $params
-     * @return DbConnection|DbConnectionMysql|\FMUP\Db
+     * @return DbConnectionMssql|DbConnectionMysql
      */
     public static function get($params = array())
     {
@@ -20,7 +20,7 @@ class DbHelper
             }
             switch($params['driver']) {
                 case 'mssql':
-                    self::$instance = new DbConnection($params);
+                    self::$instance = new DbConnectionMssql($params);
                     break;
                 case 'mysql' :
                 default:

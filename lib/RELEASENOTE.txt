@@ -1,4 +1,118 @@
 /*********/
+/* 2.1.3 */
+/*********/
+
+Fix Some accent
+
+#Fix
+ - MathHelper::getPourcentageEvolution now returns something without number_format
+ - FiltreListe attribute now encodes in utf-8
+ - \Date::getTableauLibelleMois() fix Août encoding
+ 
+/*********/
+/* 2.1.2 */
+/*********/
+
+Fix Import
+
+#Fix
+ - Import will send Exception instead of crash in case of error
+ - Import on update
+ 
+/*********/
+/* 2.1.1 */
+/*********/
+
+Fix EmailHelper
+
+#Fix
+ - EmailHelper back to its previous behaviour. Fix should be applied in your project
+ 
+/*********/
+/* 2.1.0 */
+/*********/
+
+Add import component
+
+#Fix
+ - Component DbConnectionMssql return id in update
+ - EmailHelper is now based on template name instead of id
+ 
+#New
+ - Component Import
+
+/*********/
+/* 2.0.1 */
+/*********/
+
+Compliance with old FMU 1.0.0.6 components
+
+#Fix
+ - Component generateur to load correct PATH
+ - Component console to load correct PATH
+ - Component filtre_liste to load correct PATH
+ - DbConnectionMssql to be usable in CLI
+ - DbHelper can load DbConnectionMssql driver
+
+/*********/
+/* 2.0.0 */
+/*********/
+
+Industrialization + new FMU 1.0.0.6 compatibility
+
+#New
+
+ - PHPMailer no longer needed in lib folder - FMUP Dependency thanks to composer
+ - FPDF no longer needed in lib folder - FMUP Dependency thanks to composer
+ - Version system based on composer
+ - Continuous integration
+ - added component generateur
+ - added component Filtre Liste
+ - added Helper Bouton
+ - added Helper CronHelper
+ - added Helper LangueHelper
+ - added Helper MathHelper
+ - added Helper PaiementHelper
+ - added Helper Pdf
+ - added Helper Sage
+ - Enhanced String
+ - Add Db\Driver\Sqlite
+ 
+#Fix
+ - Config can now be called in cli
+ - UniteHelper for number format
+ - PDF Componant can now work in standalone mode
+ 
+#Incompatible
+  - Method SetFlash in controller now handle only one parameter
+  - Method preFiltre in controller now handle an optional parameter $calledAction (must be declared in controllers)
+  - Langue is now a helper
+  - DbConnection is renamed DbConnectionMssql
+  - Deleted Droit
+  - Deleted Helper\ArbreHelper
+  - Deleted Helper\Boutons
+  - Deleted Helper\FormatReferences
+  - Deleted Helper\PagingHelper
+  - Deleted Helper\PopinHelper
+  - Deleted Helper\RequeteHelper
+  - Config deleted all specific methods - use paramsVariables instead
+  - Deleted deprecated methods in Date
+  - Deleted deprecated methods in Debug
+  - Deleted deprecated methods in Helper\Constant
+  - Deleted Navigation::siteOuvert - now in config
+  - Model do no longer extends FiltreListe
+  - FormHelper delete deprecated methods
+  - FormHelper now add a $editable param in almost all its method - this param is placed before $options
+  - Models don't use flashmessenger anymore
+  - config.ini no longer used - use config.php instead
+  - layouts must no longer be in view\Layout folder but directly in a layout folder
+
+#Deprecated  
+  - Controller - use \FMUP\Controller
+  - View - use \FMUP\View
+  - Framework - use \FMUP\Framework
+
+/*********/
 /* 1.2.0 */
 /*********/
 

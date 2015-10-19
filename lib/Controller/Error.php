@@ -16,8 +16,9 @@ abstract class Error extends \FMUP\Controller
 
     /**
      * rewrite to tell everybody can access error controller
+     * @param string $calledAction
      */
-    public function preFiltre($calledAction)
+    public function preFiltre($calledAction = NULL)
     {
     }
 
@@ -37,11 +38,14 @@ abstract class Error extends \FMUP\Controller
      */
     public function indexAction()
     {
-        try {
-            throw $this->getException();
-        } catch (\FMUP\Exception\Status $e) {
+        $e = $this->getException();
+        if ($e instanceof \FMUP\Exception\Status) {
             $this->errorStatus($e->getStatus());
-        } catch (\Exception $e) {
+        } else {
+            $this->writeContextToLog()
+                ->sendMailOnException()
+                ->getResponse()
+                ->setHeader(new Status(Status::VALUE_INTERNAL_SERVER_ERROR));
         }
         $this->render();
     }
@@ -49,15 +53,42 @@ abstract class Error extends \FMUP\Controller
     abstract public function render();
 
     /**
+     * Will send a mail if useDailyAlert is not active and we're not in debug
+     * @todo rewrite to avoid use of Error
+     * @uses \Config
+     * @uses \Error
+     * @return $this
+     */
+    protected function sendMailOnException()
+    {
+        if (!\Config::useDailyAlert() && !\Config::isDebug()) {
+            try {
+                throw new \Error($this->getException()->getMessage(), E_WARNING);
+            } catch (\Exception $e) {
+            }
+        }
+        return $this;
+    }
+
+    /**
      * Sends error message
      * @param string $status
+     * @return $this
      */
     protected function errorStatus($status)
     {
         error_log($status);
-        \FMUP\Error::addContextToErrorLog();
+        $this->writeContextToLog()
+            ->sendMailOnException()
+            ->getResponse()
+            ->setHeader(new Status($status));
+        return $this;
+    }
 
-        $this->getResponse()->setHeader(new Status($status));
+    protected function writeContextToLog()
+    {
+        \FMUP\Error::addContextToErrorLog();
+        return $this;
     }
 
     /**

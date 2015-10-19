@@ -1,16 +1,16 @@
 <?php
-
 /**
  * Classe mère de tous les modèles
- **/
-
-abstract class Model extends FiltreListe
+ * @version 1.0
+ */
+abstract class Model
 {
     protected static $dbInstance = null;
     protected $errors = array();
     protected $nombre_ligne;	// pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
     protected $log_id;
     public $requete;
+    public static $nb_elements;
 
     /* **********
     * Créateur	*
@@ -29,6 +29,11 @@ abstract class Model extends FiltreListe
         }
         return $this;
     }
+    
+    public function getAttributes ()
+    {
+        return array_keys(get_object_vars($this));
+    }
 
     /*
      * cette fonction est appelée au tout début du constructeur.
@@ -42,6 +47,7 @@ abstract class Model extends FiltreListe
 
     /**
      * Retourne le nom du controller associé à la classe appelante
+     * @return string : Le nom du controleur
      */
     public static function getControllerName()
     {
@@ -52,7 +58,7 @@ abstract class Model extends FiltreListe
 
     /**
      * transforme un objet en tableau
-     **/
+     */
     public function objectToTable($objet)
     {
         $tableau = array();
@@ -64,7 +70,7 @@ abstract class Model extends FiltreListe
 
     /**
      * transforme un objet en tableau sans recupérer l'id
-     **/
+     */
     public function objectToTableSansId($objet)
     {
         $tableau = array();
@@ -77,15 +83,18 @@ abstract class Model extends FiltreListe
     }
 
     /**
-     * Crée une instance de la classe NaturePoint avec les paramètres transmis
+     * Crée une instance d'un modèle avec les paramètres transmis
      * Typiquement le résultat d'une requète
+     * @param array $params : Données de l'objet
+     * @param string $class_name : Type d'objet
+     * @return Object
      */
     private static function create($params, $class_name)
     {
-        $temp = Config::parametresConnexionDb();
+        $driver = Config::parametresConnexionDb('driver');
         $class = new $class_name();
         foreach ($params as $attribut => $value) {
-            if (substr($attribut, 0, 5) == 'date_' && $temp['driver'] == 'mssql') {
+            if (substr($attribut, 0, 5) == 'date_' && $driver == 'mssql') {
                 $class->$attribut = Date::ukToFr(substr($value, 0, 19));
             } else {
                 $class->$attribut = $value;
@@ -109,28 +118,21 @@ abstract class Model extends FiltreListe
      * Convertit une collection en tableau
      * @param {Array} La collection
      * @param {Integer} L'attribut à mettre dans les index du tableau
-     * @param {Integer} L'attribut à mettre dans les valeurs du tableau
+     * @param {Integer} L'attribut ou les attributs (tableau) à mettre dans les valeurs du tableau
      **/
     public static function arrayFromCollection($collection, $element_value, $element_text)
     {
         $array = array();
         foreach ($collection as $element) {
-            $array[$element->getAttribute($element_value)] = $element->getAttribute($element_text);
-        }
-        return $array;
-    }
-    /**
-     * Convertit une collection en tableau avec text multiple
-     * @param {Array} La collection
-     * @param {Integer} L'attribut à mettre dans les index du tableau
-     * @param {Integer} Le premier attribut à mettre dans les valeurs du tableau
-     * @param {Integer} La suite de l'attribut à mettre dans les valeurs du tableau séparé du premier attribut par ' - '
-     **/
-    public static function arrayMultipleFromCollection($collection, $element_value, $element_text, $element_text2)
-    {
-        $array = array();
-        foreach ($collection as $element) {
-            $array[$element->getAttribute($element_value)] = $element->getAttribute($element_text)." - ".$element->getAttribute($element_text2) ;
+            if (is_array($element_text)) {
+                $liste_attributs = array();
+                foreach ($element_text as $attribut) {
+                    $liste_attributs[] = $element->getAttribute($attribut);
+                }
+                $array[$element->getAttribute($element_value)] = implode(' - ', $liste_attributs);
+            } else {
+                $array[$element->getAttribute($element_value)] = $element->getAttribute($element_text);
+            }
         }
         return $array;
     }
@@ -153,21 +155,23 @@ abstract class Model extends FiltreListe
     protected static function objectsFromMatrix($matrix, $class_name)
     {
         $liste = array();
-        if (!empty($matrix) && (is_array( $matrix ) || $matrix instanceof Traversable)) {
+        if (!empty($matrix) && (is_array($matrix) || $matrix instanceof Traversable)) {
             foreach ($matrix as $array) {
                 array_push($liste, Model::create($array, $class_name));
             }
         }
         return $liste;
     }
+
     protected static function objectsFromArray($array, $class_name)
     {
         return Model::create($array, $class_name);
     }
+
     protected static function objectsFromMatrixByAttribute($matrix, $class_name, $attribute = 'id')
     {
         $liste = array();
-        if (!empty($matrix) && (is_array( $matrix ) || $matrix instanceof Traversable)) {
+        if (!empty($matrix) && (is_array($matrix) || $matrix instanceof Traversable)) {
             foreach ($matrix as $array) {
                 $objet = Model::create($array, $class_name);
                 $liste[$objet->getAttribute($attribute)] = $objet;
@@ -177,35 +181,46 @@ abstract class Model extends FiltreListe
     }
 
     /**
-     * Retourne tous les éléments éventuellement filtrés
-     * @param {Array} un tableau de tous les filtres éventuels
-     * @param {String} le champ sur lequel ordonner
-     **/
+     * Retourne tous les éléments éventuellement filtrés de la table
+     * @param array $where : [OPT] Un tableau de tous les filtres éventuels
+     * @param array $options : [OPT] Options disponibles : 
+     * 		- order : Tri sur la requête
+     * 		- findOne : Utilisé pour déterminer qu'on ne recherche qu'un résultat (TODO pour afficher les objets supprimés, ça ressemble à un doublon, fonctionnement ésotérique...)
+     * 		- afficher_supprimes : TODO vérifier si c'est vraiment utilisé, apparement non
+     * 	Seulement MySQL
+     * 		- limit : Pagination
+     * 	Seulement MSSQL
+     * 		- top : Semi-pagination qui ne passe pas par la sous-vue
+     * 		- paging : C'est un tableau composé de numero_page et nb_element : Utilisé pour simuler une pagination grace à une sous-vue
+     * @return array[object]
+     */
     public static function findAll($where = array(), $options = array())
     {
         $classe_appelante = get_called_class();
-        $params_connexion = Config::parametresConnexionDb();
+        $driver = Config::parametresConnexionDb('driver');
 
         //si on appelle depuis un object complexe, on recupere la requete correspondante
         if (method_exists($classe_appelante, 'getQueryString')) {
 
             // gestion des affichages par défaut, sauf si on appelle un objet bien particulier, via la fonction findone
-            if( !isset($options['fonction']) || $options['fonction'] != 'findOne' ){
+            if (!isset($options['fonction']) || $options['fonction'] != 'findOne') {
+                // On retire les éléments supprimés de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
                     if (!isset ($where['date_suppression']) ) {
-                        if ($params_connexion['driver'] == 'mssql') {
+                        if ($driver == 'mssql') {
                             $where['date_suppression'] = "ISNULL(date_suppression, '') = ''";
                         } else {
                             $where['supprime'] = "supprime = 0";
                         }
-                    }elseif( !isset($options['afficher_supprimes']) ){
-                        // cette option va permettre de gérer les date de suppression dans les fonction getQuerryString
+                    } elseif (!isset($options['afficher_supprimes'])) {
+                        // cette option va permettre de gérer les date de suppression dans les fonction getQueryString
                         $options['afficher_supprimes'] = true;
                     }
                 }
+                // On retire les éléments non visibles de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautDataVisibles'))) {
                     if (!isset($where['visible']) && !isset($where['identifiant'])) {
-                        if ($params_connexion['driver'] == 'mssql') {
+                        if ($driver == 'mssql') {
                             $where['visible'] = 'ISNULL(visible, 0) = 1';
                         } else {
                             $where['visible'] = 'visible = 1';
@@ -219,60 +234,47 @@ abstract class Model extends FiltreListe
             $orderby = '';
             $limit = '';
 
-            if (isset($options["paging"])) {
+            if (isset($options["paging"]) && $driver == 'mssql') {
 
+                // Ordre by spécialisé pour la sous-vue générée
                 if (isset($options["order"]) && $options["order"] != '') {
                     $orderby = 'ORDER BY '.$options["order"];
                 } else {
                     $orderby = 'ORDER BY getdate()';
                 }
 
-                switch ($params_connexion['driver']) {
-                    case 'mysql':
-                        echo "Driver non géné dans le findAll de Model (".$params_connexion['driver'].") JHA GOGO FAIRE LE CODE";
-                        $vue = $SQL.Sql::parseWhere($where);
-
-                        $SQL = 'SELECT  (SELECT COUNT(*) FROM '.$vue.' ) AS REQUETE_NOMBRE_LIGNE, *
-                                FROM ('.$vue.') v
-                                WHERE v.REQUETE_NUMERO_LIGNE BETWEEN ((('.$options["paging"]["numero_page"].' - 1) * '.$options["paging"]["nb_element"].') + 1) AND '.$options["paging"]["numero_page"].' * '.$options["paging"]["nb_element"].'';
-
-                        die;
-                        break;
-                    case 'mssql':
-                        $SQL = 'WITH x AS
-                                (
-                                    SELECT REQUETE_NUMERO_LIGNE = ROW_NUMBER() OVER ('.$orderby.')
-                                            , V.*
-                                    FROM
-                                    (
-                                        '.$SQL.'
-                                    ) V
-                                    '.Sql::parseWhere($where).'
-                                )
-                                SELECT  (SELECT COUNT(*) FROM x ) AS REQUETE_NOMBRE_LIGNE, *
-                                FROM x
-                                WHERE x.REQUETE_NUMERO_LIGNE BETWEEN ((('.$options["paging"]["numero_page"].' - 1) * '.$options["paging"]["nb_element"].') + 1) AND '.$options["paging"]["numero_page"].' * '.$options["paging"]["nb_element"].'';
-                        break;
-                    default:
-                        echo "Driver non géné dans le findAll de Model (".$params_connexion['driver'].")";
-                        die;
-                }
+                $SQL = 'WITH x AS
+                        (
+                            SELECT REQUETE_NUMERO_LIGNE = ROW_NUMBER() OVER ('.$orderby.')
+                                    , V.*
+                            FROM
+                            (
+                                '.$SQL.'
+                            ) V
+                            '.Sql::parseWhere($where).'
+                        )
+                        SELECT  (SELECT COUNT(*) FROM x ) AS REQUETE_NOMBRE_LIGNE, *
+                        FROM x
+                        WHERE x.REQUETE_NUMERO_LIGNE BETWEEN ((('.$options["paging"]["numero_page"].' - 1) * '.$options["paging"]["nb_element"].') + 1)
+                                                                AND '.$options["paging"]["numero_page"].' * '.$options["paging"]["nb_element"].'';
 
             } else {
-                if ($params_connexion['driver'] == 'mysql') {
-                    if (!empty($options["limit"])) $limit = " LIMIT ".$options["limit"];
-                } elseif ($params_connexion['driver'] == 'mssql') {
-                    if (!empty($options["top"])) $top = " top ".$options["top"];
-                }
                 if (!empty($options["order"])) $orderby = " ORDER BY ".$options["order"];
-
-                $SQL = 'SELECT '.$top.' * FROM ('.$SQL.') V ';
-                $SQL .= Sql::parseWhere($where);
-                $SQL .= ' '.$orderby;
-                $SQL .= ' '.$limit;
+                
+                if ($driver == 'mysql') {
+                    $SQL .= Sql::parseWhere($where, false, $classe_appelante);
+                    $SQL .= ' '.$orderby;
+                    if (!empty($options["limit"])) $SQL .= ' '." LIMIT ".$options["limit"];
+                
+                } elseif ($driver == 'mssql') {
+                    if (!empty($options["top"])) $top = " top ".$options["top"];
+                    $SQL = 'SELECT '.$top.' * FROM ('.$SQL.') V ';
+                    $SQL .= Sql::parseWhere($where);
+                    $SQL .= ' '.$orderby;
+                }
             }
-            //if ($classe_appelante == 'CommandeLigne') var_dump($SQL);
-            //debug::output($SQL);
+            // if ($classe_appelante == 'Facture')
+            // debug::output($SQL, true);
 
             // Exécution de la requète
             $result = Model::getDb()->requete($SQL);
@@ -285,14 +287,21 @@ abstract class Model extends FiltreListe
             //sinon appelle de l'objet de Base généré par le génératOR
             $result = Model::findAllFromTable(call_user_func(array($classe_appelante, 'getTableName')), $where, $options);
         }
+        
+        // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit (pour la pagination)
+        if ($driver == 'mysql') {
+            self::$nb_elements = Model::getDb()->requeteUneLigne('SELECT FOUND_ROWS()');
+            self::$nb_elements = self::$nb_elements['FOUND_ROWS()'];
+        }
 
         // Création d'un tableau d'objets
         return Model::objectsFromMatrix($result, $classe_appelante);
     }
 
 	/**
-     * Retourne un élément
-     * @param {Integer} un identifiant
+     * Retourne un élément grâce à son ID
+     * @param int $id : Un identifiant
+     * @return null|object
      */
     static function findOne($id)
     {
@@ -307,9 +316,10 @@ abstract class Model extends FiltreListe
     }
 
 	/**
-     * Retourne le premier élément
-     * @param {Array} un tableau de tous les filtres éventuels
-     * @param {String} le champ sur lequel ordonner
+     * Retourne le premier élément d'un findAll
+     * @param array $where : [OPT] Un tableau de tous les filtres éventuels
+     * @param string $order : [OPT] Le champ sur lequel ordonner
+     * @return false|object
      */
     static function findFirst($where = array(), $order = '')
     {
@@ -324,8 +334,9 @@ abstract class Model extends FiltreListe
     }
 
 	/**
-     * Retourne le nombre d'éléments d'une requète
-     * @param {Array} un tableau de condititions
+     * Retourne le nombre d'éléments d'une requête
+     * @param array $where : Un tableau de clauses pour la requête
+     * @return int : Le nombre d'éléments
      */
     static function count($where = array())
     {
@@ -336,25 +347,31 @@ abstract class Model extends FiltreListe
 
     /**
      * Supprime l'objet dans la base de données
+     * @return bool : Le résultat du traitement, VRAI si suppression
+     * @todo : Supprimer les objets liés
      */
     function delete()
     {
         $classe_appelante = get_called_class();
-        return $this->deleteFromTable(call_user_func(array($classe_appelante, 'getTableName')));
+        $id = $this->id;
+        $retour = $this->deleteFromTable(call_user_func(array($classe_appelante, 'getTableName')));
+        return $retour;
     }
 
-    /*
-    * si la table de l'objet contient un champ date_suppression, et qu'il ne faut afficher que les donénes non supprimées par défaut
-    * alors réécrire cette fonction dans l'objet avec return true
-    */
+    /**
+     * si la table de l'objet contient un champ date_suppression, et qu'il ne faut afficher que les données non supprimées par défaut
+     * alors réécrire cette fonction dans l'objet avec return true
+     * @return bool
+     */
     public static function afficherParDefautNonSupprimes()
     {
         return false;
     }
-    /*
-    * si la table de l'objet contient un champ visible, et qu'il ne faut afficher que les donénes visibles par défaut
-    * alors réécrire cette fonction dans l'objet avec return true
-    */
+    /**
+     * si la table de l'objet contient un champ visible, et qu'il ne faut afficher que les données visibles par défaut
+     * alors réécrire cette fonction dans l'objet avec return true
+     * @return bool
+     */
     public static function afficherParDefautDataVisibles()
     {
         return false;
@@ -366,18 +383,17 @@ abstract class Model extends FiltreListe
     ************************** */
     /**
      * Trouve tous les enregistrements d'une table donnée
-     * @param {String} Le nom de la table
-     * @param {Array} Un tableau de conditions
-     * @param {Array} L'ordre, le limit, ...
-     **/
+     * @param string $table : Le nom de la table
+     * @param array $where :Un tableau de conditions
+     * @param array $options : L'ordre, le limit, ...
+     * @return array : Tableau contenant les objets
+     */
     protected static function findAllFromTable($table, $where = array(), $options = array())
     {
         $varconnexion = Config::parametresConnexionDb();
         $SQL = "SELECT ";
         if ($varconnexion['driver'] == 'mysql') {
-            if (isset($options["SQL_CALC_FOUND_ROWS"]) && $options["SQL_CALC_FOUND_ROWS"]) {
-                $SQL .= ' SQL_CALC_FOUND_ROWS ';
-            }
+            $SQL .= ' SQL_CALC_FOUND_ROWS ';
         } else {
             if (isset($options["top"]) && $options["top"]) {
                 $SQL .= " TOP ".$options["top"];
@@ -460,7 +476,7 @@ abstract class Model extends FiltreListe
     {
         $SQL = "SELECT COUNT(*) AS nb FROM $table";
         $SQL .= sql::ParseWhere($where);
-        if (isset($options["group_by"]) && $options["group_by"]) {
+        if (!empty($options["group_by"])) {
             $SQL .= " group by ".$options["group_by"];
         }
         // Exécution de la requète
@@ -496,8 +512,10 @@ abstract class Model extends FiltreListe
 
     /**
      * Supprime l'objet dans la base de données
-     * @param {String} Le nom de la table
-     **/
+     * Place le champ supprime à 1 à la place si le champ est présent dans la table
+     * @param string $table : Le nom de la table
+     * @return bool : VRAI si la suppression est effectuée
+     */
     protected function deleteFromTable($table)
     {
         if (($this->id > 0) && ($this->canBeDeleted())) {
@@ -516,40 +534,37 @@ abstract class Model extends FiltreListe
                     $infos_suppression .= ', id_suppresseur = '.Sql::secureId($id_utilisateur);
                     $this->id_suppresseur = $id_utilisateur;
                 }
+                // Loger le changement
                 $this->logerChangement("delete");
                 $SQL = "UPDATE $table
                         SET supprime = 1
                         $infos_suppression
                         WHERE id = ".$this->id;
                 if (Model::getDb()->execute($SQL)) {
-                    Controller::setFlash(Constantes::getMessageFlashSuppressionOk());
                     return true;
                 } else {
-                    Controller::setFlash(Constantes::getMessageFlashErreurSuppression(), 1);
                     return false;
                 }
             // Cas de la suppression physique
             } else {
-                /* Loger le changement */
+                // Loger le changement
                 $this->logerChangement("delete");
                 $SQL = "DELETE FROM $table WHERE id = ".$this->id;
                 if (Model::getDb()->execute($SQL)) {
                     $this->id = "";
-                    Controller::setFlash(Constantes::getMessageFlashSuppressionOk());
                     return true;
                 } else {
-                    Controller::setFlash(Constantes::getMessageFlashErreurSuppression(), 1);
                     return false;
                 }
             }
         } else {
-            Controller::setFlash(Constantes::getMessageFlashBlocageSuppression(), 1);
             return false;
         }
     }
 
     /**
-     * Retourne l'instance de base de données
+     * Retourne l'instance de base de données du controlleur actif
+     * @return DbConnectionMysql|DbConnectionMssql
      */
     public static function getDb()
     {
@@ -559,10 +574,6 @@ abstract class Model extends FiltreListe
         return self::$dbInstance;
     }
 
-    /**
-     * Define Db instance
-     * @param $dbInstance
-     */
     public static function setDb($dbInstance)
     {
         self::$dbInstance = $dbInstance;
@@ -575,7 +586,8 @@ abstract class Model extends FiltreListe
      * Sauvegarde ou met à jour l'objet dans la base de donnée
      * @param $force_enregistrement = si TRUE, alors le système contrepasse le VALIDATE et enregistre quand même l'objet
      * 			(ATTENTION à l'utilisation de ce paramètre)
-     **/
+     * @return bool : VRAI si une action a eu lieu en base (si la requête ne change rien ou le validate bloque, retourne FAUX)
+     */
     public function save($force_enregistrement = false)
     {
        // debug::output($this, true);
@@ -584,9 +596,6 @@ abstract class Model extends FiltreListe
                 /* Loger le changement */
                 $this->logerChangement("update");
                 if ($this->update() !== false) {
-                   // print_r($this);
-                   // die();
-//					$this->logerChangement("update");
                     $this->comparerDifferences();
                 } else {
                     throw new Error(Constantes::getMessageFlashErreurEnregistrement());
@@ -606,12 +615,16 @@ abstract class Model extends FiltreListe
             return false;
         }
     }
+    
     /**
-     * Insertion
+     * Insertion d'un objet en base
+     * @return bool
      */
     abstract protected function insert();
+    
     /**
-     * Mise à jour
+     * Mise à jour d'un objet en base
+     * @return bool
      */
     abstract protected function update();
 
@@ -653,7 +666,8 @@ abstract class Model extends FiltreListe
 
     /**
      * Retourne le createur de l'objet
-     **/
+     * @return Utilisateur
+     */
     public function getCreateur ()
     {
         $createur = Utilisateur::findOne($this->id_createur);
@@ -665,7 +679,8 @@ abstract class Model extends FiltreListe
 
     /**
      * Retourne le dernier modificateur de l'objet
-     **/
+     * @return Utilisateur
+     */
     public function getModificateur ()
     {
         $modificateur = Utilisateur::findOne($this->id_modificateur);
@@ -717,7 +732,7 @@ abstract class Model extends FiltreListe
         } elseif (!empty($_SESSION['id_utilisateur'])) {
             $this->id_createur = $_SESSION['id_utilisateur'];
         } else {
-            $this->id_createur = Config::idCron();
+            $this->id_createur = Config::paramsVariables('id_cron');
         }
         return true;
     }
@@ -750,9 +765,7 @@ abstract class Model extends FiltreListe
      **/
     public function setIdModificateur($value = 0)
     {
-        if ($this->id_modificateur) {
-            //nothing to do
-        } else if ($value==='null') {
+        if ($value==='null') {
             $this->id_modificateur = '';
         } elseif ($value) {
             $this->id_modificateur = $value;
@@ -760,7 +773,7 @@ abstract class Model extends FiltreListe
             $this->id_modificateur = $_SESSION['id_utilisateur'];
         } else {
             // ce cas ne peut arriver que si l'on modifie l'objet dans une page où personne n'est connecté (ex: page de première connexion)
-            $this->id_modificateur = Config::idCron();
+            $this->id_modificateur = Config::paramsVariables('id_cron');
         }
         return true;
     }
@@ -778,8 +791,10 @@ abstract class Model extends FiltreListe
     }
 
     /**
-     * Retourne les erreurs de validation d'un object
-     **/
+     * Retourne les erreurs de validation d'un objet
+     * @param string $attribute : [OPT] Pour vérifier les erreurs sur un atribut en particulier
+     * @return array
+     */
     public function getErrors($attribute = false)
     {
         if ($attribute) {
@@ -829,7 +844,7 @@ abstract class Model extends FiltreListe
     /**
      * Modifie la valeur d'un attribut si il existe
      * @param {String} l'attribut auquel accéder
-     * @value {String} la valeur à enregistrer
+     * @param {String} la valeur à enregistrer
      **/
     public function setAttribute($attribute, $value)
     {
@@ -851,9 +866,10 @@ abstract class Model extends FiltreListe
 
     /**
      * Retourne ou modifie la valeur d'un attribut
-     * @param {String} l'attribut auquel accéder
-     * @value {String} la valeur à enregistrer
-     **/
+     * @param string $function : L'attribut auquel accéder
+     * @param string $argument : [OPT] La valeur à affecter dans le cas d'une affectation
+     * @return mixed|bool|null : L'argument demandée pour une lecture, VRAI si affectation réussie, NULL sinon
+     */
     public function __call($function, $argument = array())
     {
         $ISOtoUTF8 = Config::paramsVariables('ISOtoUTF8');
@@ -873,8 +889,7 @@ abstract class Model extends FiltreListe
                 return true;
             }
         } else {
-            if (preg_match('#^get#i', $function)
-              || preg_match('#^set#i', $function)) {
+            if (preg_match('#^get#i', $function) || preg_match('#^set#i', $function)) {
                 throw new Error("Attribut inexistant $attribut dans l'objet ".get_called_class());
             } else {
                 throw new Error("Fonction inexistante $function dans l'objet ".get_called_class());
@@ -962,6 +977,7 @@ abstract class Model extends FiltreListe
                 $object->setAttribute($field, $attributes[$field]);
             }
         }
+
         return $object;
     }
 
@@ -1013,7 +1029,7 @@ abstract class Model extends FiltreListe
     public function logerChangement($type_action)
     {
         $varconnexion = Config::parametresConnexionDb();
-        if (Config::isLogue() && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
+        if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
             if (!Historisation::getIdHistoCourant()) {
                 // si on a pas initialisé cette variable, alors on en crée une par défaut, pour avoir toujours un lien entre les différetns logs
                 if (get_class($this) != 'Historisation')
@@ -1023,18 +1039,26 @@ abstract class Model extends FiltreListe
             $default_id 	= (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid']."," : "";
             $tab 	= call_user_func(array(get_class($this), 'listeChampsObjet'));
             $tab = explode(', ', $tab);
+            
+            if (isset($tab[0]) && trim($tab[0]) == '') {
+                unset($tab[0]);
+            }
 
             if (isset($tab[0]) && (trim($tab[0]) == 'id')) {
                 $tab[0] = 'id_objet_log';
+            } elseif (isset($tab[1]) && (trim($tab[1]) == 'id')) {
+                $tab[1] = 'id_objet_log';
             }
             $liste_champ = implode(', ', $tab);
 
             if (isset($tab[0]) && (trim($tab[0]) == 'id_objet_log')) {
                 $tab[0] = 'id';
+            } elseif (isset($tab[1]) && (trim($tab[1]) == 'id_objet_log')) {
+                $tab[1] = 'id';
             }
             $liste_champ_valeur = implode(', ', $tab);
 
-            $id_utilisateur = isset($_SESSION['id_utilisateur'])?$_SESSION['id_utilisateur']:-1; //possible par cron
+            $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : -1; //possible par cron
 
             $SQL = 'INSERT INTO log__'.$this->getTableName().'
                             ('.$liste_champ.'
@@ -1118,23 +1142,20 @@ abstract class Model extends FiltreListe
                     }
                 }
             }
-
             $tab_diff = array_diff_assoc($tab_champs_base, $tab_champs_log);
-
+            
             // insertion de la différence dans la table de log
             if (count($tab_diff) > 0) {
                 $libelle = "";
-                $tab_contenu = array();
-                foreach ($tab_diff as $index => $value) {
-                    if (isset($tab_champs_log[$index])) {
-                        $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
-                        $libelle .= "Le champ '".$field."' a été modifié : '".$tab_champs_log[$index]."' a été remplacé par '".$value."'\n";
 
-                        $tab_contenu[$index] = array(
-                            "old_value"	=> ($tab_champs_log[$index]),
-                            "new_value"	=> ($value)
-                        );
-                    }
+                foreach ($tab_diff as $index => $value) {
+                    $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
+                    $libelle .= "Le champ '".$field."' a été modifié : '".$tab_champs_log[$index]."' a été remplacé par '".$value."'\n";
+
+                    $tab_contenu[$index] = array(
+                                                    "old_value"	=> ($tab_champs_log[$index]),
+                                                    "new_value"	=> ($value)
+                                                );
                 }
 
                 $contenu = serialize($tab_contenu);
@@ -1221,7 +1242,7 @@ abstract class Model extends FiltreListe
                                     "id_utilisateur_log" => $rs["id_utilisateur_log"]
                                     , "date_action_log" => $rs["date_action_log"]
                                     , "action_log" => $rs["action_log"]
-                                    , "contenu_log" => self::returnArrayByJson($rs["contenu_log"])
+                                    , "contenu_log" => unserialize($rs["contenu_log"])
                                 );
         }
         return $array;
@@ -1232,13 +1253,22 @@ abstract class Model extends FiltreListe
     ************ */
     /**
      * L'objet est-il enregistrable en base de données
-     **/
+     * @return bool
+     */
     abstract public function validate();
+    
     /**
      * L'objet est-il effaçable
+     * @return bool
      */
     abstract public function canBeDeleted();
 
+    /**
+     * Détermine si notre objet est unique par rapport aux attributs donnés
+     * @param mixed $attribut : Attribut (ou liste d'attribut, dans ce cas tableau) à comparer
+     * @param array $where : [OPT] Clauses supplémentaires à prendre en compte pour notre recherche
+     * @return bool : VRAI si aucun doublon est trouvé
+     */
     public function isUniqueAttribute($attribut, $where = array())
     {
         if (is_array($attribut)) {
