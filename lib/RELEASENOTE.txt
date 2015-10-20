@@ -1,4 +1,13 @@
 /*********/
+/* 3.3.3 */
+/*********/
+
+Fix some memory leak
+
+# Fix
+ - deleted most of "create_function" call that causes memory leak on multiple calls
+ 
+/*********/
 /* 3.3.2 */
 /*********/
 
