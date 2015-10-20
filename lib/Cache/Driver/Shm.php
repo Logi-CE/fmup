@@ -154,10 +154,8 @@ class Shm implements CacheInterface
             throw new Exception('SHM is not available');
         }
         $key = $this->secureName($key);
-        if ($this->has($key)) {
-            if (!shm_remove_var($this->getShm(), $key)) {
-                throw new Exception('Unable to delete key from cache Shm');
-            }
+        if ($this->has($key) && !shm_remove_var($this->getShm(), $key)) {
+            throw new Exception('Unable to delete key from cache Shm');
         }
         return $this;
     }
