@@ -91,10 +91,15 @@ class DbConnectionMysql
         return $rows;
     }
 
+    private function utf8EncodeFilter(&$item, $index)
+    {
+        $item = utf8_encode($item);
+    }
+
     public function requeteUtf8($sql)
     {
         $resultat = self::requete($sql);
-        array_walk_recursive($resultat, create_function('&$item, $index', '$item = utf8_encode($item);'));
+        array_walk_recursive($resultat, array($this, 'utf8EncodeFilter'));
         return $resultat;
     }
     /**

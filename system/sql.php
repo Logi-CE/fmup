@@ -191,6 +191,11 @@ class Sql
         }
     }
 
+    private static function filterWhere($i)
+    {
+        return $i <> "";
+    }
+
     /**
      * Convertit un tableau de conditions en un WHERE conditions
      * Le deuxième paramètre permet de faire un HAVING à la place
@@ -204,7 +209,7 @@ class Sql
             throw new \FMUP\Exception("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".serialize($where));
         }
 
-        $where = array_filter($where, create_function('$i', 'return $i <> "";'));
+        $where = array_filter($where, 'self::filterWhere');
         if ($where == array()) {
             return "";
         } else {
