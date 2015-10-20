@@ -12,6 +12,12 @@ class Factory extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
+        $reflector = new \ReflectionClass('\FMUP\Cache\Factory');
+        $method = $reflector->getMethod('__construct');
+        $this->assertTrue($method->isPrivate(), 'Construct must be private');
+        $method = $reflector->getMethod('__clone');
+        $this->assertTrue($method->isPrivate(), 'Clone must be private');
+
         $factory = \FMUP\Cache\Factory::getInstance();
         $this->assertInstanceOf('\FMUP\Cache\Factory', $factory, 'Must be instance of \FMUP\Cache\Factory');
         $factory2 = \FMUP\Cache\Factory::getInstance();

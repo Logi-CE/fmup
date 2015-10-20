@@ -7,6 +7,12 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
+        $reflector = new \ReflectionClass('\FMUP\Cache\Factory');
+        $method = $reflector->getMethod('__construct');
+        $this->assertTrue($method->isPrivate(), 'Construct must be private');
+        $method = $reflector->getMethod('__clone');
+        $this->assertTrue($method->isPublic(), 'Clone must be public');
+
         $cache = \FMUP\Cache::getInstance(\FMUP\Cache\Factory::DRIVER_RAM);
         $this->assertInstanceOf('\FMUP\Cache', $cache, 'Instance of \FMUP\Cache');
         $cache2 = \FMUP\Cache::getInstance(\FMUP\Cache\Factory::DRIVER_RAM);
