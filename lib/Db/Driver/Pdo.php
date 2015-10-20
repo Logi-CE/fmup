@@ -6,10 +6,15 @@ use FMUP\Db\Exception;
 
 class Pdo implements DbInterface
 {
-    protected $instance = null;
-    protected $params = array();
+    private $instance = null;
+    private $params = array();
+    private $fetchMode = \PDO::FETCH_ASSOC;
+
     const CHARSET_UTF8 = 'utf8';
 
+    /**
+     * @param array $params
+     */
     public function __construct($params = array())
     {
         $this->params = $params;
@@ -219,7 +224,6 @@ class Pdo implements DbInterface
      * @param array $values
      * @return bool
      * @throws Exception
-     * @throws \Exception
      */
     public function execute($statement, $values = array())
     {
@@ -237,14 +241,14 @@ class Pdo implements DbInterface
     /**
      * Prepare a SQL string to a statement
      * @param string $sql
+     * @param array $options
      * @return \PDOStatement
      * @throws Exception
-     * @throws \Exception
      */
-    public function prepare($sql)
+    public function prepare($sql, array $options = array())
     {
         try {
-            return $this->getDriver()->prepare($sql);
+            return $this->getDriver()->prepare($sql, $options);
         } catch (\PDOException $e) {
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
@@ -255,7 +259,6 @@ class Pdo implements DbInterface
      * @param string $name optional
      * @return string
      * @throws Exception
-     * @throws \Exception
      */
     public function lastInsertId($name = null)
     {
@@ -271,7 +274,6 @@ class Pdo implements DbInterface
      * @param object $statement
      * @return array
      * @throws Exception
-     * @throws \Exception
      */
     public function fetchRow($statement)
     {
@@ -280,7 +282,7 @@ class Pdo implements DbInterface
         }
 
         try {
-            return $statement->fetch(\PDO::FETCH_ASSOC);
+            return $statement->fetch($this->getFetchMode());
         } catch (\PDOException $e) {
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
@@ -291,7 +293,6 @@ class Pdo implements DbInterface
      * @param object $statement
      * @return array
      * @throws Exception
-     * @throws \Exception
      */
     public function fetchAll($statement)
     {
@@ -300,9 +301,29 @@ class Pdo implements DbInterface
         }
 
         try {
-            return $statement->fetchAll(\PDO::FETCH_ASSOC);
+            return $statement->fetchAll($this->getFetchMode());
         } catch (\PDOException $e) {
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getFetchMode()
+    {
+        return $this->fetchMode;
+    }
+
+    /**
+     * @param int $fetchMode
+     * @return $this
+     */
+    public function setFetchMode($fetchMode = \PDO::FETCH_ASSOC)
+    {
+        if ($fetchMode) {
+            $this->fetchMode = (int)$fetchMode;
+        }
+        return $this;
     }
 }

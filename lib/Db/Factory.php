@@ -4,6 +4,7 @@ namespace FMUP\Db;
 class Factory
 {
     const DRIVER_PDO = 'Pdo';
+    const DRIVER_PDO_MYSQL = 'Pdo\\Mysql';
     const DRIVER_PDO_ODBC = 'Pdo\\Odbc';
     const DRIVER_PDO_SQLSRV = 'Pdo\\SqlSrv';
     const DRIVER_PDO_SQLITE = 'Pdo\\Sqlite';
