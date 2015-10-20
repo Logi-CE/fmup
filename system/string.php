@@ -33,14 +33,20 @@ class String
         return strtr($valeur, "äâàáåãéèëêòóôõöøìíîïùúûüýñçþÿæœðø", "ÄÂÀÁÅÃÉÈËÊÒÓÔÕÖØÌÍÎÏÙÚÛÜÝÑÇÞÝÆŒÐØ");
     }
 
+    private static function utf8EncodeFilter(&$item, $index)
+    {
+        $item = utf8_encode($item);
+    }
+
     /*
      * encode tout un tableau en UTF8
      */
     public static function utf8EncodeArray($tab = array())
     {
-        array_walk_recursive($tab, create_function('&$item, $index', '$item = utf8_encode($item);'));
+        array_walk_recursive($tab, array('\String', 'utf8EncodeFilter'));
         return $tab;
     }
+
     /**
      * Encodage des caractères spéciaux au format HTML
      * @param String La chaîne à convertir 

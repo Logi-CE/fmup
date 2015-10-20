@@ -216,8 +216,13 @@ class EmailHelper
     {
         $search = array_keys($tokens);
         $replace = array_values($tokens);
-        $search = array_map(create_function('$o', 'return "{".$o."}";'), $search);
+        $search = array_map(array('\EmailHelper', 'tokenReplaceMap'), $search);
         return str_replace($search, $replace, $message);
+    }
+
+    private static function tokenReplaceMap($o)
+    {
+        return "{" . $o . "}";
     }
 
     /**
