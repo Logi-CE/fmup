@@ -170,7 +170,7 @@ class Config
         return $line_valid;
     }
 
-    public static function sortByPrio($a, $b)
+    private function sortByPrio($a, $b)
     {
         if ($a->getPriorite() == $b->getPriorite()) {
             return 0;
@@ -185,7 +185,7 @@ class Config
         $tableau_id = array();
         $liste_config = $this->liste_config_objet;
         // on trie le tableau par priorité
-        usort($liste_config, "self::sortByPrio");
+        usort($liste_config, array($this, 'sortByPrio'));
         // pour chaque config_objet
         foreach ($liste_config as $config_objet) {
             $nom_objet = $config_objet->getNomObjet();
