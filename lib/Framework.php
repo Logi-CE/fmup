@@ -394,6 +394,7 @@ class Framework extends \Framework
 
         \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
         Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
+        Helper\Db::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
         \Model::setDb(Helper\Db::getInstance()); //@todo find a better solution
 
         parent::initialize();
