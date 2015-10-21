@@ -37,7 +37,7 @@ class Bootstrap
      */
     private function initHelperDb()
     {
-        Helper\Db::setConfig($this->getConfig());//@todo find a better solution
+        Helper\Db::getInstance()->setConfig($this->getConfig());//@todo find a better solution
         return $this;
     }
 
