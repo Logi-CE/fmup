@@ -31,6 +31,7 @@ class Pragma extends Header
     /**
      * Define the caching mode
      * @param string $mode
+     * @return $this
      */
     public function setMode($mode)
     {

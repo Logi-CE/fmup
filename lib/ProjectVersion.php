@@ -7,13 +7,13 @@ namespace FMUP;
  */
 class ProjectVersion
 {
-    static private $instance;
+    private static $instance;
     private $structure;
 
     /**
      * @return $this
      */
-    static public function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             $class = get_called_class();

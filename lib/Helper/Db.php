@@ -1,15 +1,28 @@
 <?php
 namespace FMUP\Helper;
 
+use FMUP\Config\ConfigInterface;
+
 /**
  * Class Db
  * @package FMUP\Helper
  */
-abstract class Db
+class Db
 {
     const DEFAULT_NAME = 'DEFAULT_NAME';
-    protected static $instances = array();
-    protected static $config = null;
+    private static $instance = null;
+    private $config = null;
+    private $instances = array();
+
+    private function __construct()
+    {
+
+    }
+
+    private function __clone()
+    {
+
+    }
 
     /**
      * @param string $name
@@ -17,54 +30,60 @@ abstract class Db
      * @throws \InvalidArgumentException
      * @throws \OutOfRangeException
      */
-    public static function getInstance($name = self::DEFAULT_NAME)
+    public function get($name = self::DEFAULT_NAME)
     {
         if (is_null($name)) {
             throw new \InvalidArgumentException('Name must be set');
         }
         $name = (string)$name;
-        if (!isset(self::$instances[$name])) {
+        if (!isset($this->instances[$name])) {
             if ($name == self::DEFAULT_NAME) {
-                $params = self::getConfig()->get('parametres_connexion_db');
+                $params = $this->getConfig()->get('parametres_connexion_db');
             } else {
-                $dbSettings = self::getConfig()->get('db');
+                $dbSettings = $this->getConfig()->get('db');
                 if (isset($dbSettings[$name])) {
                     $params = $dbSettings[$name];
                 } else {
                     throw new \OutOfRangeException('Trying to access a database name ' . $name . ' that not exists');
                 }
             }
-            self::$instances[$name] = new \FMUP\Db($params);
+            $this->instances[$name] = new \FMUP\Db($params);
         }
 
-        return self::$instances[$name];
+        return $this->instances[$name];
     }
 
     /**
-     * Multiton - private construct
+     * @return $this
      */
-    private function __construct()
+    public static function getInstance()
     {
-
+        if (!self::$instance) {
+            $class = get_called_class();
+            self::$instance = new $class();
+        }
+        return self::$instance;
     }
 
     /**
-     * @param \FMUP\Config $config
+     * @param ConfigInterface $config
+     * @return $this
      */
-    static public function setConfig(\FMUP\Config $config)
+    public function setConfig(ConfigInterface $config)
     {
-        self::$config = $config;
+        $this->config = $config;
+        return $this;
     }
 
     /**
-     * @return \FMUP\Config
+     * @return ConfigInterface
      * @throws \LogicException
      */
-    static public function getConfig()
+    public function getConfig()
     {
-        if (!self::$config) {
+        if (!$this->config) {
             throw new \LogicException('Config is not defined and required!');
         }
-        return self::$config;
+        return $this->config;
     }
 }

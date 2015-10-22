@@ -19,6 +19,8 @@ class Apc implements CacheInterface
 
     const SETTING_CACHE_TYPE = 'SETTING_CACHE_TYPE';
     const SETTING_CACHE_TTL = 'SETTING_CACHE_TTL';
+    const SETTING_CACHE_PREFIX = 'SETTING_CACHE_PREFIX';
+
     const CACHE_TTL_DEFAULT = 0;
 
     const CACHE_TYPE_USER = 'user';
@@ -56,7 +58,13 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
-        return apc_fetch($key);
+        $key = $this->getCacheKey($key);
+        $success = null;
+        $return = apc_fetch($key, $success);
+        if (false === $success) {
+            throw new Exception('Unable to get ' . $key . ' from APC');
+        }
+        return $return;
     }
 
     /**
@@ -70,6 +78,7 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
+        $key = $this->getCacheKey($key);
         return (bool)apc_exists($key);
     }
 
@@ -84,6 +93,7 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
+        $key = $this->getCacheKey($key);
         if ($this->getCacheType() == self::CACHE_TYPE_OP_CODE) {
             $success = apc_delete_file($key);
         } else {
@@ -107,7 +117,11 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
-        if (!apc_store($key, $value)) {
+        $key = $this->getCacheKey($key);
+        $ttl = $this->getSetting(self::CACHE_TTL_DEFAULT)
+            ? (int) $this->getSetting(self::CACHE_TTL_DEFAULT)
+            : self::CACHE_TTL_DEFAULT;
+        if (!apc_store($key, $value, $ttl) && !apc_add($key, $value, $ttl)) {
             throw new Exception('Unable to set key into cache APC');
         }
         return $this;
@@ -128,9 +142,9 @@ class Apc implements CacheInterface
 
     /**
      * Get information for specified cache type
-     * @param bool $limited (default false) If limited is TRUE, the return value will exclude the individual list of cache entries.
+     * @param bool $limited (default false) If limited is TRUE, the return value will exclude the individual list
+     *                                      of cache entries.
      *                                      This is useful when trying to optimize calls for statistics gathering.
-
      * @return array|bool
      * @throws Exception
      */
@@ -184,8 +198,21 @@ class Apc implements CacheInterface
     public function isAvailable()
     {
         if (is_null($this->isAvailable)) {
-            $this->isAvailable = function_exists('apc_clear_cache');
+            $iniValue = ini_get('apc.enabled');
+            $iniEnabled = (strtolower($iniValue) == 'on' || $iniValue == 1);
+            $this->isAvailable = function_exists('apc_clear_cache') && $iniEnabled;
         }
         return $this->isAvailable;
+    }
+
+    /**
+     * Get cache key with prefix
+     * @param string $key
+     * @return string
+     */
+    protected function getCacheKey($key)
+    {
+        $prefix = (string)$this->getSetting(self::SETTING_CACHE_PREFIX);
+        return $prefix . $key;
     }
 }

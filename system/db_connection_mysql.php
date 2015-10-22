@@ -52,15 +52,15 @@ class DbConnectionMysql
                 $this->conn->exec('SET NAMES '.$this->charset);
                 $this->conn->exec('SET CHARACTER SET '.$this->charset);
                 if (!$this->conn) {
-                    throw new Error(Error::connexionBDD());
+                    throw new \FMUP\Db\Exception('Erreur de connexion à la base de données.');
                 } else {
                     Console::enregistrer($params['host'].'/'.$params['database'].' ('.$params['driver'].')', LOG_CONNEXION);
                 }
             } catch (Exception $e) {
-                throw new Error(Error::connexionBDD());
+                throw new \FMUP\Db\Exception('Erreur de connexion à la base de données.', $e->getCode(), $e);
             }
         } else {
-            throw new Error(Error::connexionBDD());
+            throw new \FMUP\Db\Exception('Erreur de connexion à la base de données.');
         }
     }
 
@@ -70,28 +70,23 @@ class DbConnectionMysql
      */
     public function requete($sql, $params = array(array()))
     {
-        try {
-            $rows = array();
-            $stmt = $this->conn->prepare($sql);
+        $rows = array();
+        $stmt = $this->conn->prepare($sql);
 
 
-            foreach ($params as $param) {
-                $duree = microtime(1);
-                $memoire = memory_get_usage();
-                
-                $stmt->execute($param);
-                $rows = array_merge($rows, $stmt->fetchAll(PDO::FETCH_ASSOC));
-                
-                $duree -= microtime(1);
-                $memoire -= memory_get_usage();
-                Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
+        foreach ($params as $param) {
+            $duree = microtime(1);
+            $memoire = memory_get_usage();
 
-            }
-            $stmt->closeCursor();
+            $stmt->execute($param);
+            $rows = array_merge($rows, $stmt->fetchAll(PDO::FETCH_ASSOC));
 
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
+            $duree -= microtime(1);
+            $memoire -= memory_get_usage();
+            Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
+
         }
+        $stmt->closeCursor();
 
         return $rows;
     }
@@ -123,24 +118,18 @@ class DbConnectionMysql
 
     public function exportQuery($sql)
     {
-        try {
-            $rows = array();
-            $stmt = $this->conn->prepare($sql);
+        $rows = array();
+        $stmt = $this->conn->prepare($sql);
 
 
-            $duree = microtime(1);
-            $memoire = memory_get_usage();
-            
-            $stmt->execute();
-            
-            $duree -= microtime(1);
-            $memoire -= memory_get_usage();
-            Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
+        $duree = microtime(1);
+        $memoire = memory_get_usage();
 
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
-        }
+        $stmt->execute();
 
+        $duree -= microtime(1);
+        $memoire -= memory_get_usage();
+        Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt->rowCount()), LOG_SQL);
         return $stmt;
     }
 
@@ -159,62 +148,57 @@ class DbConnectionMysql
      */
     public function execute($sql, $commentaire = '', $logguer_requete = true, $params = array(array()))
     {
-        try {
-            if (strtoupper(substr($sql, 0, 7)) == "UPDATE ") {
-                $type_execute = "UPDATE";
-            } elseif (strtoupper(substr($sql, 0, 7)) == "INSERT ") {
-                $type_execute = "INSERT";
-            } elseif (strtoupper(substr($sql, 0, 7)) == "DELETE ") {
-                $type_execute = "DELETE";
-            } elseif (strtoupper(substr($sql, 0, 12)) == "BULK INSERT ") {
-                $type_execute = "BULK INSERT";
-            } else {
-                $type_execute = "?";
+        if (strtoupper(substr($sql, 0, 7)) == "UPDATE ") {
+            $type_execute = "UPDATE";
+        } elseif (strtoupper(substr($sql, 0, 7)) == "INSERT ") {
+            $type_execute = "INSERT";
+        } elseif (strtoupper(substr($sql, 0, 7)) == "DELETE ") {
+            $type_execute = "DELETE";
+        } elseif (strtoupper(substr($sql, 0, 12)) == "BULK INSERT ") {
+            $type_execute = "BULK INSERT";
+        } else {
+            $type_execute = "?";
+        }
+
+        $id_new_record = -1;
+        $new_records = array();
+        $nb_rows = 0;
+
+        if (((strpos($sql, "?") !== false) || (strpos($sql, ":") !== false)) && count($params[0]) == 0) {
+            $duree = microtime(1);
+            $memoire = memory_get_usage();
+
+            $stmt = $this->conn->exec($sql);
+
+            $duree -= microtime(1);
+            $memoire -= memory_get_usage();
+            Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt), LOG_SQL);
+
+            if ($type_execute=="INSERT") {
+                $id_new_record = $this->conn->lastInsertId();
+                $new_records = array_merge($new_records, array($id_new_record));
             }
+        } else {
+            $stmt = $this->conn->prepare($sql);
 
-            $id_new_record = -1;
-            $new_records = array();
-            $nb_rows = 0;
-
-            if (((strpos($sql, "?") !== false) || (strpos($sql, ":") !== false)) && count($params[0]) == 0) {
+            foreach ($params as $param) {
+                foreach ($param as $cle => $valeur) {
+                    $param[$cle] = str_replace($tab_script, $tab_script_replace, $valeur);
+                }
                 $duree = microtime(1);
                 $memoire = memory_get_usage();
-
-                $stmt = $this->conn->exec($sql);
+                $nb_rows = $nb_rows + $stmt->execute($param);
 
                 $duree -= microtime(1);
                 $memoire -= memory_get_usage();
-                Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $stmt), LOG_SQL);
+                Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $nb_rows), LOG_SQL);
 
                 if ($type_execute=="INSERT") {
                     $id_new_record = $this->conn->lastInsertId();
                     $new_records = array_merge($new_records, array($id_new_record));
                 }
-            } else {
-                $stmt = $this->conn->prepare($sql);
-
-                foreach ($params as $param) {
-                    foreach ($param as $cle => $valeur) {
-                        $param[$cle] = str_replace($tab_script, $tab_script_replace, $valeur);
-                    }
-                    $duree = microtime(1);
-                    $memoire = memory_get_usage();
-                    $nb_rows = $nb_rows + $stmt->execute($param);
-
-                    $duree -= microtime(1);
-                    $memoire -= memory_get_usage();
-                    Console::enregistrer(array('requete' => $sql, 'duree' => round(abs($duree), 4), 'memoire' => round(abs($memoire) / 1000000, 3), 'resultat' => $nb_rows), LOG_SQL);
-
-                    if ($type_execute=="INSERT") {
-                        $id_new_record = $this->conn->lastInsertId();
-                        $new_records = array_merge($new_records, array($id_new_record));
-                    }
-                    $stmt->closeCursor();
-                }
+                $stmt->closeCursor();
             }
-
-        } catch (Exception $e) {
-            new Error($e->getMessage().'<br/>'.$sql, 99, $e->getFile(), $e->getLine());
         }
 
         if ($type_execute=="INSERT") {

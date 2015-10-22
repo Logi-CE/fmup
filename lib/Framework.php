@@ -5,6 +5,9 @@ use FMUP\Exception\Status\NotFound;
 
 require_once __DIR__ . '/../system/framework.php';
 
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
+}
 
 /**
  * Class Framework - extends FMU
@@ -25,9 +28,9 @@ class Framework extends \Framework
      */
     private $routingSystem;
     /**
-     * @var Controller\Error
+     * @var ErrorHandler
      */
-    private $errorController;
+    private $errorHandler;
 
     /**
      * @var Dispatcher
@@ -135,7 +138,6 @@ class Framework extends \Framework
 
     /**
      * @return array
-     * @throws \NotFoundError
      */
     public function getRoute()
     {
@@ -160,7 +162,7 @@ class Framework extends \Framework
     /**
      * @param string $controllerName
      * @param string $action
-     * @return \Controller|Controller
+     * @return Controller
      * @throws Exception\Status\NotFound
      */
     protected function instantiate($controllerName, $action)
@@ -169,28 +171,24 @@ class Framework extends \Framework
         if (!class_exists($controllerName)) {
             throw new Exception\Status\NotFound('Controller does not exist');
         }
-        /* @var $controllerInstance \Controller */
+        /* @var $controllerInstance Controller */
         $controllerInstance = new $controllerName();
-
-        if ($controllerInstance instanceof Controller) {
-            /* @var $controllerInstance Controller */
-            $controllerInstance
-                ->setRequest($this->getRequest())
-                ->setResponse($this->getResponse())
-                ->setBootstrap($this->getBootstrap());
-        }
+        $controllerInstance
+            ->setRequest($this->getRequest())
+            ->setResponse($this->getResponse())
+            ->setBootstrap($this->getBootstrap());
 
         $controllerInstance->preFilter($action);
-        $callable = ($controllerInstance instanceof Controller) ? $controllerInstance->getActionMethod($action) : $action;
+        $callable = $controllerInstance->getActionMethod($action);
         $actionReturn = null;
         if (is_callable(array($controllerInstance, $callable))) {
             $actionReturn = call_user_func(array($controllerInstance, $callable));
         } else {
-            throw new Exception\Status\NotFound(\Error::fonctionIntrouvable($callable));
+            throw new Exception\Status\NotFound("Undefined function $callable");
         }
         $controllerInstance->postFilter($action);
 
-        if ($controllerInstance instanceof Controller && !is_null($actionReturn)) {
+        if (!is_null($actionReturn)) {
             $controllerInstance->getResponse()
                 ->setBody(
                     $actionReturn instanceof View ? $actionReturn->render() : $actionReturn
@@ -213,37 +211,34 @@ class Framework extends \Framework
                     new Response\Header\Location($exception->getLocation())
                 );
         } catch (\Exception $exception) {
-            $controller = $this->getErrorController()
+            $this->getErrorHandler()
                 ->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
                 ->setResponse($this->getResponse())
-                ->setException($exception);
-            $controller->preFilter('index');
-            $controller->indexAction();
-            $controller->postFilter();
+                ->handle($exception);
         }
         $this->postDispatch();
         return $this;
     }
 
     /**
-     * @return Controller\Error
+     * @return ErrorHandler
      */
-    public function getErrorController()
+    public function getErrorHandler()
     {
-        if (!$this->errorController) {
-            throw new \LogicException('Error controller must be defined');
+        if (!$this->errorHandler) {
+            $this->errorHandler = new ErrorHandler\Base();
         }
-        return $this->errorController;
+        return $this->errorHandler;
     }
 
     /**
-     * @param Controller\Error $errorController
+     * @param ErrorHandler $errorHandler
      * @return $this
      */
-    public function setErrorController(Controller\Error $errorController)
+    public function setErrorHandler(ErrorHandler $errorHandler)
     {
-        $this->errorController = $errorController;
+        $this->errorHandler = $errorHandler;
         return $this;
     }
 
@@ -291,12 +286,13 @@ class Framework extends \Framework
         if (!$this->getBootstrap()->getConfig()->get('use_daily_alert')) {
             parent::shutDown();
         } else {
-            if (($error = error_get_last()) !== null) {
-                $isUrgentError = in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR));
-                if ($isUrgentError) {
-                    if (!$this->getBootstrap()->getConfig()->get('is_debug')) {
-                        echo \Constantes::getMessageErreurApplication();
-                    }
+            $error = error_get_last();
+            $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
+            if ($error !== null && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR))) {
+                $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+                $errorHeader->render();
+                if (!$isDebug) {
+                    echo \Constantes::getMessageErreurApplication();
                 }
             }
         }
@@ -381,7 +377,6 @@ class Framework extends \Framework
         return $this;
     }
 
-
     public function initialize()
     {
         if (!$this->getBootstrap()->hasRequest()) {
@@ -393,10 +388,7 @@ class Framework extends \Framework
         $this->getBootstrap()->warmUp();
 
         \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
-        Error::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
-        Helper\Db::setConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
         \Model::setDb(Helper\Db::getInstance()); //@todo find a better solution
-
         parent::initialize();
     }
 }

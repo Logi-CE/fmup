@@ -5,7 +5,7 @@ namespace FMUP;
  * Class Config
  * @package FMUP
  */
-class Config
+class Config implements Config\ConfigInterface
 {
     /**
      * @var array

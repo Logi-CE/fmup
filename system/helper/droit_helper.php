@@ -20,9 +20,9 @@ class DroitHelper
             // Toutes les fonctions du controlleur d'identification sont autorisées à tous.
         } else {
             if (!isset($_SESSION['id_utilisateur'])) {
-                Controller::setFlash(Constantes::getMessageConnexionNecessaire());
+                \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageConnexionNecessaire()));
                 $_SESSION['get_initial'] = $_GET;
-                Controller::redirect(call_user_func(array(APP, "authController")));
+                throw new \FMUP\Exception\Location(call_user_func(array(APP, "authController")));
             } elseif (in_array($sys_controller, call_user_func(array(APP, "getListControllerAccesLibre")))) {
                 // Tout le monde à le droit à ces controlleurs une fois connecté
             } elseif ($sys_controller == 'ctrl_console' && Config::consoleActive()) {
@@ -31,8 +31,8 @@ class DroitHelper
                 $droits = Utilisateur::getUtilisateurConnecte()->getDroits($sys_controller, 'lecture');
                 // L'utilisateur CASTELIS n'a pas besoin de droits d'accès
                 if (!$droits && Utilisateur::getUtilisateurConnecte()->getId() != Config::paramsVariables('id_castelis')) {
-                    Controller::setFlash(Constantes::getMessageDroitsInsuffisants());
-                    Controller::redirect(call_user_func(array(APP, "defaultController")));
+                    \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageDroitsInsuffisants()));
+                    throw new \FMUP\Exception\Location(call_user_func(array(APP, "defaultController")));
                 }
             }
         }
@@ -51,8 +51,8 @@ class DroitHelper
         $droits = Utilisateur::getUtilisateurConnecte()->getDroits($sys_controller, 'ecriture');
         // L'utilisateur CASTELIS n'a pas besoin des droits d'écriture
         if (!$droits && Utilisateur::getUtilisateurConnecte()->getId() != Config::paramsVariables('id_castelis')) {
-            Controller::setFlash(Constantes::getMessageDroitsInsuffisants());
-            Controller::redirect(call_user_func(array(APP, "defaultController")));
+            \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageDroitsInsuffisants()));
+            throw new \FMUP\Exception\Location(call_user_func(array(APP, "defaultController")));
         }
     }
 }

@@ -6,10 +6,10 @@ interface CryptInterface
     /**
      * Hash the given string
      * @param string $string
-     * @return string 
+     * @return string
      */
     public function hash($string);
-        
+
     /**
      * UnHash the given string
      * @param string $string

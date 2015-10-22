@@ -10,6 +10,7 @@ class Bootstrap
     private $config;
     private $flashMessenger;
     private $isWarmed;
+    private $environment;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -20,10 +21,12 @@ class Bootstrap
      */
     public function warmUp()
     {
-        if (!$this->isWarmed) {
-            $this->initHelperDb()->getLogger();
-            //$this->registerErrorHandler(); //@todo activation of this might be very useful but you must clean FMU \Error class and error handler before
-            $this->isWarmed = true;
+        if (!$this->isWarmed()) {
+            $this->initHelperDb();
+            $this->getLogger();
+            $this->getEnvironment();
+            //$this->registerErrorHandler(); //@todo activation of this might be very useful
+            $this->setIsWarmed();
         }
         return $this;
     }
@@ -34,7 +37,7 @@ class Bootstrap
      */
     private function initHelperDb()
     {
-        Helper\Db::setConfig($this->getConfig());//@todo find a better solution
+        Helper\Db::getInstance()->setConfig($this->getConfig());//@todo find a better solution
         return $this;
     }
 
@@ -68,7 +71,9 @@ class Bootstrap
     {
         if (!$this->logger) {
             $this->logger = new Logger();
-            $this->logger->setRequest($this->getRequest());
+            $this->logger->setRequest($this->getRequest())
+                ->setConfig($this->getConfig())
+                ->setEnvironment($this->getEnvironment());
         }
         return $this->logger;
     }
@@ -81,13 +86,16 @@ class Bootstrap
     public function setLogger(Logger $logger)
     {
         $this->logger = $logger;
+        if (!$logger->hasEnvironment()) {
+            $logger->setEnvironment($this->getEnvironment());
+        }
         return $this;
     }
 
     public function registerErrorHandler()
     {
         if (!$this->isErrorHandlerRegistered) {
-            \Monolog\ErrorHandler::register($this->getLogger()->get(Logger::SYSTEM));
+            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME));
             $this->isErrorHandlerRegistered = true;
         }
         return $this;
@@ -173,5 +181,40 @@ class Bootstrap
     public function hasConfig()
     {
         return !is_null($this->config);
+    }
+
+    public function getEnvironment()
+    {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+            $this->environment->setConfig($this->getConfig());
+        }
+        return $this->environment;
+    }
+
+    public function setEnvironment(Environment $environment)
+    {
+        if (!$environment->hasConfig()) {
+            $environment->setConfig($this->getConfig());
+        }
+        $this->environment = $environment;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWarmed()
+    {
+        return (bool)$this->isWarmed;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setIsWarmed()
+    {
+        $this->isWarmed = true;
+        return $this;
     }
 }

@@ -3,7 +3,7 @@
 class TemplateHelper
 {
     // chemin vers le repertoire de template
-    static private $pathName = "/data/template";
+    private static $pathName = "/data/template";
 
     public static function getTemplate($file, $type)
     {

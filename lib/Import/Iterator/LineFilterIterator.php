@@ -17,8 +17,6 @@ class LineFilterIterator extends \FilterIterator
         parent::__construct($iterator);
     }
 
-    private $config;
-
     public function current()
     {
         return $this->getInnerIterator()->current();

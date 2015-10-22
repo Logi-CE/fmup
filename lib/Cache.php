@@ -14,11 +14,12 @@ class Cache
      * Cache instance
      * @var Cache
      */
-    protected static $instance = array();
+    private static $instance = array();
 
-    protected $driver = Factory::DRIVER_RAM;
-    protected $cacheInstance = null;
-    protected $params = array();
+    private $driver = Factory::DRIVER_RAM;
+    private $cacheInstance = null;
+    private $params = array();
+    private $factory;
 
     /**
      * Multiton - private construct
@@ -31,7 +32,7 @@ class Cache
      * @param string $instanceKey
      * @return $this
      */
-    public static function getInstance($instanceKey)
+    final public static function getInstance($instanceKey)
     {
         if (!isset(self::$instance[$instanceKey])) {
             $class = get_called_class();
@@ -43,17 +44,41 @@ class Cache
     }
 
     /**
-     * @return Cache\CacheInterface|null
+     * @return Cache\CacheInterface
+     * @throws Cache\Exception
      */
-    public function getDriver()
+    final public function getCacheInstance()
     {
         if (!is_null($this->cacheInstance)) {
             return $this->cacheInstance;
         }
 
-        $this->cacheInstance = Factory::create($this->driver, $this->params);
+        $this->cacheInstance = $this->getFactory()->create($this->driver, $this->params);
 
         return $this->cacheInstance;
+    }
+
+    /**
+     * Define a factory
+     * @param Factory $factory
+     * @return $this
+     */
+    public function setFactory(Factory $factory)
+    {
+        $this->factory = $factory;
+        return $this;
+    }
+
+    /**
+     * Get factory instance
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        if (!$this->factory) {
+            $this->factory = Factory::getInstance();
+        }
+        return $this->factory;
     }
 
     /**
@@ -79,25 +104,43 @@ class Cache
     }
 
     /**
+     * Get defined driver
+     * @return string
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
      * set params for construct \FMUP\Cache\CacheInterface
      * @param array $params
-     * @return \FMUP\Cache
+     * @return $this
      */
-    public function setParams($params)
+    public function setParams(array $params)
     {
-        $this->params = $params;
+        $this->params = (array)$params;
         return $this;
+    }
+
+    /**
+     * Driver settings
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 
     /**
      * set a param in cache
      * @param string $key
      * @param mixed $value
-     * @return \FMUP\Cache
+     * @return $this
      */
     public function set($key, $value)
     {
-        $this->getDriver()->set((string)$key, $value);
+        $this->getCacheInstance()->set((string)$key, $value);
         return $this;
     }
 
@@ -108,7 +151,7 @@ class Cache
      */
     public function get($key)
     {
-        return $this->getDriver()->get((string)$key);
+        return $this->getCacheInstance()->get((string)$key);
     }
 
     /**
@@ -118,17 +161,17 @@ class Cache
      */
     public function has($key)
     {
-        return $this->getDriver()->has((string)$key);
+        return $this->getCacheInstance()->has((string)$key);
     }
 
     /**
      * remove param
      * @param string $key
-     * @return \FMUP\Cache
+     * @return $this
      */
     public function remove($key)
     {
-        $this->getDriver()->remove($key);
+        $this->getCacheInstance()->remove((string)$key);
         return $this;
     }
 }

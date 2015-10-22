@@ -157,7 +157,7 @@ class View
             if (file_exists($this->vue)) {
                 include ($this->vue);
             } else {
-                throw new Error(Error::vueIntrouvable($this->vue));
+                throw new \FMUP\Exception("Vue introuvable : {$this->vue}.");
             }
 
         } else {
@@ -167,10 +167,10 @@ class View
                 if (file_exists($this->vue)) {
                     include ($this->layout);
                 } else {
-                    throw new Error(Error::vueIntrouvable($this->vue));
+                    throw new \FMUP\Exception("Vue introuvable : {$this->vue}.");
                 }
             } else {
-                throw new Error(Error::layoutIntrouvable($this->layout));
+                throw new \FMUP\Exception("Layout introuvable : {$this->layout}.");
             }
         }
 

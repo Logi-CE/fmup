@@ -12,7 +12,7 @@ interface Validator
     /**
      * Valide la valeur reçue en paramètre
      *
-     * @param unknown $value
+     * @param string $value
      * @return boolean
      */
     public function validate($value);

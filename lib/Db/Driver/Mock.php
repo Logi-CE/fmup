@@ -18,7 +18,6 @@ class Mock implements DbInterface
         return $this;
     }
 
-
     public function beginTransaction()
     {
         return $this;

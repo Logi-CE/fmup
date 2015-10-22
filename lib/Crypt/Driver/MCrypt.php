@@ -1,14 +1,13 @@
 <?php
-
 namespace FMUP\Crypt\Driver;
+
+use FMUP\Crypt\CryptInterface;
 
 /**
  * Description of MCrypt
  *
  * @author sweffling
  */
-use FMUP\Crypt\CryptInterface;
-
 class MCrypt implements CryptInterface
 {
     const KEY = 'secret_test_key';
@@ -40,7 +39,7 @@ class MCrypt implements CryptInterface
     }
 
     /**
-     *
+     * 
      * @return string
      */
     public function getIv()
@@ -70,5 +69,4 @@ class MCrypt implements CryptInterface
     {
         return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $string, MCRYPT_MODE_ECB, $this->getIv());
     }
-
 }

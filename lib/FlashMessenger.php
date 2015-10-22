@@ -15,7 +15,7 @@ class FlashMessenger
      * Set the singleton messenger instance
      * @return FlashMessenger
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (self::$instance === null) {
             $class = get_called_class();

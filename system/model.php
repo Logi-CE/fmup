@@ -639,7 +639,7 @@ abstract class Model
                 if ($this->update() !== false) {
                     $this->comparerDifferences();
                 } else {
-                    throw new Error(Constantes::getMessageFlashErreurEnregistrement());
+                    throw new \FMUP\Exception("Erreur pendant l'enregistrement");
                 }
             } else {
                 /* Loger le changement */
@@ -931,10 +931,11 @@ abstract class Model
             }
         } else {
             if (preg_match('#^get#i', $function) || preg_match('#^set#i', $function)) {
-                throw new Error("Attribut inexistant $attribut dans l'objet ".get_called_class());
+                $message = "Attribut inexistant $attribut dans l'objet ".get_called_class();
             } else {
-                throw new Error("Fonction inexistante $function dans l'objet ".get_called_class());
+                $message = "Fonction inexistante $function dans l'objet ".get_called_class();
             }
+            throw new \FMUP\Exception($message);
         }
         return null;
     }

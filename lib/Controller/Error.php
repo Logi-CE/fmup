@@ -1,26 +1,19 @@
 <?php
 namespace FMUP\Controller;
 
+use FMUP\Controller;
 use FMUP\Response\Header\Status;
 
 /**
  * Class Error
  * @package FMUP\Controller
  */
-abstract class Error extends \FMUP\Controller
+abstract class Error extends Controller
 {
     /**
      * @var \Exception
      */
     private $exception;
-
-    /**
-     * rewrite to tell everybody can access error controller
-     * @param string $calledAction
-     */
-    public function preFilter($calledAction = null)
-    {
-    }
 
     /**
      * Define exception
@@ -34,44 +27,18 @@ abstract class Error extends \FMUP\Controller
     }
 
     /**
-     * Url call for each 404
+     * Url call for each Exception status
      */
     public function indexAction()
     {
         $e = $this->getException();
         if ($e instanceof \FMUP\Exception\Status) {
             $this->errorStatus($e->getStatus());
-        } else {
-            $this->writeContextToLog()
-                ->sendMailOnException()
-                ->getResponse()
-                ->setHeader(new Status(Status::VALUE_INTERNAL_SERVER_ERROR));
         }
         $this->render();
     }
 
     abstract public function render();
-
-    /**
-     * Will send a mail if useDailyAlert is not active and we're not in debug
-     * @todo rewrite to avoid use of Error
-     * @uses \Config
-     * @uses \Error
-     * @return self
-     */
-    protected function sendMailOnException()
-    {
-        if (
-            !$this->getBootstrap()->getConfig()->get('use_daily_alert') &&
-            !$this->getBootstrap()->getConfig()->get('is_debug')
-        ) {
-            try {
-                throw new \Error($this->getException()->getMessage(), E_WARNING);
-            } catch (\Exception $e) {
-            }
-        }
-        return $this;
-    }
 
     /**
      * Sends error message
@@ -80,17 +47,7 @@ abstract class Error extends \FMUP\Controller
      */
     protected function errorStatus($status)
     {
-        error_log($status);
-        $this->writeContextToLog()
-            ->sendMailOnException()
-            ->getResponse()
-            ->setHeader(new Status($status));
-        return $this;
-    }
-
-    protected function writeContextToLog()
-    {
-        error_log($this->getException());
+        $this->getResponse()->setHeader(new Status($status));
         return $this;
     }
 

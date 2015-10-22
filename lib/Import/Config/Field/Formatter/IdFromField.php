@@ -18,6 +18,10 @@ class IdFromField implements Formatter
         $this->table_origine = $table_origine;
     }
 
+    /**
+     * @param string $value
+     * @return string
+     */
     public function format($value)
     {
         if ($value == "") {

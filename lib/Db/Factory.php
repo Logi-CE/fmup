@@ -1,13 +1,36 @@
 <?php
 namespace FMUP\Db;
 
-abstract class Factory
+class Factory
 {
     const DRIVER_PDO = 'Pdo';
+    const DRIVER_PDO_MYSQL = 'Pdo\\Mysql';
     const DRIVER_PDO_ODBC = 'Pdo\\Odbc';
     const DRIVER_PDO_SQLSRV = 'Pdo\\SqlSrv';
     const DRIVER_PDO_SQLITE = 'Pdo\\Sqlite';
     const DRIVER_MOCK = 'Mock';
+
+    private static $instance;
+
+    protected function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+    }
+
+    /**
+     * @return self
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            $class = get_called_class();
+            self::$instance = new $class();
+        }
+        return self::$instance;
+    }
 
     /**
      * @param string $driver
@@ -15,9 +38,9 @@ abstract class Factory
      * @return DbInterface
      * @throws Exception
      */
-    public static function create($driver = self::DRIVER_PDO, $params = array())
+    final public function create($driver = self::DRIVER_PDO, $params = array())
     {
-        $class = 'FMUP\\Db\\Driver\\' . $driver;
+        $class = $this->getClassNameForDriver($driver);
         if (!class_exists($class)) {
             throw new Exception('Unable to create ' . $class);
         }
@@ -26,5 +49,15 @@ abstract class Factory
             throw new Exception('Unable to create ' . $class);
         }
         return $instance;
+    }
+
+    /**
+     * Get full class name to create
+     * @param string $driver
+     * @return string
+     */
+    protected function getClassNameForDriver($driver)
+    {
+        return 'FMUP\\Db\\Driver\\' . $driver;
     }
 }

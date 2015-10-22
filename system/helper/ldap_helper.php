@@ -43,10 +43,10 @@ class LdapHelper
             if ($ressource) {
                 return $ds;
             } else {
-                new Error(Error::erreurBindLdap(ldap_error($ds)), E_WARNING);
+                throw new \FMUP\Exception("Liaison au serveur LDAP impossible : " . ldap_error($ds), E_WARNING);
             }
         } else {
-            new Error(Error::connexionImpossibleLdap(), E_WARNING);
+            throw new \FMUP\Exception("Connexion au serveur LDAP impossible", E_WARNING);
         }
     }
     /**
@@ -70,7 +70,7 @@ class LdapHelper
             } else {
 				$rc = ldap_get_option($ressource, LDAP_OPT_ERROR_STRING, $erreur);
 				if ($rc) {
-					new Error(Error::erreurAjoutEntreeLdap($erreur), E_WARNING);
+					throw new \FMUP\Exception("Erreur lors de l'ajout d'une entrée LDAP : ".$erreur, E_WARNING);
 				}
 			}
         }
@@ -98,7 +98,7 @@ class LdapHelper
         if (!$ajout) {
             $rc = ldap_get_option($ressource, LDAP_OPT_ERROR_STRING, $erreur);
             if ($rc) {
-                new Error(Error::erreurAjoutEntreeLdap($erreur), E_WARNING);
+                throw new \FMUP\Exception("Erreur lors de l'ajout d'une entrée LDAP : $erreur", E_WARNING);
             }
         } else {
             return true;
@@ -117,7 +117,7 @@ class LdapHelper
         if (!$modification) {
             $rc = ldap_get_option($ressource, LDAP_OPT_ERROR_STRING, $erreur);
             if ($rc) {
-                new Error(Error::erreurModificationEntreeLdap($erreur), E_WARNING);
+                throw new \FMUP\Exception("Modification impossible : $erreur", E_WARNING);
             }
         } else {
             return true;
@@ -135,7 +135,7 @@ class LdapHelper
         if (!$retour) {
             $rc = ldap_get_option($ressource, LDAP_OPT_ERROR_STRING, $erreur);
             if ($rc) {
-                new Error(Error::erreurSuppressionEntreeLdap($erreur), E_WARNING);
+                throw new \FMUP\Exception("Suppression impossible : " . $erreur, E_WARNING);
             }
         } else {
             return true;
