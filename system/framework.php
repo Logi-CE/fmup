@@ -170,9 +170,11 @@ class Framework
      * @param string $msg
      * @throws \FMUP\Exception
      */
-    public function errorToException($code, $msg)
+    public function errorToException($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-        throw new \FMUP\Exception($msg, $code);
+        throw new \FMUP\Exception(
+            $msg . ' @ ' . $errFile . ':' . $errLine . ' {' . serialize($errContext) . '}', $code
+        );
     }
 
     /**
