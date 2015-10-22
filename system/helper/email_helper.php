@@ -128,7 +128,7 @@ class EmailHelper
                     //emailHelper::sendEmailErreur($identifiant, $e->getMessage(), $log_adress, $objet, $message);
                 }
             } else {
-                throw new Error('Template email absent : ' . $identifiant);
+                throw new \FMUP\Exception('Template email absent : ' . $identifiant);
             }
         } else {
             if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);
@@ -138,7 +138,6 @@ class EmailHelper
     /**
      * @param PHPMailer $my_mail
      * @return PHPMailer
-     * @throws Error
      */
     public static function parametrerHeaders(PHPMailer $my_mail)
     {
@@ -216,8 +215,13 @@ class EmailHelper
     {
         $search = array_keys($tokens);
         $replace = array_values($tokens);
-        $search = array_map(create_function('$o', 'return "{".$o."}";'), $search);
+        $search = array_map(array('\EmailHelper', 'tokenReplaceMap'), $search);
         return str_replace($search, $replace, $message);
+    }
+
+    private static function tokenReplaceMap($o)
+    {
+        return "{" . $o . "}";
     }
 
     /**

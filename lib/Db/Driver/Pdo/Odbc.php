@@ -1,39 +1,30 @@
 <?php
 namespace FMUP\Db\Driver\Pdo;
 
-use FMUP\Db\Exception;
+use \FMUP\Db\Driver\Pdo;
 
-class Odbc extends \FMUP\Db\Driver\Pdo
+class Odbc extends Pdo
 {
     protected $instance = null;
 
-    public function getDriver()
+    protected function defaultConfiguration(\Pdo $instance)
     {
-        if (!is_null($this->instance)) {
-            return $this->instance;
+        $instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $instance->setAttribute(\PDO::ATTR_TIMEOUT, 10.0);
+        return $this;
+    }
+
+    protected function getDsn()
+    {
+        $host = $this->getHost();
+        $database = $this->getDatabase();
+        $dsn = 'odbc:Driver={' . $this->getDsnDriver() . '}';
+        if ($host) {
+            $dsn .= ';Server={' . $host . '}';
         }
-
-        $driver = isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
-        $host = isset($this->params['host']) ? $this->params['host'] : 'localhost';
-        $database = isset($this->params['database']) ? $this->params['database'] : null;
-        $dsn = 'odbc:Driver={' . $driver . '}';
-        $dsn .= ';Server={' . $host . '}';
-        $dsn .= ';Database={' . $database . '}';
-
-        //$charset = isset($params['charset']) ? $params['charset'] : 'utf8';
-        $login = isset($this->params['login']) ? $this->params['login'] : '';
-        $password = isset($this->params['password']) ? $this->params['password'] : '';
-        $options = array(
-            \PDO::ATTR_PERSISTENT => (bool)(isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false),
-            \PDO::ATTR_EMULATE_PREPARES => true
-        );
-        $this->instance = new \PDO($dsn, $login, $password, $options);
-        if (!$this->instance) {
-            throw new Exception('Unable to connect database');
+        if ($database) {
+            $dsn .= ';Database={' . $database . '}';
         }
-        $this->instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->instance->setAttribute(\PDO::ATTR_TIMEOUT, 10.0);
-
-        return $this->instance;
+        return $dsn;
     }
 }

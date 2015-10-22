@@ -32,7 +32,7 @@ class Component
         if (file_exists($this->component)) {
             include_once ($this->component);
         } else {
-            throw new Error(Error::composantIntrouvable($this->component));
+            throw new \FMUP\Exception("Composant introuvable : {$this->component}.");
         }
 
         if ($silent) {

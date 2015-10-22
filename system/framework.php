@@ -24,7 +24,6 @@ require_once('autoload.php');
 $sys_directory = null;
 $sys_controller = null;
 $sys_function = null;
-$sys_controller_instance = null;
 
 /**
  * Classe d'initialisation du framework
@@ -39,18 +38,13 @@ class Framework
         global $sys_function;
 
         if (!defined('APPLICATION')) {
-            throw new Error("La variable APPLICATION doit être définie.");
+            throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
         } else {
             define('APP', "App".String::toCamlCase(APPLICATION));
         }
 
-        // On détermine le niveau d'erreur
-        error_reporting(Config::errorReporting());
-        ini_set('display_errors', Config::isDebug());
-        ini_set('display_startup_errors', Config::isDebug());
-
-
         // On fixe les fonctions appelées lors d'une erreur
+        $this->definePhpIni();
         $this->defineErrorLog();
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
@@ -86,7 +80,6 @@ class Framework
 
     /**
      * @return $this
-     * @throws NotFoundError
      */
     protected function dispatch()
     {
@@ -104,36 +97,20 @@ class Framework
 
     protected function instantiate($sys_controller, $sys_function)
     {
-        global $sys_controller_instance;
         // Création d'une instance du controlleur
-        $controller_name = String::toCamlCase($sys_controller);
+        $controllerName = String::toCamlCase($sys_controller);
 
-        $db = null;
-        if (!is_null($sys_controller_instance)) {
-            $db = $sys_controller_instance->getDb();
-        }
-        /** @var $sys_controller_instance Controller */
-        $sys_controller_instance = new $controller_name();
-        if (!is_null($db)) {
-            $sys_controller_instance->setDb($db);
-        }
-        
-        // Préfiltre
-        $sys_controller_instance->preFilter($sys_function);
+        /** @var $controllerInstance \FMUP\Controller */
+        $controllerInstance = new $controllerName();
+        $controllerInstance->preFilter($sys_function);
 
-        
-        // Si la fonction peut être appelée on l'appelle
-        if (method_exists($sys_controller_instance, $sys_function)) {
-
-            call_user_func(array($sys_controller_instance, $sys_function));
-        // Sinon on appelle la page 404
+        if (method_exists($controllerInstance, $sys_function)) {
+            call_user_func(array($controllerInstance, $sys_function));
         } else {
-            throw new NotFoundError(Error::fonctionIntrouvable($sys_function));
+            throw new \FMUP\Exception\Status\NotFound("Fonction introuvable : $sys_function");
         }
-
-        // Postfiltre
-        $sys_controller_instance->postFilter();
-        return $sys_controller_instance;
+        $controllerInstance->postFilter();
+        return $controllerInstance;
     }
 
     protected function instantiateSession()
@@ -188,38 +165,24 @@ class Framework
     }
 
     /**
-     * On déclare la fonction permettant de remplacer une erreur par une exception
-     * Cette méthode permet de gérer de la même manière des erreurs et les exceptions
+     * Sends exception in case of error
      * @param int $code
      * @param string $msg
-     * @param string $file
-     * @param int $line
-     * @param mixed $context
+     * @throws \FMUP\Exception
      */
-    public function errorToException($code, $msg, $file, $line, $context)
+    public function errorToException($code, $msg)
     {
-        try {
-            throw new Error($msg, $code, $file, $line, $context);
-        } catch (Error $e) {
-            // nothing
-        }
+        throw new \FMUP\Exception($msg, $code);
     }
 
     /**
      * Cette fonction sera lancée à la fin du script quel que soit la cause (fin normale ou erreur)
      * Elle nous permet de récupérer les erreurs fatales qui sont ignorées par la fonction précédente
+     * @deprecated maybe you want to override this
      */
     public function shutDown()
     {
         if (Config::consoleActive()) Console::finaliser();
-        if (($error = error_get_last()) !== null) {
-            try {
-                throw new Error($error['message'], $error['type'], $error['file'], $error['line']);
-            } catch (Error $e) {
-                // nothing
-            }
-        }
-        exit();
     }
 
     /**
@@ -235,23 +198,31 @@ class Framework
 
         if (isset($_REQUEST["sys"]) && preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])) {
             $sys = $_REQUEST["sys"];
-        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !call_user_func(array(APP,"hasAuthentification"))) {
-            $sys = call_user_func(array(APP, "defaultController"));
+        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !is_callable(array(APP,"hasAuthentification")) || !call_user_func(array(APP,"hasAuthentification"))) {
+            $sys = is_callable(array(APP, "defaultController")) ? call_user_func(array(APP, "defaultController")) : null;
         } else {
-            $sys = call_user_func(array(APP,"authController"));
+            $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP,"authController")) : null;
         }
 
         if (!Config::siteOuvert()) {
-            if ((!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
+            $callables = is_callable(array(APP, "hasAuthentification")) && is_callable(array(APP, "defaultController")) &&
+                is_callable(array(APP, "authController")) && is_callable(array(APP, "closedAppController"));
+            if ($callables &&
+                (
+                    (!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
                 || $sys == call_user_func(array(APP, "authController"))
+                )
             ) {
-                Controller::clearFlash();
+                \FMUP\FlashMessenger::getInstance()->clear();
                 $sys = call_user_func(array(APP, "closedAppController"));
             } else {
-                Controller::setFlash(Constantes::getMessageFlashMaintenance());
+                \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageFlashMaintenance()));
             }
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
+        if (is_null($sys) || count($matches) < 3) {
+            $this->getRouteError();
+        }
 
         $sys_directory = $matches[1];
         $sys_controller = "ctrl_".$matches[2];
@@ -270,13 +241,16 @@ class Framework
     /**
      * @param string $sys_directory
      * @param string $sys_controller
-     * @throws NotFoundError
+     * @throws \FMUP\Exception\Status\NotFound
      */
     protected function getRouteError()
     {
         global $sys_directory;
         global $sys_controller;
-        throw new NotFoundError(Error::contolleurIntrouvable($sys_directory.$sys_controller.' ('.BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php".')'));
+        throw new \FMUP\Exception\Status\NotFound(
+            "Controlleur introuvable : " . $sys_directory.$sys_controller.
+            ' ('.BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php".')'
+        );
     }
 
     /**
@@ -307,30 +281,14 @@ class Framework
     }
 
     /**
-     * @deprecated not needed anymore in FMUP
-     * @throws Error
+     * @return $this
      */
-    public function executerCron ()
+    protected function definePhpIni()
     {
-        global $sys_controller_instance;
-
-        if (!defined('APPLICATION')) {
-            throw new Error("La variable APPLICATION doit être définie.");
-        } else {
-            define('APP', "App".String::toCamlCase(APPLICATION));
-        }
-
         // On détermine le niveau d'erreur
         error_reporting(Config::errorReporting());
-
-        $this->defineErrorLog();
-        $this->registerErrorHandler();
-        $this->registerShutdownFunction();
-        $this->instantiateSession();
-
-        // Création d'une instance du controlleur
-        $sys_controller_instance = new Controller();
-        $cron = new CronApplication();
-        $cron->executer();
+        ini_set('display_errors', Config::isDebug());
+        ini_set('display_startup_errors', Config::isDebug());
+        return $this;
     }
 }

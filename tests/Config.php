@@ -1,10 +1,12 @@
 <?php
-class ConfigTest extends PHPUnit_Framework_TestCase
+namespace Tests;
+
+class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
         $config = new \FMUP\Config;
-        $this->assertInstanceOf('\FMUP\Config', $config, 'Instance of \FMUP\Config');
+        $this->assertInstanceOf('\FMUP\Config\ConfigInterface', $config, 'Instance of \FMUP\Config\ConfigInterface');
         return $config;
     }
 

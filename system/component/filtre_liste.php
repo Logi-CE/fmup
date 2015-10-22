@@ -490,8 +490,7 @@ class FiltreListe
                         $filtrer = false;
                     }
                 } else {
-                    $filtrer = false;
-                    new Error('Appel à un champ non présent dans le champ de colonne.', E_WARNING);
+                    throw new \FMUP\Exception('Appel à un champ non présent dans le champ de colonne.', E_WARNING);
                 }
                 if (!empty($champ['partiellement_obligatoire'])) {
                     if (!isset($filtrer_partiellement)) {
@@ -802,7 +801,7 @@ class FiltreListe
                     $valeur = ($valeur) ? '<input class="checkbox_'.$this->unique_id.'_'.$instance->champHTML['nom'].'" type="checkbox" value="'.$value_check.'" checked="checked" '.$disabled.'>': '<input class="checkbox_'.$this->unique_id.'_'.$instance->champHTML['nom'].'" type="checkbox" value="'.$value_check.'" '.$disabled.'>';
                     break;
                 default:
-                    $valeur = htmlentities($valeur);
+                    $valeur = htmlentities($valeur, ENT_QUOTES | ENT_IGNORE, 'UTF-8');
                     break;
             }
         }

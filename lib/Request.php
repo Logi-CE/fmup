@@ -215,9 +215,4 @@ class Request
     {
         return $this->getServer(self::HTTP_REFERER);
     }
-
-    static public function createUrl()
-    {
-        return new Request\Url;
-    }
 }

@@ -21,10 +21,11 @@ class Cookie
      * Retrieve cookie system - start cookie if not started
      * @return Cookie
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self;
+            $class = get_called_class();
+            self::$instance = new $class;
         }
         return self::$instance;
     }

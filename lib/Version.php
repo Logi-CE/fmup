@@ -7,16 +7,17 @@ namespace FMUP;
  */
 class Version
 {
-    static private $instance;
+    private static $instance;
     private $structure;
 
     /**
      * @return $this
      */
-    static public function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new self;
+            $class = get_called_class();
+            self::$instance = new $class;
         }
         return self::$instance;
     }
@@ -58,16 +59,17 @@ class Version
     /**
      * Get composer file structure
      * @return Object
+     * @throws Exception
      */
     protected function getStructure()
     {
         if (!$this->structure) {
             if (!is_file($this->getComposerPath())) {
-                throw new \LogicException('composer.json does not exist');
+                throw new Exception('composer.json does not exist');
             }
             $this->structure = json_decode(file_get_contents($this->getComposerPath()));
             if (!$this->structure) {
-                throw new \LogicException('composer.json invalid structure');
+                throw new Exception('composer.json invalid structure');
             }
         }
         return $this->structure;

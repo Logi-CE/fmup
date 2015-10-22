@@ -11,13 +11,13 @@ interface Formatter
 
     /**
      * Modifie la valeur afin qu'elle corresponde au système
-     * @param unknown $value
+     * @param string $value
      */
     public function format($value);
 
     /**
      * Renvoi un message d'erreur correspondant au formatter
-     *
+     * @param string|null $param
      * @return string message
      */
     public function getErrorMessage($param = null);

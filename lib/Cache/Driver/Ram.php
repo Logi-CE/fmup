@@ -35,7 +35,7 @@ class Ram implements CacheInterface
      */
     public function get($key)
     {
-        return isset($this->params[$key]) ? $this->params[$key] : null;
+        return $this->has($key) ? $this->params[$key] : null;
     }
 
     /**
@@ -45,7 +45,7 @@ class Ram implements CacheInterface
      */
     public function has($key)
     {
-        return isset($this->params[$key]) ? true : false;
+        return array_key_exists($key, $this->params);
     }
 
     /**

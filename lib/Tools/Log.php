@@ -8,7 +8,7 @@ class Log
      */
     protected $mailerInstance = null;
     /**
-     * @var \FMUP\Config
+     * @var \FMUP\Config\ConfigInterface
      */
     protected $config = null;
 
@@ -33,19 +33,23 @@ class Log
      */
     public function sendFileToMail($filePath, array $mailAddresses)
     {
-        $body = file_exists($filePath) ? file_get_contents($filePath) : 'File ' . $filePath . ' seems not to exist';
-        if (empty($body)) {
-            $body = 'No log for today!';
+        try {
+            $body = file_exists($filePath) ? file_get_contents($filePath) : null;
+            if (empty($body)) {
+                $body = 'No log for today!';
+            }
+            $mailer = $this->getMailer();
+            $mailer->IsHTML(false);
+            $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
+            $mailer->Body = $body;
+            $mailer->AltBody = $body;
+            foreach ((array)$mailAddresses as $mail) {
+                $mailer->AddAddress($mail);
+            }
+            return $mailer->Send();
+        } catch (\Exception $e) {
+            return false;
         }
-        $mailer = $this->getMailer();
-        $mailer->IsHTML(false);
-        $mailer->Subject = "[" . $this->getConfig()->get('version') . "] Daily log alert";
-        $mailer->Body = $body;
-        $mailer->AltBody = $body;
-        foreach ((array)$mailAddresses as $mail) {
-            $mailer->AddAddress($mail);
-        }
-        return $mailer->Send();
     }
 
     /**
@@ -76,17 +80,17 @@ class Log
     }
 
     /**
-     * @param \FMUP\Config $config
+     * @param \FMUP\Config\ConfigInterface $config
      * @return $this
      */
-    public function setConfig(\FMUP\Config $config)
+    public function setConfig(\FMUP\Config\ConfigInterface $config)
     {
         $this->config = $config;
         return $this;
     }
 
     /**
-     * @return \FMUP\Config
+     * @return \FMUP\Config\ConfigInterface
      * @throws \LogicException
      */
     public function getConfig()

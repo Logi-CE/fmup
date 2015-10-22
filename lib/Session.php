@@ -30,7 +30,7 @@ class Session
      */
     public function regenerate($deleteOldSession = false)
     {
-        session_regenerate_id((bool) $deleteOldSession);
+        session_regenerate_id((bool)$deleteOldSession);
         return $this;
     }
 
@@ -38,10 +38,11 @@ class Session
      * Retrieve session system - start session if not started
      * @return Session
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self;
+            $class = get_called_class();
+            self::$instance = new $class;
         }
         return self::$instance;
     }
@@ -56,7 +57,7 @@ class Session
     {
         if (!$this->isStarted()) {
             if (is_numeric($name)) {
-                throw new \FMUP\Exception('Session name could not contain only numbers');
+                throw new Exception('Session name could not contain only numbers');
             }
             $this->name = (string)$name;
         }
@@ -84,7 +85,7 @@ class Session
     {
         if (!$this->isStarted()) {
             if (preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
-                throw new \FMUP\Exception('Session name could not anything but letters + numbers');
+                throw new Exception('Session name could not anything but letters + numbers');
             }
             $this->id = (string)$id;
         }
@@ -109,9 +110,11 @@ class Session
      */
     public function isStarted()
     {
-        if (is_null($this->sessionState)){
+        if (is_null($this->sessionState)) {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
-                $this->sessionState = (session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED);
+                $this->sessionState = (
+                    session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
+                );
             } else {
                 $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
             }

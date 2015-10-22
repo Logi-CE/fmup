@@ -2,10 +2,12 @@
 namespace FMUP\Cache\Driver;
 
 use FMUP\Cache\CacheInterface;
+use FMUP\Cache\Exception;
 
 class File implements CacheInterface
 {
     const SETTING_PATH = 'SETTING_PATH';
+    const SETTING_SERIALIZE = 'SETTING_SERIALIZE';
 
     /**
      * @var array
@@ -57,10 +59,11 @@ class File implements CacheInterface
      * Get cached file content
      * @param string $key
      * @return string
+     * @throws Exception
      */
     public function get($key)
     {
-        return file_get_contents($this->getPathByKey($key));
+        return $this->has($key) ? $this->unSerialize(file_get_contents($this->getPathByKey($key))) : null;
     }
 
     /**
@@ -89,10 +92,17 @@ class File implements CacheInterface
      * @param string $key
      * @param string $value
      * @return $this
+     * @throws Exception if unable to create cache folder
      */
     public function set($key, $value)
     {
-        file_put_contents($this->getPathByKey($key), $value);
+        $dirName = dirname($this->getPathByKey($key));
+        if (!file_exists($dirName)) {
+            if (!mkdir($dirName, 0755, true)) {
+                throw new Exception('Error while trying to create cache folder ' . $dirName);
+            }
+        }
+        file_put_contents($this->getPathByKey($key), $this->serialize($value));
         return $this;
     }
 
@@ -108,5 +118,31 @@ class File implements CacheInterface
             $path = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '..', 'data', 'cache'));
         }
         return $path . DIRECTORY_SEPARATOR . $key;
+    }
+
+    /**
+     * Serialize a content
+     * @param mixed $content
+     * @return string
+     */
+    private function serialize($content)
+    {
+        if ((bool)$this->getSetting(self::SETTING_SERIALIZE)) {
+            return serialize($content);
+        }
+        return $content;
+    }
+
+    /**
+     * UnSerialize a content
+     * @param string $content
+     * @return mixed|string
+     */
+    private function unSerialize($content)
+    {
+        if ((bool)$this->getSetting(self::SETTING_SERIALIZE)) {
+            return unserialize($content);
+        }
+        return $content;
     }
 }

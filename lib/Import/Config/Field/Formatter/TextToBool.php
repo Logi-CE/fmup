@@ -20,6 +20,7 @@ class TextToBool implements Formatter
                 return false;
             }
         }
+        return "";
     }
 
     public function getErrorMessage($value = null)
