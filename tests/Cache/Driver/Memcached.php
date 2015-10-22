@@ -10,7 +10,6 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $this->markTestIncomplete('Must test settings'); //@todo remove this
         $cache = new \FMUP\Cache\Driver\Memcached();
         $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
         $this->assertInstanceOf('\FMUP\Cache\Driver\Memcached', $cache, 'Instance of \FMUP\Cache\Driver\Memcached');
@@ -58,7 +57,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
             } catch (\FMUP\Cache\Exception $e) {
                 $this->assertTrue(false, 'Unable to store ' . $case[1] . ' in ' . $case[0] . ' : ' . $e->getMessage());
             }
-            $this->assertEquals($case[1], $cache->get($case[0]), 'Set settings must return its instance');
+            $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
         }
         return $cache;

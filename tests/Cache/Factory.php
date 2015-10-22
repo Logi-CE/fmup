@@ -1,8 +1,7 @@
 <?php
 namespace FMUP\Cache\Driver;
 
-class Mock
-{
+class Mock {
 
 }
 
@@ -13,8 +12,9 @@ class Factory extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $reflector = new \ReflectionClass('\FMUP\Cache\Factory');
-        $method = $reflector->getMethod('__construct');
+        $method = $reflector->getConstructor();
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
+
         $method = $reflector->getMethod('__clone');
         $this->assertTrue($method->isPrivate(), 'Clone must be private');
 
@@ -58,7 +58,7 @@ class Factory extends \PHPUnit_Framework_TestCase
             $driver4 = $factory->create('mock', array('bob' => 'bob'));
         } catch (\FMUP\Cache\Exception $e) {
             $this->assertEquals(
-                'Unable to create \FMUP\Cache\Driver\Mock',
+                'Unable to create FMUP\Cache\Driver\Mock',
                 $e->getMessage(),
                 'Mock instance cannot be created due to its interface'
             );

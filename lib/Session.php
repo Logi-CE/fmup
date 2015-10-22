@@ -57,7 +57,7 @@ class Session
     {
         if (!$this->isStarted()) {
             if (is_numeric($name)) {
-                throw new \FMUP\Exception('Session name could not contain only numbers');
+                throw new Exception('Session name could not contain only numbers');
             }
             $this->name = (string)$name;
         }
@@ -85,7 +85,7 @@ class Session
     {
         if (!$this->isStarted()) {
             if (preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
-                throw new \FMUP\Exception('Session name could not anything but letters + numbers');
+                throw new Exception('Session name could not anything but letters + numbers');
             }
             $this->id = (string)$id;
         }

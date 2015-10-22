@@ -15,6 +15,9 @@ class ShmTest extends \PHPUnit_Framework_TestCase
         $cache = new \FMUP\Cache\Driver\Shm();
         $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
         $this->assertInstanceOf('\FMUP\Cache\Driver\Shm', $cache, 'Instance of \FMUP\Cache\Driver\Shm');
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
         $cache2 = new \FMUP\Cache\Driver\Shm(array(''));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
@@ -28,6 +31,9 @@ class ShmTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetGet(\FMUP\Cache\Driver\Shm $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
         $test = array(
             array('test', 'test'),
             array('test', 'bob'),
@@ -42,7 +48,7 @@ class ShmTest extends \PHPUnit_Framework_TestCase
         );
         foreach ($test as $case) {
             $return = $cache->set($case[0], $case[1]);
-            $this->assertEquals($case[1], $cache->get($case[0]), 'Set settings must return its instance');
+            $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
         }
         return $cache;
@@ -54,6 +60,9 @@ class ShmTest extends \PHPUnit_Framework_TestCase
      */
     public function testHas(\FMUP\Cache\Driver\Shm $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
         $test = array(
             array('test', true),
             array('bob', true),
@@ -73,6 +82,9 @@ class ShmTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemove(\FMUP\Cache\Driver\Shm $cache)
     {
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
         $this->assertTrue($cache->has('test'), 'Test should exist');
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');

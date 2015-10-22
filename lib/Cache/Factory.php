@@ -8,10 +8,16 @@ class Factory
     const DRIVER_SHM = 'Shm';
     private static $instance;
 
-    protected function __construct()
+    /**
+     * @codeCoverageIgnore
+     */
+    private function __construct()
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
     }

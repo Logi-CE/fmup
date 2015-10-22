@@ -1,4 +1,67 @@
 /*********/
+/* 4.0.0 */
+/*********/
+
+Cleanup release + Unit Testing + Environmental Configs + ErrorHandler + Logger\Channel
+
+#New
+  - Overridable singleton
+  - Bootstrap can tell if already warmed up
+  - Component Exception\Status\Unauthorized
+  - many status header added to Response\Header\Status - (VALUE_BAD_REQUEST / VALUE_UNAUTHORIZED / VALUE_PAYMENT_REQUIRED / VALUE_METHOD_NOT_ALLOWED / VALUE_NOT_ACCEPTABLE / VALUE_PROXY_AUTH_REQUIRED / VALUE_REQUEST_TIMEOUT / VALUE_CONFLICT / VALUE_GONE / VALUE_LENGTH_REQUIRED / VALUE_PRECONDITION_FAILED / VALUE_PAYLOAD_TOO_LARGE / VALUE_REQUEST_URI_TOO_LONG / VALUE_UNSUPPORTED_MEDIA_TYPE / VALUE_REQUESTED_RANGE_NOT_SATISFIABLE / VALUE_EXPECTATION_FAILED / VALUE_I_AM_TEAPOT)
+  - ErrorHandler component - This component can be injected in Framework and act when uncaught exception occurs
+  - Component ErrorHandler\Plugin\ErrorController
+  - Component ErrorHandler\Plugin\HttpHeader
+  - Component ErrorHandler\Plugin\Log
+  - Component ErrorHandler\Plugin\Mail
+  - Component Logger\Channel
+  - Component Environment - can use ENVIRONMENT constant if defined
+  - Component Config\Ini
+  - Component Config\Ini\Extended - uses external dependencies with old Zend_Config_Ini component // this component had been migrated to be compatible with FMUP
+  - Component Config\Exception
+  - Component Config\ConfigInterface - You must use this interface instead of Config dependencies
+  - Component Cache\Driver\Memcached now allows a prefix for keys (SETTINGS_CACHE_PREFIX)
+  - Component Logger\LoggerTrait
+  - Component Db\Driver\Pdo\Mysql - this might be more efficient than a Pdo with dsn driver set to mysql since it can be extended + uses cached queries
+  - Tests\Cache
+  - Tests\Cache\Factory
+  - Tests\Cache\Driver\Ram
+  - Tests\Cache\Driver\Apc
+  - Tests\Cache\Driver\Memcached
+  - Tests\Cache\Driver\Shm
+
+#Fix
+  - Cache\Driver\Shm must use id for keys - internal transformation
+  - Cache\Driver\Apc checks now if APC is enabled
+  - Cache\Driver\Apc tries to insert two times with two different method on failure
+
+#Compatible
+  - rearchitectured Db\PDO\Drivers to be more SOLID
+  - Status Error 500 is now sent on error
+  - Fix some Coding Style
+  - Migrate FMUP to use Config\ConfigInterface dependencies instead of Config
+  - Autoloader define its BASE_PATH wich is still required by the framework - allows you to forget to implement it or override it
+
+#Deprecated
+  - App* are now deprecated and not used anymore by default - Use preDispatcher/postDispatchers instead or a master class to extends from
+  - \Debug - use Logger instead
+  - \Console - use Logger instead
+
+#Delete
+  - Component \FMUP\Error - use Exceptions instead
+  - Component \Error - use Exceptions instead
+  - Component \Controller - use \FMUP\Controller instead (override public function getActionMethod($action){ return $action} for backwards compatibility)
+  - Component \NotFoundError - Use Exception\Status\NotFound instead
+  - Framework do not uses ErrorController anymore - use ErrorHandler + ErrorController Plugin instead
+
+#BC Break
+  - Db drivers now sends Db\Exceptions instead of \PDOExceptions (still available in exception chain)
+  - Factory are now singletons
+  - Overridable singleton - Use getInstance()->method for all other static than ::getInstance()
+  - Singletons are now more SOLID by closing getInstance extendability
+  - Logger now uses channels instead
+
+/*********/
 /* 3.3.3 */
 /*********/
 
