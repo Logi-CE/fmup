@@ -1,4 +1,17 @@
 /*********/
+/* 4.0.1 */
+/*********/
+
+Fix Pdo Sqlite
+
+#Fix
+  - Db\Driver\Pdo\Sqlite was doing exception due to inaccessibility of params
+  
+#New
+  - Db\Driver\Pdo offers now a protected getSettings method
+  - error to exception now sends file+line+context in its error message
+
+/*********/
 /* 4.0.0 */
 /*********/
 

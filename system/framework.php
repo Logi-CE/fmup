@@ -172,9 +172,11 @@ class Framework
      */
     public function errorToException($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-        throw new \FMUP\Exception(
-            $msg . ' @ ' . $errFile . ':' . $errLine . ' {' . serialize($errContext) . '}', $code
-        );
+        $message = $msg . ' @ ' . $errFile . '(' . $errLine . ')';
+        if ($errContext) {
+            $message .= ' {' . serialize($errContext) . '}';
+        }
+        throw new \FMUP\Exception($message, $code);
     }
 
     /**
