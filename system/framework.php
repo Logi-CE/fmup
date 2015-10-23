@@ -156,8 +156,7 @@ class Framework
                 $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
                 $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
 
-                header('Location: '.$uri);
-                exit();
+                throw new \FMUP\Exception\Location($uri);
             } else {
                 \FMUP\Session::getInstance()->start();
             }
@@ -170,11 +169,12 @@ class Framework
      * @param string $msg
      * @throws \FMUP\Exception
      */
-    public function errorToException($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
+    public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-        $block = array(E_PARSE => E_PARSE, E_ERROR => E_ERROR, E_USER_ERROR => E_USER_ERROR);
-        if (isset($block[$code])) {
-            $message = $msg . ' @ ' . $errFile . '(' . $errLine . ')';
+        $block = E_PARSE | E_ERROR | E_USER_ERROR;
+        $binary = $code & $block;
+        if ($binary) {
+            $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
             if ($errContext) {
                 $message .= ' {' . serialize($errContext) . '}';
             }
@@ -265,7 +265,7 @@ class Framework
      */
     protected function registerErrorHandler()
     {
-        set_error_handler(array($this, 'errorToException'));
+        set_error_handler(array($this, 'errorHandler'));
         return $this;
     }
 
