@@ -221,6 +221,27 @@ class Framework extends \Framework
         return $this;
     }
 
+    public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
+    {
+        parent::errorHandler($code, $msg, $errFile, $errLine, $errContext);
+        $translate = array(
+            E_NOTICE => \Monolog\Logger::NOTICE,
+            E_WARNING => \Monolog\Logger::WARNING,
+            E_ERROR => \Monolog\Logger::ERROR,
+            E_PARSE => \Monolog\Logger::CRITICAL,
+            E_DEPRECATED => \Monolog\Logger::INFO,
+            E_USER_ERROR => \Monolog\Logger::NOTICE,
+            E_USER_WARNING => \Monolog\Logger::WARNING,
+            E_USER_ERROR => \Monolog\Logger::ERROR,
+            E_USER_DEPRECATED => \Monolog\Logger::INFO,
+            E_STRICT => \Monolog\Logger::INFO,
+            E_RECOVERABLE_ERROR => \Monolog\Logger::ERROR,
+        );
+        $level = isset($translate[$code]) ? $translate[$code] : \Monolog\Logger::ALERT;
+        $message = $msg . ' in ' . $errFile . ' on line ' . $errLine;
+        $this->getBootstrap()->getLogger()->log(\FMUP\Logger\Channel\System::NAME, $level, $message, $errContext);
+    }
+
     /**
      * @return ErrorHandler
      */
@@ -265,25 +286,6 @@ class Framework extends \Framework
     }
 
     /**
-     * Sends exception in case of error
-     * @param int $code
-     * @param string $msg
-     * @throws \FMUP\Exception
-     */
-    public function errorToException($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
-    {
-        $translate = array(
-            E_ERROR => \Monolog\Logger::ERROR,
-            E_WARNING => \Monolog\Logger::EMERGENCY,
-            E_PARSE => \Monolog\Logger::CRITICAL,
-            E_NOTICE => \Monolog\Logger::ALERT,
-        );
-        $translatedCode = isset($translate[$code]) ? $translate[$code] : \Monolog\Logger::CRITICAL;
-        parent::errorToException($code, $msg, $errFile, $errLine, $errContext);
-        $this->getBootstrap()->getLogger()->log(\FMUP\Logger\Channel\System::NAME, $translatedCode, $msg, $errContext);
-    }
-
-    /**
      * @return $this
      */
     public function registerErrorHandler()
@@ -307,7 +309,8 @@ class Framework extends \Framework
         } else {
             $error = error_get_last();
             $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
-            if ($error !== null && in_array($error['type'], array(E_PARSE, E_ERROR, E_USER_ERROR))) {
+            $code = E_PARSE | E_ERROR | E_USER_ERROR;
+            if ($error !== null && ($error['type'] & $code)) {
                 $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
                 $errorHeader->render();
                 if (!$isDebug) {
