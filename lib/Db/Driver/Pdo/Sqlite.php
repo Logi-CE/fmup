@@ -43,13 +43,13 @@ class Sqlite extends Pdo
 
     protected function getHost()
     {
-        return isset($this->params['host'])
-            ? $this->params['host']
+        return !is_null($this->getSettings('host'))
+            ? $this->getSettings('host')
             : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
     }
 
     protected function getDatabase()
     {
-        return isset($this->params['database']) ? $this->params['database'] : 'pdo_sqlite';
+        return !is_null($this->getSettings('database')) ? $this->getSettings('database') : 'pdo_sqlite';
     }
 }

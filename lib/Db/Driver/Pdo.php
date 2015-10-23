@@ -7,7 +7,7 @@ use FMUP\Db\Exception;
 class Pdo implements DbInterface
 {
     private $instance = null;
-    private $params = array();
+    private $settings = array();
     private $fetchMode = \PDO::FETCH_ASSOC;
 
     const CHARSET_UTF8 = 'utf8';
@@ -17,7 +17,7 @@ class Pdo implements DbInterface
      */
     public function __construct($params = array())
     {
-        $this->params = $params;
+        $this->settings = $params;
     }
 
     /**
@@ -72,7 +72,7 @@ class Pdo implements DbInterface
      */
     protected function getDatabase()
     {
-        return isset($this->params['database']) ? $this->params['database'] : null;
+        return isset($this->settings['database']) ? $this->settings['database'] : null;
     }
 
     /**
@@ -81,7 +81,7 @@ class Pdo implements DbInterface
      */
     protected function getHost()
     {
-        return isset($this->params['host']) ? $this->params['host'] : 'localhost';
+        return isset($this->settings['host']) ? $this->settings['host'] : 'localhost';
     }
 
     /**
@@ -90,7 +90,17 @@ class Pdo implements DbInterface
      */
     protected function getDsnDriver()
     {
-        return isset($this->params['driver']) ? $this->params['driver'] : 'mysql';
+        return isset($this->settings['driver']) ? $this->settings['driver'] : 'mysql';
+    }
+
+    /**
+     * Retrieve settings
+     * @param null $param
+     * @return array|null
+     */
+    protected function getSettings($param = null)
+    {
+        return is_null($param) ? $this->settings : (isset($this->settings[$param]) ? $this->settings[$param] : null);
     }
 
     /**
@@ -101,7 +111,7 @@ class Pdo implements DbInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-            isset($this->params['PDOBddPersistant']) ? $this->params['PDOBddPersistant'] : false
+            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
@@ -113,7 +123,7 @@ class Pdo implements DbInterface
      */
     protected function getCharset()
     {
-        return isset($params['charset']) ? $params['charset'] : self::CHARSET_UTF8;
+        return isset($this->settings['charset']) ? $this->settings['charset'] : self::CHARSET_UTF8;
     }
 
     /**
@@ -122,7 +132,7 @@ class Pdo implements DbInterface
      */
     protected function getLogin()
     {
-        return isset($this->params['login']) ? $this->params['login'] : '';
+        return isset($this->settings['login']) ? $this->settings['login'] : '';
     }
 
     /**
@@ -131,7 +141,7 @@ class Pdo implements DbInterface
      */
     protected function getPassword()
     {
-        return isset($this->params['password']) ? $this->params['password'] : '';
+        return isset($this->settings['password']) ? $this->settings['password'] : '';
     }
 
 
