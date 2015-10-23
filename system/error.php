@@ -73,8 +73,6 @@ class Error extends Exception
             }
         }
         
-        require_once BASE_PATH.'/lib/PHPMailer_v5.0.2/class.phpmailer.php';
-        
         $mail = new PHPMailer();
         if (Config::smtpServeur() != 'localhost') {
             $mail->IsSMTP();

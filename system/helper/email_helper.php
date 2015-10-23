@@ -1,5 +1,4 @@
 <?php
-new Component('PHPMailer_v5.0.2/class.phpmailer');
 
 class EmailHelper
 {
