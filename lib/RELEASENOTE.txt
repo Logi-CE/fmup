@@ -1,4 +1,13 @@
 /*********/
+/* 4.0.2 */
+/*********/
+
+Fix Blocking Exception
+
+#Fix
+  - Exception is not thrown anymore on not important errors (but still logged)
+
+/*********/
 /* 4.0.1 */
 /*********/
 

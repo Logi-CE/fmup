@@ -265,6 +265,25 @@ class Framework extends \Framework
     }
 
     /**
+     * Sends exception in case of error
+     * @param int $code
+     * @param string $msg
+     * @throws \FMUP\Exception
+     */
+    public function errorToException($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
+    {
+        $translate = array(
+            E_ERROR => \Monolog\Logger::ERROR,
+            E_WARNING => \Monolog\Logger::EMERGENCY,
+            E_PARSE => \Monolog\Logger::CRITICAL,
+            E_NOTICE => \Monolog\Logger::ALERT,
+        );
+        $translatedCode = isset($translate[$code]) ? $translate[$code] : \Monolog\Logger::CRITICAL;
+        parent::errorToException($code, $msg, $errFile, $errLine, $errContext);
+        $this->getBootstrap()->getLogger()->log(\FMUP\Logger\Channel\System::NAME, $translatedCode, $msg, $errContext);
+    }
+
+    /**
      * @return $this
      */
     public function registerErrorHandler()
