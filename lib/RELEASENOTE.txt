@@ -241,7 +241,7 @@ Fix Some accent
 #Fix
  - MathHelper::getPourcentageEvolution now returns something without number_format
  - FiltreListe attribute now encodes in utf-8
- - \Date::getTableauLibelleMois() fix Août encoding
+ - \Date::getTableauLibelleMois() fix Aoï¿½t encoding
  
 /*********/
 /* 2.1.2 */
@@ -345,6 +345,15 @@ Industrialization + new FMU 1.0.0.6 compatibility
   - Controller - use \FMUP\Controller
   - View - use \FMUP\View
   - Framework - use \FMUP\Framework
+
+/*********/
+/* 1.2.2 */
+/*********/
+
+PHPMailer dependency
+
+# Fix
+ - Use phpmailer composer dependency instead of require_once
 
 /*********/
 /* 1.2.1 */
