@@ -2,13 +2,16 @@
 namespace FMUP;
 
 use FMUP\Db\Factory;
+use FMUP\Logger;
 
 /**
  * Class Db
  * @package FMUP
  */
-class Db
+class Db implements Logger\LoggerInterface
 {
+    use Logger\LoggerTrait;
+
     protected $driver = Factory::DRIVER_PDO;
     protected $params = array();
     private $driverInstance = null;
@@ -32,8 +35,12 @@ class Db
             return $this->driverInstance;
         }
 
-        $this->driverInstance = Factory::getInstance()->create($this->driver, $this->params);
+        $driverInstance = Factory::getInstance()->create($this->driver, $this->params);
+        if ($driverInstance instanceof Logger\LoggerInterface && true === $this->hasLogger()) {
+            $driverInstance->setLogger($this->getLogger());
+        }
 
+        $this->driverInstance = $driverInstance;
         return $this->driverInstance;
     }
 

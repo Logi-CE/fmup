@@ -3,9 +3,20 @@ namespace FMUP\Db\Driver;
 
 use FMUP\Db\DbInterface;
 use FMUP\Db\Exception;
+use FMUP\Logger;
 
-class Pdo implements DbInterface
+class Pdo implements DbInterface, Logger\LoggerInterface
 {
+    use Logger\LoggerTrait;
+
+    /**
+     * @return string
+     */
+    protected function getLoggerName()
+    {
+        return Logger\Channel\System::NAME;
+    }
+
     private $instance = null;
     private $settings = array();
     private $fetchMode = \PDO::FETCH_ASSOC;
@@ -29,6 +40,7 @@ class Pdo implements DbInterface
         if (is_null($this->instance)) {
             $this->instance = new \PDO($this->getDsn(), $this->getLogin(), $this->getPassword(), $this->getOptions());
             if (!$this->instance) {
+                $this->log(Logger::CRITICAL, 'Unable to connect database', $this->getSettings());
                 throw new Exception('Unable to connect database');
             }
             $this->defaultConfiguration($this->instance);
@@ -111,7 +123,7 @@ class Pdo implements DbInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
+                isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
@@ -154,10 +166,12 @@ class Pdo implements DbInterface
     {
         try {
             if ($this->getDriver()->inTransaction()) {
+                $this->log(Logger::CRITICAL, 'Transaction already opened', $this->getSettings());
                 throw new Exception('Transaction already opened');
             }
             return $this->getDriver()->beginTransaction();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $this->getSettings());
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -171,6 +185,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->rollBack();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -184,6 +199,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->errorCode();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -197,6 +213,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->errorInfo();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -210,6 +227,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->commit();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -224,6 +242,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->prepare($sql)->execute();
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -238,12 +257,14 @@ class Pdo implements DbInterface
     public function execute($statement, $values = array())
     {
         if (!$statement instanceof \PDOStatement) {
+            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
             throw new Exception('Statement not in right format');
         }
 
         try {
             return $statement->execute($values);
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), array('exception' => $e, 'values' => $values));
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -260,6 +281,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->prepare($sql, $options);
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), array('exception' => $e, 'sql' => $sql));
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -275,6 +297,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->lastInsertId($name);
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -288,12 +311,14 @@ class Pdo implements DbInterface
     public function fetchRow($statement)
     {
         if (!$statement instanceof \PDOStatement) {
+            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
             throw new Exception('Statement not in right format');
         }
 
         try {
             return $statement->fetch($this->getFetchMode());
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -307,12 +332,14 @@ class Pdo implements DbInterface
     public function fetchAll($statement)
     {
         if (!$statement instanceof \PDOStatement) {
+            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
             throw new Exception('Statement not in right format');
         }
 
         try {
             return $statement->fetchAll($this->getFetchMode());
         } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), $e);
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -333,6 +360,7 @@ class Pdo implements DbInterface
     {
         if ($fetchMode) {
             $this->fetchMode = (int)$fetchMode;
+            $this->log(Logger::DEBUG, 'Fetch Mode changed', array('fetchMode' => $fetchMode));
         }
         return $this;
     }

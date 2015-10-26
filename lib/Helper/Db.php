@@ -2,13 +2,16 @@
 namespace FMUP\Helper;
 
 use FMUP\Config\ConfigInterface;
+use FMUP\Logger;
 
 /**
  * Class Db
  * @package FMUP\Helper
  */
-class Db
+class Db implements Logger\LoggerInterface
 {
+    use Logger\LoggerTrait;
+
     const DEFAULT_NAME = 'DEFAULT_NAME';
     private static $instance = null;
     private $config = null;
@@ -47,7 +50,11 @@ class Db
                     throw new \OutOfRangeException('Trying to access a database name ' . $name . ' that not exists');
                 }
             }
-            $this->instances[$name] = new \FMUP\Db($params);
+            $instance = new \FMUP\Db($params);
+            if ($this->hasLogger()) {
+                $instance->setLogger($this->getLogger());
+            }
+            $this->instances[$name] = $instance;
         }
 
         return $this->instances[$name];

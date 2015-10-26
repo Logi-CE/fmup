@@ -22,8 +22,8 @@ class Bootstrap
     public function warmUp()
     {
         if (!$this->isWarmed()) {
-            $this->initHelperDb();
             $this->getLogger();
+            $this->initHelperDb();
             $this->getEnvironment();
             //$this->registerErrorHandler(); //@todo activation of this might be very useful
             $this->setIsWarmed();
@@ -37,7 +37,9 @@ class Bootstrap
      */
     private function initHelperDb()
     {
-        Helper\Db::getInstance()->setConfig($this->getConfig());//@todo find a better solution
+        Helper\Db::getInstance()
+            ->setConfig($this->getConfig()) //@todo find a better solution
+            ->setLogger($this->getLogger());
         return $this;
     }
 
