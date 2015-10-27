@@ -1,4 +1,13 @@
 /*********/
+/* 4.0.3 */
+/*********/
+
+Fix exception on session redirection
+
+#Fix
+  - exception on session redirection
+
+/*********/
 /* 4.0.2 */
 /*********/
 
