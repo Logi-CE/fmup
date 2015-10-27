@@ -156,7 +156,9 @@ class Framework
                 $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
                 $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
 
-                throw new \FMUP\Exception\Location($uri);
+                $header = new \FMUP\Response\Header\Location($uri);
+                $header->render(); //@todo something better must be done
+                exit; //@todo something better must be done
             } else {
                 \FMUP\Session::getInstance()->start();
             }
