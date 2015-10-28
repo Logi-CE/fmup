@@ -59,6 +59,7 @@ trait LoggerTrait
     public function log($level, $message, array $context = array())
     {
         if ($this->hasLogger()) {
+            $context['class_origin'] = get_called_class();
             $this->getLogger()->log($this->getLoggerName(), (int)$level, $message, (array)$context);
         }
         return $this;
