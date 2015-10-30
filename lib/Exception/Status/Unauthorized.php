@@ -12,7 +12,7 @@ class Unauthorized extends \FMUP\Exception\Status
      * @see FMUP\Response\Header
      * @return string
      */
-    function getStatus()
+    public function getStatus()
     {
         return \FMUP\Response\Header\Status::VALUE_UNAUTHORIZED;
     }

@@ -12,5 +12,5 @@ abstract class Status extends \FMUP\Exception
      * @see FMUP\Response\Header
      * @return string
      */
-    abstract function getStatus();
+    abstract public function getStatus();
 }
