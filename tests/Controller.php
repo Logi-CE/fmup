@@ -10,7 +10,7 @@
  * Actions dans git bash
  *      abizac@WK114 /c/wamp/www/FMUP (master)
  *          vendor/bin/phing phpunit                => test dans la console
- *          vendor/bin/phpunit tests/Config.php     => résultats à voir dans FMUP\build\coverage\report\index.html
+ *          vendor/bin/phpunit tests/Config.php     => rÃ©sultats Ã  voir dans FMUP\build\coverage\report\index.html
  */
 
 namespace Tests;
@@ -55,7 +55,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * La méthode prefilter retourne $this tout le temps
+     * La mÃ©thode prefilter retourne $this tout le temps
      * @depends testConstruct
      * @return FMUPController
      */
@@ -71,7 +71,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * La méthode postfilter retourne $this tout le temps
+     * La mÃ©thode postfilter retourne $this tout le temps
      * @depends testConstruct
      * @return FMUPController
      */
@@ -140,7 +140,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             $controller3 = clone $controller;
             $controller3->getRequest();
             $this->assertFalse(true, 'Exception expected : request null');
-        } catch (\Exception $e) {
+        } catch (\LogicException $e) {
             $this->assertEquals($e->getMessage(), 'Request must be set', 'Wrong exception message.');
         }
 
@@ -200,7 +200,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             $controller3 = clone $controller;
             $controller3->getResponse();
             $this->assertFalse(true, 'Exception expected : response null');
-        } catch (\Exception $e) {
+        } catch (\LogicException $e) {
             $this->assertEquals($e->getMessage(), 'Response must be set', 'Wrong exception message.');
         }
 
@@ -257,7 +257,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($controller2->getView(), "View should be not null");
 
         $controller3 = clone $controller;
-        $this->assertTrue($controller3->getView() == new View(), "Issue with Easy Loading initialization.");
+        $this->assertInstanceOf('\FMUP\View', $controller3->getView(), "Issue with Lazy Loading initialization.");
 
         return $controller;
     }
@@ -266,7 +266,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * @depends testConstruct
      * @return FMUPController
      */
-    public function testsetBootstrap(FMUPController $controller)
+    public function testSetBootstrap(FMUPController $controller)
     {
         $controller2 = clone $controller;
         $controller2->setBootstrap(new Bootstrap());
@@ -308,7 +308,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $bootstrap = new Bootstrap();
         $controller2->setBootstrap($bootstrap);
-        $this->assertSame($bootstrap, $this->invokeMethod($controller2, 'getBootstrap'), "Bootstrap given to controller is not the same that getView give.");
+        $this->assertSame($bootstrap, $this->invokeMethod($controller2, 'getBootstrap'), "Bootstrap given to controller is not the same that getBootstrap give.");
 
         try{
             $controller3 = clone $controller;
@@ -333,7 +333,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $session = Session::getInstance();
         $bootstrap->setSession($session);
 
-        $this->assertSame($session, $this->invokeMethod($controller2, 'getSession'), "Session given to controller is not the same that getView give.");
+        $this->assertSame($session, $this->invokeMethod($controller2, 'getSession'), "Session given to controller is not the same that getSession give.");
     }
 
     /**
