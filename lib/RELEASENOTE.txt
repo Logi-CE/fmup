@@ -1,4 +1,13 @@
 /*********/
+/* 4.0.5 */
+/*********/
+
+Fix blocking messages in native queue system on send
+
+#Fix
+  - blocking messages in native queue system on send
+
+/*********/
 /* 4.0.4 */
 /*********/
 
