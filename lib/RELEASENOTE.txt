@@ -1,4 +1,13 @@
 /*********/
+/* 4.0.4 */
+/*********/
+
+Fix notice on PDO exception error code
+
+#Fix
+  - notice on PDO exception error code
+
+/*********/
 /* 4.0.3 */
 /*********/
 
