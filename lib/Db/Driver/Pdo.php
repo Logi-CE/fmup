@@ -111,7 +111,7 @@ class Pdo implements DbInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
+                isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
@@ -158,7 +158,7 @@ class Pdo implements DbInterface
             }
             return $this->getDriver()->beginTransaction();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -171,7 +171,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->rollBack();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -184,7 +184,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->errorCode();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -197,7 +197,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->errorInfo();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -210,7 +210,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->commit();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -224,7 +224,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->prepare($sql)->execute();
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -244,7 +244,7 @@ class Pdo implements DbInterface
         try {
             return $statement->execute($values);
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -260,7 +260,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->prepare($sql, $options);
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -275,7 +275,7 @@ class Pdo implements DbInterface
         try {
             return $this->getDriver()->lastInsertId($name);
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -294,7 +294,7 @@ class Pdo implements DbInterface
         try {
             return $statement->fetch($this->getFetchMode());
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
@@ -313,7 +313,7 @@ class Pdo implements DbInterface
         try {
             return $statement->fetchAll($this->getFetchMode());
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
 
