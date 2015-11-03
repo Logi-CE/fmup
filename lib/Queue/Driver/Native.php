@@ -106,7 +106,7 @@ class Native implements DriverInterface
     {
         $messageType = $this->secureMessageType($messageType);
         $error = 0;
-        $success = msg_send($queueResource, $messageType, $message, true, true, $error);
+        $success = msg_send($queueResource, $messageType, $message, true, false, $error);
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
