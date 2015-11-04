@@ -7,6 +7,8 @@ use \FMUP\Queue\Exception;
 class Native implements DriverInterface
 {
     const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE';
+    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND';
+    const PARAM_SERIALIZE = 'PARAM_SERIALIZE';
 
     const CONFIGURATION_PERM_UID = 'msg_perm.uid';
     const CONFIGURATION_PERM_GID = 'msg_perm.gid';
@@ -68,7 +70,7 @@ class Native implements DriverInterface
             $receivedMessageType,
             $messageSize,
             $message,
-            true,
+            $this->isSerialize(),
             0,
             $error
         );
@@ -106,7 +108,8 @@ class Native implements DriverInterface
     {
         $messageType = $this->secureMessageType($messageType);
         $error = 0;
-        $success = msg_send($queueResource, $messageType, $message, true, false, $error);
+        $blockSend = (bool)$this->getSetting(self::PARAM_BLOCK_SEND);
+        $success = msg_send($queueResource, $messageType, $message, $this->isSerialize(), $blockSend, $error);
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
@@ -218,5 +221,16 @@ class Native implements DriverInterface
     public function destroy($queueResource)
     {
         return msg_remove_queue($queueResource);
+    }
+
+    /**
+     * Check whether serialize setting is defined or not
+     * @return bool
+     */
+    private function isSerialize()
+    {
+        return is_null($this->getSetting(self::PARAM_SERIALIZE))
+            ? true
+            : (bool)$this->getSetting(self::PARAM_SERIALIZE);
     }
 }
