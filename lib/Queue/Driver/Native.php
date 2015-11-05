@@ -53,8 +53,6 @@ class Native implements DriverInterface
     /**
      * Get a message from queue
      *
-     * /!\ This method will block process while no message is retrieved
-     *
      * @param resource $queueResource
      * @param string $messageType
      * @return mixed|null
@@ -77,7 +75,9 @@ class Native implements DriverInterface
             $this->getReceiveFlags(),
             $error
         );
-        if (!$success) {
+        $isNonBlockReceive = (MSG_IPC_NOWAIT & $this->getParamBlockReceive());
+        $isNonBlockingPlusNoMessage = $isNonBlockReceive && ($error === MSG_ENOMSG);
+        if (!$success && !$isNonBlockingPlusNoMessage) {
             throw new Exception("Error while receiving message", $error);
         }
         return $message;
@@ -243,10 +243,19 @@ class Native implements DriverInterface
      */
     private function getReceiveFlags()
     {
-        $blockReceive = $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
+        $blockReceive = $this->getParamBlockReceive();
         $modeExcept = $this->getSetting(self::PARAM_RECEIVE_MODE_EXCEPT) ? MSG_EXCEPT : 0;
         $forceSize = $this->getSetting(self::PARAM_RECEIVE_FORCE_SIZE) ? MSG_NOERROR : 0;
 
         return $blockReceive | $modeExcept | $forceSize;
+    }
+
+    /**
+     * Check whether block or not on reception
+     * @return int
+     */
+    private function getParamBlockReceive()
+    {
+        return $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
     }
 }
