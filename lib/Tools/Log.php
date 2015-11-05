@@ -19,7 +19,7 @@ class Log
      */
     public function sendErrorLog($date = null)
     {
-        $mailAddresses = explode(';', $this->getConfig()->get('mail_support'));
+        $mailAddresses = explode(';', str_replace(',', ';', $this->getConfig()->get('mail_support')));
         return $this->sendFileToMail(\Config::pathToPhpErrorLog($date), $mailAddresses);
     }
 
