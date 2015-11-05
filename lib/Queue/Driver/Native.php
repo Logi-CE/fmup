@@ -69,7 +69,7 @@ class Native implements DriverInterface
             $messageSize,
             $message,
             true,
-            0,
+            MSG_IPC_NOWAIT,
             $error
         );
         if (!$success) {
