@@ -1,4 +1,21 @@
 /*********/
+/* 4.1.0 */
+/*********/
+
+LoggerInterface + Db Logging + Queue System is non blocking
+
+#New
+ - Component Logger\LoggerInterface
+ - Component Logger\LoggerTrait
+ - Component Db now uses a Logger
+ - add documentation
+ - UnitTest Controller
+ - Queue\Driver\Native can now set blocking option on send and/or receive
+
+#Delete
+  -FMUP\Db\Driver\Mock (was useless)
+  
+/*********/
 /* 4.0.6 */
 /*********/
 
