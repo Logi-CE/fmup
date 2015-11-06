@@ -1,6 +1,8 @@
 <?php
 namespace FMUP\Db;
 
+use FMUP\Logger\LoggerInterface;
+
 class Factory
 {
     const DRIVER_PDO = 'Pdo';

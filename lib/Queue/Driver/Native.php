@@ -6,7 +6,12 @@ use \FMUP\Queue\Exception;
 
 class Native implements DriverInterface
 {
-    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE';
+    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
+    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
+    const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
+    const PARAM_RECEIVE_FORCE_SIZE = 'PARAM_RECEIVE_FORCE_SIZE'; //(bool) force size without error if message in queue is bigger than defined message size (@see PARAM_MAX_MESSAGE_SIZE) (default false)
+    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
+    const PARAM_RECEIVE_MODE_EXCEPT = 'PARAM_RECEIVE_MODE_EXCEPT'; //(bool) will receive a message different than the specified type if set to true (default false)
 
     const CONFIGURATION_PERM_UID = 'msg_perm.uid';
     const CONFIGURATION_PERM_GID = 'msg_perm.gid';
@@ -48,8 +53,6 @@ class Native implements DriverInterface
     /**
      * Get a message from queue
      *
-     * /!\ This method will block process while no message is retrieved
-     *
      * @param resource $queueResource
      * @param string $messageType
      * @return mixed|null
@@ -68,11 +71,13 @@ class Native implements DriverInterface
             $receivedMessageType,
             $messageSize,
             $message,
-            true,
-            0,
+            $this->isSerialize(),
+            $this->getReceiveFlags(),
             $error
         );
-        if (!$success) {
+        $isNonBlockReceive = (MSG_IPC_NOWAIT & $this->getParamBlockReceive());
+        $isNonBlockingPlusNoMessage = $isNonBlockReceive && ($error === MSG_ENOMSG);
+        if (!$success && !$isNonBlockingPlusNoMessage) {
             throw new Exception("Error while receiving message", $error);
         }
         return $message;
@@ -106,7 +111,8 @@ class Native implements DriverInterface
     {
         $messageType = $this->secureMessageType($messageType);
         $error = 0;
-        $success = msg_send($queueResource, $messageType, $message, true, false, $error);
+        $blockSend = (bool)$this->getSetting(self::PARAM_BLOCK_SEND);
+        $success = msg_send($queueResource, $messageType, $message, $this->isSerialize(), $blockSend, $error);
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
@@ -218,5 +224,38 @@ class Native implements DriverInterface
     public function destroy($queueResource)
     {
         return msg_remove_queue($queueResource);
+    }
+
+    /**
+     * Check whether serialize setting is defined or not
+     * @return bool
+     */
+    private function isSerialize()
+    {
+        return is_null($this->getSetting(self::PARAM_SERIALIZE))
+            ? true
+            : (bool)$this->getSetting(self::PARAM_SERIALIZE);
+    }
+
+    /**
+     * Reception options
+     * @return int
+     */
+    private function getReceiveFlags()
+    {
+        $blockReceive = $this->getParamBlockReceive();
+        $modeExcept = $this->getSetting(self::PARAM_RECEIVE_MODE_EXCEPT) ? MSG_EXCEPT : 0;
+        $forceSize = $this->getSetting(self::PARAM_RECEIVE_FORCE_SIZE) ? MSG_NOERROR : 0;
+
+        return $blockReceive | $modeExcept | $forceSize;
+    }
+
+    /**
+     * Check whether block or not on reception
+     * @return int
+     */
+    private function getParamBlockReceive()
+    {
+        return $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
     }
 }

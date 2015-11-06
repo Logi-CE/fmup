@@ -39,4 +39,29 @@ trait LoggerTrait
     {
         return (bool) $this->logger;
     }
+
+    /**
+     * @return string
+     */
+    protected function getLoggerName()
+    {
+        return Logger\Channel\Standard::NAME;
+    }
+
+    /**
+     * Log message if message is defined
+     * @param int $level
+     * @param string $message
+     * @param array $context
+     * @return $this
+     * @throws Exception
+     */
+    public function log($level, $message, array $context = array())
+    {
+        if ($this->hasLogger()) {
+            $context['class_origin'] = get_called_class();
+            $this->getLogger()->log($this->getLoggerName(), (int)$level, $message, (array)$context);
+        }
+        return $this;
+    }
 }
