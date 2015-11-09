@@ -77,4 +77,12 @@ class Queue
     {
         return $this->getDriver()->push($this->getQueueResource(), $message, $messageType);
     }
+
+    /**
+     * @return array
+     */
+    public function getStats()
+    {
+        return $this->getDriver()->getStats($this->getQueueResource());
+    }
 }

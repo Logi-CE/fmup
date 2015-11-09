@@ -118,4 +118,13 @@ class Db implements Logger\LoggerInterface
     {
         return $this->getDriver()->lastInsertId($name);
     }
+
+    /**
+     * Force reconnection
+     * @return string
+     */
+    public function forceReconnect()
+    {
+        return $this->getDriver()->forceReconnect();
+    }
 }

@@ -49,6 +49,16 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     }
 
     /**
+     * Force reconnection
+     * @return $this
+     */
+    public function forceReconnect()
+    {
+        $this->instance = null;
+        return $this;
+    }
+
+    /**
      * @param \Pdo $instance
      * @return $this
      */

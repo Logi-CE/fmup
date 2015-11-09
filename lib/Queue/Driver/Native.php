@@ -279,4 +279,14 @@ class Native implements DriverInterface
     {
         return $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
     }
+
+    /**
+     * @todo factorize this method
+     * @param resource $queueResource
+     * @return array
+     */
+    public function getStats($queueResource)
+    {
+        return $this->getConfiguration($queueResource);
+    }
 }

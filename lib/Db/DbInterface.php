@@ -105,6 +105,12 @@ interface DbInterface
     public function fetchAll($statement);
 
     /**
+     * Force reconnection
+     * @return $this
+     */
+    public function forceReconnect();
+
+    /**
      * Retrieve the internal driver
      * @return mixed
      */

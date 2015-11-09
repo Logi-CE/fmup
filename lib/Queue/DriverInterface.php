@@ -37,4 +37,10 @@ interface DriverInterface
      * @return bool true on success
      */
     public function push($queueResource, $message, $messageType = null);
+
+    /**
+     * @param resource $queueResource
+     * @return array
+     */
+    public function getStats($queueResource);
 }
