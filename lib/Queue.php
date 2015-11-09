@@ -1,12 +1,14 @@
 <?php
 namespace FMUP;
 
-
 class Queue
 {
+    use Environment\OptionalTrait;
+
     private $name;
     private $driver;
     private $queueResource;
+
 
     /**
      * Creates a queue
@@ -25,6 +27,9 @@ class Queue
     {
         if (!$this->driver) {
             $this->driver = new Queue\Driver\Native();
+            if ($this->hasEnvironment()) {
+                $this->driver->setEnvironment($this->getEnvironment());
+            }
         }
         return $this->driver;
     }
