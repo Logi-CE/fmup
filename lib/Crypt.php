@@ -7,10 +7,11 @@ class Crypt
 {
     protected $driver;
     private $driverInterface = null;
+    protected $factory;
 
     public function __construct($driver = Factory::DRIVER_MD5)
     {
-        $this->driver = $driver;
+        $this->driver = $driver;  
     }
 
     /**
@@ -22,9 +23,38 @@ class Crypt
         if (!is_null($this->driverInterface)) {
             return $this->driverInterface;
         }
-
-        $this->driverInterface = Factory::getInstance()->create($this->driver);
+        $this->driverInterface = $this->getFactory()->create($this->driver);
         return $this->driverInterface;
+    }
+    
+    /**
+     * 
+     * @param \FMUP\Crypt\CryptInterface $driver
+     * @return \FMUP\Crypt
+     */
+    public function setDriver(\FMUP\Crypt\CryptInterface $driver)
+    {
+        $this->driverInterface = $driver;
+        return $this;
+    }
+    
+     /**
+     * @return FMUP\Crypt\Factory
+     */
+    public function getFactory() {
+        
+        if(!isset($this->factory)) {
+            $this->factory = Factory::getInstance();
+        }
+        return $this->factory;
+    } 
+    
+    /**
+     * @return driver
+     */
+    public function getDriverName()
+    {
+        return $this->driver;
     }
 
     /**
