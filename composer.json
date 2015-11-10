@@ -24,7 +24,8 @@
     "suggest": {
       "ext-pdo_mysql": "To use Mysql connections",
       "ext-pdo_sqlite": "To use Sqlite connections",
-      "ext-sqlite3": "To use Sqlite connections"
+      "ext-sqlite3": "To use Sqlite connections",
+      "ext-sysvmsg": "To use Queue system"
     },
     "autoload": {
         "psr-4": {
