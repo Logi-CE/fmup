@@ -1,6 +1,6 @@
 {
     "name":"castelis/fmup",
-    "version":"dev-addEnvironementToQueue",
+    "version":"dev-beta420",
     "require": {
         "php": "~5.3",
         "ext-json": "~1.2",
