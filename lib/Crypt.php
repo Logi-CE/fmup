@@ -1,7 +1,7 @@
 <?php
 namespace FMUP;
 
-use \FMUP\Crypt\Factory;
+use FMUP\Crypt\Factory;
 
 class Crypt
 {
@@ -11,11 +11,11 @@ class Crypt
 
     public function __construct($driver = Factory::DRIVER_MD5)
     {
-        $this->driver = $driver;  
+        $this->driver = $driver;
     }
 
     /**
-     * 
+     *
      * @return \FMUP\Crypt\CryptInterface
      */
     public function getDriver()
@@ -26,31 +26,32 @@ class Crypt
         $this->driverInterface = $this->getFactory()->create($this->driver);
         return $this->driverInterface;
     }
-    
+
     /**
-     * 
+     *
      * @param \FMUP\Crypt\CryptInterface $driver
      * @return \FMUP\Crypt
      */
-    public function setDriver(\FMUP\Crypt\CryptInterface $driver)
+    public function setDriver(Crypt\CryptInterface $driver)
     {
         $this->driverInterface = $driver;
         return $this;
     }
-    
-     /**
-     * @return FMUP\Crypt\Factory
+
+    /**
+     * @return Factory
      */
-    public function getFactory() {
-        
-        if(!isset($this->factory)) {
+    public function getFactory()
+    {
+        if (!isset($this->factory)) {
             $this->factory = Factory::getInstance();
         }
         return $this->factory;
-    } 
-    
+    }
+
     /**
-     * @return driver
+     * Get driver name
+     * @return string
      */
     public function getDriverName()
     {
@@ -66,7 +67,7 @@ class Crypt
     {
         return $this->getDriver()->hash($string);
     }
-    
+
     /**
      * Unhash a string
      * @param string $string
@@ -76,7 +77,7 @@ class Crypt
     {
         return $this->getDriver()->unHash($string);
     }
-    
+
     /**
      * Check if a clear string is equivalent to a hashed one
      * @param  string $password
