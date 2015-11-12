@@ -9,6 +9,7 @@ use Monolog\Handler\ChromePHPHandler;
 class Standard extends Channel
 {
     const NAME = 'Standard';
+    const CLI_SAPI = 'cli';
 
     public function getName()
     {
@@ -17,7 +18,11 @@ class Standard extends Channel
 
     public function configure()
     {
-        if ($this->getEnvironment()->get() == Environment::DEV && !headers_sent()) {
+        if (
+            $this->getEnvironment()->get() == Environment::DEV
+            && !headers_sent()
+            && strtolower(substr(PHP_SAPI, 0, 3)) != self::CLI_SAPI
+        ) {
             $this->getLogger()
                 ->pushHandler(new FirePHPHandler())
                 ->pushHandler(new ChromePHPHandler());

@@ -1,4 +1,21 @@
 /*********/
+/* 4.2.0 */
+/*********/
+
+Db force reconnect + Queue\Driver\Native Environment + Queue\Driver\Native retry
+
+#New
+ - Component Environment\OptionalTrait
+ - Queue\Driver\Native can now handle Environment
+ - Queue\Driver\Native can now handle Retry setting
+ - FMUP\Db can now forceReconnection
+ - Crypt unit test
+
+#Fix
+ - Do not load Headers handler in FMUP\Logger on cli SAPI
+ - add suggest for memcached + sysvmsg extensions
+
+/*********/
 /* 4.1.0 */
 /*********/
 

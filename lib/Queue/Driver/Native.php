@@ -3,15 +3,19 @@ namespace FMUP\Queue\Driver;
 
 use \FMUP\Queue\DriverInterface;
 use \FMUP\Queue\Exception;
+use \FMUP\Environment;
 
 class Native implements DriverInterface
 {
+    use Environment\OptionalTrait;
+
     const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
     const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
     const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
     const PARAM_RECEIVE_FORCE_SIZE = 'PARAM_RECEIVE_FORCE_SIZE'; //(bool) force size without error if message in queue is bigger than defined message size (@see PARAM_MAX_MESSAGE_SIZE) (default false)
     const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
     const PARAM_RECEIVE_MODE_EXCEPT = 'PARAM_RECEIVE_MODE_EXCEPT'; //(bool) will receive a message different than the specified type if set to true (default false)
+    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';//(int) max send retry time, default DEFAULT_RETRY_TIMES
 
     const CONFIGURATION_PERM_UID = 'msg_perm.uid';
     const CONFIGURATION_PERM_GID = 'msg_perm.gid';
@@ -23,6 +27,8 @@ class Native implements DriverInterface
     const CONFIGURATION_MESSAGE_SIZE = 'msg_qbytes';
     const CONFIGURATION_SENDER_PID = 'msg_lspid';
     const CONFIGURATION_RECEIVER_PID = 'msg_lrpid';
+
+    const DEFAULT_RETRY_TIMES = 3;
 
     private $settings = array();
 
@@ -112,7 +118,19 @@ class Native implements DriverInterface
         $messageType = $this->secureMessageType($messageType);
         $error = 0;
         $blockSend = (bool)$this->getSetting(self::PARAM_BLOCK_SEND);
-        $success = msg_send($queueResource, $messageType, $message, $this->isSerialize(), $blockSend, $error);
+        $maxSendRetry = (int)$this->getSetting(self::PARAM_MAX_SEND_RETRY_TIME)
+            ? (int)$this->getSetting(self::PARAM_MAX_SEND_RETRY_TIME)
+            : self::DEFAULT_RETRY_TIMES;
+        $retry = 0;
+        $success = false;
+        while ($retry < $maxSendRetry) {
+            $success = msg_send($queueResource, $messageType, $message, $this->isSerialize(), $blockSend, $error);
+            if ($success || (!$success && $error != MSG_EAGAIN)) {
+                $retry = self::DEFAULT_RETRY_TIMES;
+            } else {
+                $retry++;
+            }
+        }
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
@@ -161,6 +179,9 @@ class Native implements DriverInterface
     {
         if (is_numeric($string)) {
             return (int) $string;
+        }
+        if ($this->hasEnvironment()) {
+            $string .= $this->getEnvironment()->get();
         }
         $length = strlen($string);
         $return = 0;
@@ -257,5 +278,15 @@ class Native implements DriverInterface
     private function getParamBlockReceive()
     {
         return $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
+    }
+
+    /**
+     * @todo factorize this method
+     * @param resource $queueResource
+     * @return array
+     */
+    public function getStats($queueResource)
+    {
+        return $this->getConfiguration($queueResource);
     }
 }
