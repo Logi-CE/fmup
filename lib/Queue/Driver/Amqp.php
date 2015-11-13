@@ -1,0 +1,125 @@
+<?php
+namespace FMUP\Queue\Driver;
+
+use FMUP\Environment;
+use FMUP\Queue\Channel;
+use FMUP\Queue\DriverInterface;
+use FMUP\Queue\Exception;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
+class Amqp implements DriverInterface
+{
+    use Environment\OptionalTrait;
+
+    private $amqpConnection;
+    private $currentMsg;
+
+    /**
+     * @var Channel
+     */
+    private $currentChannel;
+
+    public function connect(Channel $channel)
+    {
+        $channelResource = $this->getAmqpConnection()->channel();
+        $channelResource->queue_declare($channel->getName(), false, true);
+        return $channel->setResource($channelResource);
+    }
+
+    /**
+     * @return AMQPStreamConnection
+     */
+    public function getAmqpConnection()
+    {
+        if (!$this->amqpConnection) {
+            $this->setAmqpConnection(new AMQPStreamConnection('localhost', 5672, 'guest', 'guest'));
+        }
+        return $this->amqpConnection;
+    }
+
+    /**
+     * @param AMQPStreamConnection $connection
+     * @return $this
+     */
+    public function setAmqpConnection(AMQPStreamConnection $connection)
+    {
+        $this->amqpConnection = $connection;
+        return $this;
+    }
+
+    /**
+     * @param Channel $channel
+     * @return AMQPChannel
+     * @throws Exception
+     */
+    private function getQueue(Channel $channel)
+    {
+        if (!$channel->hasResource()) {
+            $this->connect($channel);
+        }
+
+        $queue = $channel->getResource();
+        if (!$queue instanceof AMQPChannel) {
+            throw new Exception('Resource is not AMQPChannel');
+        }
+        return $queue;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param mixed $message
+     * @param null $messageType
+     * @return bool
+     * @throws Exception
+     */
+    public function push(Channel $channel, $message, $messageType = null)
+    {
+        $queue = $this->getQueue($channel);
+        $serialize = $channel->getSettings()->getSerialize();
+        $msg = new AMQPMessage($serialize ? serialize($message) : (string)$message);
+        $queue->basic_publish($msg, '', $channel->getName());
+        return true;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param null $messageType
+     * @return null
+     * @throws Exception
+     */
+    public function pull(Channel $channel, $messageType = null)
+    {
+        $queue = $this->getQueue($channel);
+        $this->currentMsg = null;
+        $this->currentChannel = $channel;
+        $name = $channel->getName();
+        $queue->basic_consume($name, $name, false, false, false, false, array($this, 'onPull'));
+        do {
+            $queue->wait(null, true);
+        } while (is_null($this->currentMsg) && $channel->getSettings()->getBlockReceive());
+        return $this->currentMsg;
+    }
+
+    /**
+     * @param AMQPMessage $msg
+     * @return $this
+     */
+    private function onPull(AMQPMessage $msg)
+    {
+        $serialize = $this->currentChannel->getSettings()->getSerialize();
+        $this->currentMsg = $serialize ? unserialize($msg->body) : $msg->body;
+        return $this;
+    }
+
+    /**
+     * @param Channel $channel
+     * @throws Exception
+     * @return array
+     */
+    public function getStats(Channel $channel)
+    {
+        throw new Exception('Stats not available on AMQP Driver');
+    }
+}

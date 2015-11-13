@@ -3,19 +3,12 @@ namespace FMUP\Queue\Driver;
 
 use \FMUP\Queue\DriverInterface;
 use \FMUP\Queue\Exception;
+use \FMUP\Queue\Channel;
 use \FMUP\Environment;
 
 class Native implements DriverInterface
 {
     use Environment\OptionalTrait;
-
-    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
-    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
-    const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
-    const PARAM_RECEIVE_FORCE_SIZE = 'PARAM_RECEIVE_FORCE_SIZE'; //(bool) force size without error if message in queue is bigger than defined message size (@see PARAM_MAX_MESSAGE_SIZE) (default false)
-    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
-    const PARAM_RECEIVE_MODE_EXCEPT = 'PARAM_RECEIVE_MODE_EXCEPT'; //(bool) will receive a message different than the specified type if set to true (default false)
-    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';//(int) max send retry time, default DEFAULT_RETRY_TIMES
 
     const CONFIGURATION_PERM_UID = 'msg_perm.uid';
     const CONFIGURATION_PERM_GID = 'msg_perm.gid';
@@ -28,60 +21,64 @@ class Native implements DriverInterface
     const CONFIGURATION_SENDER_PID = 'msg_lspid';
     const CONFIGURATION_RECEIVER_PID = 'msg_lrpid';
 
-    const DEFAULT_RETRY_TIMES = 3;
-
-    private $settings = array();
-
     /**
      * Connect to specified queue
-     * @param string|int $name
-     * @return resource
+     * @param Channel $channel
+     * @return Channel
      * @throws Exception
      */
-    public function connect($name)
+    public function connect(Channel $channel)
     {
-        $name = $this->secureQueueName($name);
-        return msg_get_queue($name);
+        if (!$channel->hasResource()) {
+            $name = $this->secureQueueName($channel->getName());
+            $channel->setName($name);
+            $resource = msg_get_queue($name);
+            $channel->setResource($resource);
+        }
+        return $channel;
     }
 
     /**
      * Check if queue exists
-     * @param string|int $name
+     * @param Channel $channel
      * @return bool
      * @throws Exception
      */
-    public function exists($name)
+    public function exists(Channel $channel)
     {
-        $name = $this->secureQueueName($name);
+        $name = $this->secureQueueName($channel->getName());
         return msg_queue_exists($name);
     }
 
     /**
      * Get a message from queue
      *
-     * @param resource $queueResource
+     * @param Channel $channel
      * @param string $messageType
      * @return mixed|null
      * @throws Exception
      */
-    public function pull($queueResource, $messageType = null)
+    public function pull(Channel $channel, $messageType = null)
     {
+        if (!$channel->hasResource()) {
+            $this->connect($channel);
+        }
         $messageType = $this->secureMessageType($messageType);
         $receivedMessageType = 0;
         $message = null;
         $error = 0;
-        $messageSize = $this->getMessageSize($queueResource);
+        $messageSize = $this->getMessageSize($channel);
         $success = msg_receive(
-            $queueResource,
+            $channel->getResource(),
             $messageType,
             $receivedMessageType,
             $messageSize,
             $message,
-            $this->isSerialize(),
-            $this->getReceiveFlags(),
+            $channel->getSettings()->getSerialize(),
+            $this->getReceiveFlags($channel),
             $error
         );
-        $isNonBlockReceive = (MSG_IPC_NOWAIT & $this->getParamBlockReceive());
+        $isNonBlockReceive = (MSG_IPC_NOWAIT & $this->getParamBlockReceive($channel));
         $isNonBlockingPlusNoMessage = $isNonBlockReceive && ($error === MSG_ENOMSG);
         if (!$success && !$isNonBlockingPlusNoMessage) {
             throw new Exception("Error while receiving message", $error);
@@ -91,42 +88,44 @@ class Native implements DriverInterface
 
     /**
      * Retrieve message maximum size for a given queue
-     * @param resource $queueResource
+     * @param Channel $channel
      * @return int
      */
-    private function getMessageSize($queueResource)
+    private function getMessageSize(Channel $channel)
     {
-        $messageSize = $this->getSetting(self::PARAM_MAX_MESSAGE_SIZE);
+        $messageSize = $channel->getSettings()->getMaxMessageSize();
         if (!$messageSize) {
-            $configuration = $this->getConfiguration($queueResource);
+            $configuration = $this->getConfiguration($channel->getResource());
             $messageSize = (int)$configuration[self::CONFIGURATION_MESSAGE_SIZE];
-            $this->setSetting(self::PARAM_MAX_MESSAGE_SIZE, $messageSize);
+            $channel->getSettings()->setMaxMessageSize($messageSize);
         }
         return $messageSize;
     }
 
     /**
      * Push a message in queue
-     * @param resource $queueResource
+     * @param Channel $channel
      * @param mixed $message
      * @param string|int $messageType
      * @return $this
      * @throws Exception
      */
-    public function push($queueResource, $message, $messageType = null)
+    public function push(Channel $channel, $message, $messageType = null)
     {
+        if (!$channel->hasResource()) {
+            $this->connect($channel);
+        }
         $messageType = $this->secureMessageType($messageType);
         $error = 0;
-        $blockSend = (bool)$this->getSetting(self::PARAM_BLOCK_SEND);
-        $maxSendRetry = (int)$this->getSetting(self::PARAM_MAX_SEND_RETRY_TIME)
-            ? (int)$this->getSetting(self::PARAM_MAX_SEND_RETRY_TIME)
-            : self::DEFAULT_RETRY_TIMES;
+        $blockSend = (bool)$channel->getSettings()->getBlockSend();
+        $maxSendRetry = (int)$channel->getSettings()->getMaxSendRetryTime();
+        $serialize = (bool)$channel->getSettings()->getSerialize();
         $retry = 0;
         $success = false;
         while ($retry < $maxSendRetry) {
-            $success = msg_send($queueResource, $messageType, $message, $this->isSerialize(), $blockSend, $error);
+            $success = msg_send($channel->getResource(), $messageType, $message, $serialize, $blockSend, $error);
             if ($success || (!$success && $error != MSG_EAGAIN)) {
-                $retry = self::DEFAULT_RETRY_TIMES;
+                $retry = Channel\Settings::DEFAULT_RETRY_TIMES;
             } else {
                 $retry++;
             }
@@ -192,101 +191,85 @@ class Native implements DriverInterface
     }
 
     /**
-     * Define a setting
-     * @param $paramName
-     * @param null $value
-     * @return $this
-     */
-    public function setSetting($paramName, $value = null)
-    {
-        $this->settings[$paramName] = $value;
-        return $this;
-    }
-
-    /**
-     * Get Setting Name value
-     * @param string $paramName
-     * @return mixed
-     */
-    public function getSetting($paramName)
-    {
-        return isset($this->settings[$paramName]) ? $this->settings[$paramName] : null;
-    }
-
-    /**
      * Get queue configuration
      * @param resource $queueResource
      * @return array
      */
-    public function getConfiguration($queueResource)
+    private function getConfiguration($queueResource)
     {
         return msg_stat_queue($queueResource);
     }
 
     /**
      * Define queue configuration
-     * @param resource $queueResource
+     * @param Channel $channel
      * @param array $params
      * @return bool
      */
-    public function setConfiguration($queueResource, $params)
+    public function setConfiguration(Channel $channel, $params)
     {
         if (isset($params[self::CONFIGURATION_MESSAGE_SIZE])) {
-            $this->setSetting(self::PARAM_MAX_MESSAGE_SIZE, (int)$params[self::CONFIGURATION_MESSAGE_SIZE]);
+            $channel->getSettings()->setMaxMessageSize((int)$params[self::CONFIGURATION_MESSAGE_SIZE]);
         }
-        return msg_set_queue($queueResource, (array)$params);
+        return msg_set_queue($channel->getResource(), (array)$params);
     }
 
     /**
      * Destroy a queue
-     * @param resource $queueResource
+     * @param Channel $channel
      * @return bool
      */
-    public function destroy($queueResource)
+    public function destroy(Channel $channel)
     {
-        return msg_remove_queue($queueResource);
-    }
-
-    /**
-     * Check whether serialize setting is defined or not
-     * @return bool
-     */
-    private function isSerialize()
-    {
-        return is_null($this->getSetting(self::PARAM_SERIALIZE))
-            ? true
-            : (bool)$this->getSetting(self::PARAM_SERIALIZE);
+        if ($channel->hasResource()) {
+            if (msg_remove_queue($channel->getResource())) {
+                $channel->setResource(null);
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
      * Reception options
+     * @param Channel $channel
      * @return int
      */
-    private function getReceiveFlags()
+    private function getReceiveFlags(Channel $channel)
     {
-        $blockReceive = $this->getParamBlockReceive();
-        $modeExcept = $this->getSetting(self::PARAM_RECEIVE_MODE_EXCEPT) ? MSG_EXCEPT : 0;
-        $forceSize = $this->getSetting(self::PARAM_RECEIVE_FORCE_SIZE) ? MSG_NOERROR : 0;
+        $modeExcept = 0;
+        $forceSize = 0;
+        $settings = $channel->getSettings();
+        if ($settings instanceof Channel\Settings\Native) {
+            $modeExcept = $settings->getReceiveModeExcept() ? MSG_EXCEPT : 0;
+            $forceSize = $settings->getReceiveForceSize() ? MSG_NOERROR : 0;
+        }
+        $blockReceive = $this->getParamBlockReceive($channel);
 
         return $blockReceive | $modeExcept | $forceSize;
     }
 
     /**
      * Check whether block or not on reception
+     * @param Channel $channel
      * @return int
      */
-    private function getParamBlockReceive()
+    private function getParamBlockReceive(Channel $channel)
     {
-        return $this->getSetting(self::PARAM_BLOCK_RECEIVE) ? 0 : MSG_IPC_NOWAIT;
+        return $channel->getSettings()->getBlockReceive() ? 0 : MSG_IPC_NOWAIT;
     }
 
     /**
      * @todo factorize this method
-     * @param resource $queueResource
+     * @param Channel $channel
      * @return array
      */
-    public function getStats($queueResource)
+    public function getStats(Channel $channel)
     {
-        return $this->getConfiguration($queueResource);
+        if (!$channel->hasResource()) {
+            $this->connect($channel);
+        }
+        return $this->getConfiguration($channel->getResource());
     }
 }
