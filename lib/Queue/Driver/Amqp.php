@@ -95,10 +95,17 @@ class Amqp implements DriverInterface
         $this->currentMsg = null;
         $this->currentChannel = $channel;
         $name = $channel->getName();
-        $queue->basic_consume($name, $name, false, false, false, false, array($this, 'onPull'));
-        do {
-            $queue->wait(null, true);
-        } while (is_null($this->currentMsg) && $channel->getSettings()->getBlockReceive());
+        if ($channel->getSettings()->getBlockReceive()) {
+            $queue->basic_consume($name, $name, false, false, false, false, array($this, 'onPull'));
+            do {
+                $queue->wait();
+            } while (is_null($this->currentMsg));
+        } else {
+            $message = $queue->basic_get($name, true);
+            if (!is_null($message)) {
+                $this->onPull($message);
+            }
+        }
         return $this->currentMsg;
     }
 
@@ -106,7 +113,7 @@ class Amqp implements DriverInterface
      * @param AMQPMessage $msg
      * @return $this
      */
-    private function onPull(AMQPMessage $msg)
+    public function onPull(AMQPMessage $msg)
     {
         $serialize = $this->currentChannel->getSettings()->getSerialize();
         $this->currentMsg = $serialize ? unserialize($msg->body) : $msg->body;
