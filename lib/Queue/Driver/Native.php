@@ -46,7 +46,7 @@ class Native implements DriverInterface
      */
     public function exists(Channel $channel)
     {
-        $name = $this->secureQueueName($channel->getName());
+        $name = (!$channel->hasResource()) ? $this->secureQueueName($channel->getName()) : $channel->getName();
         return msg_queue_exists($name);
     }
 

@@ -23,9 +23,25 @@ class Amqp implements DriverInterface
 
     public function connect(Channel $channel)
     {
-        $channelResource = $this->getAmqpConnection()->channel();
-        $channelResource->queue_declare($channel->getName(), false, true);
-        return $channel->setResource($channelResource);
+        if (!$channel->hasResource()) {
+            $channelResource = $this->getAmqpConnection()->channel();
+            $channel->setName($this->secureName($channel->getName()));
+            $channelResource->queue_declare($channel->getName(), false, true);
+            $channel->setResource($channelResource);
+        }
+        return $channel;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function secureName($name)
+    {
+        if ($this->hasEnvironment()) {
+            $name .= '.' . $this->getEnvironment()->get();
+        }
+        return $name;
     }
 
     /**
