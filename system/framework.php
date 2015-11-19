@@ -170,18 +170,11 @@ class Framework
      * @param int $code
      * @param string $msg
      * @throws \FMUP\Exception
+     * @deprecated
      */
     public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-        $block = E_PARSE | E_ERROR | E_USER_ERROR;
-        $binary = $code & $block;
-        if ($binary) {
-            $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
-            if ($errContext) {
-                $message .= ' {' . serialize($errContext) . '}';
-            }
-            throw new \FMUP\Exception($message, $code);
-        }
+
     }
 
     /**
