@@ -27,8 +27,7 @@
       "ext-pdo_sqlite": "To use Sqlite connections",
       "ext-sqlite3": "To use Sqlite connections",
       "ext-sysvmsg": "To use Queue system",
-      "ext-memcached" : "Memcached >= 2.0.0 to use the Memcached Cache adapter",
-      "ext-amqp" : "AMQP >= 1.0.0 to use the Memcached Queue adapter"
+      "ext-memcached" : "Memcached >= 2.0.0 to use the Memcached Cache adapter"
     },
     "autoload": {
         "psr-4": {
