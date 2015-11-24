@@ -10,7 +10,7 @@ class Sapi
     private static $instance;
 
     const CLI = 'cli';
-    const APACHE = 'apache';
+    const CGI = 'cgi';
 
     /**
      * @return $this
@@ -43,7 +43,7 @@ class Sapi
      */
     public function get()
     {
-        return $this->isCli() ? self::CLI : self::APACHE;
+        return $this->isCli() ? self::CLI : self::CGI;
     }
 
     /**
