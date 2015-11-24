@@ -2,6 +2,8 @@
 namespace FMUP;
 
 use FMUP\Dispatcher\Plugin;
+use FMUP\Sapi;
+use FMUP\Environment;
 
 class Dispatcher
 {
@@ -16,6 +18,9 @@ class Dispatcher
      */
     private $originalRequest;
 
+    private $sapi;
+    private $environment;
+
     /**
      * Construct - may define routes to instantiate
      */
@@ -24,17 +29,65 @@ class Dispatcher
     }
 
     /**
+     * @param \FMUP\Sapi $sapi
+     * @return $this
+     */
+    public function setSapi(Sapi $sapi)
+    {
+        $this->sapi = $sapi;
+        return $this;
+    }
+
+    /**
+     * @return Sapi
+     */
+    public function getSapi()
+    {
+        if (!$this->sapi) {
+            $this->sapi = Sapi::getInstance();
+        }
+        return $this->sapi;
+    }
+
+    /**
+     * @return \FMUP\Environment
+     */
+    public function getEnvironment()
+    {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+        }
+        return $this->environment;
+    }
+
+    /**
+     * @param \FMUP\Environment $environment
+     * @return $this
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+    /**
      * Dispatch routes and return the first available route
      * @param Request $request
      * @param Response $response
+     * @return $this
      */
     public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
         foreach ($this->plugins as $plugin) {
             /* @var $plugin Plugin */
-            $plugin->setRequest($request)->setResponse($response)->handle();
+            $plugin->setRequest($request)->setResponse($response)
+                ->setSapi($this->getSapi())->setEnvironment($this->getEnvironment());
+            if ($plugin->canHandle()) {
+                $plugin->handle();
+            }
         }
+        return $this;
     }
 
     /**

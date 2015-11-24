@@ -11,6 +11,7 @@ class Bootstrap
     private $flashMessenger;
     private $isWarmed;
     private $environment;
+    private $sapi;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -136,6 +137,38 @@ class Bootstrap
         return !is_null($this->request);
     }
 
+    /**
+     * Define Server API
+     * @param Sapi $sapi
+     * @return $this
+     */
+    public function setSapi(Sapi $sapi)
+    {
+        $this->sapi = $sapi;
+        return $this;
+    }
+
+    /**
+     * Retrieve defined Server API
+     * @return Sapi
+     * @throws \LogicException if no request has been set
+     */
+    public function getSapi()
+    {
+        if (!$this->hasSapi()) {
+            throw new \LogicException('SAPI is not defined');
+        }
+        return $this->sapi;
+    }
+
+    /**
+     * Check if SAPI is defined
+     * @return bool
+     */
+    public function hasSapi()
+    {
+        return !is_null($this->sapi);
+    }
 
     /**
      * Get flashMessenger

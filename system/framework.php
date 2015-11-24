@@ -4,7 +4,7 @@
  * @deprecated
  * @todo refactor to avoid use of this code
  */
-if (!isset($_GET['sys'])) {
+if (!isset($_GET['sys']) && \FMUP\Sapi::getInstance()->get() != \FMUP\Sapi::CLI) {
     $result = preg_match('~/([^&?]+)((\&|\?).*)?$~', $_SERVER['REQUEST_URI'], $matches);
     $_GET['sys'] = isset($matches[1]) ? $matches[1] : '';
     if (isset($matches[2])) {
@@ -31,6 +31,32 @@ $sys_function = null;
  */
 class Framework
 {
+    /**
+     * @var \FMUP\Sapi
+     */
+    private $sapi;
+
+    /**
+     * @return \FMUP\Sapi
+     */
+    public function getSapi()
+    {
+        if (!$this->sapi) {
+            $this->sapi = \FMUP\Sapi::getInstance();
+        }
+        return $this->sapi;
+    }
+
+    /**
+     * @param \FMUP\Sapi $sapi
+     * @return $this
+     */
+    public function setSapi(\FMUP\Sapi $sapi)
+    {
+        $this->sapi = $sapi;
+        return $this;
+    }
+
     public function initialize ()
     {
         global $sys_directory;
@@ -115,6 +141,9 @@ class Framework
 
     protected function instantiateSession()
     {
+        if ($this->getSapi()->get() == \FMUP\Sapi::CLI) {
+            return $this;
+        }
         if (Config::getGestionSession()) {
             $session = new HlpSessions('BACK');
             session_set_save_handler(
@@ -201,6 +230,10 @@ class Framework
      */
     public function getRoute()
     {
+        if ($this->getSapi()->get() == \FMUP\Sapi::CLI) {
+            $this->getRouteError();
+            return $this;
+        }
         global $sys_directory;
         global $sys_controller;
         global $sys_function;
