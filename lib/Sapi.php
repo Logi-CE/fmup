@@ -15,7 +15,7 @@ class Sapi
     /**
      * @return $this
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             $class = get_called_class();
