@@ -2,11 +2,13 @@
 namespace FMUP;
 
 use FMUP\Dispatcher\Plugin;
-use FMUP\Sapi;
 use FMUP\Environment;
+use FMUP\Sapi;
 
 class Dispatcher
 {
+    use Environment\OptionalTrait, Sapi\OptionalTrait;
+
     /**
      * List of routes to check on routing
      * @var array
@@ -18,56 +20,11 @@ class Dispatcher
      */
     private $originalRequest;
 
-    private $sapi;
-    private $environment;
-
     /**
      * Construct - may define routes to instantiate
      */
     public function __construct()
     {
-    }
-
-    /**
-     * @param \FMUP\Sapi $sapi
-     * @return $this
-     */
-    public function setSapi(Sapi $sapi)
-    {
-        $this->sapi = $sapi;
-        return $this;
-    }
-
-    /**
-     * @return Sapi
-     */
-    public function getSapi()
-    {
-        if (!$this->sapi) {
-            $this->sapi = Sapi::getInstance();
-        }
-        return $this->sapi;
-    }
-
-    /**
-     * @return \FMUP\Environment
-     */
-    public function getEnvironment()
-    {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
-        }
-        return $this->environment;
-    }
-
-    /**
-     * @param \FMUP\Environment $environment
-     * @return $this
-     */
-    public function setEnvironment(Environment $environment)
-    {
-        $this->environment = $environment;
-        return $this;
     }
 
     /**

@@ -8,7 +8,6 @@
 
 namespace FMUP\Environment;
 
-
 use FMUP\Environment;
 
 trait OptionalTrait
@@ -27,10 +26,13 @@ trait OptionalTrait
     }
 
     /**
-     * @return Environment|null
+     * @return Environment
      */
     public function getEnvironment()
     {
+        if (!$this->environment) {
+            $this->environment = Environment::getInstance();
+        }
         return $this->environment;
     }
 

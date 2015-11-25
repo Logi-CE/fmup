@@ -17,6 +17,7 @@ abstract class Request
 
     /**
      * Check if a param is defined in request
+     * @param string $name
      * @return bool
      */
     abstract public function has($name);

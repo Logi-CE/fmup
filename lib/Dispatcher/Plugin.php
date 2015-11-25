@@ -13,6 +13,7 @@ use FMUP\Environment;
  */
 abstract class Plugin
 {
+    use Environment\OptionalTrait, Sapi\OptionalTrait;
     /**
      * @var Request
      */
@@ -75,48 +76,6 @@ abstract class Plugin
             throw new Exception('Response not set');
         }
         return $this->response;
-    }
-
-    /**
-     * @param Sapi $sapi
-     * @return $this
-     */
-    public function setSapi(Sapi $sapi)
-    {
-        $this->sapi = $sapi;
-        return $this;
-    }
-
-    /**
-     * @return Sapi
-     */
-    public function getSapi()
-    {
-        if (!$this->sapi) {
-            $this->sapi = Sapi::getInstance();
-        }
-        return $this->sapi;
-    }
-
-    /**
-     * @return Environment
-     */
-    public function getEnvironment()
-    {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
-        }
-        return $this->environment;
-    }
-
-    /**
-     * @param Environment $environment
-     * @return $this
-     */
-    public function setEnvironment(Environment $environment)
-    {
-        $this->environment = $environment;
-        return $this;
     }
 
     /**

@@ -32,9 +32,9 @@ class Cli extends Request
         $short = '';
         $long = array();
         if (strlen($name) == 1) {
-            $short = $name;
+            $short = $name . ':';
         }  else {
-            $long = array($name);
+            $long = array($name . ':');
         }
         $options = getopt($short, $long);
         return isset($options[$name]);

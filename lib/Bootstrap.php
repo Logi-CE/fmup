@@ -3,6 +3,9 @@ namespace FMUP;
 
 class Bootstrap
 {
+    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
+    use Sapi\OptionalTrait;
+
     private $isErrorHandlerRegistered = false;
     private $logger;
     private $request;
@@ -10,8 +13,6 @@ class Bootstrap
     private $config;
     private $flashMessenger;
     private $isWarmed;
-    private $environment;
-    private $sapi;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -138,39 +139,6 @@ class Bootstrap
     }
 
     /**
-     * Define Server API
-     * @param Sapi $sapi
-     * @return $this
-     */
-    public function setSapi(Sapi $sapi)
-    {
-        $this->sapi = $sapi;
-        return $this;
-    }
-
-    /**
-     * Retrieve defined Server API
-     * @return Sapi
-     * @throws \LogicException if no request has been set
-     */
-    public function getSapi()
-    {
-        if (!$this->hasSapi()) {
-            throw new \LogicException('SAPI is not defined');
-        }
-        return $this->sapi;
-    }
-
-    /**
-     * Check if SAPI is defined
-     * @return bool
-     */
-    public function hasSapi()
-    {
-        return !is_null($this->sapi);
-    }
-
-    /**
      * Get flashMessenger
      * @return \FMUP\FlashMessenger
      */
@@ -218,24 +186,6 @@ class Bootstrap
         return !is_null($this->config);
     }
 
-    public function getEnvironment()
-    {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
-            $this->environment->setConfig($this->getConfig());
-        }
-        return $this->environment;
-    }
-
-    public function setEnvironment(Environment $environment)
-    {
-        if (!$environment->hasConfig()) {
-            $environment->setConfig($this->getConfig());
-        }
-        $this->environment = $environment;
-        return $this;
-    }
-
     /**
      * @return bool
      */
@@ -250,6 +200,32 @@ class Bootstrap
     public function setIsWarmed()
     {
         $this->isWarmed = true;
+        return $this;
+    }
+
+    /**
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        if (!$this->hasEnvironment()) {
+            $environment = Environment::getInstance();
+            $environment->setConfig($this->getConfig());
+            $this->setEnvironmentTrait($environment);
+        }
+        return $this->getEnvironmentTrait();
+    }
+
+    /**
+     * @param Environment $environment
+     * @return $this
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        if (!$environment->hasConfig()) {
+            $environment->setConfig($this->getConfig());
+        }
+        $this->setEnvironmentTrait($environment);
         return $this;
     }
 }

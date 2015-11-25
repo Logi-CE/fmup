@@ -76,19 +76,21 @@ class Framework
         $this->registerShutdownFunction();
         $this->instantiateSession();
 
-        // On allume la console des logs
-        Console::initialiser();
+        if ($this->getSapi()->get() != \FMUP\Sapi::CLI) {
+            // On allume la console des logs
+            Console::initialiser();
 
-        //log des pages
-        $url = '';
-        if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        if (Config::isDebug()) {
-            if (isset($_SESSION['id_utilisateur'])) {
-                FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
-                FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
-            } else {
-                FileHelper::fLog('URL', $url);
-                FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
+            //log des pages
+            $url = '';
+            if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            if (Config::isDebug()) {
+                if (isset($_SESSION['id_utilisateur'])) {
+                    FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
+                    FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
+                } else {
+                    FileHelper::fLog('URL', $url);
+                    FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
+                }
             }
         }
         $this->dispatch();
