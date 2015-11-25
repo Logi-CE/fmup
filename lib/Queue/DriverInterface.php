@@ -9,38 +9,31 @@ use FMUP\Environment;
 interface DriverInterface
 {
     /**
-     * Check if a queue name exists
-     * @param string $name
-     * @return bool
-     */
-    public function exists($name);
-
-    /**
      * Creates a queue if don't exists / Connect a queue
-     * @param string $name
-     * @return resource
+     * @param Channel $channel
+     * @return Channel
      */
-    public function connect($name);
+    public function connect(Channel $channel);
 
     /**
      * Get a message from a queue
-     * @param resource $queueResource
+     * @param Channel $channel
      * @param string $messageType
      * @return mixed
      */
-    public function pull($queueResource, $messageType = null);
+    public function pull(Channel $channel, $messageType = null);
 
     /**
-     * @param resource $queueResource
+     * @param Channel $channel
      * @param mixed $message
      * @param string $messageType
      * @return bool true on success
      */
-    public function push($queueResource, $message, $messageType = null);
+    public function push(Channel $channel, $message, $messageType = null);
 
     /**
-     * @param resource $queueResource
+     * @param Channel $channel
      * @return array
      */
-    public function getStats($queueResource);
+    public function getStats(Channel $channel);
 }

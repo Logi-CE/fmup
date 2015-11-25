@@ -248,7 +248,20 @@ class Framework extends \Framework
 
     public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-        parent::errorHandler($code, $msg, $errFile, $errLine, $errContext);
+        $block = E_PARSE | E_ERROR | E_USER_ERROR;
+        $binary = $code & $block;
+        if ($binary) {
+            $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
+            if ($errContext) {
+                $message .= ' {' . serialize($errContext) . '}';
+            }
+            $fmupMail = new \FMUP\ErrorHandler\Plugin\Mail();
+            $fmupMail->setBootstrap($this->getBootstrap())
+                ->setRequest($this->getRequest())
+                ->setException(new \FMUP\Exception($message, $code))
+                ->handle();
+        }
+
         $translate = array(
             E_NOTICE => \Monolog\Logger::NOTICE,
             E_WARNING => \Monolog\Logger::WARNING,
@@ -329,19 +342,16 @@ class Framework extends \Framework
      */
     public function shutDown()
     {
-        if (!$this->getBootstrap()->getConfig()->get('use_daily_alert')) {
-            parent::shutDown();
-        } else {
-            $error = error_get_last();
-            $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
-            $code = E_PARSE | E_ERROR | E_USER_ERROR;
-            $canHeader = $this->getSapi()->get() != Sapi::CLI;
-            if ($error !== null && ($error['type'] & $code) && $canHeader) {
-                $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
-                $errorHeader->render();
-                if (!$isDebug) {
-                    echo \Constantes::getMessageErreurApplication();
-                }
+        $error = error_get_last();
+        $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
+        $code = E_PARSE | E_ERROR | E_USER_ERROR;
+        $canHeader = $this->getSapi()->get() != Sapi::CLI;
+        if ($error !== null && ($error['type'] & $code) && $canHeader) {
+            $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
+            $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+            $errorHeader->render();
+            if (!$isDebug) {
+                echo \Constantes::getMessageErreurApplication();
             }
         }
     }
