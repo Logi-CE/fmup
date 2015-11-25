@@ -5,6 +5,26 @@ use FMUP\Request;
 
 class Cli extends Request
 {
+    const SHORT = 'SHORT';
+    const LONG = 'LONG';
+
+    private $opt = array(self::SHORT => '', self::LONG => array('route:'));
+
+    /**
+     * @param string $short
+     * @param array $long
+     * @return $this
+     */
+    public function defineOpt($short = '', array $long = array())
+    {
+        $long[] = 'route:';
+        $this->opt = array(
+            self::SHORT => (string) $short,
+            self::LONG => (array) $long,
+        );
+        return $this;
+    }
+
     /**
      * @param string $name
      * @param mixed $defaultValue
@@ -12,15 +32,16 @@ class Cli extends Request
      */
     public function get($name, $defaultValue = null)
     {
-        $short = '';
-        $long = array();
-        if (strlen($name) == 1) {
-            $short = $name . ':';
-        }  else {
-            $long = array($name . ':');
-        }
-        $options = getopt($short, $long);
+        $options = $this->getOpt();
         return isset($options[$name]) ? $options[$name] : $defaultValue;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOpt()
+    {
+        return getopt($this->opt[self::SHORT], $this->opt[self::LONG]);
     }
 
     /**
@@ -29,15 +50,7 @@ class Cli extends Request
      */
     public function has($name)
     {
-        $short = '';
-        $long = array();
-        if (strlen($name) == 1) {
-            $short = $name . ':';
-        }  else {
-            $long = array($name . ':');
-        }
-        $options = getopt($short, $long);
-        return isset($options[$name]);
+        return isset($this->getOpt()[$name]);
     }
 
     /**
