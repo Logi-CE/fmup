@@ -19,8 +19,7 @@ class Standard extends Channel
 
     public function configure()
     {
-
-        $canSendHeaders = !headers_sent() && !$this->getSapi()->is(Sapi::CLI);
+        $canSendHeaders = !headers_sent() && $this->getSapi()->get() != Sapi::CLI;
         $isDev = $this->getEnvironment()->get() == Environment::DEV;
         $allowBrowser = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Castelis') !== false;
         if ($canSendHeaders && ($allowBrowser || $isDev)) {
