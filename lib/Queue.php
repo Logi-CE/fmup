@@ -1,14 +1,15 @@
 <?php
 namespace FMUP;
 
+use FMUP\Queue\Channel;
+use FMUP\Queue\Exception as QueueException;
+
 class Queue
 {
     use Environment\OptionalTrait;
 
-    private $name;
     private $driver;
-    private $queueResource;
-
+    private $channel;
 
     /**
      * Creates a queue
@@ -16,7 +17,34 @@ class Queue
      */
     public function __construct($name)
     {
-        $this->name = (string)$name;
+        $this->getOrDefineChannel($name);
+    }
+
+    /**
+     * Instanciate a channel if not already defined or retrieve defined channel
+     * @param string $name
+     * @return Channel
+     * @throws QueueException
+     */
+    public function getOrDefineChannel($name = null)
+    {
+        if (!$this->channel) {
+            if (empty($name)) {
+                throw new QueueException('Unable to create queue with no name');
+            }
+            $this->channel = new Channel((string)$name);
+        }
+        return $this->channel;
+    }
+
+    /**
+     * @param Channel $channel
+     * @return $this
+     */
+    public function setChannel(Channel $channel)
+    {
+        $this->channel = $channel;
+        return $this;
     }
 
     /**
@@ -27,9 +55,13 @@ class Queue
     {
         if (!$this->driver) {
             $this->driver = new Queue\Driver\Native();
-            if ($this->hasEnvironment()) {
-                $this->driver->setEnvironment($this->getEnvironment());
-            }
+        }
+        if (
+            $this->driver instanceof Environment\OptionalTrait &&
+            !$this->driver->hasEnvironment() &&
+            $this->hasEnvironment()
+        ) {
+            $this->driver->setEnvironment($this->getEnvironment());
         }
         return $this->driver;
     }
@@ -46,25 +78,13 @@ class Queue
     }
 
     /**
-     * Retrieve queue resource
-     * @return resource
-     */
-    private function getQueueResource()
-    {
-        if (!$this->queueResource) {
-            $this->queueResource = $this->getDriver()->connect($this->name);
-        }
-        return $this->queueResource;
-    }
-
-    /**
      * Get a message from current queue
      * @param string $messageType (optional message type requested)
      * @return mixed|null null if no message
      */
     public function pull($messageType = null)
     {
-        return $this->getDriver()->pull($this->getQueueResource(), $messageType);
+        return $this->getDriver()->pull($this->getOrDefineChannel(), $messageType);
     }
 
     /**
@@ -75,7 +95,7 @@ class Queue
      */
     public function push($message, $messageType = null)
     {
-        return $this->getDriver()->push($this->getQueueResource(), $message, $messageType);
+        return $this->getDriver()->push($this->getOrDefineChannel(), $message, $messageType);
     }
 
     /**
@@ -83,6 +103,6 @@ class Queue
      */
     public function getStats()
     {
-        return $this->getDriver()->getStats($this->getQueueResource());
+        return $this->getDriver()->getStats($this->getOrDefineChannel());
     }
 }
