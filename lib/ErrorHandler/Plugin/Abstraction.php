@@ -5,12 +5,14 @@ use FMUP\Response;
 use FMUP\Request;
 use FMUP\Exception;
 use FMUP\Bootstrap;
+use FMUP\Sapi;
 
 abstract class Abstraction
 {
     private $response;
     private $request;
     private $bootstrap;
+
     /**
      * @var \Exception
      */
