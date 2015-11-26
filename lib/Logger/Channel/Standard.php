@@ -22,7 +22,7 @@ class Standard extends Channel
         if (
             $this->getEnvironment()->get() == Environment::DEV
             && !headers_sent()
-            && !$this->getSapi()->is(Sapi::CLI)
+            && $this->getSapi()->get() != Sapi::CLI
         ) {
             $this->getLogger()
                 ->pushHandler(new FirePHPHandler())
