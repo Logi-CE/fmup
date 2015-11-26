@@ -18,11 +18,10 @@ class Standard extends Channel
 
     public function configure()
     {
-        if (
-            $this->getEnvironment()->get() == Environment::DEV
-            && !headers_sent()
-            && strtolower(substr(PHP_SAPI, 0, 3)) != self::CLI_SAPI
-        ) {
+        $canSendHeaders = !headers_sent() && strtolower(substr(PHP_SAPI, 0, 3)) != self::CLI_SAPI;
+        $isDev = $this->getEnvironment()->get() == Environment::DEV;
+        $allowBrowser = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Castelis') !== false;
+        if ($canSendHeaders && ($allowBrowser || $isDev)) {
             $this->getLogger()
                 ->pushHandler(new FirePHPHandler())
                 ->pushHandler(new ChromePHPHandler());
