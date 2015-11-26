@@ -3,6 +3,7 @@ namespace FMUP;
 
 class Logger
 {
+    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
     /**
      * Detailed debug information
      */
@@ -165,34 +166,15 @@ class Logger
     }
 
     /**
-     * @param Environment $environment
-     * @return $this
-     */
-    public function setEnvironment(Environment $environment)
-    {
-        $this->environment = $environment;
-        return $this;
-    }
-
-    /**
-     * Check whether environment exists
-     * @return bool
-     */
-    public function hasEnvironment()
-    {
-        return (bool) $this->environment;
-    }
-
-    /**
      * @return Environment
      */
     public function getEnvironment()
     {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
-            $this->environment->setConfig($this->getConfig());
+        if (!$this->hasEnvironment()) {
+            $environment = Environment::getInstance();
+            $this->setEnvironment($environment->setConfig($this->getConfig()));
         }
-        return $this->environment;
+        return $this->getEnvironmentTrait();
     }
 
     /**
