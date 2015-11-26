@@ -1,4 +1,18 @@
 /*********/
+/* 4.3.0 */
+/*********/
+
+AMQP Queue system + fix mail error fatal
+
+#New
+ - Component Queue\Driver\Amqp
+ - Component Queue\Channel
+ - Component Queue\Channel\Settings
+
+#Fix
+ - Error mail sent on error
+
+/*********/
 /* 4.2.0 */
 /*********/
 
