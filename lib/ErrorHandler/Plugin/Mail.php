@@ -39,7 +39,6 @@ class Mail extends Abstraction
                 $mail->AddAddress($recipient);
             }
         }
-
         return $mail->Send();
     }
 
