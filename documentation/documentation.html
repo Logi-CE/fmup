@@ -5933,7 +5933,7 @@ Error message and password prompt
 <div modified="20151030104823994" modifier="Jay" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
-<div modified="20151030140216028" modifier="Jay" title="$:/state/sidebar">
+<div modified="20151127160335414" modifier="Jay" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div modified="20151030103145006" modifier="Jay" title="$:/state/tab--1963855381">
@@ -5963,7 +5963,7 @@ Error message and password prompt
 <div created="20151030103031656" creator="J" modified="20151030103031920" modifier="Ja" title="$:/status/UserName">
 <pre>Jay</pre>
 </div>
-<div list="Routing Response Welcome" title="$:/StoryList">
+<div list="Request Welcome" title="$:/StoryList">
 <pre></pre>
 </div>
 <div modified="20151030103239275" modifier="Jay" title="$:/temp/HidePluginWarning">
@@ -6350,22 +6350,31 @@ On ajoute autant de `FMUP\Dispatcher\Plugin` que necessaire dans le `PreDispatch
 Par défaut, il existe le Dispatcher `FMUP\Dispatcher\Post` qui s'execute en `PostDispatch` qui inclue le plugin `FMUP\Dispatcher\Plugin\Render` pour faire le rendu de la `Response` au navigateur.​
 </pre>
 </div>
-<div created="20151030130001223" creator="Jay" modified="20151030130139262" modifier="Jay" tags="" title="Request">
+<div created="20151030130001223" creator="Jay" modified="20151127160331590" modifier="Jay" tags="" title="Request">
 <pre>!Description
-Le composant `Request` a pour but d'analyser une requete HTTP et d'offrir de maniere perene le resultat de cette analyse sous forme d'objet. 
+Le composant `Request` a pour but d'analyser une requete et d'offrir de maniere perene le resultat de cette analyse sous forme d'objet. 
+
+!!Http
+Le composant `Request\Http` implemente l'analyse d'une requete HTTP.
+
 Concretement, cela permet de recuperer les GET/POST etc sans utiliser la superglobale au sein du code. 
 
 Grace a ce composant, il sera ainsi possible de determiner si l'utilisateur a fait une requete Ajax, un post, un upload de fichier, son navigateur, s'il possede tel ou tel composant, ses langues etc...
+
+!!Cli
+En mode CLI (Command Line Interface), Le composant `Request\Cli` analyse les parametres passés au script grace a la syntaxe [[GetOpt|http://php.net/getopt]]. Il faut définir ces parametres grace a la methode `defineOpt` avant utilisation. Le parametre ''--route'' est utilisé pour diriger une requete.
 
 !Comment le recuperer et/ou l'utiliser ?
 
 Dans un controlleur, il est possible d'heriter du controlleur `\FMUP\Controller` afin de pouvoir recuperer la requete (apres modification le cas echeant apres le systeme de routing) grace à la methode `getRequest()`
 
-Dans les autres cas, il est possible de faire un `new \FMUP\Request()` afin de beneficier de ses fonctionnalitées.
+Dans les autres cas, il est possible de faire un `new \FMUP\Request\Http()` afin de beneficier de ses fonctionnalitées.
 
 ''@@color:red;
 CETTE PRATIQUE N'EST PAS DU TOUT CONSEILLEE ! La requete devrait toujours n'être accessible que depuis un controlleur ou a un niveau supérieur (Route/Routing/Post-Traitement....).​
-@@''</pre>
+@@''
+
+</pre>
 </div>
 <div created="20151030130150631" creator="Jay" modified="20151102152849273" modifier="Jay" tags="" title="Response">
 <pre>!Description

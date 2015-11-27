@@ -11,7 +11,7 @@ Framework CLI
  - Component Request\Http
  
 #Incompatible
- - Request\Http is now abstract - you have to use Request\Http if you want to create new request (compatible beceause no one wants to create a request)
+ - Request\Http is now abstract - you have to use Request\Http if you want to create new request (compatible because no one wants to create a request)
  - Require now PHP >= 5.4 due to use of Traits
 
 /*********/
