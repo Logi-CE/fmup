@@ -31,31 +31,7 @@ $sys_function = null;
  */
 class Framework
 {
-    /**
-     * @var \FMUP\Sapi
-     */
-    private $sapi;
-
-    /**
-     * @return \FMUP\Sapi
-     */
-    public function getSapi()
-    {
-        if (!$this->sapi) {
-            $this->sapi = \FMUP\Sapi::getInstance();
-        }
-        return $this->sapi;
-    }
-
-    /**
-     * @param \FMUP\Sapi $sapi
-     * @return $this
-     */
-    public function setSapi(\FMUP\Sapi $sapi)
-    {
-        $this->sapi = $sapi;
-        return $this;
-    }
+    use \FMUP\Sapi\OptionalTrait;
 
     public function initialize ()
     {
