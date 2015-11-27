@@ -49,31 +49,6 @@ class Framework extends \Framework
      * @var Config
      */
     private $config;
-    /**
-     * @var Sapi
-     */
-    private $sapi;
-
-    /**
-     * @return Sapi
-     */
-    public function getSapi()
-    {
-        if (!$this->sapi) {
-            $this->sapi = Sapi::getInstance();
-        }
-        return $this->sapi;
-    }
-
-    /**
-     * @param Sapi $sapi
-     * @return $this
-     */
-    public function setSapi(Sapi $sapi)
-    {
-        $this->sapi = $sapi;
-        return $this;
-    }
 
     /**
      * @param Routing $routingSystem
