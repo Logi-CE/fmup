@@ -93,7 +93,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetRequest(FMUPController $controller)
     {
         $controller2 = clone $controller;
-        $controller2->setRequest(new Request());
+        $controller2->setRequest(new Request\Http());
 
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a request doesn't affect the controller.");
 
@@ -131,7 +131,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testGetRequest(FMUPController $controller)
     {
         $controller2 = clone $controller;
-        $request = new Request();
+        $request = new Request\Http();
         $controller2->setRequest($request);
         $this->assertSame($request, $controller2->getRequest(), "Request given to controller is not the same that getRequest give.");
         $this->assertNotNull($controller2->getRequest(), "Request should be not null");

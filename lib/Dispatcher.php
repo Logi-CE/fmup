@@ -2,9 +2,13 @@
 namespace FMUP;
 
 use FMUP\Dispatcher\Plugin;
+use FMUP\Environment;
+use FMUP\Sapi;
 
 class Dispatcher
 {
+    use Environment\OptionalTrait, Sapi\OptionalTrait;
+
     /**
      * List of routes to check on routing
      * @var array
@@ -27,14 +31,20 @@ class Dispatcher
      * Dispatch routes and return the first available route
      * @param Request $request
      * @param Response $response
+     * @return $this
      */
     public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
         foreach ($this->plugins as $plugin) {
             /* @var $plugin Plugin */
-            $plugin->setRequest($request)->setResponse($response)->handle();
+            $plugin->setRequest($request)->setResponse($response)
+                ->setSapi($this->getSapi())->setEnvironment($this->getEnvironment());
+            if ($plugin->canHandle()) {
+                $plugin->handle();
+            }
         }
+        return $this;
     }
 
     /**

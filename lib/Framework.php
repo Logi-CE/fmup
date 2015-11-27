@@ -77,7 +77,7 @@ class Framework extends \Framework
     public function getRequest()
     {
         if (!$this->request) {
-            $this->request = new Request();
+            $this->request = ($this->getSapi()->get() == Sapi::CLI ? new Request\Cli() : new Request\Http());
         }
         return $this->request;
     }
@@ -320,7 +320,8 @@ class Framework extends \Framework
         $error = error_get_last();
         $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
         $code = E_PARSE | E_ERROR | E_USER_ERROR;
-        if ($error !== null && ($error['type'] & $code)) {
+        $canHeader = $this->getSapi()->get() != Sapi::CLI;
+        if ($error !== null && ($error['type'] & $code) && $canHeader) {
             $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
             $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
             $errorHeader->render();
@@ -411,6 +412,9 @@ class Framework extends \Framework
 
     public function initialize()
     {
+        if (!$this->getBootstrap()->hasSapi()) {
+            $this->getBootstrap()->setSapi($this->getSapi());
+        }
         if (!$this->getBootstrap()->hasRequest()) {
             $this->getBootstrap()->setRequest($this->getRequest());
         }

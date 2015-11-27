@@ -1,6 +1,8 @@
 <?php
 namespace FMUP\ErrorHandler\Plugin;
 
+use FMUP\Sapi;
+
 class Mail extends Abstraction
 {
     public function canHandle()
@@ -19,12 +21,15 @@ class Mail extends Abstraction
     protected function sendMail($body)
     {
         $config = $this->getBootstrap()->getConfig();
+        $serverName = $this->getBootstrap()->getSapi()->get() != Sapi::CLI
+            ? $this->getRequest()->getServer(\FMUP\Request\Http::SERVER_NAME)
+            : $this->getBootstrap()->getConfig()->get('erreur_mail_sujet');
 
         $mail = new \PHPMailer();
         $mail = \EmailHelper::parametrerHeaders($mail);
         $mail->From       = $config->get('mail_robot');
         $mail->FromName   = $config->get('mail_robot_name');
-        $mail->Subject    = '[Erreur] ' . $this->getRequest()->getServer(\FMUP\Request::SERVER_NAME);
+        $mail->Subject    = '[Erreur] ' . $serverName;
         $mail->AltBody    = $body;
         $mail->WordWrap   = 50; // set word wrap
 

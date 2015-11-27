@@ -3,6 +3,10 @@ namespace FMUP;
 
 class Bootstrap
 {
+    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
+    use Sapi\OptionalTrait;
+    use Logger\LoggerTrait { getLogger as getLoggerTrait; };
+
     private $isErrorHandlerRegistered = false;
     private $logger;
     private $request;
@@ -10,7 +14,6 @@ class Bootstrap
     private $config;
     private $flashMessenger;
     private $isWarmed;
-    private $environment;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -71,13 +74,15 @@ class Bootstrap
      */
     public function getLogger()
     {
-        if (!$this->logger) {
-            $this->logger = new Logger();
-            $this->logger->setRequest($this->getRequest())
+        if (!$this->hasLogger()) {
+            $this->setLogger(
+                (new Logger())
+                ->setRequest($this->getRequest())
                 ->setConfig($this->getConfig())
-                ->setEnvironment($this->getEnvironment());
+                ->setEnvironment($this->getEnvironment())
+            );
         }
-        return $this->logger;
+        return $this->getLoggerTrait();
     }
 
     /**
@@ -87,10 +92,10 @@ class Bootstrap
      */
     public function setLogger(Logger $logger)
     {
-        $this->logger = $logger;
         if (!$logger->hasEnvironment()) {
             $logger->setEnvironment($this->getEnvironment());
         }
+        $this->setEnvironmentTrait($logger);
         return $this;
     }
 
@@ -135,7 +140,6 @@ class Bootstrap
     {
         return !is_null($this->request);
     }
-
 
     /**
      * Get flashMessenger
@@ -185,24 +189,6 @@ class Bootstrap
         return !is_null($this->config);
     }
 
-    public function getEnvironment()
-    {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
-            $this->environment->setConfig($this->getConfig());
-        }
-        return $this->environment;
-    }
-
-    public function setEnvironment(Environment $environment)
-    {
-        if (!$environment->hasConfig()) {
-            $environment->setConfig($this->getConfig());
-        }
-        $this->environment = $environment;
-        return $this;
-    }
-
     /**
      * @return bool
      */
@@ -217,6 +203,32 @@ class Bootstrap
     public function setIsWarmed()
     {
         $this->isWarmed = true;
+        return $this;
+    }
+
+    /**
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        if (!$this->hasEnvironment()) {
+            $environment = Environment::getInstance();
+            $environment->setConfig($this->getConfig());
+            $this->setEnvironmentTrait($environment);
+        }
+        return $this->getEnvironmentTrait();
+    }
+
+    /**
+     * @param Environment $environment
+     * @return $this
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        if (!$environment->hasConfig()) {
+            $environment->setConfig($this->getConfig());
+        }
+        $this->setEnvironmentTrait($environment);
         return $this;
     }
 }

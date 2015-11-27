@@ -1,4 +1,20 @@
 /*********/
+/* 5.0.0 */
+/*********/
+
+Framework CLI
+
+#New
+ - Component Sapi
+ - Component Routing\Route\Cli
+ - Component Request\Cli
+ - Component Request\Http
+ 
+#Incompatible
+ - Request\Http is now abstract - you have to use Request\Http if you want to create new request (compatible beceause no one wants to create a request)
+ - Require now PHP >= 5.4 due to use of Traits
+
+/*********/
 /* 4.3.0 */
 /*********/
 
