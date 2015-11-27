@@ -5,10 +5,9 @@ class Bootstrap
 {
     use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
     use Sapi\OptionalTrait;
-    use Logger\LoggerTrait { getLogger as getLoggerTrait; };
+    use Logger\LoggerTrait { getLogger as getLoggerTrait; }
 
     private $isErrorHandlerRegistered = false;
-    private $logger;
     private $request;
     private $session;
     private $config;
