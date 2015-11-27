@@ -65,11 +65,6 @@ class Logger
      */
     private $config;
 
-    /**
-     * @var Environment
-     */
-    private $environment;
-
     protected $factory;
 
     /**
