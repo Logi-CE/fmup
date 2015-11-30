@@ -5,7 +5,7 @@ class Bootstrap
 {
     use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
     use Sapi\OptionalTrait;
-    use Logger\LoggerTrait { getLogger as getLoggerTrait; }
+    use Logger\LoggerTrait { getLogger as getLoggerTrait; setLogger as setLoggerTrait; }
 
     private $isErrorHandlerRegistered = false;
     private $request;
@@ -94,7 +94,7 @@ class Bootstrap
         if (!$logger->hasEnvironment()) {
             $logger->setEnvironment($this->getEnvironment());
         }
-        $this->setEnvironmentTrait($logger);
+        $this->setLoggerTrait($logger);
         return $this;
     }
 
