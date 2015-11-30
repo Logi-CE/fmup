@@ -1,4 +1,13 @@
 /*********/
+/* 5.0.2 */
+/*********/
+
+FMUP Bootstrap Environment + Logger confusion
+
+#Fix
+ - FMUP Bootstrap Environment + Logger confusion
+
+/*********/
 /* 5.0.1 */
 /*********/
 
