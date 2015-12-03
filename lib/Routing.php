@@ -9,6 +9,8 @@ use FMUP\Routing\Route;
  */
 class Routing
 {
+    const WAY_APPEND = 'WAY_APPEND';
+    const WAY_PREPEND = 'WAY_PREPEND';
     /**
      * List of routes to check on routing
      * @var array
@@ -21,13 +23,6 @@ class Routing
     private $originalRequest;
 
     /**
-     * Construct - may define routes to instantiate
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Dispatch routes and return the first available route
      * @param Request $request
      * @return Route|null
@@ -37,6 +32,7 @@ class Routing
         $this->setOriginalRequest($request);
         $redispatch = false;
         $routeSelected = null;
+        $this->defaultRoutes();
         do {
             foreach ($this->routes as $route) {
                 /* @var $route Route */
@@ -85,11 +81,25 @@ class Routing
     /**
      * Add a route in stack
      * @param Route $route
+     * @param string $way
      * @return $this
      */
-    public function addRoute(Route $route)
+    public function addRoute(Route $route, $way = self::WAY_APPEND)
     {
-        array_push($this->routes, $route);
+        if ($way == self::WAY_PREPEND) {
+            array_unshift($this->routes, $route);
+        } else {
+            array_push($this->routes, $route);
+        }
+        return $this;
+    }
+
+    /**
+     * Can be used to define routes initialized by default
+     * @return $this
+     */
+    public function defaultRoutes()
+    {
         return $this;
     }
 }
