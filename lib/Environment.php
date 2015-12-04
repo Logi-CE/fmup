@@ -75,7 +75,6 @@ class Environment
         if ($this->getConfig()->has('version')) {
             return (string) $this->getConfig()->get('version');
         }
-        //throw new Exception('No environment detected');
-        return 'dev';
+        throw new Exception('No environment detected');
     }
 }
