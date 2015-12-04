@@ -9,6 +9,9 @@ class Dispatcher
 {
     use Environment\OptionalTrait, Sapi\OptionalTrait;
 
+    const WAY_APPEND = 'WAY_APPEND';
+    const WAY_PREPEND = 'WAY_PREPEND';
+
     /**
      * List of routes to check on routing
      * @var array
@@ -21,13 +24,6 @@ class Dispatcher
     private $originalRequest;
 
     /**
-     * Construct - may define routes to instantiate
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Dispatch routes and return the first available route
      * @param Request $request
      * @param Response $response
@@ -36,6 +32,7 @@ class Dispatcher
     public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
+        $this->defaultPlugins();
         foreach ($this->plugins as $plugin) {
             /* @var $plugin Plugin */
             $plugin->setRequest($request)->setResponse($response)
@@ -67,7 +64,6 @@ class Dispatcher
         return $this->originalRequest;
     }
 
-
     /**
      * Clear all routes defined
      * @return $this
@@ -81,11 +77,25 @@ class Dispatcher
     /**
      * Add a plugin in stack
      * @param Plugin $plugin
+     * @param string $way
      * @return $this
      */
-    public function addPlugin(Plugin $plugin)
+    public function addPlugin(Plugin $plugin, $way = self::WAY_APPEND)
     {
-        array_push($this->plugins, $plugin);
+        if ($way == self::WAY_APPEND) {
+            array_push($this->plugins, $plugin);
+        } else {
+            array_unshift($this->plugins, $plugin);
+        }
+        return $this;
+    }
+
+    /**
+     * Initialize default plugins to define - optional
+     * @return $this
+     */
+    public function defaultPlugins()
+    {
         return $this;
     }
 }

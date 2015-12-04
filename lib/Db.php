@@ -15,6 +15,10 @@ class Db implements Logger\LoggerInterface
     protected $driver = Factory::DRIVER_PDO;
     protected $params = array();
     private $driverInstance = null;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
     /**
      * @param array $params
@@ -35,13 +39,34 @@ class Db implements Logger\LoggerInterface
             return $this->driverInstance;
         }
 
-        $driverInstance = Factory::getInstance()->create($this->driver, $this->params);
+        $driverInstance = $this->getFactory()->create($this->driver, $this->params);
         if ($driverInstance instanceof Logger\LoggerInterface && true === $this->hasLogger()) {
             $driverInstance->setLogger($this->getLogger());
         }
 
         $this->driverInstance = $driverInstance;
         return $this->driverInstance;
+    }
+
+    /**
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        if (!$this->factory) {
+            $this->factory = Factory::getInstance();
+        }
+        return $this->factory;
+    }
+
+    /**
+     * @param Factory $factory
+     * @return $this
+     */
+    public function setFactory(Factory $factory)
+    {
+        $this->factory = $factory;
+        return $this;
     }
 
     /**

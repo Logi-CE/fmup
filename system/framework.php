@@ -52,21 +52,21 @@ class Framework
         $this->registerShutdownFunction();
         $this->instantiateSession();
 
+        // On allume la console des logs
         if ($this->getSapi()->get() != \FMUP\Sapi::CLI) {
-            // On allume la console des logs
             Console::initialiser();
+        }
 
-            //log des pages
-            $url = '';
-            if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            if (Config::isDebug()) {
-                if (isset($_SESSION['id_utilisateur'])) {
-                    FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
-                    FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
-                } else {
-                    FileHelper::fLog('URL', $url);
-                    FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
-                }
+        //log des pages
+        $url = '';
+        if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        if (Config::isDebug()) {
+            if (isset($_SESSION['id_utilisateur'])) {
+                FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
+                FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
+            } else {
+                FileHelper::fLog('URL', $url);
+                FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
             }
         }
         $this->dispatch();
@@ -201,10 +201,6 @@ class Framework
      */
     public function getRoute()
     {
-        if ($this->getSapi()->get() == \FMUP\Sapi::CLI) {
-            $this->getRouteError();
-            return $this;
-        }
         global $sys_directory;
         global $sys_controller;
         global $sys_function;
@@ -241,7 +237,7 @@ class Framework
         $sys_controller = "ctrl_".$matches[2];
         $sys_function = String::toCamlCase($matches[3]);
 
-        
+
         if (
             !class_exists(\String::toCamlCase($sys_controller)) ||
             !is_callable(array(\String::toCamlCase($sys_controller), $sys_function)))

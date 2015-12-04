@@ -1,8 +1,13 @@
 <?php
 namespace FMUP\Tools;
 
+use FMUP\Logger\LoggerTrait;
+use FMUP\Logger;
+
 class Log
 {
+    use LoggerTrait;
+
     /**
      * @var \PHPMailer
      */
@@ -20,7 +25,7 @@ class Log
     public function sendErrorLog($date = null)
     {
         $mailAddresses = explode(';', str_replace(',', ';', $this->getConfig()->get('mail_support')));
-        return $this->sendFileToMail(\Config::pathToPhpErrorLog($date), $mailAddresses);
+        return $this->sendFileToMail(\Config::getInstance()->setFmupConfig($this->getConfig())->pathToPhpErrorLog($date), $mailAddresses);
     }
 
     /**
@@ -48,6 +53,7 @@ class Log
             }
             return $mailer->Send();
         } catch (\Exception $e) {
+            $this->log(Logger::CRITICAL, $e->getMessage(), array('exception' => $e));
             return false;
         }
     }
@@ -95,9 +101,17 @@ class Log
      */
     public function getConfig()
     {
-        if (!$this->config) {
+        if (!$this->hasConfig()) {
             throw new \LogicException("This object needs config!");
         }
         return $this->config;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasConfig()
+    {
+        return (bool) $this->config;
     }
 }
