@@ -15,6 +15,8 @@ if (!defined('BASE_PATH')) {
  */
 class Framework extends \Framework
 {
+    use Sapi\OptionalTrait;
+
     /**
      * @var Request
      */
