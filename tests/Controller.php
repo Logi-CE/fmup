@@ -21,17 +21,12 @@ use \FMUP\Session;
 use \FMUP\Bootstrap;
 use \FMUP\View;
 
-class MockController extends FMUPController
-{
-    public function __construct(){}
-}
-
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testConstruct()
     {
-        $controller = $this->getMockBuilder('FMUPController')
+        $controller = $this->getMockBuilder('\FMUP\Controller')
             ->setMethods(null)
             ->getMockForAbstractClass();
 
