@@ -18,7 +18,7 @@ class Queue
      */
     public function __construct($name)
     {
-        $this->channelName = $name;
+        $this->channelName = (string)$name;
     }
 
     /**

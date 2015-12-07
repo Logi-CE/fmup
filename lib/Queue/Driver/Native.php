@@ -6,7 +6,7 @@ use \FMUP\Queue\Exception;
 use \FMUP\Queue\Channel;
 use \FMUP\Environment;
 
-class Native implements DriverInterface
+class Native implements DriverInterface, Environment\OptionalInterface
 {
     use Environment\OptionalTrait;
 
