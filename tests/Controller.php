@@ -30,7 +30,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(null)
             ->getMockForAbstractClass();
 
-        $this->assertInstanceOf('FMUPController', $controller, 'Not an instance of FMUPController');
+        $this->assertInstanceOf('\FMUP\Controller', $controller, 'Not an instance of FMUP\Controller');
 
         return $controller;
     }
