@@ -55,21 +55,21 @@ class Url
     }
 
     /**
-     * @return \FMUP\Request
+     * @return \FMUP\Request\Http
      */
     public function getRequest()
     {
         if (!$this->request) {
-            $this->request = new \FMUP\Request();
+            $this->request = new \FMUP\Request\Http();
         }
         return $this->request;
     }
 
     /**
-     * @param \FMUP\Request $request
+     * @param \FMUP\Request\Http $request
      * @return $this
      */
-    public function setRequest(\FMUP\Request $request)
+    public function setRequest(\FMUP\Request\Http $request)
     {
         $this->request = $request;
         return $this;

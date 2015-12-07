@@ -16,7 +16,7 @@ class Error extends Standard
 {
     const NAME = 'Error';
 
-    private $request;
+    private $projectVersion;
 
     public function getName()
     {
@@ -28,7 +28,7 @@ class Error extends Standard
         parent::configure();
         $handler = new NativeMailerHandler(
             explode(',', $this->getConfig()->get('mail_support')),
-            '[Erreur] ' . $this->getRequest()->getServer(Request::SERVER_NAME),
+            '[Erreur] ' . $this->getProjectVersion()->name(),
             $this->getConfig()->get('mail_robot'),
             Logger::CRITICAL
         );
@@ -41,17 +41,24 @@ class Error extends Standard
         return $this;
     }
 
-    public function getRequest()
+    /**
+     * @return \FMUP\ProjectVersion
+     */
+    private function getProjectVersion()
     {
-        if (!$this->request) {
-            $this->request = new Request();
+        if (!$this->projectVersion) {
+            $this->projectVersion = \FMUP\ProjectVersion::getInstance();
         }
-        return $this->request;
+        return $this->projectVersion;
     }
 
-    public function setRequest(Request $request)
+    /**
+     * @param \FMUP\ProjectVersion $projectVersion
+     * @return $this
+     */
+    public function setProjectVersion(\FMUP\ProjectVersion $projectVersion)
     {
-        $this->request = $request;
+        $this->projectVersion = $projectVersion;
         return $this;
     }
 }

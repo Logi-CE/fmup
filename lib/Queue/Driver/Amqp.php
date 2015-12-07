@@ -94,7 +94,9 @@ class Amqp implements DriverInterface
     {
         $queue = $this->getQueue($channel);
         $serialize = $channel->getSettings()->getSerialize();
-        $msg = new AMQPMessage($serialize ? serialize($message) : (string)$message);
+        $msg = (!$message instanceof AMQPMessage)
+            ? new AMQPMessage($serialize ? serialize($message) : (string)$message)
+            : $message;
         $queue->basic_publish($msg, '', $channel->getName());
         return true;
     }

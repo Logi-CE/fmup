@@ -4,7 +4,7 @@
  * @deprecated
  * @todo refactor to avoid use of this code
  */
-if (!isset($_GET['sys'])) {
+if (!isset($_GET['sys']) && \FMUP\Sapi::getInstance()->get() != \FMUP\Sapi::CLI) {
     $result = preg_match('~/([^&?]+)((\&|\?).*)?$~', $_SERVER['REQUEST_URI'], $matches);
     $_GET['sys'] = isset($matches[1]) ? $matches[1] : '';
     if (isset($matches[2])) {
@@ -31,6 +31,8 @@ $sys_function = null;
  */
 class Framework
 {
+    use \FMUP\Sapi\OptionalTrait;
+
     public function initialize ()
     {
         global $sys_directory;
@@ -51,7 +53,9 @@ class Framework
         $this->instantiateSession();
 
         // On allume la console des logs
-        Console::initialiser();
+        if ($this->getSapi()->get() != \FMUP\Sapi::CLI) {
+            Console::initialiser();
+        }
 
         //log des pages
         $url = '';
@@ -115,6 +119,9 @@ class Framework
 
     protected function instantiateSession()
     {
+        if ($this->getSapi()->get() == \FMUP\Sapi::CLI) {
+            return $this;
+        }
         if (Config::getGestionSession()) {
             $session = new HlpSessions('BACK');
             session_set_save_handler(
@@ -230,7 +237,7 @@ class Framework
         $sys_controller = "ctrl_".$matches[2];
         $sys_function = String::toCamlCase($matches[3]);
 
-        
+
         if (
             !class_exists(\String::toCamlCase($sys_controller)) ||
             !is_callable(array(\String::toCamlCase($sys_controller), $sys_function)))

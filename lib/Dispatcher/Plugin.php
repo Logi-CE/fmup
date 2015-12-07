@@ -4,6 +4,8 @@ namespace FMUP\Dispatcher;
 use FMUP\Exception;
 use FMUP\Request;
 use FMUP\Response;
+use FMUP\Sapi;
+use FMUP\Environment;
 
 /**
  * Class Route - Route handling
@@ -11,6 +13,7 @@ use FMUP\Response;
  */
 abstract class Plugin
 {
+    use Environment\OptionalTrait, Sapi\OptionalTrait;
     /**
      * @var Request
      */
@@ -63,6 +66,15 @@ abstract class Plugin
             throw new Exception('Response not set');
         }
         return $this->response;
+    }
+
+    /**
+     * Check if plugin can handle request/response
+     * @return bool
+     */
+    public function canHandle()
+    {
+        return true;
     }
 
     /**

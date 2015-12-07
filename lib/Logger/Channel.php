@@ -9,6 +9,7 @@ use FMUP\Environment;
 
 abstract class Channel
 {
+    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
     /**
      * @var MonologLogger
      */
@@ -28,11 +29,6 @@ abstract class Channel
      * @var Response
      */
     private $response;
-
-    /**
-     * @var Environment
-     */
-    private $environment;
 
     /**
      * Name of the channel
@@ -101,29 +97,19 @@ abstract class Channel
     }
 
     /**
-     * Define environment
-     * @param Environment $environment
-     * @return $this
-     */
-    public function setEnvironment(Environment $environment)
-    {
-        $this->environment = $environment;
-        return $this;
-    }
-
-    /**
      * @return Environment
      * @throws Exception
      */
     public function getEnvironment()
     {
-        if (!$this->environment) {
-            $this->environment = Environment::getInstance();
+        if (!$this->hasEnvironment()) {
+            $environment = Environment::getInstance();
             if ($this->hasConfig()) {
-                $this->environment->setConfig($this->getConfig());
+                $environment->setConfig($this->getConfig());
             }
+            $this->setEnvironment($environment);
         }
-        return $this->environment;
+        return $this->getEnvironmentTrait();
     }
 
     /**
