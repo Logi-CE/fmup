@@ -100,7 +100,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     public function testPullPush(\FMUP\Queue $queue)
     {
-        
+
     }
 
     public function testGetStats()
