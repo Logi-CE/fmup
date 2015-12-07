@@ -200,4 +200,15 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($cache, $return, 'Set settings must return its instance');
         $this->assertFalse($cache->has('test'), 'Test should\'nt exist');
     }
+
+    /**
+     * @depends testGetCacheInstance
+     * @param \FMUP\Cache $cache
+     */
+    public function testSetFactory(\FMUP\Cache $cache)
+    {
+        $mockFactory = \FMUP\Cache\Factory::getInstance();
+        $cache->setFactory($mockFactory);
+        $this->assertSame($mockFactory, $cache->getFactory(), 'Factory is not set correctly');
+    }
 }

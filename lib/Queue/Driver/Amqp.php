@@ -9,7 +9,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class Amqp implements DriverInterface
+class Amqp implements DriverInterface, Environment\OptionalInterface
 {
     use Environment\OptionalTrait;
 

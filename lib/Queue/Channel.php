@@ -1,8 +1,6 @@
 <?php
 namespace FMUP\Queue;
 
-use FMUP\Queue\Exception;
-
 class Channel
 {
     private $name;
