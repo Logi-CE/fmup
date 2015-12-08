@@ -3,7 +3,9 @@ namespace FMUP;
 
 class Logger
 {
-    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
+    use Environment\OptionalTrait {
+        getEnvironment as getEnvironmentTrait;
+    }
     use Config\OptionalTrait;
     /**
      * Detailed debug information
@@ -163,6 +165,6 @@ class Logger
         if ($channelType->getName() === \FMUP\Logger\Channel\Standard::NAME) {
             $message = "[Channel $channel] $message";
         }
-        return $channelType->addRecord((int) $level, $message, (array) $context);
+        return $channelType->addRecord((int)$level, $message, (array)$context);
     }
 }

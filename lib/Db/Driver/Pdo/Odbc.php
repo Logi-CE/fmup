@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Db\Driver\Pdo;
 
-use \FMUP\Db\Driver\Pdo;
+use FMUP\Db\Driver\Pdo;
 
 class Odbc extends Pdo
 {

@@ -1,8 +1,8 @@
 <?php
 namespace FMUP\ErrorHandler\Plugin;
 
-use \FMUP\Controller\Error;
-use \FMUP\Exception;
+use FMUP\Controller\Error;
+use FMUP\Exception;
 
 /**
  * Class ErrorController

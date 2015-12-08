@@ -133,7 +133,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-                isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
+            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );

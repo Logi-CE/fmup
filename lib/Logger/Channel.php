@@ -1,15 +1,17 @@
 <?php
 namespace FMUP\Logger;
 
-use Monolog\Logger as MonologLogger;
 use FMUP\Config;
+use FMUP\Environment;
 use FMUP\Request;
 use FMUP\Response;
-use FMUP\Environment;
+use Monolog\Logger as MonologLogger;
 
 abstract class Channel
 {
-    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
+    use Environment\OptionalTrait {
+        getEnvironment as getEnvironmentTrait;
+    }
     use Config\OptionalTrait;
 
     /**
@@ -119,6 +121,6 @@ abstract class Channel
      */
     public function addRecord($level, $message, array $context = array())
     {
-        return $this->getLogger()->addRecord((int) $level,(string) $message, (array)$context);
+        return $this->getLogger()->addRecord((int)$level, (string)$message, (array)$context);
     }
 }

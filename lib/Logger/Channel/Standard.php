@@ -2,10 +2,10 @@
 namespace FMUP\Logger\Channel;
 
 use FMUP\Environment;
-use FMUP\Sapi;
 use FMUP\Logger\Channel;
-use Monolog\Handler\FirePHPHandler;
+use FMUP\Sapi;
 use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\FirePHPHandler;
 
 class Standard extends Channel
 {

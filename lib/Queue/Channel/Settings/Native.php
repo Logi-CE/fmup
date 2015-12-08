@@ -39,7 +39,7 @@ class Native extends Settings
      */
     public function setReceiveForceSize($receiveForceSize = false)
     {
-        $this->settings[self::PARAM_RECEIVE_FORCE_SIZE] = (bool) $receiveForceSize;
+        $this->settings[self::PARAM_RECEIVE_FORCE_SIZE] = (bool)$receiveForceSize;
         return $this;
     }
 
@@ -62,7 +62,7 @@ class Native extends Settings
      */
     public function setReceiveModeExcept($receiveModeExcept = false)
     {
-        $this->settings[self::PARAM_RECEIVE_MODE_EXCEPT] = (bool) $receiveModeExcept;
+        $this->settings[self::PARAM_RECEIVE_MODE_EXCEPT] = (bool)$receiveModeExcept;
         return $this;
     }
 

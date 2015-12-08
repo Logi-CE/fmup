@@ -19,8 +19,8 @@ class Cli extends Request
     {
         $long[] = 'route:';
         $this->opt = array(
-            self::SHORT => (string) $short,
-            self::LONG => (array) $long,
+            self::SHORT => (string)$short,
+            self::LONG => (array)$long,
         );
         return $this;
     }

@@ -4,9 +4,9 @@ namespace FMUP\Logger\Channel;
 use FMUP\Request;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
+use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
-use Monolog\Logger;
 
 /**
  * Class Error

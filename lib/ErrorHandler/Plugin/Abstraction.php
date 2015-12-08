@@ -1,10 +1,10 @@
 <?php
 namespace FMUP\ErrorHandler\Plugin;
 
-use FMUP\Response;
-use FMUP\Request;
-use FMUP\Exception;
 use FMUP\Bootstrap;
+use FMUP\Exception;
+use FMUP\Request;
+use FMUP\Response;
 use FMUP\Sapi;
 
 abstract class Abstraction

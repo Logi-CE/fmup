@@ -3,10 +3,16 @@ namespace FMUP;
 
 class Bootstrap
 {
-    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
+    use Environment\OptionalTrait {
+        getEnvironment as getEnvironmentTrait;
+        setEnvironment as setEnvironmentTrait;
+    }
     use Sapi\OptionalTrait;
     use Config\RequiredTrait;
-    use Logger\LoggerTrait { getLogger as getLoggerTrait; setLogger as setLoggerTrait; }
+    use Logger\LoggerTrait {
+        getLogger as getLoggerTrait;
+        setLogger as setLoggerTrait;
+    }
 
     private $isErrorHandlerRegistered = false;
     private $request;
@@ -40,7 +46,7 @@ class Bootstrap
     private function initHelperDb()
     {
         Helper\Db::getInstance()
-            ->setConfig($this->getConfig()) //@todo find a better solution
+            ->setConfig($this->getConfig())//@todo find a better solution
             ->setLogger($this->getLogger());
         return $this;
     }
@@ -76,9 +82,9 @@ class Bootstrap
         if (!$this->hasLogger()) {
             $this->setLogger(
                 (new Logger())
-                ->setRequest($this->getRequest())
-                ->setConfig($this->getConfig())
-                ->setEnvironment($this->getEnvironment())
+                    ->setRequest($this->getRequest())
+                    ->setConfig($this->getConfig())
+                    ->setEnvironment($this->getEnvironment())
             );
         }
         return $this->getLoggerTrait();

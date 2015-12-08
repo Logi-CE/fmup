@@ -1,8 +1,8 @@
 <?php
 namespace FMUP\Tools;
 
-use FMUP\Logger\LoggerTrait;
 use FMUP\Logger;
+use FMUP\Logger\LoggerTrait;
 
 class Log
 {
@@ -112,6 +112,6 @@ class Log
      */
     public function hasConfig()
     {
-        return (bool) $this->config;
+        return (bool)$this->config;
     }
 }
