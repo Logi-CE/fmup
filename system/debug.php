@@ -101,8 +101,6 @@ class Debug
         $retour .= "Mémoire consommée : ".round(abs($memoire), 4)."\n";
         if (!$console) {
             Debug::output($retour);
-        } else {
-            Console::enregistrer($retour);
         }
     }
 }

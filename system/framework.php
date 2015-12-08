@@ -52,11 +52,6 @@ class Framework
         $this->registerShutdownFunction();
         $this->instantiateSession();
 
-        // On allume la console des logs
-        if ($this->getSapi()->get() != \FMUP\Sapi::CLI) {
-            Console::initialiser();
-        }
-
         //log des pages
         $url = '';
         if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -191,7 +186,6 @@ class Framework
      */
     public function shutDown()
     {
-        if (Config::consoleActive()) Console::finaliser();
     }
 
     /**

@@ -252,7 +252,6 @@ class Sql
     public static function conditionsFromArray($params)
     {
         $where = array();
-        Console::enregistrer($params);
         foreach ($params as $champ => $valeur) {
             if (0 === strpos($champ, 'id_') || $champ == 'id') {
                 if ($valeur != '') {

@@ -652,7 +652,6 @@ abstract class Model
             }
             return $this->id;
         } else {
-            Console::enregistrer($this->getErrors());
             return false;
         }
     }

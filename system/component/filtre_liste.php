@@ -506,8 +506,6 @@ class FiltreListe
             $filtre = false;
         }
         
-        Console::enregistrer($filtre);
-        
         return $filtre;
     }
     
