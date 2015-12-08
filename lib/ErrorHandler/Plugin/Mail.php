@@ -69,7 +69,24 @@ class Mail extends Abstraction
         echo '<style>td{padding: 3px 5px;}</style>';
         echo '<table border="1"><tr><th>Fichier</th><th>Ligne</th><th>Fonction</th></tr>';
         unset($retour[0]);
-        foreach ($retour as $trace) {
+        $this->renderTraces($retour);
+        if (!empty($retour[0]['args'][0]) && is_object($retour[0]['args'][0])) {
+            $traces = $retour[0]['args'][0]->getTrace();
+            $this->renderTraces($traces);
+        }
+        echo '</table>';
+        $tampon = ob_get_clean();
+
+        return $tampon;
+    }
+
+    /**
+     * @param array $traces
+     * @return $this
+     */
+    protected function renderTrace(array $traces = array())
+    {
+        foreach ($traces as $trace) {
             echo '<tr>';
             echo '<td>' . ((isset($trace['file'])) ? $trace['file'] : $this->getException()->getFile()) . '</td>';
             echo '<td style="text-align: right;">' . ((isset($trace['line'])) ? $trace['line'] : $this->getException()->getLine()) . '</td>';
@@ -97,40 +114,6 @@ class Mail extends Abstraction
 
             echo '</tr>';
         }
-        if (!empty($retour[0]['args'][0]) && is_object($retour[0]['args'][0])) {
-            $traces = $retour[0]['args'][0]->getTrace();
-            foreach ($traces as $trace) {
-                echo '<tr>';
-                echo '<td>' . ((isset($trace['file'])) ? $trace['file'] : '-') . '</td>';
-                echo '<td style="text-align: right;">' . ((isset($trace['line'])) ? $trace['line'] : '-') . '</td>';
-                echo '<td>' . ((isset($trace['class'])) ? $trace['class'] : '');
-                echo (isset($trace['type'])) ? $trace['type'] : '';
-                echo (isset($trace['function'])) ? $trace['function'] : '';
-
-                $arguments = array();
-                if (!empty($trace['args'])) {
-                    foreach ($trace['args'] as $name => $arg) {
-                        if (is_array($arg)) {
-                            $arguments[] = 'Array';
-                        } elseif (is_object($arg)) {
-                            $arguments[] = 'Object';
-                        } elseif (is_resource($arg)) {
-                            $arguments[] = 'Resource';
-                        } else {
-                            $arg = '"' . $arg . '"';
-                            $coupure = (strlen($arg) > 50) ? '...' : '';
-                            $arguments[] = substr($arg, 0, 50) . $coupure;
-                        }
-                    }
-                }
-                echo '(' . implode(',', $arguments) . ')</td>';
-
-                echo '</tr>';
-            }
-        }
-        echo '</table>';
-        $tampon = ob_get_clean();
-
-        return $tampon;
+        return $this;
     }
 }

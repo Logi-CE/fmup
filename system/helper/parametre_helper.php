@@ -21,23 +21,6 @@ class ParametreHelper
     }
 
     /**
-     * @return DbConnectionMssql|DbConnectionMysql
-     */
-    public function getDb()
-    {
-        if (!$this->db) {
-            $this->db = DbHelper::get();
-        }
-        return $this->db;
-    }
-
-    public function setDb($db)
-    {
-        $this->db = $db;
-        return $this;
-    }
-
-    /**
      * Fonction pré-chargeant les données pour l'utilisation
      * Elle nous permettra de ne lancer qu'une requête puisqu'on gardera les résultats
      */
