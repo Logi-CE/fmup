@@ -4,6 +4,7 @@ namespace FMUP;
 class Logger
 {
     use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
+    use Config\OptionalTrait;
     /**
      * Detailed debug information
      */
@@ -60,10 +61,7 @@ class Logger
      * @var Request
      */
     private $request;
-    /**
-     * @var Config
-     */
-    private $config;
+
 
     protected $factory;
 
@@ -137,27 +135,6 @@ class Logger
             throw new \LogicException('Request is not defined');
         }
         return $this->request;
-    }
-
-    /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            $this->config = new Config();
-        }
-        return $this->config;
     }
 
     /**

@@ -610,7 +610,7 @@ abstract class Model
     public static function getDb()
     {
         if (!self::$dbInstance) {
-            self::$dbInstance = DbHelper::get(Config::parametresConnexionDb());
+            self::$dbInstance = \FMUP\Helper\Db::getInstance()->get();
         }
         return self::$dbInstance;
     }

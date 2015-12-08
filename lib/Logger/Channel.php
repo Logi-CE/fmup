@@ -10,15 +10,12 @@ use FMUP\Environment;
 abstract class Channel
 {
     use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
+    use Config\OptionalTrait;
+
     /**
      * @var MonologLogger
      */
     private $logger;
-
-    /**
-     * @var Config
-     */
-    private $config;
 
     /**
      * @var Request
@@ -63,37 +60,6 @@ abstract class Channel
     {
         $this->logger = $logger;
         return $this;
-    }
-
-    /**
-     * @return Config
-     * @throws Exception
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            throw new Exception('Config is not defined');
-        }
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * Check whether config exists
-     * @return bool
-     */
-    public function hasConfig()
-    {
-        return (bool) $this->config;
     }
 
     /**

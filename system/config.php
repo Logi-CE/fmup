@@ -9,8 +9,8 @@ if (!defined('BASE_PATH')) {
  */
 class Config
 {
+    use \FMUP\Config\OptionalTrait { getConfig as getFmupConfig; setConfig as setFmupConfig;}
     private static $instance;
-    private $fmupConfig = null;
     private $inited = false;
 
     public static function getInstance()
@@ -29,20 +29,6 @@ class Config
     private function __clone()
     {
 
-    }
-
-    public function getFmupConfig()
-    {
-        if (!$this->fmupConfig) {
-            $this->fmupConfig = new \FMUP\Config;
-        }
-        return $this->fmupConfig;
-    }
-
-    public function setFmupConfig(\FMUP\Config\ConfigInterface $config)
-    {
-        $this->fmupConfig = $config;
-        return $this;
     }
 
     private function initDefault()

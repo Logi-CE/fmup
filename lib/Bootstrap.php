@@ -5,12 +5,12 @@ class Bootstrap
 {
     use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
     use Sapi\OptionalTrait;
+    use Config\RequiredTrait;
     use Logger\LoggerTrait { getLogger as getLoggerTrait; setLogger as setLoggerTrait; }
 
     private $isErrorHandlerRegistered = false;
     private $request;
     private $session;
-    private $config;
     private $flashMessenger;
     private $isWarmed;
 
@@ -160,32 +160,6 @@ class Bootstrap
     {
         $this->flashMessenger = $flashMessenger;
         return $this;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->hasConfig()) {
-            throw new \LogicException('Config is not defined');
-        }
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    public function hasConfig()
-    {
-        return !is_null($this->config);
     }
 
     /**

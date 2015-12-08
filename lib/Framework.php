@@ -15,6 +15,8 @@ if (!defined('BASE_PATH')) {
  */
 class Framework extends \Framework
 {
+    use Config\OptionalTrait;
+
     /**
      * @var Request
      */
@@ -45,10 +47,6 @@ class Framework extends \Framework
      * @var Bootstrap
      */
     private $bootstrap;
-    /**
-     * @var Config
-     */
-    private $config;
 
     /**
      * @param Routing $routingSystem
@@ -111,29 +109,6 @@ class Framework extends \Framework
     {
         $this->response = $response;
         return $this;
-    }
-
-    /**
-     * Define a config to use
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * Retrieve defined config
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            $this->config = new Config;
-        }
-        return $this->config;
     }
 
     /**
@@ -424,7 +399,6 @@ class Framework extends \Framework
         $this->getBootstrap()->warmUp();
 
         \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
-        \Model::setDb(Helper\Db::getInstance()->get()); //@todo find a better solution
         parent::initialize();
     }
 }
