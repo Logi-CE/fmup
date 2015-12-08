@@ -227,11 +227,11 @@ class Config
      */
     public static function siteOuvert()
     {
-        $retour = (
-            !self::getInstance()->get('maintenance_forcee')
-            && self::getInstance()->get('utilise_parametres')
-            && ParametreHelper::getInstance()->trouver('Maintenance')
+        $isMaintenance = (
+            !(self::getInstance()->get('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance'))
         );
+        $retour = !self::getInstance()->get('maintenance_forcee') && $isMaintenance;
+
         $day_number = date('w');
         $heure = date('H');
         foreach (self::getInstance()->get('maintenance_plages') as $plage) {
