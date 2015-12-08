@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe permettant de créer différents éléments d'un formulaire
  * @version 1.0.
@@ -9,25 +10,25 @@ class FormHelper
      * Crée un input hidden contenant le token du formulaire
      * @return string : L'input HTML
      */
-    public static function getInputToken ()
+    public static function getInputToken()
     {
         return self::inputSimple('hidden', array('name' => 'tokenform', 'value' => $_SESSION['jeton_formulaire']));
     }
-    
+
     /**
      * Fonction vérifiant le token retourné dans un formulaire
      * @return bool : Vrai si le token est validé
      */
-    public static function checkToken ()
+    public static function checkToken()
     {
         $retour = false;
         if (isset($_REQUEST['tokenform'], $_SESSION['jeton_formulaire'])) {
             $retour = ($_SESSION['jeton_formulaire'] == $_REQUEST['tokenform']);
         }
-    
+
         return $retour;
     }
-    
+
     /**
      * Fonction déterminant si le champ d'un formulaire est considéré comme éditable ou non
      * (non éditable transforme l'input en span)
@@ -36,11 +37,11 @@ class FormHelper
      * @param bool $editable : [OPT] Le flag éditable dans la fonction
      * @return bool : VRAI si pas éditable
      */
-    protected static function getDroitInput ($object, $attribute, $editable = true)
+    protected static function getDroitInput($object, $attribute, $editable = true)
     {
         return (!$editable || !$object->isChampModifiable($attribute));
     }
-    
+
     /**
      * Fonction permettant de formater les params
      * @param Object $object : L'objet de l'attribut
@@ -48,40 +49,40 @@ class FormHelper
      * @param array $params : Les params
      * @return array : les params
      */
-    public static function formaterClassePourInput ($object, $attribute, $params)
+    public static function formaterClassePourInput($object, $attribute, $params)
     {
         $class_name = String::to_Case(get_class($object));
-        
+
         $params['value'] = $object->getAttribute($attribute);
-    
+
         if (isset($params["autocomplete"])) {
             $params["autocomplete"] = ' autocomplete="off"';
         }
-    
+
         if (!isset($params["name"])) {
             $params["name"] = $class_name;
             // ???
             if (array_key_exists('premier_tableau', $params) && $params['premier_tableau'] != '') {
-                $params["name"] .= "[".$params['premier_tableau']."]";
+                $params["name"] .= "[" . $params['premier_tableau'] . "]";
             }
-            $params["name"] .= "[".$attribute."]";
+            $params["name"] .= "[" . $attribute . "]";
             if (array_key_exists('sous_tableau', $params) && $params['sous_tableau'] != '') {
-                $params["name"] .= "[".$params['sous_tableau']."]";
+                $params["name"] .= "[" . $params['sous_tableau'] . "]";
             }
         }
-    
+
         if (empty($params["id"])) {
-            $params["id"] = $class_name."_".$attribute;
+            $params["id"] = $class_name . "_" . $attribute;
         }
-    
+
         if (empty($params["class"])) {
             $params["class"] = '';
         }
-        
+
         if (empty($params["invite"])) {
             $params["invite"] = array();
         }
-    
+
         return $params;
     }
 
@@ -102,9 +103,9 @@ class FormHelper
     {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
-        
+
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-        
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
 
         // formatage optionnel de la valeur, $params['formatage'] doit etre une fonction de unite helper
@@ -115,22 +116,22 @@ class FormHelper
             }
             unset($params['formatage']);
         }
-        
+
         if (isset($params["id_span"])) {
             $id_span = $params["id_span"];
             unset($params["id_span"]);
         } else {
-            $id_span = "span_".$params["id"];
+            $id_span = "span_" . $params["id"];
         }
-        
+
         // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
+        if (isset($errors[$attribute])) {
             $params["class"] .= " erreur";
         } elseif (isset($differences[$attribute])) {
             $params["class"] .= " difference";
             $params["title"] = "ce champ a &eacute;t&eacute; modifi&eacute;";
         }
-        
+
         // Création du champ
         if ($no_edit) {
             $retour = self::spanSimple($valeur_formatee, $id_span, $params);
@@ -141,7 +142,7 @@ class FormHelper
 
         return $retour;
     }
-    
+
     /**
      * Retourne un input password avec la value de l'object $object suivant la propriété $attribute
      * @param mixed $object : L'objet à exploiter
@@ -152,16 +153,9 @@ class FormHelper
      */
     public static function inputPassword($object, $attribute, $editable = true, $params = array())
     {
-        $errors = $object->getErrors();
-        
         $no_edit = self::getDroitInput($object, $attribute, $editable);
 
         $params = self::formaterClassePourInput($object, $attribute, $params);
-
-        // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
-            $html_class .= " erreur";
-        }
 
         // Création du champ
         if ($no_edit) {
@@ -188,29 +182,29 @@ class FormHelper
 
         return $retour;
     }
-    
+
     /**
      * Crée un input avec les paramètres données
      * @param string $type : Attribut type : text, checkbox, password et hidden disponibles
      * @param array $params : Chaque paramètre est un attribut ajouté à l'input
      * @return string : l'input sous forme HTML
      */
-    public static function inputSimple ($type, $params)
+    public static function inputSimple($type, $params)
     {
-        $retour = '<input type="'.$type.'"';
+        $retour = '<input type="' . $type . '"';
         foreach ($params as $param => $valeur_param) {
             if ($param && $valeur_param != '' && $param != 'invite') {
                 if ($param == 'value') {
                     $valeur_param = DisplayHelper::convertCaracteresSpeciaux($valeur_param);
                 }
-                $retour .= ' '.DisplayHelper::convertCaracteresSpeciaux($param).'="'.DisplayHelper::convertCaracteresSpeciaux($valeur_param).'"';
+                $retour .= ' ' . DisplayHelper::convertCaracteresSpeciaux($param) . '="' . DisplayHelper::convertCaracteresSpeciaux($valeur_param) . '"';
             }
         }
         $retour .= ' />';
-    
+
         return $retour;
     }
-    
+
     /**
      * Crée un span avec un input caché à côté
      * @param string $valeur : Le texte dans le span
@@ -219,17 +213,17 @@ class FormHelper
      * @param bool $autoriser_html : Active ou non htmlentities
      * @return string : Le HTML
      */
-    public static function spanSimple ($texte, $id, $params, $autoriser_html = false)
+    public static function spanSimple($texte, $id, $params, $autoriser_html = false)
     {
         if (empty($params["title"])) {
             $params["title"] = '';
         }
-    
+
         // Si on est readonly on ne met pas la classe calendrier qui met l'icone en JS
         if ($params["class"] == "calendrier") {
             $params["class"] = "";
         }
-    
+
         if (!$autoriser_html) {
             $defaultCharset = version_compare(PHP_VERSION, '5.6', '>=') ? ini_get('default_charset') : 'UTF-8';
             if (!defined('ENT_COMPAT')) {
@@ -240,10 +234,10 @@ class FormHelper
             }
             $texte = htmlentities($texte, ENT_COMPAT | ENT_HTML401, $defaultCharset);
         }
-    
-        $retour = '<span title="'.$params["title"].'" class="'.$params["class"].'" id="'.$id.'">'.$texte.'</span>';
+
+        $retour = '<span title="' . $params["title"] . '" class="' . $params["class"] . '" id="' . $id . '">' . $texte . '</span>';
         $retour .= self::inputSimple('hidden', $params);
-    
+
         return $retour;
     }
 
@@ -261,9 +255,9 @@ class FormHelper
         $differences = $object->compareVersion();
 
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-        
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
-        
+
         if (empty($params["rows"])) {
             $params["rows"] = "2";
         }
@@ -272,12 +266,12 @@ class FormHelper
         }
 
         // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
+        if (isset($errors[$attribute])) {
             $params["class"] .= " erreur";
         } elseif (isset($differences[$attribute])) {
             $params["class"] .= " difference";
         }
-        
+
         // Création du champ
         if ($no_edit) {
             $retour = self::spanSimple($params['value'], $params["id"], $params);
@@ -286,13 +280,13 @@ class FormHelper
         }
         return $retour;
     }
-    
+
     /**
      * Crée un input avec les paramètres données
      * @param array $params : Chaque paramètre est un attribut ajouté à l'input
      * @return string : le textarea sous forme HTML
      */
-    public static function textareaSimple ($params)
+    public static function textareaSimple($params)
     {
         $retour = "<textarea";
         foreach ($params as $param => $valeur_param) {
@@ -300,17 +294,17 @@ class FormHelper
                 if ($param == 'value') {
                     $valeur = $valeur_param;
                 } else {
-                    $retour .= ' '.$param.'="'.$valeur_param.'"';
+                    $retour .= ' ' . $param . '="' . $valeur_param . '"';
                 }
             }
         }
         $retour .= ">";
-    
+
         if (isset($valeur)) {
             $retour .= htmlentities($valeur);
         }
         $retour .= "</textarea>";
-    
+
         return $retour;
     }
 
@@ -318,7 +312,7 @@ class FormHelper
      * Retourne un ensemble d'inputs construit à partir d'une collection
      * @param Object $object : L'objet qui contient la valeur
      * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array[Object] $collection : La collection d'options à afficher.
+     * @param array [Object] $collection : La collection d'options à afficher.
      * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
      * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
      * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
@@ -330,7 +324,7 @@ class FormHelper
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::checkboxesFromArray($object, $attribute, $array, $editable, $params);
     }
-    
+
     /**
      * Retourne un ensemble d'inputs construit à partir d'un tableau
      * @param Object $object : L'objet qui contient la valeur
@@ -345,24 +339,24 @@ class FormHelper
     public static function checkboxesFromArray($object, $attribute, $array, $editable = true, $params = array())
     {
         $params = self::formaterClassePourInput($object, $attribute, $params);
-        
+
         $no_edit = self::getDroitInput($object, $attribute, $editable);
         $nom = $params['name'];
         $id = $params['id'];
-        
+
         $retour = "";
         foreach ($array as $value => $text) {
             $params['name'] = $nom;
-            $params['name'] .= '['.$value.']';
+            $params['name'] .= '[' . $value . ']';
             $params['id'] = $id;
-            $params['id'] .= '_'.$value;
-            
+            $params['id'] .= '_' . $value;
+
             $retour .= self::inputCheckbox($object, $attribute, !$no_edit, $params, array('0', $value));
             $retour .= self::labelSimple($text, $params);
         }
         return $retour;
     }
-    
+
     /**
      * Retourne une checkbox pour l'object $object suivant la propriété $attribute
      * @param object $object : L'objet utilisé
@@ -376,15 +370,15 @@ class FormHelper
     {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
-    
+
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-    
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
-    
+
         if (!isset($params["style"])) {
             $params["style"] = "width: auto;";
         }
-    
+
         $autoriser_html = false;
         $valeur_formatee = $params['value'];
         // Création du champ
@@ -397,37 +391,37 @@ class FormHelper
             $autoriser_html = true;
             unset($params["icone"]);
         }
-    
+
         // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
+        if (isset($errors[$attribute])) {
             $params['class'] .= "erreur";
         } elseif (isset($differences[$attribute])) {
             $params['class'] .= " difference";
         }
-    
+
         if ($no_edit) {
             $retour = self::spanSimple($valeur_formatee, $params['id'], $params, $autoriser_html);
         } else {
             // Gestion du non coché (l'hidden sera écrasé par la checkbox seulement si elle est cochée)
             $retour = self::inputSimple('hidden', array('name' => $params['name'], 'value' => $valeurs[0]));
-    
-            if ($valeurs[1]."" === $params['value']."") {
+
+            if ($valeurs[1] . "" === $params['value'] . "") {
                 $params['checked'] = "checked";
             }
             // La valeur de l'input ici est la valeur du coché, et non la valeur en base
             $params['value'] = $valeurs[1];
-    
+
             // Création du champ
             $retour .= self::inputSimple('checkbox', $params);
         }
         return $retour;
     }
-    
+
     /**
      * Retourne un ensemble d'inputs construit à partir d'une collection
      * @param Object $object : L'objet qui contient la valeur
      * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array[Object] $collection : La collection d'options à afficher.
+     * @param array [Object] $collection : La collection d'options à afficher.
      * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
      * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
      * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
@@ -440,7 +434,7 @@ class FormHelper
         return FormHelper::radiosFromArray($object, $attribute, $array, $editable, $params);
     }
 
-    
+
     /**
      * Retourne un ensemble d'inputs construit à partir d'un tableau
      * @param Object $object : L'objet qui contient la valeur
@@ -453,22 +447,22 @@ class FormHelper
     public static function radiosFromArray($object, $attribute, $array, $editable = true, $params = array())
     {
         $params = self::formaterClassePourInput($object, $attribute, $params);
-        
+
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-        
+
         $id = $params['id'];
-        
+
         $retour = "";
         foreach ($array as $value => $text) {
             $params['id'] = $id;
-            $params['id'] .= '_'.$value;
-            
+            $params['id'] .= '_' . $value;
+
             $retour .= self::inputRadio($object, $attribute, !$no_edit, $params, $value);
             $retour .= self::labelSimple($text, $params);
         }
         return $retour;
     }
-    
+
     /**
      * Retourne un radio pour l'object $object suivant la propriété $attribute
      * @param object $object : L'objet utilisé
@@ -482,34 +476,34 @@ class FormHelper
     {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
-    
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
-    
+
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-    
+
         // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
+        if (isset($errors[$attribute])) {
             $params['class'] .= "erreur";
         } elseif (isset($differences[$attribute])) {
             $params['class'] .= " difference";
         }
-    
+
         // Création du champ
         if ($no_edit) {
             $retour = self::spanSimple($params['value'], $params['id'], $params);
         } else {
-            if ($valeur."" === $params['value']."") {
+            if ($valeur . "" === $params['value'] . "") {
                 $params['checked'] = "checked";
             }
             // La valeur de l'input ici est la valeur du coché, et non la valeur en base
             $params['value'] = $valeur;
-    
+
             // Création du champ
             $retour = self::inputSimple('radio', $params);
         }
         return $retour;
     }
-    
+
     /**
      * Crée un label pour les checkbox/radios
      * @param string $valeur : Le texte dans le span
@@ -517,24 +511,24 @@ class FormHelper
      * @param bool $autoriser_html : Active ou non htmlentities
      * @return string : Le HTML
      */
-    public static function labelSimple ($texte, $params, $autoriser_html = false)
+    public static function labelSimple($texte, $params, $autoriser_html = false)
     {
         if (empty($params["title"])) {
             $params["title"] = '';
         }
-    
+
         if (!isset($params["class"])) {
             $params["class"] = "radio_label";
         } else {
-            $params["class"] = "radio_label ".$params["class"];
+            $params["class"] = "radio_label " . $params["class"];
         }
-    
+
         if (!$autoriser_html) {
             $texte = htmlentities($texte);
         }
-    
-        $retour = '<label title="'.$params["title"].'" class="'.$params["class"].'" for="'.$params['id'].'">'.$texte.'</label>';
-    
+
+        $retour = '<label title="' . $params["title"] . '" class="' . $params["class"] . '" for="' . $params['id'] . '">' . $texte . '</label>';
+
         return $retour;
     }
 
@@ -542,7 +536,7 @@ class FormHelper
      * Retourne un select construit à partir d'une collection
      * @param Object $object : L'objet qui contient la valeur
      * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array[Object] $collection : La collection d'options à afficher.
+     * @param array [Object] $collection : La collection d'options à afficher.
      * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
      * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
      * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
@@ -554,7 +548,7 @@ class FormHelper
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::selectFromArray($object, $attribute, $array, $editable, $params);
     }
-    
+
     /**
      * Retourne un ensemble d'inputs construit à partir d'un tableau
      * @param Object $object : L'objet qui contient la valeur
@@ -570,23 +564,23 @@ class FormHelper
         $differences = $object->compareVersion();
 
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-        
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
 
         if (isset($params["id_span"])) {
             $html_id_span = $params["id_span"];
             unset($params["id_span"]);
         } else {
-            $html_id_span = "span_".$params["id"];
+            $html_id_span = "span_" . $params["id"];
         }
 
         // En cas d'erreurs sur ce champ
-        if (isset( $errors[$attribute] )) {
+        if (isset($errors[$attribute])) {
             $params["class"] .= " erreur";
         } elseif (isset($differences[$attribute])) {
             $params["class"] .= " difference";
         }
-        
+
         // Création du champ
         if ($no_edit) {
             $texte_champ = "&nbsp;";
@@ -602,7 +596,7 @@ class FormHelper
         }
         return $retour;
     }
-    
+
     /**
      * Crée un select avec les paramètres données
      * @param string $tableau : Tableau des options à afficher
@@ -610,12 +604,12 @@ class FormHelper
      * @param array $params : Chaque paramètre est un attribut ajouté au select
      * @return string : le select sous forme HTML
      */
-    public static function selectSimple ($tableau, $valeur, $params)
+    public static function selectSimple($tableau, $valeur, $params)
     {
         $retour = '<select';
         foreach ($params as $param => $valeur_param) {
             if ($param && $valeur_param != '' && $param != 'invite') {
-                $retour .= ' '.$param.'="'.$valeur_param.'"';
+                $retour .= ' ' . $param . '="' . $valeur_param . '"';
             }
         }
         $retour .= '>';
@@ -623,7 +617,7 @@ class FormHelper
         $retour .= "</select>";
         return $retour;
     }
-    
+
     /**
      * Construit une liste d'options à partir d'une collection
      * @param array $tableau : Le tableau sous la forme cle => valeur
@@ -636,7 +630,7 @@ class FormHelper
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::optionsFromArray($array, $selected_value, $options_supplementaires);
     }
-    
+
     /**
      * Construit une liste d'options à partir d'un tableau
      * @param array $tableau : Le tableau sous la forme cle => valeur
@@ -655,22 +649,22 @@ class FormHelper
 
         // Option pour la value ""
         foreach ($options_supplementaires as $cle => $valeur) {
-            $retour .= '<option value="'.$cle.'" '.($valeur_selectionnee == $cle ? 'selected="selected"' : "").'>'.$valeur.'</option>';
+            $retour .= '<option value="' . $cle . '" ' . ($valeur_selectionnee == $cle ? 'selected="selected"' : "") . '>' . $valeur . '</option>';
         }
 
         // Les autres options
         foreach ($tableau as $value => $text) {
             $retour .= "<option value='$value' ";
             // Suite à un bug obscur de PHP sur la comparaison de clés, on concatène avec une chaine vide
-            if ($value."" == $valeur_selectionnee."") {
+            if ($value . "" == $valeur_selectionnee . "") {
                 $retour .= "selected='selected' ";
             }
-            $retour .= '>'.htmlspecialchars($text).'</option>'."\n";
+            $retour .= '>' . htmlspecialchars($text) . '</option>' . "\n";
         }
 
         return $retour;
     }
-    
+
     /**
      * Crée un input text gérant l'autocompletion avec la value de l'object $object suivant la propriété $attribute
      * @param mixed $object : L'objet à exploiter
@@ -681,29 +675,17 @@ class FormHelper
      */
     public static function inputAutocompleteText($object, $attribute, $editable = true, $params = array())
     {
-        $errors = $object->getErrors();
-        $differences = $object->compareVersion();
-    
         $no_edit = self::getDroitInput($object, $attribute, $editable);
-    
+
         $params = self::formaterClassePourInput($object, $attribute, $params);
-    
+
         if (isset($params["id_span"])) {
             $html_id_span = $params["id_span"];
             unset($params["id_span"]);
         } else {
-            $html_id_span = "span_".$params["id"];
+            $html_id_span = "span_" . $params["id"];
         }
-    
-        if (isset( $errors['id_'.$attribute] )) {
-            $html_class .= " erreur";
-        } elseif (isset($differences['id_'.$attribute])) {
-            $html_class .= " difference";
-            $title = "ce champ a &eacute;t&eacute; modifi&eacute;";
-        } else {
-            $html_class .= " autocomplete";
-        }
-    
+
         // formatage optionnel de la valeur, $params['formatage'] doit etre une fonction de unite helper
         $valeur_formatee = $params['value'];
         if (!empty($params['formatage'])) {
@@ -712,16 +694,16 @@ class FormHelper
             }
             unset($params['formatage']);
         }
-    
+
         if ($no_edit) {
             $retour = self::spanSimple($valeur_formatee, $html_id_span, $params);
         } else {
             $retour = self::inputAutocompleteSimple(get_class($object), $attribute, 'id', $params);
         }
-    
+
         return $retour;
     }
-    
+
     /**
      * Crée un input text gérant l'autocompletion
      * @param string $classe : Nom de l'objet auquel appartient l'attribut
@@ -730,19 +712,18 @@ class FormHelper
      * @param array $params : [OPT] Tableau pouvant contenir les paramètres mane, id, maxlength, valeur et id_valeur
      * @return string : l'input sous forme HTML
      */
-    public static function inputAutocompleteSimple ($classe, $attribut, $cle = 'id', $params = array())
+    public static function inputAutocompleteSimple($classe, $attribut, $cle = 'id', $params = array())
     {
-        $html_name = (isset($params['name'])) ? $params['name'] : 'filtre['.$classe.']';
-        $html_id = (isset($params['id'])) ? $params['id'] : 'filtre_'.$classe;
-        $maxlength = (isset($params['maxlength'])) ? $params['maxlength'] : '';
+        $html_name = (isset($params['name'])) ? $params['name'] : 'filtre[' . $classe . ']';
+        $html_id = (isset($params['id'])) ? $params['id'] : 'filtre_' . $classe;
         $valeur = (isset($params['valeur'])) ? $params['valeur'] : '';
         $id_valeur = (isset($params['id_valeur'])) ? $params['id_valeur'] : '';
-    
-        $parametres = array('name' => $html_name.'['.$attribut.']', 'id' => $html_id, 'value' => $valeur, 'autocomplete' => 'off');
+
+        $parametres = array('name' => $html_name . '[' . $attribut . ']', 'id' => $html_id, 'value' => $valeur, 'autocomplete' => 'off');
         if (!empty($params['maxlength'])) {
             $parametres['maxlength'] = $params['maxlength'];
         }
-    
+
         $retour = self::inputSimple('text', $parametres);
         // Image de suppression
         $retour .= "\n";
@@ -751,89 +732,10 @@ class FormHelper
             if (!$valeur) {
                 $cache = 'display: none; ';
             }
-            $retour .= '<img src="'.Constantes::getSrcImageSuppressionAutocomplete().'" alt="X" title="Retirer la valeur" class="img_action" style="'.$cache.'cursor: pointer; position: absolute;" />';
+            $retour .= '<img src="' . Constantes::getSrcImageSuppressionAutocomplete() . '" alt="X" title="Retirer la valeur" class="img_action" style="' . $cache . 'cursor: pointer; position: absolute;" />';
         }
-        $retour .= self::inputSimple('hidden', array('name' => $html_name.'['.$cle.']', 'id' => $html_id.'_id', 'value' => $id_valeur));
-    
+        $retour .= self::inputSimple('hidden', array('name' => $html_name . '[' . $cle . ']', 'id' => $html_id . '_id', 'value' => $id_valeur));
+
         return $retour;
     }
-    
-    /*public static function textAreaMapHtml($object, $attribute, $editable = true, $params = array())
-    {
-        $class_name = String::to_Case(get_class($object));
-        $errors = $object->getErrors();
-
-        $no_edit = self::getDroitInput($object, $attribute, $editable);
-        
-        if (isset($params["id"])) {
-            $html_id = $params["id"];
-        } else {
-            $html_id = $class_name."_".$attribute;
-        }
-        if (isset($params["class"])) {
-            $html_class = $params["class"];
-        } else {
-            $html_class = "";
-        }
-        if (isset($params["name"])) {
-            $html_name = $params["name"];
-        } else {
-            $html_name = $class_name."[".$attribute."]";
-        }
-
-        if (isset($params["rows"])) {
-            $html_rows = $params["rows"];
-        } else {
-            $html_rows = "";
-        }
-        if (isset($params["cols"])) {
-            $html_cols = $params["cols"];
-        } else {
-            $html_cols = "";
-        }
-
-        if (isset ($params["liste_categories"])) {
-            $liste_categories = $params["liste_categories"];
-            $map_html = "";
-            $url = './categorie/categorie/entree?id_categorie=';
-            foreach ($liste_categories as $numero => $categorie) {
-                $map_html .= '<area href="'.$url.$categorie -> getId().'" coords="" shape="" alt=""/>';
-            }
-        } else {
-            $map_html = "";
-        }
-
-        if (isset ($params["liste_sous_categories"])) {
-            $liste_sous_categories = $params["liste_sous_categories"];
-            $map_html = "";
-            $url = './produits/produit/lister?id_sous_categorie=';
-            foreach ($liste_sous_categories as $numero => $sous_categorie) {
-                $map_html .= '<area href="'.$url.$sous_categorie -> getId().'" coords="" shape="" alt=""/>';
-            }
-        } else {
-            $map_html = "";
-        }
-
-
-        if ($no_edit) {
-            // Création du champ
-            $retour = "<span class='$html_class'>".$object->getAttribute($attribute)."</span>";
-            $retour .= FormHelper::inputHidden($object, $attribute, $params);
-        } else {
-            // En cas d'erreurs sur ce champ
-            if (isset( $errors[$attribute] )) {
-                $html_class .= " erreur";
-            }
-
-            // Création du champ
-            $retour = "<textarea name='$html_name' id='$html_id' class='$html_class' rows='$html_rows' cols='$html_cols'>";
-            $retour .= str_replace('\"', '&quote;', $object->getAttribute($attribute));
-            if ($object -> getAttribute($attribute)=="") {
-                $retour .= $map_html;
-            }
-            $retour .= "</textarea>";
-        }
-
-        return $retour;
-    }*/
 }

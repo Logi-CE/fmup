@@ -65,9 +65,6 @@ class Framework
             }
         }
         $this->dispatch();
-
-        // historisation
-        HistoriqueHelper::stockageHistoriqueNavigation($sys_directory, $sys_controller, $sys_function);
     }
 
     /**

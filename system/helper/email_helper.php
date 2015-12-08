@@ -210,6 +210,7 @@ class EmailHelper
      * @param $message texte à parser
      * @param $tokens tableau associatif des tokens à remplacer
      * @return message traité
+     * @uses self::tokenReplaceMap
      */
     public static function remplaceToken($message = '', $tokens = array())
     {
