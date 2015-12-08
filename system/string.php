@@ -38,8 +38,9 @@ class String
         $item = utf8_encode($item);
     }
 
-    /*
+    /**
      * encode tout un tableau en UTF8
+     * @uses self::utf8EncodeFilter
      */
     public static function utf8EncodeArray($tab = array())
     {

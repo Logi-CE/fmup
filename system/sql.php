@@ -199,8 +199,8 @@ class Sql
     /**
      * Convertit un tableau de conditions en un WHERE conditions
      * Le deuxième paramètre permet de faire un HAVING à la place
+     * @uses self::filterWhere
      */
-
     public static function parseWhere($where, $having = false, $class = null, $option = array())
     {
         $where = self::replaceXFields($where, $class, $option);
@@ -209,7 +209,7 @@ class Sql
             throw new \FMUP\Exception("Erreur à l'utilisation de sqlParseWhere : tableau attendu. Reçu : ".serialize($where));
         }
 
-        $where = array_filter($where, 'self::filterWhere');
+        $where = array_filter($where, array('\Sql', 'filterWhere'));
         if ($where == array()) {
             return "";
         } else {
