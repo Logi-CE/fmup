@@ -57,10 +57,16 @@ class Mail extends Abstraction
     {
         ob_start();
         echo "<strong>Erreur : " . $this->getException()->getMessage() . "</strong><br/>";
-        echo "Erreur sur la ligne <strong>" . $this->getException()->getLine() . "</strong> dans le fichier <strong>" . $this->getException()->getFile() . "</strong><br/>";
+        echo "Erreur sur la ligne <strong>" . $this->getException()->getLine() . "</strong> dans le fichier ";
+        echo '<strong>' . $this->getException()->getFile() . "</strong><br/>";
 
-        if (isset($_SERVER["REMOTE_ADDR"])) echo "Adresse IP de l'internaute : " . $_SERVER["REMOTE_ADDR"] . ' ' . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "<br/>";
-        if (isset($_SERVER["HTTP_HOST"])) echo "URL appelée : http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "<br/><br/>";
+        if (isset($_SERVER["REMOTE_ADDR"])) {
+            echo "Adresse IP de l'internaute : " . $_SERVER["REMOTE_ADDR"];
+            echo  ' ' . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "<br/>";
+        }
+        if (isset($_SERVER["HTTP_HOST"])) {
+            echo "URL appelée : http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "<br/><br/>";
+        }
 
         echo "Trace complète :<br/>";
 

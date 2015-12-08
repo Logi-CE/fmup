@@ -8,7 +8,6 @@ use FMUP\Config\Ini;
  * Class Extended
  * Config Ini Extended applies old Zend_Config_Ini inheritance feature
  * (in the same component since Zend_Config_Ini is not compliant with composer)
- * 
  * @package FMUP\Config\Ini
  * @uses Zend_Config_Ini (version 1.12.16)
  */

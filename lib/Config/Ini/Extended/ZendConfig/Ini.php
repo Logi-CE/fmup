@@ -74,8 +74,8 @@ class Ini extends ZendConfig
      *     'skipExtends'        => false,
      *      );
      *
-     * @param  string        $filename
-     * @param  mixed         $section
+     * @param  string $filename
+     * @param  mixed $section
      * @param  boolean|array $options
      * @throws Exception
      */
@@ -90,13 +90,13 @@ class Ini extends ZendConfig
             $allowModifications = $options;
         } elseif (is_array($options)) {
             if (isset($options['allowModifications'])) {
-                $allowModifications = (bool) $options['allowModifications'];
+                $allowModifications = (bool)$options['allowModifications'];
             }
             if (isset($options['nestSeparator'])) {
-                $this->_nestSeparator = (string) $options['nestSeparator'];
+                $this->_nestSeparator = (string)$options['nestSeparator'];
             }
             if (isset($options['skipExtends'])) {
-                $this->_skipExtends = (bool) $options['skipExtends'];
+                $this->_skipExtends = (bool)$options['skipExtends'];
             }
         }
 
@@ -106,7 +106,7 @@ class Ini extends ZendConfig
             // Load entire file
             $dataArray = array();
             foreach ($iniArray as $sectionName => $sectionData) {
-                if(!is_array($sectionData)) {
+                if (!is_array($sectionData)) {
                     $dataArray = $this->_arrayMergeRecursive($dataArray, $this->_processKey(array(), $sectionName, $sectionData));
                 } else {
                     $dataArray[$sectionName] = $this->_processSection($iniArray, $sectionName);
@@ -170,8 +170,7 @@ class Ini extends ZendConfig
     {
         $loaded = $this->_parseIniFile($filename);
         $iniArray = array();
-        foreach ($loaded as $key => $data)
-        {
+        foreach ($loaded as $key => $data) {
             $pieces = explode($this->_sectionSeparator, $key);
             $thisSection = trim($pieces[0]);
             switch (count($pieces)) {
@@ -181,7 +180,7 @@ class Ini extends ZendConfig
 
                 case 2:
                     $extendedSection = trim($pieces[1]);
-                    $iniArray[$thisSection] = array_merge(array(';extends'=>$extendedSection), $data);
+                    $iniArray[$thisSection] = array_merge(array(';extends' => $extendedSection), $data);
                     break;
 
                 default:
@@ -197,9 +196,9 @@ class Ini extends ZendConfig
      * key. Passes control to _processKey() to handle the nest separator
      * sub-property syntax that may be used within the key name.
      *
-     * @param  array  $iniArray
+     * @param  array $iniArray
      * @param  string $section
-     * @param  array  $config
+     * @param  array $config
      * @throws Exception
      * @return array
      */
@@ -229,7 +228,7 @@ class Ini extends ZendConfig
      * Assign the key's value to the property list. Handles the
      * nest separator for sub-properties.
      *
-     * @param  array  $config
+     * @param  array $config
      * @param  string $key
      * @param  string $value
      * @throws Exception
