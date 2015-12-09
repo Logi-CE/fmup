@@ -1113,7 +1113,10 @@ abstract class Model
     public function logerChangement($type_action)
     {
         $varconnexion = Config::parametresConnexionDb();
-        if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
+        if (Config::paramsVariables('is_logue') &&
+            call_user_func(array(get_class($this), 'tableToLog')) &&
+            $this->id
+        ) {
             if (!Historisation::getIdHistoCourant()) {
                 // si on a pas initialisé cette variable, alors on en crée une par défaut,
                 // pour avoir toujours un lien entre les différetns logs
