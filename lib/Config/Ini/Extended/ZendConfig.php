@@ -367,7 +367,7 @@ class ZendConfig implements \Countable, \Iterator
     public function setReadOnly()
     {
         $this->allowModifications = false;
-        foreach ($this->data as $key => $value) {
+        foreach ($this->data as $value) {
             if ($value instanceof ZendConfig) {
                 $value->setReadOnly();
             }
@@ -444,9 +444,9 @@ class ZendConfig implements \Countable, \Iterator
     public function loadFileErrorHandler($errno, $errstr, $errfile, $errline)
     {
         if ($this->loadFileErrorStr === null) {
-            $this->loadFileErrorStr = $errstr;
+            $this->loadFileErrorStr = $errstr . "([$errno] @ $errfile:$errline)";
         } else {
-            $this->loadFileErrorStr .= (PHP_EOL . $errstr);
+            $this->loadFileErrorStr .= (PHP_EOL . $errstr . "([$errno] @ $errfile:$errline)");
         }
     }
 

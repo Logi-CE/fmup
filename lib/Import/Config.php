@@ -156,7 +156,7 @@ class Config
         // Réinitialisation du tableau d'erreur
         $this->errors = array();
 
-        foreach ($this->getListeField() as $key => $field) {
+        foreach ($this->getListeField() as $field) {
             $field->formatField();
             $valid_field = $field->validateField();
             if (!$valid_field) {
@@ -179,6 +179,7 @@ class Config
     }
 
     /**
+     * @uses $this->sortByPrio
      */
     public function validateObjects()
     {
