@@ -91,7 +91,7 @@ class Response
      */
     public function send()
     {
-        foreach ($this->getHeaders() as $type => $headers) {
+        foreach ($this->getHeaders() as $headers) {
             foreach ($headers as $header) {
                 /* @var $header Response\Header */
                 $header->render();
