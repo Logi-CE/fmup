@@ -1,7 +1,6 @@
 <?php
 namespace FMUP\Config;
 
-
 interface ConfigInterface
 {
     /**

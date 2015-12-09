@@ -1,7 +1,6 @@
 <?php
 namespace FMUP\Exception;
 
-
 class Location extends \FMUP\Exception
 {
     public function getLocation()

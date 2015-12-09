@@ -72,7 +72,7 @@ class Settings
             case self::PARAM_MAX_SEND_RETRY_TIME:
                 $this->setMaxSendRetryTime($value);
                 break;
-            default;
+            default:
                 throw new QueueException('Setting is not defined');
                 break;
         }
@@ -182,5 +182,4 @@ class Settings
             ? (int)$this->settings[self::PARAM_MAX_SEND_RETRY_TIME]
             : self::DEFAULT_RETRY_TIMES;
     }
-
 }

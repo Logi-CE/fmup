@@ -1,7 +1,6 @@
 <?php
 namespace FMUP\ErrorHandler;
 
-
 class Base extends \FMUP\ErrorHandler
 {
     public function init()
@@ -9,8 +8,7 @@ class Base extends \FMUP\ErrorHandler
         $this
             ->add(new \FMUP\ErrorHandler\Plugin\HttpHeader())
             ->add(new \FMUP\ErrorHandler\Plugin\Log())
-            ->add(new \FMUP\ErrorHandler\Plugin\Mail())
-        ;
+            ->add(new \FMUP\ErrorHandler\Plugin\Mail());
 
         return $this;
     }

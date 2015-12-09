@@ -62,7 +62,7 @@ class Cli extends Request
         $return = $this->get('route');
         if (isset($_SERVER['argc']) && $_SERVER['argc'] > 2 && $withQuerySting) {
             $args = $_SERVER['argv'];
-            unset ($args[0]);
+            unset($args[0]);
             $return = implode(' ', $args);
         }
         return $return;
