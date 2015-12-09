@@ -13,12 +13,8 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 class Launch extends \FMUP\Import
 {
-
-
     private $total_insert;
-
     private $total_update;
-
     private $total_errors;
 
     /**
@@ -60,7 +56,7 @@ class Launch extends \FMUP\Import
             $lci = new LineToConfigIterator($this->fileIterator, $this->config);
             $di = new DoublonIterator($lci);
             $vi = new ValidatorIterator($di);
-            foreach ($vi as $key => $value) {
+            foreach ($vi as $value) {
                 if ($value) {
                     $valid = $vi->getValid();
                     if ($valid && !$value->getDoublonLigne()) {
