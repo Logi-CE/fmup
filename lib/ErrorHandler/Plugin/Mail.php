@@ -90,7 +90,7 @@ class Mail extends Abstraction
      * @param array $traces
      * @return $this
      */
-    protected function renderTrace(array $traces = array())
+    protected function renderTraces(array $traces = array())
     {
         foreach ($traces as $trace) {
             echo '<tr>';
