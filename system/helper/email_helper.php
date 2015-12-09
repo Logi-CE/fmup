@@ -28,8 +28,7 @@ class EmailHelper
         $email_cache = "",
         $params = array(),
         $options = array()
-    )
-    {
+    ) {
         $my_mail = new PHPMailer(true);
 
         if (preg_match('|^(?:[^<]*<)?([^>]*)(?:>)?$|i', $send_to, $matches) ||
@@ -152,7 +151,9 @@ class EmailHelper
                 throw new \FMUP\Exception('Template email absent : ' . $identifiant);
             }
         } else {
-            if ($handle) FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);
+            if ($handle) {
+                FileHelper::fLog('mail', 'adresse email non reconnue : ' . $send_to);
+            }
         }
     }
 
@@ -187,8 +188,7 @@ class EmailHelper
         $destinataire_origine,
         $objet_origine = "",
         $message_origine = ""
-    )
-    {
+    ) {
         $erreur_mail = new PHPMailer(true);
         $erreur_mail->IsHTML(true);
         $erreur_mail->CharSet = "UTF-8";
@@ -284,8 +284,9 @@ class EmailHelper
             Config::paramsVariables('mail_reply_name')
         );
 
-        if (Config::paramsVariables('version') == 'dev')
+        if (Config::paramsVariables('version') == 'dev') {
             $objet = ' ** DEV ** ' . $objet;
+        }
 
         $my_mail->Subject = $objet;
         $my_mail->MsgHTML($message);
@@ -305,8 +306,12 @@ class EmailHelper
 
     public static function addReplyTo($my_mail, $adresses = '', $nom_adresse = '')
     {
-        if ($adresses = '') $adresses = Config::paramsVariables('mail_reply');
-        if ($nom_adresse = '') $nom_adresse = Config::paramsVariables('mail_reply_name');
+        if ($adresses = '') {
+            $adresses = Config::paramsVariables('mail_reply');
+        }
+        if ($nom_adresse = '') {
+            $nom_adresse = Config::paramsVariables('mail_reply_name');
+        }
         $tmp = self::explodeListEmails($adresses);
         foreach ($tmp as $adress) {
             if ($adress != "" && Is::courriel($adress)) {

@@ -16,6 +16,7 @@ class AppFront
     {
         return true;
     }
+
     /**
      * La page 404
      **/
@@ -23,6 +24,7 @@ class AppFront
     {
         return 'accueil/erreur404';
     }
+
     /**
      * Le controlleur chargé par défaut par l'application
      **/
@@ -30,6 +32,7 @@ class AppFront
     {
         return 'home/index';
     }
+
     /**
      * Le controlleur chargé par défaut par l'application
      **/
@@ -61,7 +64,6 @@ class AppFront
      **/
     public static function defaultCSS()
     {
-        //return array('system/default', 'system/style', 'system/layout', 'client/identification');
         return array('system/default', 'system/style', 'lib/calendar', 'system/layout', 'lib/MooDialog');
     }
 
@@ -70,22 +72,23 @@ class AppFront
      **/
     public static function defaultJavascripts()
     {
-        return array(	'lib/mootools-1.2'
-                        , 'lib/mootools-1.2-more'
-                        , 'lib/calendar'
-                        , 'navigation'
-                        , 'interface'
-                        , 'menu'
-                        , 'fonctions'
-                        , 'lib/MooDialog/MooDialog'
-                        , 'lib/MooDialog/MooDialog.Alert'
-                        , 'lib/MooDialog/MooDialog.Confirm'
-                        , 'lib/MooDialog/MooDialog.Error'
-                        , 'lib/MooDialog/MooDialog.Iframe'
-                        , 'lib/MooDialog/MooDialog.Prompt'
-                        , 'lib/MooDialog/MooDialog.Request'
-                        , 'lib/MooDialog/Overlay');
-        // 'lib/enhanceselect', 'frontend'
+        return array(
+            'lib/mootools-1.2',
+            'lib/mootools-1.2-more',
+            'lib/calendar',
+            'navigation',
+            'interface',
+            'menu',
+            'fonctions',
+            'lib/MooDialog/MooDialog',
+            'lib/MooDialog/MooDialog.Alert',
+            'lib/MooDialog/MooDialog.Confirm',
+            'lib/MooDialog/MooDialog.Error',
+            'lib/MooDialog/MooDialog.Iframe',
+            'lib/MooDialog/MooDialog.Prompt',
+            'lib/MooDialog/MooDialog.Request',
+            'lib/MooDialog/Overlay'
+        );
     }
 
     /**

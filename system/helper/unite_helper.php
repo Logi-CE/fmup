@@ -120,8 +120,7 @@ class UniteHelper
         $format = '',
         $separateur = ",",
         $separateur_millier = " "
-    )
-    {
+    ) {
         if (!$valeur) {
             $valeur = 0;
         }

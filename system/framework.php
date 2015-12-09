@@ -33,7 +33,7 @@ class Framework
 {
     use \FMUP\Sapi\OptionalTrait;
 
-    public function initialize ()
+    public function initialize()
     {
         global $sys_directory;
         global $sys_controller;
@@ -42,7 +42,7 @@ class Framework
         if (!defined('APPLICATION')) {
             throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
         } else {
-            define('APP', "App".String::toCamlCase(APPLICATION));
+            define('APP', "App" . String::toCamlCase(APPLICATION));
         }
 
         // On fixe les fonctions appelées lors d'une erreur
@@ -54,14 +54,16 @@ class Framework
 
         //log des pages
         $url = '';
-        if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        if (isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) {
+            $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        }
         if (Config::isDebug()) {
             if (isset($_SESSION['id_utilisateur'])) {
-                FileHelper::fLog('URL_'.$_SESSION['id_utilisateur'], $url);
-                FileHelper::fLog('POST_'.$_SESSION['id_utilisateur'], $url."\r\n".print_r($_REQUEST, 1));
+                FileHelper::fLog('URL_' . $_SESSION['id_utilisateur'], $url);
+                FileHelper::fLog('POST_' . $_SESSION['id_utilisateur'], $url . "\r\n" . print_r($_REQUEST, 1));
             } else {
                 FileHelper::fLog('URL', $url);
-                FileHelper::fLog('POST', $url."\r\n".print_r($_REQUEST, 1));
+                FileHelper::fLog('POST', $url . "\r\n" . print_r($_REQUEST, 1));
             }
         }
         $this->dispatch();
@@ -136,7 +138,9 @@ class Framework
                 session_id($_REQUEST['psid']);
                 session_start();
                 $old_session = $_SESSION;
-                if ($multi_onglet) $old_session["window.name"] = date('YmdHis');
+                if ($multi_onglet) {
+                    $old_session["window.name"] = date('YmdHis');
+                }
 
                 session_regenerate_id();
                 $_SESSION = $old_session;
@@ -152,7 +156,7 @@ class Framework
                     }
                 }
 
-                $uri = (isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
+                $uri = (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
                 $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
 
                 $header = new \FMUP\Response\Header\Location($uri);
@@ -198,10 +202,10 @@ class Framework
 
         if (isset($_REQUEST["sys"]) && preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])) {
             $sys = $_REQUEST["sys"];
-        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !is_callable(array(APP,"hasAuthentification")) || !call_user_func(array(APP,"hasAuthentification"))) {
+        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !is_callable(array(APP, "hasAuthentification")) || !call_user_func(array(APP, "hasAuthentification"))) {
             $sys = is_callable(array(APP, "defaultController")) ? call_user_func(array(APP, "defaultController")) : null;
         } else {
-            $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP,"authController")) : null;
+            $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP, "authController")) : null;
         }
 
         if (!Config::siteOuvert()) {
@@ -210,7 +214,7 @@ class Framework
             if ($callables &&
                 (
                     (!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
-                || $sys == call_user_func(array(APP, "authController"))
+                    || $sys == call_user_func(array(APP, "authController"))
                 )
             ) {
                 \FMUP\FlashMessenger::getInstance()->clear();
@@ -225,14 +229,14 @@ class Framework
         }
 
         $sys_directory = $matches[1];
-        $sys_controller = "ctrl_".$matches[2];
+        $sys_controller = "ctrl_" . $matches[2];
         $sys_function = String::toCamlCase($matches[3]);
 
 
         if (
             !class_exists(\String::toCamlCase($sys_controller)) ||
-            !is_callable(array(\String::toCamlCase($sys_controller), $sys_function)))
-        {
+            !is_callable(array(\String::toCamlCase($sys_controller), $sys_function))
+        ) {
             $this->getRouteError();
         }
         return array(\String::toCamlCase($sys_controller), $sys_function);
@@ -248,8 +252,8 @@ class Framework
         global $sys_directory;
         global $sys_controller;
         throw new \FMUP\Exception\Status\NotFound(
-            "Controlleur introuvable : " . $sys_directory.$sys_controller.
-            ' ('.BASE_PATH."/application/".APPLICATION."/controller/".$sys_directory.$sys_controller.".php".')'
+            "Controlleur introuvable : " . $sys_directory . $sys_controller .
+            ' (' . BASE_PATH . "/application/" . APPLICATION . "/controller/" . $sys_directory . $sys_controller . ".php" . ')'
         );
     }
 

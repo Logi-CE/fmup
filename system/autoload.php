@@ -1,5 +1,5 @@
 <?php
-if(!defined('APPLICATION')) {
+if (!defined('APPLICATION')) {
     define('APPLICATION', 'application');
 }
 if (!defined('BASE_PATH')) {
@@ -57,5 +57,3 @@ if (function_exists('spl_autoload_register')) {
         fmu_autoload($class);
     }
 }
-
-

@@ -278,8 +278,7 @@ class Framework extends \Framework
      */
     public function registerErrorHandler()
     {
-        if (
-            $this->getBootstrap()->getConfig()->get('is_debug') ||
+        if ($this->getBootstrap()->getConfig()->get('is_debug') ||
             !$this->getBootstrap()->getConfig()->get('use_daily_alert')
         ) {
             parent::registerErrorHandler();
@@ -403,4 +402,3 @@ class Framework extends \Framework
         parent::initialize();
     }
 }
-

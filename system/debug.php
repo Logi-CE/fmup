@@ -19,7 +19,6 @@ class Debug
     public static function output($variable, $parametre = null)
     {
         if (Config::isDebug() || Utilisateur::isCastelis()) {
-
             echo ($parametre || null === $parametre)
                 ? '<pre style="border: 2px solid green; padding: 10px; background-color: #CCFFCC">'
                 : '<!--';

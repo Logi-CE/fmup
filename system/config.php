@@ -10,7 +10,8 @@ if (!defined('BASE_PATH')) {
 class Config
 {
     use \FMUP\Config\OptionalTrait {
-        getConfig as getFmupConfig; setConfig as setFmupConfig;
+        getConfig as getFmupConfig;
+        setConfig as setFmupConfig;
     }
     private static $instance;
     private $inited = false;
@@ -255,9 +256,15 @@ class Config
         $heure = date('H');
         foreach (self::getInstance()->get('maintenance_plages') as $plage) {
             list($var_jour, $var_heure_debut, $var_heure_fin) = $plage;
-            if ($var_jour == -1) $var_jour = $day_number;
-            if ($var_heure_debut == -1) $var_heure_debut = $heure;
-            if ($var_heure_fin == -1) $var_heure_fin = $heure;
+            if ($var_jour == -1) {
+                $var_jour = $day_number;
+            }
+            if ($var_heure_debut == -1) {
+                $var_heure_debut = $heure;
+            }
+            if ($var_heure_fin == -1) {
+                $var_heure_fin = $heure;
+            }
             $retour = $retour && !($day_number == $var_jour && $heure <= $var_heure_fin && $heure >= $var_heure_debut);
         }
 

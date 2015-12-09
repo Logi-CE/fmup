@@ -175,7 +175,9 @@ class DisplayHelper
 
         //if (strlen($valeur) > $taille + 3) {
         if (strlen($valeur) > $taille) {
-            if (!$coupe_violement) $valeur_formate .= ' ';
+            if (!$coupe_violement) {
+                $valeur_formate .= ' ';
+            }
             $valeur_formate .= '...';
             $valeur_formate .= $balise_fermante;     // dans le cas d'une coupure de commentaire avec un <p> dedans.
         }

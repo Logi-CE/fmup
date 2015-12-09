@@ -53,7 +53,9 @@ abstract class Model
     public static function getControllerName()
     {
         $classe_appelante = get_called_class();
-        if (substr($classe_appelante, 0, 4) == 'Base') $classe_appelante = substr($classe_appelante, 4);
+        if (substr($classe_appelante, 0, 4) == 'Base') {
+            $classe_appelante = substr($classe_appelante, 4);
+        }
         return String::to_Case($classe_appelante);
     }
 
@@ -205,7 +207,6 @@ abstract class Model
 
         //si on appelle depuis un object complexe, on recupere la requete correspondante
         if (method_exists($classe_appelante, 'getQueryString')) {
-
             // gestion des affichages par défaut, sauf si on appelle un objet bien particulier, via la fonction findone
             if (!isset($options['fonction']) || $options['fonction'] != 'findOne') {
                 // On retire les éléments supprimés de la liste
@@ -239,7 +240,6 @@ abstract class Model
             $limit = '';
 
             if (isset($options["paging"]) && $driver == 'mssql') {
-
                 // Ordre by spécialisé pour la sous-vue générée
                 if (isset($options["order"]) && $options["order"] != '') {
                     $orderby = 'ORDER BY ' . $options["order"];
@@ -264,15 +264,21 @@ abstract class Model
                             AND ' . $options["paging"]["numero_page"] . ' * ' . $options["paging"]["nb_element"] . '';
 
             } else {
-                if (!empty($options["order"])) $orderby = " ORDER BY " . $options["order"];
+                if (!empty($options["order"])) {
+                    $orderby = " ORDER BY " . $options["order"];
+                }
 
                 if ($driver == 'mysql') {
                     $SQL .= Sql::parseWhere($where, false, $classe_appelante);
                     $SQL .= ' ' . $orderby;
-                    if (!empty($options["limit"])) $SQL .= ' ' . " LIMIT " . $options["limit"];
+                    if (!empty($options["limit"])) {
+                        $SQL .= ' ' . " LIMIT " . $options["limit"];
+                    }
 
                 } elseif ($driver == 'mssql') {
-                    if (!empty($options["top"])) $top = " top " . $options["top"];
+                    if (!empty($options["top"])) {
+                        $top = " top " . $options["top"];
+                    }
                     $SQL = 'SELECT ' . $top . ' * FROM (' . $SQL . ') V ';
                     $SQL .= Sql::parseWhere($where);
                     $SQL .= ' ' . $orderby;
@@ -325,7 +331,7 @@ abstract class Model
      * @param int $id : Un identifiant
      * @return null|object
      */
-    static function findOne($id)
+    public static function findOne($id)
     {
         $classe_appelante = get_called_class();
 
@@ -347,7 +353,7 @@ abstract class Model
      * @param string $order : [OPT] Le champ sur lequel ordonner
      * @return false|object
      */
-    static function findFirst($where = array(), $order = '')
+    public static function findFirst($where = array(), $order = '')
     {
         $classe_appelante = get_called_class();
 
@@ -368,7 +374,7 @@ abstract class Model
      * @param array $where : Un tableau de clauses pour la requête
      * @return int : Le nombre d'éléments
      */
-    static function count($where = array())
+    public static function count($where = array())
     {
         $classe_appelante = get_called_class();
         return Model::countFromTable(call_user_func(array($classe_appelante, 'getTableName')), $where);
@@ -380,7 +386,7 @@ abstract class Model
      * @return bool : Le résultat du traitement, VRAI si suppression
      * @todo : Supprimer les objets liés
      */
-    function delete()
+    public function delete()
     {
         $classe_appelante = get_called_class();
         $id = $this->id;
@@ -496,8 +502,7 @@ abstract class Model
         $attribute,
         $where = array(),
         $options = array()
-    )
-    {
+    ) {
         $SQL = "SELECT $attribute \n";
         $SQL .= " FROM $table  \n LEFT JOIN $left_table  \n";
         $SQL .= " ON $link_table  \n";
@@ -568,9 +573,7 @@ abstract class Model
         } else {
             $result = $db->fetchAll($sql);
         }
-        if ($group_by != "") $retour = $result;
-        else $retour = $result[0]["somme"];
-        return $retour;
+        return ($group_by != "") ? $result : $result[0]["somme"];
     }
 
     /**
@@ -953,16 +956,15 @@ abstract class Model
         $attribut = String::to_Case(substr($function, 3));
         if (property_exists($this, $attribut)) {
             if (preg_match('#^get#i', $function)) {
-                if ($ISOtoUTF8 && !String::isUtf8($this->$attribut)) return utf8_encode($this->$attribut);
-                return $this->$attribut;
+                return ($ISOtoUTF8 && !String::isUtf8($this->$attribut))
+                    ? utf8_encode($this->$attribut)
+                    : $this->$attribut;
             }
 
             if (preg_match('#^set#i', $function) && count($argument)) {
-                if ($ISOtoUTF8 && String::isUtf8($argument[0])) {
-                    $this->$attribut = utf8_decode($argument[0]);
-                } else {
-                    $this->$attribut = $argument[0];
-                }
+                $this->$attribut = ($ISOtoUTF8 && String::isUtf8($argument[0]))
+                    ? utf8_decode($argument[0])
+                    : $argument[0];
                 return true;
             }
         } else {
@@ -1044,7 +1046,9 @@ abstract class Model
         if ($identifiant) {
             $object = call_user_func(array(get_class($this), 'FindOne'), $identifiant);
         }
-        if (!$identifiant || !$object) $object = $this;
+        if (!$identifiant || !$object) {
+            $object = $this;
+        }
         // récuperation des champs modifiable pour l'utilisateur courant
         $editable_fields = $object->listeChampsModifiable();
         //Si on fournit une donnée et si l'on peut la modifier
@@ -1111,8 +1115,9 @@ abstract class Model
             if (!Historisation::getIdHistoCourant()) {
                 // si on a pas initialisé cette variable, alors on en crée une par défaut,
                 // pour avoir toujours un lien entre les différetns logs
-                if (get_class($this) != 'Historisation')
+                if (get_class($this) != 'Historisation') {
                     Historisation::init('* SYSTEME *');
+                }
             }
 
             $default_id = (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid'] . "," : "";

@@ -25,7 +25,9 @@ class Date
                 $heure = ' ' . $heure;
             }
             // Si l'année est en deux caractères, on la complète
-            if (strlen($annee) == 2) $annee = '20' . $annee;
+            if (strlen($annee) == 2) {
+                $annee = '20' . $annee;
+            }
             $retour = $annee . '-' . $mois . '-' . $jour . $heure;
 
             // Si la date est déjà convertie, on la renvoie
@@ -58,7 +60,9 @@ class Date
                 $heure = ' ' . $heure;
             }
             // Si l'année est en deux caractères, on la complète
-            if (strlen($annee) == 2) $annee = '20' . $annee;
+            if (strlen($annee) == 2) {
+                $annee = '20' . $annee;
+            }
             $retour = $jour . '/' . $mois . '/' . $annee . $heure;
 
             // Si la date est déjà convertie, on la renvoit
@@ -348,8 +352,8 @@ class Date
         $jours_feries = self::getJoursFeries($date->format('Y'));
         if (isset($jours_feries[$date->format('n') . '_' . $date->format('j')]) ||
             $date->format('N') == 6 ||
-            $date->format('N') == 7)
-        {
+            $date->format('N') == 7
+        ) {
             $retour = false;
         }
         return $retour;
@@ -415,8 +419,9 @@ class Date
     {
         $libelle = self::getTableauLibelleJours($lang);
 
-        if (isset($libelle[$num_jour]))
+        if (isset($libelle[$num_jour])) {
             return $libelle[$num_jour];
+        }
 
         return '';
 
@@ -426,8 +431,9 @@ class Date
     {
         $libelle = self::getTableauLibelleMois($lang);
 
-        if (isset($libelle[$num_mois]))
+        if (isset($libelle[$num_mois])) {
             return $libelle[$num_mois];
+        }
 
         return '';
 
@@ -465,10 +471,7 @@ class Date
             )
         );
 
-        if (isset($tableau[$langue]))
-            return $tableau[$langue];
-
-        return array();
+        return isset($tableau[$langue]) ? $tableau[$langue] : array();
     }
 
     public static function getTableauLibelleMois($langue = 'FR')
@@ -522,10 +525,7 @@ class Date
             )
         );
 
-        if (isset($tableau[$langue]))
-            return $tableau[$langue];
-
-        return array();
+        return (isset($tableau[$langue])) ? $tableau[$langue] : array();
     }
 
     /**

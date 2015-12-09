@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe gérant diverses opérations sur les fichiers
  * @version 1.0
@@ -13,8 +14,8 @@ class FileHelper
     public static function listerFichier($dossier)
     {
         $liste_fichiers = array();
-        if (is_dir(BASE_PATH.'/'.$dossier)) {
-            $dir = opendir(BASE_PATH.'/'.$dossier);
+        if (is_dir(BASE_PATH . '/' . $dossier)) {
+            $dir = opendir(BASE_PATH . '/' . $dossier);
             // on scanne le répertoire
             while ($fichier = readdir($dir)) {
                 // si c'est un fichier
@@ -25,7 +26,7 @@ class FileHelper
             }
             closedir($dir);
         }
-        
+
         return $liste_fichiers;
     }
 
@@ -59,7 +60,7 @@ class FileHelper
         foreach ($tableau as $ligne) {
             $count_colonnes = 0;
             foreach ($ligne as $colonne) {
-                $retour .= $colonne.$separateur_colonne;
+                $retour .= $colonne . $separateur_colonne;
                 if (++$count_colonnes >= $nombre_colonnes_max) {
                     $retour .= $separateur_ligne;
                 }
@@ -80,10 +81,10 @@ class FileHelper
         if (is_array($message) || is_object($message)) {
             $message = print_r($message, true);
         }
-        $nom_fichier = 'logs_'.strtr($nom_fichier, '/\\', '__').'_'.date($periodicite).'.log';
-        $chemin_fichier = Config::paramsVariables('log_path').$nom_fichier;
+        $nom_fichier = 'logs_' . strtr($nom_fichier, '/\\', '__') . '_' . date($periodicite) . '.log';
+        $chemin_fichier = Config::paramsVariables('log_path') . $nom_fichier;
         $id_fichier = fopen($chemin_fichier, "a");
-        fwrite($id_fichier, "[".date("d/m/Y H:i:s")."] ".$message."\r\n");
+        fwrite($id_fichier, "[" . date("d/m/Y H:i:s") . "] " . $message . "\r\n");
         fclose($id_fichier);
     }
 
@@ -91,19 +92,19 @@ class FileHelper
      * Crée un cartouche formaté a attacher à tout fichier Excel généré par l'application
      * @param string nom : titre du document à insérer dans le cartouche
      */
-    public static function getCartoucheExcel ($nom)
+    public static function getCartoucheExcel($nom)
     {
-        $texte =  '<tr>';
+        $texte = '<tr>';
         $texte .= '	<td style="font-weight: bold">Titre</td>';
-        $texte .= '	<td colspan="3" style="text-align: left">'.$nom.'</td>';
+        $texte .= '	<td colspan="3" style="text-align: left">' . $nom . '</td>';
         $texte .= '</tr>';
         $texte .= '<tr>';
         $texte .= '	<td style="font-weight: bold">Date</td>';
-        $texte .= '	<td colspan="3" style="text-align: left">'.date('d/m/Y h:i:s').'</td>';
+        $texte .= '	<td colspan="3" style="text-align: left">' . date('d/m/Y h:i:s') . '</td>';
         $texte .= '</tr>';
         $texte .= '<tr>';
         $texte .= '	<td style="font-weight: bold">Version</td>';
-        $texte .= '	<td colspan="3" style="text-align: left">'.Config::paramsVariables('version_site').'</td>';
+        $texte .= '	<td colspan="3" style="text-align: left">' . Config::paramsVariables('version_site') . '</td>';
         $texte .= '</tr>';
         $texte .= '<tr></tr><tr></tr>';
 
@@ -121,9 +122,9 @@ class FileHelper
     public static function genererDocumentParModele($fichier_modele, $nom_fichier, $tableau_remplacements = array())
     {
         $retour = false;
-        
+
         // Lecture du fichier source
-        $chemin_modele = Config::paramsVariables('template_path').$fichier_modele;
+        $chemin_modele = Config::paramsVariables('template_path') . $fichier_modele;
         $contenu = file_get_contents($chemin_modele);
 
         // On remplace les mots-clés, un à un
@@ -167,7 +168,7 @@ class FileHelper
     {
         if (get_resource_type($handle) == 'stream') {
             $newline = str_repeat("\r\n", $nb_newline);
-            fwrite($handle, $newline.date('H:i:s')."\t".$text."\r\n");
+            fwrite($handle, $newline . date('H:i:s') . "\t" . $text . "\r\n");
         }
     }
 }

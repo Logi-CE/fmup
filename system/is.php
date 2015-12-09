@@ -182,10 +182,10 @@ class Is
             if (count($resultat) == 3) {
                 list($jour, $mois, $annee) = $resultat;
                 if (Is::integer($jour) && Is::integer($mois) && Is::integer($annee)) {
-                    if (strlen($annee) == 2) $annee = '20' . $annee;
-                    if ($annee < 1000) return false;
-                    if ($annee > 9999) return false;
-                    return checkDate($mois, $jour, $annee);
+                    if (strlen($annee) == 2) {
+                        $annee = '20' . $annee;
+                    }
+                    return ($annee < 1000 || $annee > 9999) ? false : checkDate($mois, $jour, $annee);
                 }
             }
         }
@@ -206,10 +206,10 @@ class Is
             if (count($resultat) == 3) {
                 list($annee, $mois, $jour) = $resultat;
                 if (Is::integer($jour) && Is::integer($mois) && Is::integer($annee)) {
-                    if (strlen($annee) == 2) $annee = '20' . $annee;
-                    if ($annee < 1000) return false;
-                    if ($annee > 9999) return false;
-                    return checkDate($mois, $jour, $annee);
+                    if (strlen($annee) == 2) {
+                        $annee = '20' . $annee;
+                    }
+                    return ($annee < 1000 || $annee > 9999) ? false : checkDate($mois, $jour, $annee);
                 }
             }
         }

@@ -330,8 +330,7 @@ class FormHelper
         $element_text,
         $editable = true,
         $params = array()
-    )
-    {
+    ) {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::checkboxesFromArray($object, $attribute, $array, $editable, $params);
     }
@@ -383,8 +382,7 @@ class FormHelper
         $editable = true,
         $params = array(),
         $valeurs = array(0, 1)
-    )
-    {
+    ) {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
 
@@ -453,8 +451,7 @@ class FormHelper
         $element_text,
         $editable = true,
         $params = array()
-    )
-    {
+    ) {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::radiosFromArray($object, $attribute, $array, $editable, $params);
     }
@@ -577,8 +574,7 @@ class FormHelper
         $element_text,
         $editable = true,
         $params = array()
-    )
-    {
+    ) {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::selectFromArray($object, $attribute, $array, $editable, $params);
     }
@@ -670,8 +666,7 @@ class FormHelper
         $element_text,
         $selected_value,
         $options_supplementaires = array()
-    )
-    {
+    ) {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::optionsFromArray($array, $selected_value, $options_supplementaires);
     }
