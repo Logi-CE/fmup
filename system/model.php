@@ -1114,13 +1114,6 @@ abstract class Model
     {
         $varconnexion = Config::parametresConnexionDb();
         if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
-            if (!Historisation::getIdHistoCourant()) {
-                // si on a pas initialisé cette variable, alors on en crée une par défaut,
-                // pour avoir toujours un lien entre les différetns logs
-                if (get_class($this) != 'Historisation') {
-                    Historisation::init('* SYSTEME *');
-                }
-            }
 
             $default_id = (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid'] . "," : "";
             $tab = call_user_func(array(get_class($this), 'listeChampsObjet'));
@@ -1148,7 +1141,6 @@ abstract class Model
 
             $SQL = 'INSERT INTO log__' . $this->getTableName() . '
                             (' . $liste_champ . '
-                                , id_historisation
                                 , libelle_historisation
                                 , contenu_log
                                 , id_utilisateur_log
@@ -1157,7 +1149,6 @@ abstract class Model
                             )
                         SELECT ' . $default_id . '
                                 ' . $liste_champ_valeur . ',
-                                ' . Sql::secureId(Historisation::getIdHistoCourant()) . ',
                                 \'\',
                                 \'\',
                                 ' . Sql::secureId($id_utilisateur) . ',
