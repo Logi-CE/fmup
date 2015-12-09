@@ -10,7 +10,7 @@ class String
      * Convertir une chaine de la casse chameau à la casse 'underscore'
      * @param String la chaîne à convertir
      **/
-    public static function to_Case($chaine)
+    public static function toSnakeCase($chaine)
     {
         return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_$2', $chaine));
     }
