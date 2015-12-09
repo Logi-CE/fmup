@@ -108,7 +108,8 @@ class Is
      * Fonction vérifiant le numéro de téléphone passé en paramètre
      * @param mixed $valeur : La variable testée
      * @return bool
-     *          VRAI si la chaine passée en paramètre est un numéro de téléphone valide faisant de 10 à 20 caractères,
+     *          VRAI si la chaine passée en paramètre est un numéro de téléphone
+     *          valide faisant de 10 à 20 caractères,
      *          espaces, "+" et "." tolérés
      */
     public static function telephone($valeur)

@@ -191,7 +191,8 @@ class Framework
 
     /**
      * Cette fonction récupère le controleur appelé dans l'URL
-     * Elle va aussi gérer si l'utilisateur doit se connecter ou si le site est en maintenance (et changer le controleur en conséquence)
+     * Elle va aussi gérer si l'utilisateur doit se connecter ou si le site est en maintenance
+     * (et changer le controleur en conséquence)
      * @return array : Un tableau contenant le dossier, le controleur et la fonction à appeler
      */
     public function getRoute()
@@ -200,27 +201,41 @@ class Framework
         global $sys_controller;
         global $sys_function;
 
-        if (isset($_REQUEST["sys"]) && preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])) {
+        if (isset($_REQUEST["sys"]) &&
+            preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])
+        ) {
             $sys = $_REQUEST["sys"];
-        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) || !is_callable(array(APP, "hasAuthentification")) || !call_user_func(array(APP, "hasAuthentification"))) {
-            $sys = is_callable(array(APP, "defaultController")) ? call_user_func(array(APP, "defaultController")) : null;
+        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) ||
+            !is_callable(array(APP, "hasAuthentification")) ||
+            !call_user_func(array(APP, "hasAuthentification"))
+        ) {
+            $sys = is_callable(array(APP, "defaultController"))
+                ? call_user_func(array(APP, "defaultController"))
+                : null;
         } else {
             $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP, "authController")) : null;
         }
 
         if (!Config::siteOuvert()) {
-            $callables = is_callable(array(APP, "hasAuthentification")) && is_callable(array(APP, "defaultController")) &&
-                is_callable(array(APP, "authController")) && is_callable(array(APP, "closedAppController"));
+            $callables = is_callable(array(APP, "hasAuthentification")) &&
+                is_callable(array(APP, "defaultController")) &&
+                is_callable(array(APP, "authController")) &&
+                is_callable(array(APP, "closedAppController"));
             if ($callables &&
                 (
-                    (!call_user_func(array(APP, "hasAuthentification")) && $sys == call_user_func(array(APP, "defaultController")))
+                    (
+                        !call_user_func(array(APP, "hasAuthentification")) &&
+                        $sys == call_user_func(array(APP, "defaultController"))
+                    )
                     || $sys == call_user_func(array(APP, "authController"))
                 )
             ) {
                 \FMUP\FlashMessenger::getInstance()->clear();
                 $sys = call_user_func(array(APP, "closedAppController"));
             } else {
-                \FMUP\FlashMessenger::getInstance()->add(new \FMUP\FlashMessenger\Message(Constantes::getMessageFlashMaintenance()));
+                \FMUP\FlashMessenger::getInstance()->add(
+                    new \FMUP\FlashMessenger\Message(Constantes::getMessageFlashMaintenance())
+                );
             }
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
@@ -233,8 +248,7 @@ class Framework
         $sys_function = String::toCamlCase($matches[3]);
 
 
-        if (
-            !class_exists(\String::toCamlCase($sys_controller)) ||
+        if (!class_exists(\String::toCamlCase($sys_controller)) ||
             !is_callable(array(\String::toCamlCase($sys_controller), $sys_function))
         ) {
             $this->getRouteError();
@@ -253,7 +267,10 @@ class Framework
         global $sys_controller;
         throw new \FMUP\Exception\Status\NotFound(
             "Controlleur introuvable : " . $sys_directory . $sys_controller .
-            ' (' . BASE_PATH . "/application/" . APPLICATION . "/controller/" . $sys_directory . $sys_controller . ".php" . ')'
+            ' (' .
+            BASE_PATH . "/application/" . APPLICATION . "/controller/" .
+            $sys_directory . $sys_controller . ".php"
+            . ')'
         );
     }
 

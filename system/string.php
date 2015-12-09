@@ -32,7 +32,11 @@ class String
     public static function toUpperCase($valeur)
     {
         $valeur = strtoupper($valeur);
-        return strtr($valeur, "äâàáåãéèëêòóôõöøìíîïùúûüýñçþÿæœðø", "ÄÂÀÁÅÃÉÈËÊÒÓÔÕÖØÌÍÎÏÙÚÛÜÝÑÇÞÝÆŒÐØ");
+        return strtr(
+            $valeur,
+            "äâàáåãéèëêòóôõöøìíîïùúûüýñçþÿæœðø",
+            "ÄÂÀÁÅÃÉÈËÊÒÓÔÕÖØÌÍÎÏÙÚÛÜÝÑÇÞÝÆŒÐØ"
+        );
     }
 
     private static function utf8EncodeFilter(&$item, $index)
