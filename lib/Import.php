@@ -5,9 +5,7 @@ use FMUP\Import\Iterator\FileIterator;
 
 abstract class Import
 {
-
     protected $fileIterator;
-
     protected $config;
 
     public function __construct($file_name, \FMUP\Import\Config $config)
@@ -16,5 +14,5 @@ abstract class Import
         $this->config = $config;
     }
 
-    public abstract function parse();
+    abstract public function parse();
 }

@@ -12,12 +12,8 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 abstract class Display extends \FMUP\Import
 {
-
-
     private $total_insert;
-
     private $total_update;
-
     private $total_errors;
 
     /**
@@ -75,7 +71,7 @@ abstract class Display extends \FMUP\Import
      * @param LineToConfigIterator $lci
      * @param integer $key
      */
-    public abstract function displayImport(
+    abstract public function displayImport(
         Config $value,
         ValidatorIterator $vi,
         DoublonIterator $di,
