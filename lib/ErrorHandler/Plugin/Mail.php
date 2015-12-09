@@ -104,7 +104,7 @@ class Mail extends Abstraction
 
             $arguments = array();
             if (!empty($trace['args'])) {
-                foreach ($trace['args'] as $name => $arg) {
+                foreach ($trace['args'] as $arg) {
                     if (is_array($arg)) {
                         $arguments[] = 'Array';
                     } elseif (is_object($arg)) {

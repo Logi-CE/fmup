@@ -54,15 +54,8 @@ class EmailHelper
 
             if ($no_problem && $email) {
                 try {
-                    //TODO : en attendant de faire mieux avec le nom et prénom de la personne
-                    $to = $adresse_mail;
-
                     // Remplacement du message de l'email par un message particulier si ce paramètre éxiste
-                    if (isset($options['message_foce'])) {
-                        $message = $options['message_foce'];
-                    } else {
-                        $message = $email->getMessage();
-                    }
+                    $message = isset($options['message_foce']) ? $options['message_foce'] : $email->getMessage();
                     $message = emailHelper::remplaceToken($message, $tokens);
 
                     $my_mail = EmailHelper::parametrerHeaders($my_mail);
@@ -182,60 +175,6 @@ class EmailHelper
         return $my_mail;
     }
 
-    public static function sendEmailErreur(
-        $id_email,
-        $erreur,
-        $destinataire_origine,
-        $objet_origine = "",
-        $message_origine = ""
-    ) {
-        $erreur_mail = new PHPMailer(true);
-        $erreur_mail->IsHTML(true);
-        $erreur_mail->CharSet = "UTF-8";
-
-        $erreur_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
-        $erreur_mail = self::addReplyTo(
-            $erreur_mail,
-            Config::paramsVariables('mail_reply'),
-            Config::paramsVariables('mail_reply_name')
-        );
-
-        $objet = "";
-        if (Config::paramsVariables('version') != 'prod') {
-            $objet .= "** " . strtoupper(Config::paramsVariables('version')) . " ** ";
-        }
-        $objet .= "Erreur rencontrée lors d'un envoi de mail";
-        $erreur_mail->Subject = $objet;
-
-        $message = "L'envoi de l'email suivant a échoué
-                    <br>
-                    <br>
-                    <hr>
-                    <br>
-                    <b>Erreur rencontrée : </b>" . $erreur . "
-                    <br>
-                    <b>Objet : </b>" . $objet_origine . "
-                    <br><br>
-                    <b>Destinataire(s) : </b><br>";
-        $adresses = explode(';', $destinataire_origine);
-        foreach ($adresses as $adress) {
-            $message .= "&nbsp;&nbsp;&nbsp; - " . trim($adress) . "<br>";
-        }
-
-        $message .= "<br><hr><br>
-                    <b>Message : </b>
-                    <br><br>
-                    ";
-        $message .= $message_origine;
-
-
-        $erreur_mail->MsgHTML($message);
-
-        $erreur_mail = self::addAddress($erreur_mail, Config::paramsVariables('mail_support'));
-
-        $erreur_mail->Send();
-    }
-
     /**
      * Remplace les tokens dans un message
      * @param $message texte à parser
@@ -291,9 +230,7 @@ class EmailHelper
         $my_mail->Subject = $objet;
         $my_mail->MsgHTML($message);
 
-        $log_adress = $to;
         $my_mail = self::addAddress($my_mail, $to);
-
         // on met CASTELIS en copie (pour les tests)
         $my_mail = self::addBCC($my_mail, Config::paramsVariables('mail_support'));
 
@@ -321,7 +258,7 @@ class EmailHelper
         return $my_mail;
     }
 
-    public static function addAddress($my_mail, $adresses, $nom_adresse = '')
+    public static function addAddress($my_mail, $adresses)
     {
         $tmp = self::explodeListEmails($adresses);
         foreach ($tmp as $adress) {
@@ -332,7 +269,7 @@ class EmailHelper
         return $my_mail;
     }
 
-    public static function addBCC($my_mail, $adresses, $nom_adresse = '')
+    public static function addBCC($my_mail, $adresses)
     {
         $tmp = self::explodeListEmails($adresses);
         foreach ($tmp as $adress) {
@@ -350,10 +287,7 @@ class EmailHelper
      */
     public static function explodeListEmails($adresses = '')
     {
-        if (strpos($adresses, ';') === false) {
-            return explode(',', $adresses);
-        } else {
-            return explode(';', $adresses);
-        }
+        $char = (strpos($adresses, ';') === false) ? ',' : ';';
+        return explode($char, $adresses);
     }
 }
