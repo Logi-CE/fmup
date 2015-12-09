@@ -91,7 +91,8 @@ class String
      * Coupe une chaine en sous-chaines en essayant autant que possible de couper sur les espaces
      * @param string $chaine : La chaîne à couper
      * @param int $nombre_caracteres : Le nombre de caractères maximum d'une sous-chaine
-     * @param string $nombre_coupures_max : [OPT] Le nombre de sous-chaines maximum à créer, la dernière comportant le reliquat
+     * @param string $nombre_coupures_max [OPT] Le nombre de sous-chaines maximum à créer,
+     *                                      la dernière comportant le reliquat
      * @return array[string] : Un tableau contenant les sous-chaines
      */
     public static function couper ($chaine, $nombre_caracteres = 40, $nombre_coupures_max = false)
@@ -179,25 +180,25 @@ class String
                     // US-ASCII, pass straight through.
                     $out[] = $in;
                     $mBytes = 1;
-                } else if (0xC0 == (0xE0 & ($in))) {
+                } elseif (0xC0 == (0xE0 & ($in))) {
                     // First octet of 2 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x1F) << 6;
                     $mState = 1;
                     $mBytes = 2;
-                } else if (0xE0 == (0xF0 & ($in))) {
+                } elseif (0xE0 == (0xF0 & ($in))) {
                     // First octet of 3 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x0F) << 12;
                     $mState = 2;
                     $mBytes = 3;
-                } else if (0xF0 == (0xF8 & ($in))) {
+                } elseif (0xF0 == (0xF8 & ($in))) {
                     // First octet of 4 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x07) << 18;
                     $mState = 3;
                     $mBytes = 4;
-                } else if (0xF8 == (0xFC & ($in))) {
+                } elseif (0xF8 == (0xFC & ($in))) {
                     /* First octet of 5 octet sequence.
                     *
                     * This is illegal because the encoded codepoint must be either
@@ -210,7 +211,7 @@ class String
                     $mUcs4 = ($mUcs4 & 0x03) << 24;
                     $mState = 4;
                     $mBytes = 5;
-                } else if (0xFC == (0xFE & ($in))) {
+                } elseif (0xFC == (0xFE & ($in))) {
                     // First octet of 6 octet sequence, see comments for 5 octet sequence.
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 1) << 30;

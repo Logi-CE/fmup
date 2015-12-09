@@ -62,7 +62,7 @@ class Mail extends Abstraction
 
         if (isset($_SERVER["REMOTE_ADDR"])) {
             echo "Adresse IP de l'internaute : " . $_SERVER["REMOTE_ADDR"];
-            echo  ' ' . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "<br/>";
+            echo ' ' . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "<br/>";
         }
         if (isset($_SERVER["HTTP_HOST"])) {
             echo "URL appelée : http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "<br/><br/>";
@@ -95,7 +95,9 @@ class Mail extends Abstraction
         foreach ($traces as $trace) {
             echo '<tr>';
             echo '<td>' . ((isset($trace['file'])) ? $trace['file'] : $this->getException()->getFile()) . '</td>';
-            echo '<td style="text-align: right;">' . ((isset($trace['line'])) ? $trace['line'] : $this->getException()->getLine()) . '</td>';
+            echo '<td style="text-align: right;">' . ((isset($trace['line']))
+                    ? $trace['line']
+                    : $this->getException()->getLine()) . '</td>';
             echo '<td>' . ((isset($trace['class'])) ? $trace['class'] : '');
             echo (isset($trace['type'])) ? $trace['type'] : '';
             echo (isset($trace['function'])) ? $trace['function'] : '';

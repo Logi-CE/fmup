@@ -10,9 +10,11 @@ use FMUP\Queue\Channel\Settings;
 class Native extends Settings
 {
     private $settings = array();
-
-    const PARAM_RECEIVE_FORCE_SIZE = 'PARAM_RECEIVE_FORCE_SIZE'; //(bool) force size without error if message in queue is bigger than defined message size (@see PARAM_MAX_MESSAGE_SIZE) (default false)
-    const PARAM_RECEIVE_MODE_EXCEPT = 'PARAM_RECEIVE_MODE_EXCEPT'; //(bool) will receive a message different than the specified type if set to true (default false)
+    //(bool) force size without error if message in queue is bigger than defined message size
+    // (@see PARAM_MAX_MESSAGE_SIZE) (default false)
+    const PARAM_RECEIVE_FORCE_SIZE = 'PARAM_RECEIVE_FORCE_SIZE';
+    //(bool) will receive a message different than the specified type if set to true (default false)
+    const PARAM_RECEIVE_MODE_EXCEPT = 'PARAM_RECEIVE_MODE_EXCEPT';
 
     public function define($setting, $value)
     {

@@ -37,7 +37,8 @@ class Routing
             foreach ($this->routes as $route) {
                 /* @var $route Route */
                 if ($route->setRequest($request)->canHandle()) {
-                    $route->handle(); //this will handle the request - not fluent interface because we don't know how developer will write
+                    //this will handle the request - not fluent interface because we don't know how developer will write
+                    $route->handle();
                     $redispatch = $route->hasToBeReDispatched();
                     $routeSelected = $route;
                     break;

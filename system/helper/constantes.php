@@ -23,7 +23,8 @@ class Constantes
     
     public static function getMessageConnexionMaintenance ()
     {
-        return "<strong>Le site est actuellement en maintenance.</strong><br />Veuillez nous excusez pour la gêne occasionnée.";
+        return "<strong>Le site est actuellement en maintenance.</strong>"
+        ."<br />Veuillez nous excusez pour la gêne occasionnée.";
     }
     
     public static function getMessagePageNonTrouvee ()
@@ -32,7 +33,7 @@ class Constantes
     }
     
     public static function getMessageAttenteFlash () {
-        return '<img src="'.Constantes::getSrcImageLoader().'" alt="" />Traitement en cours...<br />Merci de patienter.';
+        return '<img src="'.self::getSrcImageLoader().'" alt="" />Traitement en cours...<br />Merci de patienter.';
     }
 
     /**
@@ -91,7 +92,8 @@ class Constantes
     
     public static function getMessageMailOubliEnvoye ()
     {
-        return 'Nous avons bien pris en compte votre demande. Vous allez recevoir un mail de réinitialisation.::Réinitialisation::ok';
+        return 'Nous avons bien pris en compte votre demande.'
+        .' Vous allez recevoir un mail de réinitialisation.::Réinitialisation::ok';
     }
     
     public static function getMessageDeconnexion ()

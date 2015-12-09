@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe mère de tous les modèles
  * @version 1.0
@@ -7,7 +8,7 @@ abstract class Model
 {
     protected static $dbInstance = null;
     protected $errors = array();
-    protected $nombre_ligne;	// pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
+    protected $nombre_ligne; // pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
     protected $log_id;
     public $requete;
     public static $nb_elements;
@@ -29,13 +30,13 @@ abstract class Model
         }
         return $this;
     }
-    
-    public function getAttributes ()
+
+    public function getAttributes()
     {
         return array_keys(get_object_vars($this));
     }
 
-    /*
+    /**
      * cette fonction est appelée au tout début du constructeur.
      * elle est principalement utilisée pour la gestion des cases à cocher qui doivent être décochée
      * si elles ne sont pas envoyée dans le $_POST du formulaire.
@@ -52,7 +53,7 @@ abstract class Model
     public static function getControllerName()
     {
         $classe_appelante = get_called_class();
-        if(substr($classe_appelante, 0, 4) == 'Base') $classe_appelante = substr($classe_appelante, 4);
+        if (substr($classe_appelante, 0, 4) == 'Base') $classe_appelante = substr($classe_appelante, 4);
         return String::to_Case($classe_appelante);
     }
 
@@ -136,6 +137,7 @@ abstract class Model
         }
         return $array;
     }
+
     /**
      * Convertit un objet en tableau
      * @param {Array} La collection
@@ -183,15 +185,17 @@ abstract class Model
     /**
      * Retourne tous les éléments éventuellement filtrés de la table
      * @param array $where : [OPT] Un tableau de tous les filtres éventuels
-     * @param array $options : [OPT] Options disponibles : 
-     * 		- order : Tri sur la requête
-     * 		- findOne : Utilisé pour déterminer qu'on ne recherche qu'un résultat (TODO pour afficher les objets supprimés, ça ressemble à un doublon, fonctionnement ésotérique...)
-     * 		- afficher_supprimes : TODO vérifier si c'est vraiment utilisé, apparement non
-     * 	Seulement MySQL
-     * 		- limit : Pagination
-     * 	Seulement MSSQL
-     * 		- top : Semi-pagination qui ne passe pas par la sous-vue
-     * 		- paging : C'est un tableau composé de numero_page et nb_element : Utilisé pour simuler une pagination grace à une sous-vue
+     * @param array $options : [OPT] Options disponibles :
+     *        - order : Tri sur la requête
+     *        - findOne : Utilisé pour déterminer qu'on ne recherche qu'un résultat
+     *          (TODO pour afficher les objets supprimés, ça ressemble à un doublon, fonctionnement ésotérique...)
+     *        - afficher_supprimes : TODO vérifier si c'est vraiment utilisé, apparement non
+     *    Seulement MySQL
+     *        - limit : Pagination
+     *    Seulement MSSQL
+     *        - top : Semi-pagination qui ne passe pas par la sous-vue
+     *        - paging : C'est un tableau composé de numero_page et nb_element
+     *                     Utilisé pour simuler une pagination grace à une sous-vue
      * @return array[object]
      */
     public static function findAll($where = array(), $options = array())
@@ -206,7 +210,7 @@ abstract class Model
             if (!isset($options['fonction']) || $options['fonction'] != 'findOne') {
                 // On retire les éléments supprimés de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                    if (!isset ($where['date_suppression']) ) {
+                    if (!isset ($where['date_suppression'])) {
                         if ($driver == 'mssql') {
                             $where['date_suppression'] = "ISnull(date_suppression, '') = ''";
                         } else {
@@ -238,39 +242,40 @@ abstract class Model
 
                 // Ordre by spécialisé pour la sous-vue générée
                 if (isset($options["order"]) && $options["order"] != '') {
-                    $orderby = 'ORDER BY '.$options["order"];
+                    $orderby = 'ORDER BY ' . $options["order"];
                 } else {
                     $orderby = 'ORDER BY getdate()';
                 }
 
                 $SQL = 'WITH x AS
                         (
-                            SELECT REQUETE_NUMERO_LIGNE = ROW_NUMBER() OVER ('.$orderby.')
+                            SELECT REQUETE_NUMERO_LIGNE = ROW_NUMBER() OVER (' . $orderby . ')
                                     , V.*
                             FROM
                             (
-                                '.$SQL.'
+                                ' . $SQL . '
                             ) V
-                            '.Sql::parseWhere($where).'
+                            ' . Sql::parseWhere($where) . '
                         )
                         SELECT  (SELECT COUNT(*) FROM x ) AS REQUETE_NOMBRE_LIGNE, *
                         FROM x
-                        WHERE x.REQUETE_NUMERO_LIGNE BETWEEN ((('.$options["paging"]["numero_page"].' - 1) * '.$options["paging"]["nb_element"].') + 1)
-                                                                AND '.$options["paging"]["numero_page"].' * '.$options["paging"]["nb_element"].'';
+                        WHERE x.REQUETE_NUMERO_LIGNE BETWEEN (((' .
+                    $options["paging"]["numero_page"] . ' - 1) * ' . $options["paging"]["nb_element"] . ') + 1)
+                            AND ' . $options["paging"]["numero_page"] . ' * ' . $options["paging"]["nb_element"] . '';
 
             } else {
-                if (!empty($options["order"])) $orderby = " ORDER BY ".$options["order"];
-                
+                if (!empty($options["order"])) $orderby = " ORDER BY " . $options["order"];
+
                 if ($driver == 'mysql') {
                     $SQL .= Sql::parseWhere($where, false, $classe_appelante);
-                    $SQL .= ' '.$orderby;
-                    if (!empty($options["limit"])) $SQL .= ' '." LIMIT ".$options["limit"];
-                
+                    $SQL .= ' ' . $orderby;
+                    if (!empty($options["limit"])) $SQL .= ' ' . " LIMIT " . $options["limit"];
+
                 } elseif ($driver == 'mssql') {
-                    if (!empty($options["top"])) $top = " top ".$options["top"];
-                    $SQL = 'SELECT '.$top.' * FROM ('.$SQL.') V ';
+                    if (!empty($options["top"])) $top = " top " . $options["top"];
+                    $SQL = 'SELECT ' . $top . ' * FROM (' . $SQL . ') V ';
                     $SQL .= Sql::parseWhere($where);
-                    $SQL .= ' '.$orderby;
+                    $SQL .= ' ' . $orderby;
                 }
             }
             // if ($classe_appelante == 'Facture')
@@ -285,15 +290,22 @@ abstract class Model
             }
         } else {
             if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                if (!isset ($where['supprime']) && (!isset($options['fonction']) || $options['fonction'] != 'findOne' )) {
+                if (!isset ($where['supprime']) &&
+                    (!isset($options['fonction']) || $options['fonction'] != 'findOne')
+                ) {
                     $where['supprime'] = 'supprime = 0';
                 }
             }
             //sinon appelle de l'objet de Base généré par le génératOR
-            $result = Model::findAllFromTable(call_user_func(array($classe_appelante, 'getTableName')), $where, $options);
+            $result = Model::findAllFromTable(
+                call_user_func(array($classe_appelante, 'getTableName')),
+                $where,
+                $options
+            );
         }
-        
-        // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit (pour la pagination)
+
+        // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit
+        // (pour la pagination)
         if ($driver == 'mysql') {
             $db = Model::getDb();
             if (!$db instanceof \FMUP\Db) {
@@ -308,7 +320,7 @@ abstract class Model
         return Model::objectsFromMatrix($result, $classe_appelante);
     }
 
-	/**
+    /**
      * Retourne un élément grâce à son ID
      * @param int $id : Un identifiant
      * @return null|object
@@ -317,15 +329,19 @@ abstract class Model
     {
         $classe_appelante = get_called_class();
 
-        $return = call_user_func(array($classe_appelante, 'findAll'), array('id = '.Sql::secureId($id)), array('fonction' => 'findOne'));
-        if (count($return)>0) {
+        $return = call_user_func(
+            array($classe_appelante, 'findAll'),
+            array('id = ' . Sql::secureId($id)),
+            array('fonction' => 'findOne')
+        );
+        if (count($return) > 0) {
             return $return[0];
         } else {
             return null;
         }
     }
 
-	/**
+    /**
      * Retourne le premier élément d'un findAll
      * @param array $where : [OPT] Un tableau de tous les filtres éventuels
      * @param string $order : [OPT] Le champ sur lequel ordonner
@@ -335,7 +351,11 @@ abstract class Model
     {
         $classe_appelante = get_called_class();
 
-        $return = call_user_func(array($classe_appelante, 'findAll'), $where, array('order' => $order, 'limit' => '0, 1', 'top' => '1'));
+        $return = call_user_func(
+            array($classe_appelante, 'findAll'),
+            $where,
+            array('order' => $order, 'limit' => '0, 1', 'top' => '1')
+        );
         if (count($return)) {
             return $return[0];
         } else {
@@ -343,7 +363,7 @@ abstract class Model
         }
     }
 
-	/**
+    /**
      * Retourne le nombre d'éléments d'une requête
      * @param array $where : Un tableau de clauses pour la requête
      * @return int : Le nombre d'éléments
@@ -369,7 +389,8 @@ abstract class Model
     }
 
     /**
-     * si la table de l'objet contient un champ date_suppression, et qu'il ne faut afficher que les données non supprimées par défaut
+     * si la table de l'objet contient un champ date_suppression,
+     * et qu'il ne faut afficher que les données non supprimées par défaut
      * alors réécrire cette fonction dans l'objet avec return true
      * @return bool
      */
@@ -377,6 +398,7 @@ abstract class Model
     {
         return false;
     }
+
     /**
      * si la table de l'objet contient un champ visible, et qu'il ne faut afficher que les données visibles par défaut
      * alors réécrire cette fonction dans l'objet avec return true
@@ -406,22 +428,22 @@ abstract class Model
             $SQL .= ' SQL_CALC_FOUND_ROWS ';
         } else {
             if (isset($options["top"]) && $options["top"]) {
-                $SQL .= " TOP ".$options["top"];
+                $SQL .= " TOP " . $options["top"];
             }
         }
         $SQL .= " * FROM $table";
         $SQL .= Sql::parseWhere($where);
         if (isset($options["group_by"]) && $options["group_by"]) {
-            $SQL .= " group by ".$options["group_by"];
+            $SQL .= " group by " . $options["group_by"];
         }
         if (isset($options["order"]) && $options["order"]) {
-            $SQL .= " ORDER BY ".$options["order"];
+            $SQL .= " ORDER BY " . $options["order"];
         }
         if ($varconnexion['driver'] == 'mysql') {
             if (isset($options["top"]) && $options["top"]) {
-                $SQL .= " LIMIT ".$options["top"];
+                $SQL .= " LIMIT " . $options["top"];
             } elseif (!empty($options['limit'])) {
-                $SQL .= " LIMIT ".$options["limit"];
+                $SQL .= " LIMIT " . $options["limit"];
             }
         }
 
@@ -445,16 +467,16 @@ abstract class Model
     {
         $SQL = "SELECT    id\n";
         if ($attribute != 'id') {
-            $SQL .= ",".$attribute."\n";
+            $SQL .= "," . $attribute . "\n";
         }
         $SQL .= "FROM $table ";
         $SQL .= Sql::parseWhere($where);
 
         if (isset($options["order"]) && $options["order"]) {
-            $SQL .= " ORDER BY ".$options["order"];
+            $SQL .= " ORDER BY " . $options["order"];
         }
         if (isset($options["limit"]) && $options["limit"]) {
-            $SQL .= " LIMIT ".$options["limit"];
+            $SQL .= " LIMIT " . $options["limit"];
         }
         //echo($SQL);
         // Exécution de la requète
@@ -467,7 +489,14 @@ abstract class Model
         return $result;
     }
 
-    public static function findAllAttributeFromLeftJoinTable($table, $left_table, $link_table, $attribute, $where = array(), $options = array())
+    public static function findAllAttributeFromLeftJoinTable(
+        $table,
+        $left_table,
+        $link_table,
+        $attribute,
+        $where = array(),
+        $options = array()
+    )
     {
         $SQL = "SELECT $attribute \n";
         $SQL .= " FROM $table  \n LEFT JOIN $left_table  \n";
@@ -475,10 +504,10 @@ abstract class Model
         $SQL .= Sql::parseWhere($where);
 
         if (isset($options["order"]) && $options["order"]) {
-            $SQL .= " ORDER BY ".$options["order"]."  \n";
+            $SQL .= " ORDER BY " . $options["order"] . "  \n";
         }
         if (isset($options["limit"]) && $options["limit"]) {
-            $SQL .= " LIMIT ".$options["limit"];
+            $SQL .= " LIMIT " . $options["limit"];
         }
         //debug::output($SQL);
         // Exécution de la requète
@@ -501,7 +530,7 @@ abstract class Model
         $SQL = "SELECT COUNT(*) AS nb FROM $table";
         $SQL .= sql::ParseWhere($where);
         if (!empty($options["group_by"])) {
-            $SQL .= " group by ".$options["group_by"];
+            $SQL .= " group by " . $options["group_by"];
         }
         // Exécution de la requète
         $db = \Model::getDb();
@@ -526,8 +555,8 @@ abstract class Model
         $select = "SUM($colonne) as somme";
         $group_by = "";
         if (isset($options["group_by"]) && $options["group_by"]) {
-                $select .= ", $table.$colonne";
-                $group_by = " GROUP BY ".$options["group_by"];
+            $select .= ", $table.$colonne";
+            $group_by = " GROUP BY " . $options["group_by"];
         }
         $sql = "SELECT $select FROM $table";
         $sql .= sql::ParseWhere($where);
@@ -565,7 +594,7 @@ abstract class Model
                     if (isset($_SESSION['id_utilisateur'])) {
                         $id_utilisateur = $_SESSION['id_utilisateur'];
                     }
-                    $infos_suppression .= ', id_suppresseur = '.Sql::secureId($id_utilisateur);
+                    $infos_suppression .= ', id_suppresseur = ' . Sql::secureId($id_utilisateur);
                     $this->id_suppresseur = $id_utilisateur;
                 }
                 // Loger le changement
@@ -573,18 +602,18 @@ abstract class Model
                 $SQL = "UPDATE $table
                         SET supprime = 1
                         $infos_suppression
-                        WHERE id = ".$this->id;
+                        WHERE id = " . $this->id;
                 $db = Model::getDb();
                 if ($db instanceof \FMUP\Db) {
                     return (bool)$db->query($SQL);
                 } else {
                     return (bool)$db->execute($SQL);
                 }
-            // Cas de la suppression physique
+                // Cas de la suppression physique
             } else {
                 // Loger le changement
                 $this->logerChangement("delete");
-                $SQL = "DELETE FROM $table WHERE id = ".$this->id;
+                $SQL = "DELETE FROM $table WHERE id = " . $this->id;
                 $db = Model::getDb();
                 if ($db instanceof \FMUP\Db) {
                     $return = (bool)$db->query($SQL);
@@ -626,12 +655,13 @@ abstract class Model
     /**
      * Sauvegarde ou met à jour l'objet dans la base de donnée
      * @param $force_enregistrement = si TRUE, alors le système contrepasse le VALIDATE et enregistre quand même l'objet
-     * 			(ATTENTION à l'utilisation de ce paramètre)
-     * @return bool : VRAI si une action a eu lieu en base (si la requête ne change rien ou le validate bloque, retourne FAUX)
+     *            (ATTENTION à l'utilisation de ce paramètre)
+     * @return bool
+     *      VRAI si une action a eu lieu en base (si la requête ne change rien ou le validate bloque, retourne FAUX)
      */
     public function save($force_enregistrement = false)
     {
-       // debug::output($this, true);
+        // debug::output($this, true);
         if ($force_enregistrement || $this->validate(true)) {
             if (Is::id($this->id)) {
                 /* Loger le changement */
@@ -655,13 +685,13 @@ abstract class Model
             return false;
         }
     }
-    
+
     /**
      * Insertion d'un objet en base
      * @return bool
      */
     abstract protected function insert();
-    
+
     /**
      * Mise à jour d'un objet en base
      * @return bool
@@ -676,6 +706,7 @@ abstract class Model
     {
         return Constantes::getMessageFlashInsertionOk();
     }
+
     /**
      * Le message affiché à l'update
      */
@@ -683,6 +714,7 @@ abstract class Model
     {
         return Constantes::getMessageFlashModificationOk();
     }
+
     /**
      * Le message affiché à la suppression
      */
@@ -690,6 +722,7 @@ abstract class Model
     {
         return Constantes::getMessageFlashSuppressionOk();
     }
+
     /**
      * Le message affiché à l'upload d'un document
      */
@@ -708,7 +741,7 @@ abstract class Model
      * Retourne le createur de l'objet
      * @return Utilisateur
      */
-    public function getCreateur ()
+    public function getCreateur()
     {
         $createur = Utilisateur::findOne($this->id_createur);
         if (!$createur) {
@@ -721,7 +754,7 @@ abstract class Model
      * Retourne le dernier modificateur de l'objet
      * @return Utilisateur
      */
-    public function getModificateur ()
+    public function getModificateur()
     {
         $modificateur = Utilisateur::findOne($this->id_modificateur);
         if (!$modificateur) {
@@ -734,6 +767,7 @@ abstract class Model
     {
         return str_replace(' ', ' à ', $this->getDateCreation());
     }
+
     /*
      * retourne la concaténation de la date et l'heure de dernière modification de l'objet
      */
@@ -762,6 +796,7 @@ abstract class Model
         }
         return true;
     }
+
     /**
      * Modifie le champ createur par la personne connectée
      **/
@@ -790,7 +825,7 @@ abstract class Model
      **/
     public function setDateModification($value = '')
     {
-        if ($value==='null') {
+        if ($value === 'null') {
             $this->date_modification = '';
         } elseif ($value) {
             $this->date_modification = Date::frToSql($value);
@@ -805,14 +840,15 @@ abstract class Model
      **/
     public function setIdModificateur($value = 0)
     {
-        if ($value==='null') {
+        if ($value === 'null') {
             $this->id_modificateur = '';
         } elseif ($value) {
             $this->id_modificateur = $value;
         } elseif (isset($_SESSION['id_utilisateur'])) {
             $this->id_modificateur = $_SESSION['id_utilisateur'];
         } else {
-            // ce cas ne peut arriver que si l'on modifie l'objet dans une page où personne n'est connecté (ex: page de première connexion)
+            // ce cas ne peut arriver que si l'on modifie l'objet dans une page où personne n'est connecté
+            // (ex: page de première connexion)
             $this->id_modificateur = Config::paramsVariables('id_cron');
         }
         return true;
@@ -879,8 +915,9 @@ abstract class Model
      **/
     public function getAttribute($attribute)
     {
-        return call_user_func(array($this, 'get'.String::toCamlCase($attribute)));
+        return call_user_func(array($this, 'get' . String::toCamlCase($attribute)));
     }
+
     /**
      * Modifie la valeur d'un attribut si il existe
      * @param {String} l'attribut auquel accéder
@@ -888,7 +925,7 @@ abstract class Model
      **/
     public function setAttribute($attribute, $value)
     {
-        call_user_func(array($this, 'set'.String::toCamlCase($attribute)), $value);
+        call_user_func(array($this, 'set' . String::toCamlCase($attribute)), $value);
         return true;
     }
 
@@ -930,9 +967,9 @@ abstract class Model
             }
         } else {
             if (preg_match('#^get#i', $function) || preg_match('#^set#i', $function)) {
-                $message = "Attribut inexistant $attribut dans l'objet ".get_called_class();
+                $message = "Attribut inexistant $attribut dans l'objet " . get_called_class();
             } else {
-                $message = "Fonction inexistante $function dans l'objet ".get_called_class();
+                $message = "Fonction inexistante $function dans l'objet " . get_called_class();
             }
             throw new \FMUP\Exception($message);
         }
@@ -940,16 +977,16 @@ abstract class Model
     }
 
     /**
-    * Retourne l'id de l'objet
-    **/
+     * Retourne l'id de l'objet
+     **/
     /*public function getId()
     {
         return $this->id;
     }*/
 
     /**
-    * Retourne le code langue de l'utilisateur
-    **/
+     * Retourne le code langue de l'utilisateur
+     **/
     public function getCodeLangue()
     {
         return $this->code_langue;
@@ -961,11 +998,11 @@ abstract class Model
     ***********************/
 
     /**
-    * Renvoi le tableau des champs autorisés
-    * pour l'utilisateur en cours
-    *
-    * @return tableau des champs autorisés
-    */
+     * Renvoi le tableau des champs autorisés
+     * pour l'utilisateur en cours
+     *
+     * @return tableau des champs autorisés
+     */
     public function listeChampsModifiable()
     {
         return array();
@@ -974,10 +1011,10 @@ abstract class Model
     /**
      * Donne le droit à modifier l'objet mais par une méthode différente (non directe par l'attribut)
      **/
-     public function setIdNew($valeur = '')
-     {
-         $this->id = $valeur;
-     }
+    public function setIdNew($valeur = '')
+    {
+        $this->id = $valeur;
+    }
 
     /**
      * Renvoi l'autorisation d'un champ pour l'utilisateur en cours
@@ -1040,28 +1077,28 @@ abstract class Model
         return 'id_objet_log';
     }
 
-     /**
-      * Spécifie les champs de la table à comparer
-      * Retourne un taleau vide si tous les champs de la table à comparer
-      * @return Array $array
-      */
-     public function fieldsToCompare()
-     {
-         $array = array();
-         return $array;
-     }
+    /**
+     * Spécifie les champs de la table à comparer
+     * Retourne un taleau vide si tous les champs de la table à comparer
+     * @return Array $array
+     */
+    public function fieldsToCompare()
+    {
+        $array = array();
+        return $array;
+    }
 
-     /**
-      * Spécifie les champs à ne pas prendre en compte pour la comparaison
-      * Tableau non vide contenant tout le temps, au moins le champ id
-      * @return Array $array
-      */
-     public function fieldsInException()
-     {
-         $array = array();
-        $array['id'] 					= 'Id';
-         return $array;
-     }
+    /**
+     * Spécifie les champs à ne pas prendre en compte pour la comparaison
+     * Tableau non vide contenant tout le temps, au moins le champ id
+     * @return Array $array
+     */
+    public function fieldsInException()
+    {
+        $array = array();
+        $array['id'] = 'Id';
+        return $array;
+    }
 
     /**
      * fonction de log
@@ -1072,15 +1109,16 @@ abstract class Model
         $varconnexion = Config::parametresConnexionDb();
         if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
             if (!Historisation::getIdHistoCourant()) {
-                // si on a pas initialisé cette variable, alors on en crée une par défaut, pour avoir toujours un lien entre les différetns logs
+                // si on a pas initialisé cette variable, alors on en crée une par défaut,
+                // pour avoir toujours un lien entre les différetns logs
                 if (get_class($this) != 'Historisation')
                     Historisation::init('* SYSTEME *');
             }
 
-            $default_id 	= (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid']."," : "";
-            $tab 	= call_user_func(array(get_class($this), 'listeChampsObjet'));
+            $default_id = (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid'] . "," : "";
+            $tab = call_user_func(array(get_class($this), 'listeChampsObjet'));
             $tab = explode(', ', $tab);
-            
+
             if (isset($tab[0]) && trim($tab[0]) == '') {
                 unset($tab[0]);
             }
@@ -1099,10 +1137,10 @@ abstract class Model
             }
             $liste_champ_valeur = implode(', ', $tab);
 
-            $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : -1; //possible par cron
+            $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : -1;
 
-            $SQL = 'INSERT INTO log__'.$this->getTableName().'
-                            ('.$liste_champ.'
+            $SQL = 'INSERT INTO log__' . $this->getTableName() . '
+                            (' . $liste_champ . '
                                 , id_historisation
                                 , libelle_historisation
                                 , contenu_log
@@ -1110,16 +1148,16 @@ abstract class Model
                                 , date_action_log
                                 , action_log
                             )
-                        SELECT '.$default_id.'
-                                '.$liste_champ_valeur.',
-                                '.Sql::secureId(Historisation::getIdHistoCourant()).',
+                        SELECT ' . $default_id . '
+                                ' . $liste_champ_valeur . ',
+                                ' . Sql::secureId(Historisation::getIdHistoCourant()) . ',
                                 \'\',
                                 \'\',
-                                '.Sql::secureId($id_utilisateur).',
-                                '.Sql::secureDate(Date::frToSql(Date::today(true))).',
-                                '.Sql::secure($type_action).'
-                        FROM '.$this->getTableName().' T
-                        WHERE id = '.Sql::secureId($this->id).'
+                                ' . Sql::secureId($id_utilisateur) . ',
+                                ' . Sql::secureDate(Date::frToSql(Date::today(true))) . ',
+                                ' . Sql::secure($type_action) . '
+                        FROM ' . $this->getTableName() . ' T
+                        WHERE id = ' . Sql::secureId($this->id) . '
                     ';
             $db = Model::getDb();
             if ($db instanceof \FMUP\Db) {
@@ -1138,10 +1176,10 @@ abstract class Model
     public function comparerDifferences()
     {
         $tab_champs_comparaison = $this->fieldsToCompare();
-        $tab_champs_exception 	= $this->fieldsInException();
-        $tab_champs_base 		= array();
-        $tab_champs_log 		= array();
-        $tab_contenu			= array();
+        $tab_champs_exception = $this->fieldsInException();
+        $tab_champs_base = array();
+        $tab_champs_log = array();
+        $tab_contenu = array();
 
         $champs_specifiques = false;
         if (!empty($tab_champs_comparaison)) {
@@ -1204,21 +1242,22 @@ abstract class Model
 
                 foreach ($tab_diff as $index => $value) {
                     $field = ($champs_specifiques) ? $tab_champs_comparaison[$index] : $index;
-                    $libelle .= "Le champ '".$field."' a été modifié : '".$field."' a été remplacé par '".$value."'\n";
+                    $libelle .= "Le champ '" . $field . "' a été modifié : '"
+                        . $field . "' a été remplacé par '" . $value . "'\n";
 
                     $tab_contenu[$index] = array(
-                                                    "old_value"	=> isset($tab_champs_log[$index]) ? $tab_champs_log[$index] : null,
-                                                    "new_value"	=> ($value)
-                                                );
+                        "old_value" => isset($tab_champs_log[$index]) ? $tab_champs_log[$index] : null,
+                        "new_value" => ($value)
+                    );
                 }
 
                 $contenu = serialize($tab_contenu);
                 //$contenu = json_encode($tab_contenu);
 
-                $sql = "UPDATE log__".$this->getTableName()."
-                        SET libelle_historisation = ".Sql::secure(($libelle))."
-                        , contenu_log = ".Sql::secure($contenu)."
-                        WHERE id = ".Sql::secureId($this->log_id);
+                $sql = "UPDATE log__" . $this->getTableName() . "
+                        SET libelle_historisation = " . Sql::secure(($libelle)) . "
+                        , contenu_log = " . Sql::secure($contenu) . "
+                        WHERE id = " . Sql::secureId($this->log_id);
                 $db = Model::getDb();
                 if (!$db instanceof \FMUP\Db) {
                     $db->execute($sql);
@@ -1235,16 +1274,16 @@ abstract class Model
     public function getSqlLog($from = "")
     {
         if ($from == 'log') {
-            $table = 'log__'.$this->getTableName();
-            $condition = " T.id = ".Sql::secureId($this->log_id);
+            $table = 'log__' . $this->getTableName();
+            $condition = " T.id = " . Sql::secureId($this->log_id);
         } else {
-             $table = $this->getTableName();
-            $condition = " T.id = ".Sql::secureId($this->id);
+            $table = $this->getTableName();
+            $condition = " T.id = " . Sql::secureId($this->id);
         }
 
         $sql = "SELECT T.*
-                FROM ".$table." T
-                WHERE ".$condition;
+                FROM " . $table . " T
+                WHERE " . $condition;
         return $sql;
     }
 
@@ -1262,8 +1301,8 @@ abstract class Model
     public function getHistoriqueSurObjet()
     {
         $sql = "SELECT *
-                FROM log__".$this->getTableName()."
-                WHERE id_objet_log = ".Sql::secureId($this->id)."
+                FROM log__" . $this->getTableName() . "
+                WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
         if (!$db instanceof \FMUP\Db) {
@@ -1280,8 +1319,8 @@ abstract class Model
     public function getHistoriqueSurObjetDiffLibelle()
     {
         $sql = "SELECT libelle_historisation, id_utilisateur_log, date_action_log, action_log
-                FROM log__".$this->getTableName()."
-                WHERE id_objet_log = ".Sql::secureId($this->id)."
+                FROM log__" . $this->getTableName() . "
+                WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
         if (!$db instanceof \FMUP\Db) {
@@ -1299,8 +1338,8 @@ abstract class Model
     {
         $array = array();
         $sql = "SELECT id, contenu_log, id_utilisateur_log, date_action_log, action_log
-                FROM log__".$this->getTableName()."
-                WHERE id_objet_log = ".Sql::secureId($this->id)."
+                FROM log__" . $this->getTableName() . "
+                WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
         if (!$db instanceof \FMUP\Db) {
@@ -1311,11 +1350,11 @@ abstract class Model
 
         foreach ($res as $rs) {
             $array[$rs["id"]] = array(
-                                    "id_utilisateur_log" => $rs["id_utilisateur_log"]
-                                    , "date_action_log" => $rs["date_action_log"]
-                                    , "action_log" => $rs["action_log"]
-                                    , "contenu_log" => unserialize($rs["contenu_log"])
-                                );
+                "id_utilisateur_log" => $rs["id_utilisateur_log"]
+            , "date_action_log" => $rs["date_action_log"]
+            , "action_log" => $rs["action_log"]
+            , "contenu_log" => unserialize($rs["contenu_log"])
+            );
         }
         return $array;
     }
@@ -1328,7 +1367,7 @@ abstract class Model
      * @return bool
      */
     abstract public function validate();
-    
+
     /**
      * L'objet est-il effaçable
      * @return bool
@@ -1345,12 +1384,13 @@ abstract class Model
     {
         if (is_array($attribut)) {
             foreach ($attribut as $current_attribut) {
-                $where[$current_attribut] = 'IFnull('.$current_attribut.', 0) = IFnull('.sql::Secure($this->$current_attribut).', 0)';
+                $where[$current_attribut] = 'IFnull(' . $current_attribut . ', 0) = '
+                    . 'IFnull(' . sql::Secure($this->$current_attribut) . ', 0)';
             }
         } else {
-            $where[$attribut] = 'IFnull('.$attribut.', 0) = IFnull('.sql::Secure($this->$attribut).', 0)';
+            $where[$attribut] = 'IFnull(' . $attribut . ', 0) = IFnull(' . sql::Secure($this->$attribut) . ', 0)';
         }
-        $where['id'] = "IFnull(id, 0) <> IFnull(".sql::secureId($this->id).", 0)";
+        $where['id'] = "IFnull(id, 0) <> IFnull(" . sql::secureId($this->id) . ", 0)";
         $doublon = call_user_func(array(get_class($this), 'FindFirst'), $where);
 
         if ($doublon) {

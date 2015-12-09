@@ -50,7 +50,8 @@ class IdFromField implements Formatter
 
     public function getErrorMessage($value = null)
     {
-        return "Aucune correspondance n'a été trouvé pour le champ : '" . $this->champ_origine . "' de la table : '" . $this->table_origine . "' pour la valeur : '" . $value . "'";
+        return "Aucune correspondance n'a été trouvé pour le champ : '" . $this->champ_origine . "' de la table : '"
+            . $this->table_origine . "' pour la valeur : '" . $value . "'";
     }
 
     public function hasError()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe permettant le débogage de l'application
  * @version 1.0
@@ -7,34 +8,37 @@
  */
 class Debug
 {
-	public static $duree;       // Variable utilisée pour les mesures de temps d'exécution
+    public static $duree;       // Variable utilisée pour les mesures de temps d'exécution
     public static $memoire;     // Variable utilisée pour les mesures de consommation mémoire
-    
+
     /**
      * Effectue une sortie lisible d'une variable
-     * @param {Object} La variable
-     * @param {Boolean} $parametre Si null rien de spécial, si false on affiche en commentaire, si true on tue le script
-     **/
+     * @param $object $variable La variable
+     * @param bool $parametre Si null rien de spécial, si false on affiche en commentaire, si true on tue le script
+     */
     public static function output($variable, $parametre = null)
     {
-      if (Config::isDebug() || Utilisateur::isCastelis()) {
+        if (Config::isDebug() || Utilisateur::isCastelis()) {
 
-        echo ($parametre||null===$parametre)?'<pre style="border: 2px solid green; padding: 10px; background-color: #CCFFCC">':'<!--';
-        // on affiche la ligne ou on se trouve
-        $source = debug_backtrace();
-        echo $source[0]['file'].':'.$source[0]['line'].'<br />';
-        print_r($variable);
-        echo ($parametre||null===$parametre)?'</pre>':'-->';
+            echo ($parametre || null === $parametre)
+                ? '<pre style="border: 2px solid green; padding: 10px; background-color: #CCFFCC">'
+                : '<!--';
+            // on affiche la ligne ou on se trouve
+            $source = debug_backtrace();
+            echo $source[0]['file'] . ':' . $source[0]['line'] . '<br />';
+            print_r($variable);
+            echo ($parametre || null === $parametre) ? '</pre>' : '-->';
 
 
-        if ($parametre) {
-          /*echo '<pre>';
-          debug_print_backtrace();
-          echo '</pre>';*/
-          die('Arrêt du script.');
+            if ($parametre) {
+                /*echo '<pre>';
+                debug_print_backtrace();
+                echo '</pre>';*/
+                die('Arrêt du script.');
+            }
         }
-      }
     }
+
     /**
      * Retourne une sortie lisible d'une variable sous forme de chaine de caractère
      * @param {Object} La variable
@@ -42,12 +46,13 @@ class Debug
      **/
     public static function toString($variable)
     {
-      ob_start();
-      var_dump($variable);
-      $resultat = ob_get_contents();
-      ob_end_clean();
-      return $resultat;
+        ob_start();
+        var_dump($variable);
+        $resultat = ob_get_contents();
+        ob_end_clean();
+        return $resultat;
     }
+
     /**
      * Envoie un mail de débuggage
      *
@@ -56,23 +61,24 @@ class Debug
      */
     public static function mail($buffer, $title)
     {
-      $headers  = 'MIME-Version: 1.0' . "\r\n";
-      $headers .= "Content-type: text/html; charset=utf-8 \r\n";
-      $headers .= "From: ".Config::paramsVariables('mail_robot'). "\r\n";
-      return mail(Config::paramsVariables('mail_support'), $title, $buffer, $headers);
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= "Content-type: text/html; charset=utf-8 \r\n";
+        $headers .= "From: " . Config::paramsVariables('mail_robot') . "\r\n";
+        return mail(Config::paramsVariables('mail_support'), $title, $buffer, $headers);
     }
+
     /**
      * Backtrace
      **/
     public static function backtrace()
     {
-      ob_start();
-      debug_print_backtrace();
-      $backtrace = preg_replace('/.*?\n/', "", ob_get_contents(), 1);
-      ob_end_clean();
-      echo "<pre style='border: 2px solid red; padding: 10px; background-color: #FFCCCC'>$backtrace</pre>";
-      echo "<hr />";
-	}
+        ob_start();
+        debug_print_backtrace();
+        $backtrace = preg_replace('/.*?\n/', "", ob_get_contents(), 1);
+        ob_end_clean();
+        echo "<pre style='border: 2px solid red; padding: 10px; background-color: #FFCCCC'>$backtrace</pre>";
+        echo "<hr />";
+    }
 
     /**
      * Méthode pour initialiser la mesure de mémoire et de temps d'exécution
@@ -95,12 +101,12 @@ class Debug
         self::$memoire -= memory_get_usage();
         $retour = "";
         if ($message) {
-            $retour .= $message."\n";
+            $retour .= $message . "\n";
         }
-        $retour .= "Temps d'exécution : ".round(abs($duree), 4)."\n";
-        $retour .= "Mémoire consommée : ".round(abs($memoire), 4)."\n";
+        $retour .= "Temps d'exécution : " . round(abs(self::$duree), 4) . "\n";
+        $retour .= "Mémoire consommée : " . round(abs(self::$memoire), 4) . "\n";
         if (!$console) {
-            Debug::output($retour);
+            self::output($retour);
         }
     }
 }

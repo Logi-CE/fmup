@@ -398,7 +398,8 @@ class Framework extends \Framework
         }
         $this->getBootstrap()->warmUp();
 
-        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
+        //to be compliant with old system @todo delete
+        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig());
         parent::initialize();
     }
 }

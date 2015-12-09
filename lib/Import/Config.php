@@ -199,7 +199,8 @@ class Config
                     if (isset($tableau_id[$id_necessaire])) {
                         // et on le set
                         $objet->setAttribute($liste_attribut[$id_necessaire], $tableau_id[$id_necessaire]);
-                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire] . "LIKE '%" . $tableau_id[$id_necessaire] . "%'";
+                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire]
+                            . "LIKE '%" . $tableau_id[$id_necessaire] . "%'";
                     }
                 }
             }
@@ -210,7 +211,9 @@ class Config
                     ->getChampCible(), $this->getField($index)
                     ->getValue());
                 // et on prépare le filtre
-                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%" . $this->getField($index)->getValue() . "%'";
+                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible()
+                    . " LIKE '%"
+                    . $this->getField($index)->getValue() . "%'";
             }
             // on va chercher l'objet en base
             $objet_trouve = $nom_objet::findFirst($where);
@@ -252,7 +255,8 @@ class Config
                         // on le set
                         $objet->setAttribute($liste_attribut[$id_necessaire], $tableau_id[$id_necessaire]);
                         // et on prépare le filtre
-                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire] . " LIKE '%" . $tableau_id[$id_necessaire] . "%'";
+                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire] . " LIKE '%"
+                            . $tableau_id[$id_necessaire] . "%'";
                     }
                 }
             }
@@ -263,7 +267,8 @@ class Config
                     ->getChampCible(), $this->getField($index)
                     ->getValue());
                 // et on prépare le filtre
-                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%" . $this->getField($index)->getValue() . "%'";
+                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%"
+                    . $this->getField($index)->getValue() . "%'";
             }
             // on hydrate toutes les infos sur l'objet
             foreach ($this->liste_field as $field) {

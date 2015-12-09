@@ -72,7 +72,8 @@ class FileHelper
      * Crée un fichier de log pour y mettre les données en paramètre
      * @param string $nom_fichier : Le nom (en partie) du fichier
      * @param mixed $message : La chaine à loguer
-     * @param string $periodicite : [OPT] Détermine la périodicité des fichiers, il est placé à la fin du nom du fichier avec la fonction date, par défaut tous les jours
+     * @param string $periodicite : [OPT] Détermine la périodicité des fichiers,
+     *              il est placé à la fin du nom du fichier avec la fonction date, par défaut tous les jours
      */
     public static function fLog($nom_fichier, $message, $periodicite = 'Ymd')
     {
@@ -113,7 +114,8 @@ class FileHelper
      * Crée un document à partir d'un template en y remplaçant des expressions
      * @param unknown $fichier_modele : Le nom du template
      * @param unknown $nom_fichier : Le nom complet du fichier avec le chemin
-     * @param array $tableau_remplacements : [OPT] Un tableau contenant tous les remplacements à faire, sous la forme origine => remplacement
+     * @param array $tableau_remplacements : [OPT] Un tableau contenant tous les remplacements à faire,
+     *                                  sous la forme origine => remplacement
      * @return bool : VRAI si totu s'est bien passé
      */
     public static function genererDocumentParModele($fichier_modele, $nom_fichier, $tableau_remplacements = array())

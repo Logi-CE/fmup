@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe gérant l'affichage de certains éléments
  * @version 1.0
@@ -11,11 +12,11 @@ class DisplayHelper
      **/
     public static function getClassLigne($numero_ligne, $type = "")
     {
-        $classes = array('ligne_paire'.$type, 'ligne_impaire'.$type);
+        $classes = array('ligne_paire' . $type, 'ligne_impaire' . $type);
         return $classes[$numero_ligne % 2];
     }
 
-    public static function getExergueLigue ($actif)
+    public static function getExergueLigue($actif)
     {
         if ($actif) {
             $retour = "exergue";
@@ -25,10 +26,10 @@ class DisplayHelper
         return $retour;
     }
 
-    public static function getTitle ($message, $actif)
+    public static function getTitle($message, $actif)
     {
         if ($actif) {
-            $retour = " title='".$message."' ";
+            $retour = " title='" . $message . "' ";
         } else {
             $retour = "";
         }
@@ -42,11 +43,12 @@ class DisplayHelper
     public static function errorsFor($object)
     {
         if ($object->getErrors()) {
-            return DisplayHelper::errors($object->getErrors())."<br/>";
+            return DisplayHelper::errors($object->getErrors()) . "<br/>";
         } else {
             return '';
         }
     }
+
     /**
      * Affiche des erreurs à partir d'un tableau d'erreurs
      * @params {Array} Le tableau d'erreurs
@@ -55,16 +57,12 @@ class DisplayHelper
     {
         $retour = "";
         if (count($array)) {
-            $retour .= "<div class='erreurs'>";
-            $retour .= "	<p class='erreurs_titre'>".UniteHelper::getSingulierPluriel(count($array), "Erreur", "Erreurs", false)."</p>";
-            $retour .= "	<ul>";
+            $message = UniteHelper::getSingulierPluriel(count($array), "Erreur", "Erreurs", false);
+            $retour .= "<div class='erreurs'><p class='erreurs_titre'>" . $message . "</p><ul>";
             foreach ($array as $erreur) {
-                $retour .= "	<li>";
-                $retour .= "			".$erreur;
-                $retour .= "	</li>";
+                $retour .= "<li>$erreur</li>";
             }
-            $retour .= "	</ul>";
-            $retour .= "</div>";
+            $retour .= "</ul></div>";
         }
         return $retour;
     }
@@ -110,7 +108,7 @@ class DisplayHelper
       **************************** */
     public static function getLibelleboolean($value)
     {
-        if ($value ==1) {
+        if ($value == 1) {
             return "oui";
         } else {
             return "non";
@@ -154,15 +152,17 @@ class DisplayHelper
         $pattern = '/<[^<>]*>/';
         return preg_replace($pattern, '', $text);
     }
+
     /**
      *
      */
     public static function formatterCommentaire($text)
     {
-        $order   = array("\r\n", "\n", "\r");
+        $order = array("\r\n", "\n", "\r");
         $replace = '<br />';
         return str_replace($order, $replace, $text);
     }
+
     /**
      * Retourne les @taille premières lettre du texte donnée en paramètre
      * en ne coupant pas un mot
@@ -177,7 +177,7 @@ class DisplayHelper
         if (strlen($valeur) > $taille) {
             if (!$coupe_violement) $valeur_formate .= ' ';
             $valeur_formate .= '...';
-            $valeur_formate .= $balise_fermante;	 // dans le cas d'une coupure de commentaire avec un <p> dedans.
+            $valeur_formate .= $balise_fermante;     // dans le cas d'une coupure de commentaire avec un <p> dedans.
         }
         return $valeur_formate;
     }
@@ -197,12 +197,12 @@ class DisplayHelper
         }
     }
 
-    public static function errorsClass ($tableau_erreurs, $libelle)
+    public static function errorsClass($tableau_erreurs, $libelle)
     {
         $retour = '';
         if (isset($tableau_erreurs[$libelle])) {
             $retour = 'erreur';
         }
-            return $retour;
+        return $retour;
     }
 }

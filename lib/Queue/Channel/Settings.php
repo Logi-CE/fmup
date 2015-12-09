@@ -9,12 +9,17 @@ use FMUP\Queue\Exception as QueueException;
  */
 class Settings
 {
-    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
-    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';//(int) max send retry time, default DEFAULT_RETRY_TIMES
+    //(int) in bytes (default system)
+    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE';
+    //(int) max send retry time, default DEFAULT_RETRY_TIMES
+    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';
 
-    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
-    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
-    const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
+    //(bool) if process must wait to be sure the message is sent (default false)
+    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND';
+    //(bool) process will be blocked while no message is received (default false)
+    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE';
+    //(bool) must serialize a message (default true)
+    const PARAM_SERIALIZE = 'PARAM_SERIALIZE';
 
     const DEFAULT_RETRY_TIMES = 3;
 

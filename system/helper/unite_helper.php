@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe permettant de formater des valeurs pour affichage
  * @version 1.0
@@ -17,21 +18,21 @@ class UniteHelper
     {
         $retour = '';
         if ($afficher_valeur) {
-            $retour = $valeur.' ';
+            $retour = $valeur . ' ';
         }
-        
+
         if ($valeur <= 1) {
             $retour .= $singulier;
         } else {
             if (!$pluriel) {
-                $pluriel = $singulier.'s';
+                $pluriel = $singulier . 's';
             }
             $retour .= $pluriel;
         }
-        
+
         return $retour;
     }
-    
+
     /**
      * Retourne un décimal formaté en monnaie
      * @param float $valeur : La valeur à formater
@@ -55,7 +56,7 @@ class UniteHelper
     {
         return self::getNombreFormat($valeur, $virgule, $format);
     }
-    
+
     /**
      * Retourne un décimal formaté en tonne
      * @param float $valeur : La valeur en tonne
@@ -67,7 +68,7 @@ class UniteHelper
     {
         return self::getNombreFormat($valeur, $virgule, $format);
     }
-    
+
     /**
      * Retourne un décimal formaté en kilogrammes
      * @param float $valeur : La valeur en kilogrammes
@@ -103,7 +104,7 @@ class UniteHelper
     {
         return self::getNombreFormat($valeur, $virgule, $format);
     }
-    
+
     /**
      * Retourne un décimal formaté
      * @param float $valeur : La valeur à formater
@@ -113,14 +114,20 @@ class UniteHelper
      * @param string $separateur_millier : [OPT] Le séparateur de millier, par défaut " "
      * @return string : Valeur formatée
      */
-    public static function getNombreFormat ($valeur, $virgule, $format = '', $separateur = ",", $separateur_millier = " ")
+    public static function getNombreFormat(
+        $valeur,
+        $virgule,
+        $format = '',
+        $separateur = ",",
+        $separateur_millier = " "
+    )
     {
         if (!$valeur) {
             $valeur = 0;
         }
         $valeur_formatee = number_format(str_replace(",", ".", $valeur), $virgule, $separateur, $separateur_millier);
         if ($format) {
-            $valeur_formatee .= ' '.$format ;
+            $valeur_formatee .= ' ' . $format;
         }
         return $valeur_formatee;
     }
@@ -133,19 +140,20 @@ class UniteHelper
      */
     public static function getFormatNombreExcel($valeur, $virgule = "2")
     {
-        return UniteHelper::getNombreFormat($valeur, $virgule, '', ',', '');
+        return self::getNombreFormat($valeur, $virgule, '', ',', '');
     }
 
-    public static function getInt($id="") {
-        $retour = 0;        
-        
+    public static function getInt($id = "")
+    {
+        $retour = 0;
+
         $id = str_replace(" ", "", $id);
         $id = str_replace(",", ".", $id);
-        
-        if (intVal($id)."" == $id."") {
+
+        if (intVal($id) . "" == $id . "") {
             $retour = intVal($id);
         }
-    
+
         return $retour;
     }
 }

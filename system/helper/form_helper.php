@@ -97,7 +97,8 @@ class FormHelper
      * - id_span : ID du span en readonly
      * - AUTRE : Sera mis à la suite en attribut sous la forme cle="valeur"
      * @return string : La ou les balises HTML
-     * @example : inputText($client, "name") donne < input type="text" name="client[name]" value="$client->getName()" id="client_name" />
+     * @example : inputText($client, "name")
+     * donne < input type="text" name="client[name]" value="$client->getName()" id="client_name" />
      */
     public static function inputText($object, $attribute, $editable = true, $params = array())
     {
@@ -197,7 +198,8 @@ class FormHelper
                 if ($param == 'value') {
                     $valeur_param = DisplayHelper::convertCaracteresSpeciaux($valeur_param);
                 }
-                $retour .= ' ' . DisplayHelper::convertCaracteresSpeciaux($param) . '="' . DisplayHelper::convertCaracteresSpeciaux($valeur_param) . '"';
+                $retour .= ' ' . DisplayHelper::convertCaracteresSpeciaux($param) . '="'
+                    . DisplayHelper::convertCaracteresSpeciaux($valeur_param) . '"';
             }
         }
         $retour .= ' />';
@@ -235,7 +237,8 @@ class FormHelper
             $texte = htmlentities($texte, ENT_COMPAT | ENT_HTML401, $defaultCharset);
         }
 
-        $retour = '<span title="' . $params["title"] . '" class="' . $params["class"] . '" id="' . $id . '">' . $texte . '</span>';
+        $retour = '<span title="{' . $params["title"] . '" class="' . $params["class"] . '" id="' . $id . '">'
+            . $texte . '</span>';
         $retour .= self::inputSimple('hidden', $params);
 
         return $retour;
@@ -319,7 +322,15 @@ class FormHelper
      * @param array $params : [OPT] Paramètres supplémentaires
      * @return string : La ou les balises HTML
      */
-    public static function checkboxesFromCollection($object, $attribute, $collection, $element_value, $element_text, $editable = true, $params = array())
+    public static function checkboxesFromCollection(
+        $object,
+        $attribute,
+        $collection,
+        $element_value,
+        $element_text,
+        $editable = true,
+        $params = array()
+    )
     {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::checkboxesFromArray($object, $attribute, $array, $editable, $params);
@@ -366,7 +377,13 @@ class FormHelper
      * @param array $valeurs : [OPT] Les valeurs pour le champ, non coché puis coché, par défaut 0 et 1
      * @return string : La ou les balises HTML
      */
-    public static function inputCheckbox($object, $attribute, $editable = true, $params = array(), $valeurs = array(0, 1))
+    public static function inputCheckbox(
+        $object,
+        $attribute,
+        $editable = true,
+        $params = array(),
+        $valeurs = array(0, 1)
+    )
     {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
@@ -428,7 +445,15 @@ class FormHelper
      * @param array $params : [OPT] Paramètres supplémentaires
      * @return string : La ou les balises HTML
      */
-    public static function radiosFromCollection($object, $attribute, $collection, $element_value, $element_text, $editable = true, $params = array())
+    public static function radiosFromCollection(
+        $object,
+        $attribute,
+        $collection,
+        $element_value,
+        $element_text,
+        $editable = true,
+        $params = array()
+    )
     {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::radiosFromArray($object, $attribute, $array, $editable, $params);
@@ -527,7 +552,8 @@ class FormHelper
             $texte = htmlentities($texte);
         }
 
-        $retour = '<label title="' . $params["title"] . '" class="' . $params["class"] . '" for="' . $params['id'] . '">' . $texte . '</label>';
+        $retour = '<label title="' . $params["title"] . '" ' .
+            'class="' . $params["class"] . '" for="' . $params['id'] . '">' . $texte . '</label>';
 
         return $retour;
     }
@@ -543,7 +569,15 @@ class FormHelper
      * @param array $params : [OPT] Paramètres supplémentaires
      * @return string : La ou les balises HTML
      */
-    public static function selectFromCollection($object, $attribute, $collection, $element_value, $element_text, $editable = true, $params = array())
+    public static function selectFromCollection(
+        $object,
+        $attribute,
+        $collection,
+        $element_value,
+        $element_text,
+        $editable = true,
+        $params = array()
+    )
     {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::selectFromArray($object, $attribute, $array, $editable, $params);
@@ -613,7 +647,11 @@ class FormHelper
             }
         }
         $retour .= '>';
-        $retour .= self::optionsFromArray($tableau, DisplayHelper::convertCaracteresSpeciaux($valeur), $params['invite']);
+        $retour .= self::optionsFromArray(
+            $tableau,
+            DisplayHelper::convertCaracteresSpeciaux($valeur),
+            $params['invite']
+        );
         $retour .= "</select>";
         return $retour;
     }
@@ -622,10 +660,17 @@ class FormHelper
      * Construit une liste d'options à partir d'une collection
      * @param array $tableau : Le tableau sous la forme cle => valeur
      * @param string $valeur_selectionnee : La valeur sélectionnée
-     * @param mixed $options_supplementaires : [OPT] La ou les options supplémentaires à ajouter, peut être une chaine ou un tableau
+     * @param mixed $options_supplementaires : [OPT] La ou les options supplémentaires à ajouter,
+     *                                      peut être une chaine ou un tableau
      * @return string : La ou les balises HTML
      */
-    public static function optionsFromCollection($collection, $element_value, $element_text, $selected_value, $options_supplementaires = array())
+    public static function optionsFromCollection(
+        $collection,
+        $element_value,
+        $element_text,
+        $selected_value,
+        $options_supplementaires = array()
+    )
     {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::optionsFromArray($array, $selected_value, $options_supplementaires);
@@ -635,7 +680,8 @@ class FormHelper
      * Construit une liste d'options à partir d'un tableau
      * @param array $tableau : Le tableau sous la forme cle => valeur
      * @param string $valeur_selectionnee : La valeur sélectionnée
-     * @param mixed $options_supplementaires : [OPT] La ou les options supplémentaires à ajouter, peut être une chaine ou un tableau
+     * @param mixed $options_supplementaires :
+     *                  [OPT] La ou les options supplémentaires à ajouter, peut être une chaine ou un tableau
      * @return string : La ou les balises HTML
      */
     public static function optionsFromArray($tableau, $valeur_selectionnee, $options_supplementaires = array())
@@ -649,7 +695,9 @@ class FormHelper
 
         // Option pour la value ""
         foreach ($options_supplementaires as $cle => $valeur) {
-            $retour .= '<option value="' . $cle . '" ' . ($valeur_selectionnee == $cle ? 'selected="selected"' : "") . '>' . $valeur . '</option>';
+            $retour .= '<option value="' . $cle . '" '
+                . ($valeur_selectionnee == $cle ? 'selected="selected"' : "")
+                . '>' . $valeur . '</option>';
         }
 
         // Les autres options
@@ -719,7 +767,12 @@ class FormHelper
         $valeur = (isset($params['valeur'])) ? $params['valeur'] : '';
         $id_valeur = (isset($params['id_valeur'])) ? $params['id_valeur'] : '';
 
-        $parametres = array('name' => $html_name . '[' . $attribut . ']', 'id' => $html_id, 'value' => $valeur, 'autocomplete' => 'off');
+        $parametres = array(
+            'name' => $html_name . '[' . $attribut . ']',
+            'id' => $html_id,
+            'value' => $valeur,
+            'autocomplete' => 'off'
+        );
         if (!empty($params['maxlength'])) {
             $parametres['maxlength'] = $params['maxlength'];
         }
@@ -732,9 +785,18 @@ class FormHelper
             if (!$valeur) {
                 $cache = 'display: none; ';
             }
-            $retour .= '<img src="' . Constantes::getSrcImageSuppressionAutocomplete() . '" alt="X" title="Retirer la valeur" class="img_action" style="' . $cache . 'cursor: pointer; position: absolute;" />';
+            $retour .= '<img src="' . Constantes::getSrcImageSuppressionAutocomplete() . '" '
+                . 'alt="X" title="Retirer la valeur" class="img_action" '
+                . 'style="' . $cache . 'cursor: pointer; position: absolute;" />';
         }
-        $retour .= self::inputSimple('hidden', array('name' => $html_name . '[' . $cle . ']', 'id' => $html_id . '_id', 'value' => $id_valeur));
+        $retour .= self::inputSimple(
+            'hidden',
+            array(
+                'name' => $html_name . '[' . $cle . ']',
+                'id' => $html_id . '_id',
+                'value' => $id_valeur
+            )
+        );
 
         return $retour;
     }

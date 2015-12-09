@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cette classe contient des fonctions de formatage ou de calcul de date
  * @version 1.0
@@ -8,7 +9,8 @@ class Date
     /**
      * Transforme une date FR jj/mm/aaaa en date UK
      * @param string $ma_date : La date en format français (avec ou sans les heures) à convertir
-     * @return string : La date UK si la date passée en paramètre est FR, si c'est une date UK, elle est renvoyée, sinon FAUX
+     * @return string|false La date UK si la date passée en paramètre est FR,
+     *          si c'est une date UK, elle est renvoyée, sinon FAUX
      */
     public static function frToUk($ma_date)
     {
@@ -20,27 +22,28 @@ class Date
             } else {
                 list($date, $heure) = explode(' ', $ma_date);
                 list($jour, $mois, $annee) = preg_split('|[/.-]|', $date);
-                $heure = ' '.$heure;
+                $heure = ' ' . $heure;
             }
             // Si l'année est en deux caractères, on la complète
-            if (strlen($annee) == 2) $annee = '20'.$annee;
-            $retour = $annee.'-'.$mois.'-'.$jour.$heure;
-            
-        // Si la date est déjà convertie, on la renvoie
+            if (strlen($annee) == 2) $annee = '20' . $annee;
+            $retour = $annee . '-' . $mois . '-' . $jour . $heure;
+
+            // Si la date est déjà convertie, on la renvoie
         } elseif (Is::dateTimeUk($ma_date)) {
             $retour = $ma_date;
-            
-        // Sinon on renvoie FAUX
+
+            // Sinon on renvoie FAUX
         } else {
             $retour = false;
         }
         return $retour;
     }
 
-	/**
+    /**
      * Transforme une date UK en date FR jj/mm/aaaa
      * @param string $ma_date : La date en format UK (avec ou sans les heures) à convertir
-     * @return string : La date FR si la date passée en paramètre est UK, si c'est une date FR, elle est renvoyée, sinon FAUX
+     * @return string|false
+     *      La date FR si la date passée en paramètre est UK, si c'est une date FR, elle est renvoyée, sinon FAUX
      */
     public static function ukToFr($ma_date)
     {
@@ -52,17 +55,17 @@ class Date
             } else {
                 list($date, $heure) = explode(' ', $ma_date);
                 list($annee, $mois, $jour) = preg_split('|[/.-]|', $date);
-                $heure = ' '.$heure;
+                $heure = ' ' . $heure;
             }
             // Si l'année est en deux caractères, on la complète
-            if (strlen($annee) == 2) $annee = '20'.$annee;
-            $retour = $jour.'/'.$mois.'/'.$annee.$heure;
-            
-        // Si la date est déjà convertie, on la renvoit
+            if (strlen($annee) == 2) $annee = '20' . $annee;
+            $retour = $jour . '/' . $mois . '/' . $annee . $heure;
+
+            // Si la date est déjà convertie, on la renvoit
         } elseif (Is::dateTime($ma_date)) {
             $retour = $ma_date;
-            
-        // Sinon on renvoit FAUX
+
+            // Sinon on renvoit FAUX
         } else {
             $retour = false;
         }
@@ -72,7 +75,8 @@ class Date
     /**
      * Transforme une date francaise jj/mm/aaaa en date sql pour la BDD
      * @param string $ma_date : La date en format français (avec ou sans les heures) à convertir
-     * @return string : La date UK si la date passée en paramètre est FR, si c'est une date UK, elle est renvoyée, sinon FAUX
+     * @return string|FALSE
+     *      La date UK si la date passée en paramètre est FR, si c'est une date UK, elle est renvoyée, sinon FAUX
      */
     public static function frToSql($ma_date)
     {
@@ -84,11 +88,11 @@ class Date
             } elseif ($temp['driver'] == 'mssql') {
                 $retour = $ma_date;
             }
-        // Si la date est déjà convertie, on la renvoie
+            // Si la date est déjà convertie, on la renvoie
         } elseif (Is::dateTimeUk($ma_date)) {
             $retour = $ma_date;
-            
-        // Sinon on renvoie FAUX
+
+            // Sinon on renvoie FAUX
         } else {
             $retour = false;
         }
@@ -103,7 +107,7 @@ class Date
     {
         $resultat = explode(' ', $ma_date);
         $date = '';
-        if (count($resultat)>0) {
+        if (count($resultat) > 0) {
             $date = $resultat[0];
         }
         return $date;
@@ -117,7 +121,7 @@ class Date
     {
         $resultat = explode(' ', $ma_date);
         $heure = '';
-        if (count($resultat)>1) {
+        if (count($resultat) > 1) {
             $heure = $resultat[1];
         }
         return $heure;
@@ -133,7 +137,7 @@ class Date
     {
         if ($heure_debut && $heure_fin) {
             $debut = Date::getTabHeure($heure_debut);
-            $fin   = Date::getTabHeure($heure_fin);
+            $fin = Date::getTabHeure($heure_fin);
 
             $diff_heures = $fin['heure'] - $debut['heure'];
             $diff_minutes = ($fin['minute'] - $debut['minute'] + 60) % 60;
@@ -153,22 +157,29 @@ class Date
      */
     public static function addMinutesHeures($mon_heure, $duree)
     {
-        $tab_heure = Date::getTabHeure($mon_heure);
+        $tab_heure = self::getTabHeure($mon_heure);
         $heure_modifiee = date('H:i', mktime($tab_heure['heure'], $tab_heure['minute'] + $duree, 0, 1, 1, 2012));
         return str_replace(':', 'h', $heure_modifiee);
     }
-    
+
     /**
      * Ajoute du temps à une date
      * @param string $ma_date : Date au format français
      * @param string $type_ajout : Type d'ajout entre "minute", "heure", "jour", "mois", "annee"
      * @param int $nombre : Nombre du type demandé à ajouter - peut être négatif
      */
-    public static function addTime ($ma_date, $type_ajout, $nombre) {
-        $mots_anglais = array('minute' => 'minutes', 'heure' => 'hours', 'jour' => 'days', 'mois' => 'months', 'annee' => 'years');
+    public static function addTime($ma_date, $type_ajout, $nombre)
+    {
+        $mots_anglais = array(
+            'minute' => 'minutes',
+            'heure' => 'hours',
+            'jour' => 'days',
+            'mois' => 'months',
+            'annee' => 'years'
+        );
         if (Is::dateTime($ma_date) && Is::integer($nombre) && isset($mots_anglais[$type_ajout])) {
-            $date_uk = Date::frToUk($ma_date);
-            return date('d/m/Y H:i:s', (strtotime($date_uk.' '.$nombre.' '.$mots_anglais[$type_ajout])));
+            $date_uk = self::frToUk($ma_date);
+            return date('d/m/Y H:i:s', (strtotime($date_uk . ' ' . $nombre . ' ' . $mots_anglais[$type_ajout])));
         } else {
             return false;
         }
@@ -182,7 +193,7 @@ class Date
      */
     public static function formatDateComplete($ma_date = false, $locale = 'fra_fra')
     {
-        $timestamp = ($ma_date) ? strtotime(Date::frToUk($ma_date)) : time();
+        $timestamp = ($ma_date) ? strtotime(self::frToUk($ma_date)) : time();
         setlocale(LC_TIME, $locale);
         return ucwords(utf8_encode(strftime('%A %d %B %Y', $timestamp)));
     }
@@ -222,8 +233,9 @@ class Date
         if ((self::compareFr($date_debut1, $date_debut2) >= 0 && self::compareFr($date_debut1, $date_fin2) <= 0)
             || (self::compareFr($date_fin1, $date_debut2) >= 0 && self::compareFr($date_fin1, $date_fin2) <= 0)
             || (self::compareFr($date_debut1, $date_debut2) >= 0 && self::compareFr($date_fin1, $date_fin2) <= 0)
-            || (self::compareFr($date_debut1, $date_debut2) <= 0 && self::compareFr($date_fin1, $date_fin2) >= 0)) {
-                return true;
+            || (self::compareFr($date_debut1, $date_debut2) <= 0 && self::compareFr($date_fin1, $date_fin2) >= 0)
+        ) {
+            return true;
         }
         return false;
     }
@@ -241,8 +253,9 @@ class Date
         if (($heure_debut1 >= $heure_debut2 && $heure_debut1 <= $heure_fin2)
             || ($heure_fin1 >= $heure_debut2 && $heure_fin1 <= $heure_fin2)
             || ($heure_debut1 >= $heure_debut2 && $heure_fin1 <= $heure_fin2)
-            || ($heure_debut1 <= $heure_debut2 && $heure_fin1 >= $heure_fin2)) {
-                return true;
+            || ($heure_debut1 <= $heure_debut2 && $heure_fin1 >= $heure_fin2)
+        ) {
+            return true;
         }
         return false;
     }
@@ -261,16 +274,16 @@ class Date
             $retour = date('Y-m-d');
         }
         if ($heure) {
-            $retour .= ' '.self::now();
+            $retour .= ' ' . self::now();
         }
         return $retour;
     }
-    
-	/**
+
+    /**
      *  Retourne l'heure courante
-     *  @return string : L'heure courante
+     * @return string : L'heure courante
      */
-    public static function now ()
+    public static function now()
     {
         return date("H:i:s");
     }
@@ -311,7 +324,7 @@ class Date
                 $date_en_cours = $date_fin;
                 $date_fin = new DateTime(self::frToUk($date_debut));
             }
-            
+
             while ($date_en_cours < $date_fin) {
                 if (!$jours_ouvres || self::estOuvre($date_en_cours->format('d/m/Y'))) {
                     $nb_jours++;
@@ -319,21 +332,24 @@ class Date
                 $date_en_cours->modify('+1 days');
             }
         }
-        
+
         return $nb_jours;
     }
-    
+
     /**
      * Détermine si un jour est ouvré ou non, en comptant les jours fériés et les weekends
      * @param string $date : Date au format français
      * @return bool VRAI si le jour est ouvré, sinon FAUX
      */
-    public static function estOuvre ($date)
+    public static function estOuvre($date)
     {
         $retour = true;
         $date = new DateTime(self::frToUk($date));
         $jours_feries = self::getJoursFeries($date->format('Y'));
-        if (isset($jours_feries[$date->format('n').'_'.$date->format('j')]) || $date->format('N') == 6 || $date->format('N') == 7) {
+        if (isset($jours_feries[$date->format('n') . '_' . $date->format('j')]) ||
+            $date->format('N') == 6 ||
+            $date->format('N') == 7)
+        {
             $retour = false;
         }
         return $retour;
@@ -345,33 +361,33 @@ class Date
      * @param int $nb_jours : Nombre de jour à ajouter potentiellement négatif
      * @return string : Date au format français
      */
-    public static function ajouterJoursOuvres ($date, $nb_jours)
+    public static function ajouterJoursOuvres($date, $nb_jours)
     {
         $modificateur = 1;
         if ($nb_jours < 0) {
             $nb_jours = abs($nb_jours);
             $modificateur = -1;
         }
-        
+
         $date = new DateTime(self::frToUk($date));
         while ($nb_jours > 0 || !self::estOuvre($date->format('d/m/Y'))) {
             if (self::estOuvre($date->format('d/m/Y'))) {
                 $nb_jours--;
             }
-            $date->modify($modificateur.' days');
+            $date->modify($modificateur . ' days');
         }
-        
+
         return $date->format('d/m/Y');
     }
-    
-	/**
+
+    /**
      * retourne un tableau avec les minutes et les heures d'une heure
      * ex :  9h30 -->  heure:9  et minute:30
-     * 		soit array('heure'=>9, 'minute'=>30)
+     *        soit array('heure'=>9, 'minute'=>30)
      */
     public static function getTabHeure($heure)
     {
-        $tmp = array('heure'=>0, 'minute'=>0);
+        $tmp = array('heure' => 0, 'minute' => 0);
         if (Is::alphaNumerique($heure) && preg_match('#^([0-9]{2})h([0-9]{2})$#', $heure, $tab)) {
             $tmp = array('heure' => $tab[1], 'minute' => $tab[2]);
         }
@@ -382,10 +398,10 @@ class Date
     {
         $tmp = array();
 
-        $tmp[] = array('valeur'=>'', 'texte'=>'* Tous *');
+        $tmp[] = array('valeur' => '', 'texte' => '* Tous *');
 
         foreach (self::getTableauLibelleMois($lang) as $id => $mois) {
-            $tmp[] = array('valeur'=>$id, 'texte'=>$mois);
+            $tmp[] = array('valeur' => $id, 'texte' => $mois);
         }
 
         return $tmp;
@@ -399,17 +415,18 @@ class Date
     {
         $libelle = self::getTableauLibelleJours($lang);
 
-        if(isset($libelle[$num_jour]))
+        if (isset($libelle[$num_jour]))
             return $libelle[$num_jour];
 
         return '';
 
     }
+
     public static function getLibelleMois($num_mois, $lang = 'FR')
     {
         $libelle = self::getTableauLibelleMois($lang);
 
-        if(isset($libelle[$num_mois]))
+        if (isset($libelle[$num_mois]))
             return $libelle[$num_mois];
 
         return '';
@@ -420,35 +437,35 @@ class Date
     {
         $tableau = array(
             'FR' => array(
-                    '1' => 'Lundi',
-                    '2' => 'Mardi',
-                    '3' => 'Mercredi',
-                    '4' => 'Jeudi',
-                    '5' => 'Vendredi',
-                    '6' => 'Samedi',
-                    '7' => 'Dimanche',
-                ),
+                '1' => 'Lundi',
+                '2' => 'Mardi',
+                '3' => 'Mercredi',
+                '4' => 'Jeudi',
+                '5' => 'Vendredi',
+                '6' => 'Samedi',
+                '7' => 'Dimanche',
+            ),
             'EN' => array(
-                    '1' => 'Monday',
-                    '2' => 'Tuesday',
-                    '3' => 'Wednesday',
-                    '4' => 'Thursday',
-                    '5' => 'Friday',
-                    '6' => 'Saturday',
-                    '7' => 'Sunday',
-                ),
+                '1' => 'Monday',
+                '2' => 'Tuesday',
+                '3' => 'Wednesday',
+                '4' => 'Thursday',
+                '5' => 'Friday',
+                '6' => 'Saturday',
+                '7' => 'Sunday',
+            ),
             'ES' => array(
-                    '1' => 'Lunes',
-                    '2' => 'Martes',
-                    '3' => 'Miercoles',
-                    '4' => 'Jueves',
-                    '5' => 'Viernes',
-                    '6' => 'Sabado',
-                    '7' => 'Domingo',
-                )
-            );
+                '1' => 'Lunes',
+                '2' => 'Martes',
+                '3' => 'Miercoles',
+                '4' => 'Jueves',
+                '5' => 'Viernes',
+                '6' => 'Sabado',
+                '7' => 'Domingo',
+            )
+        );
 
-        if(isset($tableau[$langue]))
+        if (isset($tableau[$langue]))
             return $tableau[$langue];
 
         return array();
@@ -456,99 +473,99 @@ class Date
 
     public static function getTableauLibelleMois($langue = 'FR')
     {
-        if ($langue=='') {
+        if ($langue == '') {
             $langue = 'FR';
         }
 
         $tableau = array(
             'FR' => array(
-                    '1'  => 'Janvier',
-                    '2'  => 'Février',
-                    '3'  => 'Mars',
-                    '4'  => 'Avril',
-                    '5'  => 'Mai',
-                    '6'  => 'Juin',
-                    '7'  => 'Juillet',
-                    '8'  => 'Août',
-                    '9'  => 'Septembre',
-                    '10' => 'Octobre',
-                    '11' => 'Novembre',
-                    '12' => 'Décembre'
-                ),
+                '1' => 'Janvier',
+                '2' => 'Février',
+                '3' => 'Mars',
+                '4' => 'Avril',
+                '5' => 'Mai',
+                '6' => 'Juin',
+                '7' => 'Juillet',
+                '8' => 'Août',
+                '9' => 'Septembre',
+                '10' => 'Octobre',
+                '11' => 'Novembre',
+                '12' => 'Décembre'
+            ),
             'EN' => array(
-                    '1'  => 'January',
-                    '2'  => 'February',
-                    '3'  => 'March',
-                    '4'  => 'April',
-                    '5'  => 'May',
-                    '6'  => 'June',
-                    '7'  => 'July',
-                    '8'  => 'August',
-                    '9'  => 'September',
-                    '10' => 'October',
-                    '11' => 'November',
-                    '12' => 'December'
-                ),
+                '1' => 'January',
+                '2' => 'February',
+                '3' => 'March',
+                '4' => 'April',
+                '5' => 'May',
+                '6' => 'June',
+                '7' => 'July',
+                '8' => 'August',
+                '9' => 'September',
+                '10' => 'October',
+                '11' => 'November',
+                '12' => 'December'
+            ),
             'ES' => array(
-                    '1'  => 'Enero',
-                    '2'  => 'Febrero',
-                    '3'  => 'Marzo',
-                    '4'  => 'Abril',
-                    '5'  => 'Mayo',
-                    '6'  => 'Junio',
-                    '7'  => 'Julio',
-                    '8'  => 'Agosto',
-                    '9'  => 'Septiembre',
-                    '10' => 'Octubre',
-                    '11' => 'Noviembre',
-                    '12' => 'Diciembre'
-                )
-            );
+                '1' => 'Enero',
+                '2' => 'Febrero',
+                '3' => 'Marzo',
+                '4' => 'Abril',
+                '5' => 'Mayo',
+                '6' => 'Junio',
+                '7' => 'Julio',
+                '8' => 'Agosto',
+                '9' => 'Septiembre',
+                '10' => 'Octubre',
+                '11' => 'Noviembre',
+                '12' => 'Diciembre'
+            )
+        );
 
-        if(isset($tableau[$langue]))
+        if (isset($tableau[$langue]))
             return $tableau[$langue];
 
         return array();
     }
-    
-	/**
+
+    /**
      * Retourne tous les jours fériés de l'année donnée
      * @param int $annee : L'année demandée
      * @return array : Un tableau sous la forme 'mois_jour' => nom du jour férié
      */
-    public static function getJoursFeries ($annee)
+    public static function getJoursFeries($annee)
     {
         $timestamp_paques = easter_date($annee);
-        
+
         // Mois_Jour (pour les ordonner)
         return array(
-              "1_1" => "Jour de l'an"
-            , "5_1" => "Fête du travail"
-            , "5_8" => "Victoire 1945"
-            , "7_14" => "Fête nationale"
-            , "8_15" => "Assomption"
-            , "11_1" => "Toussaint"
-            , "11_11" => "Armistice 1918"
-            , "12_25" => "Nöel"
-            , date('n_j', $timestamp_paques + (86400 * 1)) => 'Lundi de Pâques'
-            , date('n_j', $timestamp_paques + (86400 * 39)) => 'Ascension'
-            , date('n_j', $timestamp_paques + (86400 * 50)) => 'Lundi de Pentecôte'
+            "1_1" => "Jour de l'an"
+        , "5_1" => "Fête du travail"
+        , "5_8" => "Victoire 1945"
+        , "7_14" => "Fête nationale"
+        , "8_15" => "Assomption"
+        , "11_1" => "Toussaint"
+        , "11_11" => "Armistice 1918"
+        , "12_25" => "Nöel"
+        , date('n_j', $timestamp_paques + (86400 * 1)) => 'Lundi de Pâques'
+        , date('n_j', $timestamp_paques + (86400 * 39)) => 'Ascension'
+        , date('n_j', $timestamp_paques + (86400 * 50)) => 'Lundi de Pentecôte'
         );
     }
-    
-	/**
+
+    /**
      * Retourne la date de la veille, ou de l'avant veille si on a passé un lundi
      * @param string $date : [OPT] Date au format UK
      * @return string : La date
      */
-    public static function getDateDernierJourOuvre ($date = false)
+    public static function getDateDernierJourOuvre($date = false)
     {
         if (!$date) {
-            $date = new DateTime(Date::today(false, 'UK'));
+            $date = new DateTime(self::today(false, 'UK'));
         } else {
             $date = new DateTime($date);
         }
-        
+
         // Si nous sommes lundi nous vérifions la clôture du samedi
         if ($date->format('l') == "Monday") {
             $date->modify('-2 days');
@@ -558,27 +575,27 @@ class Date
 
         return $date->format('Y-m-d');
     }
-    
+
     /**
      * Donne la différence entre deux dates au format français (JJ/MM/AAAA) avec ou sans heure
      * @param string $date1 : Première date
      * @param string $date2 : Seconde date
      * @return int : Nombre d'heure
      */
-    public static function donnerDifferenceDate ($date1, $date2)
+    public static function donnerDifferenceDate($date1, $date2)
     {
         if (Is::dateTime($date1) && Is::dateTime($date2)) {
             $date1 = new DateTime(self::frToUk($date1));
             $date2 = new DateTime(self::frToUk($date2));
-    
+
             $reste_heure = $date1->getTimestamp() - $date2->getTimestamp();
-    
+
             $reste_minute = $reste_heure % 3600;
             $heure_retour = floor($reste_heure / 3600);
             $reste_seconde = $reste_minute % 60;
             $minutes_retour = floor($reste_minute / 60);
-    
-            return $heure_retour.':'.$minutes_retour.':'.$reste_seconde;
+
+            return $heure_retour . ':' . $minutes_retour . ':' . $reste_seconde;
         }
         return false;
     }

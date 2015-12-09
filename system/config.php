@@ -37,25 +37,32 @@ class Config
     {
         $param_defaut = array(
             'app_port' => '80',// port par défaut.
-            'mot_passe_crypte' => true,// Indique si les mots de passe sont cryptés en base, et si oui, l'application les encodera directement
+            // Indique si les mots de passe sont cryptés en base, et si oui, l'application les encodera directement
+            'mot_passe_crypte' => true,
             'maintenance_forcee' => false,// Force la page de maintenance
-            'maintenance_plages' => array(),//Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
+            //Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
+            'maintenance_plages' => array(),
             'is_logue' => false,// Détermine si l'application utilise les logs
             'log_path' => BASE_PATH . '/log/',// Chemin du dossier ou sont stockés les fichiers de log
-            'data_path' => BASE_PATH . '/public/commun/documents/',// Chemin physique vers les documents partagés ou générés
+            // Chemin physique vers les documents partagés ou générés
+            'data_path' => BASE_PATH . '/public/commun/documents/',
             'template_path' => BASE_PATH . '/public/commun/templates/',// Chemin physique vers les fichiers templates
             'translate_path' => BASE_PATH . '/data/translation/',// Chemin physique vers les fichiers de traduction
             'data_src' => '/documents/',// Chemin "SRC" des documents partagés et générés (pour les balises img)
             'utilise_parametres' => false,// Utilisation de la table de paramètrage
-            'historisation_navigation' => false,// historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
-            'historisation_requete' => false,// historisation en BDD de toutes les requetes lancées, dans la table hitorique_requetes
-            'is_debug' => true,// Mode DEBUG, il désactive les envois de mail et affiche les erreurs à l'écran. Il active la console
+            // historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
+            'historisation_navigation' => false,
+            // historisation en BDD de toutes les requetes lancées, dans la table hitorique_requetes
+            'historisation_requete' => false,
+            // Mode DEBUG, il désactive les envois de mail et affiche les erreurs à l'écran. Il active la console
+            'is_debug' => true,
             'affichage_erreurs' => true,// Affichage de l'erreur sur la page (false pour phpunit)
             'limite_mail_erreur' => -1,// Nb de mails d'erreurs autorisés par minute (-1 correspond à pas de limitation)
             'envoi_mail' => false,// Force l'envoi de mail sur les autres versions que "prod"
             'mail_robot' => 'no-reply@castelis.com',// Mail d'envoi des mails de l'application
             'mail_robot_name' => 'Application CASTELIS',// Nom des mails d'envoi de l'application
-            'mail_envoi_test' => 'castelis@castelis.local',// Mail de test qui se substitue à l'adresse classique en cas d'envoi impossible ou pour les tests
+            // Mail de test qui se substitue à l'adresse classique en cas d'envoi impossible ou pour les tests
+            'mail_envoi_test' => 'castelis@castelis.local',
             'mail_reply' => 'support@castelis.com',// Mail de retour des mails envoyés par l'application
             'mail_reply_name' => 'CASTELIS',// Nom des mails de retour des mails envoyés par l'application
             'mail_support' => 'castelis@castelis.local',// Mail support recevant les erreurs de l'application
@@ -87,10 +94,15 @@ class Config
             } else {
                 $params = $param_defaut;
             }
-            /* fichier config.ini est obligatoire (placé à la racine du site) mais ne doit surtout pas être intégré dans le SVN; il doit contenir les paramétrage d'accès à la BDD
-            * un fichier d'exemple nommé config_exemple.ini indique les paramètres obligatoires à renseigner dans le fichier config.ini
-            * Dans le cas des tests unitaires, le serveur aura pour nom 'phpunit' et nécessitera une connexion particulière.
-            * Le fichier config_test.ini (placé au même endroit que config.ini) sera alors chargé à la place
+            /*
+             * fichier config.ini est obligatoire (placé à la racine du site)
+             * mais ne doit surtout pas être intégré dans le SVN;
+             * il doit contenir les paramétrage d'accès à la BDD
+             * un fichier d'exemple nommé config_exemple.ini indique les paramètres obligatoires à
+             * renseigner dans le fichier config.ini.
+             * Dans le cas des tests unitaires, le serveur aura pour nom 'phpunit'
+             * et nécessitera une connexion particulière.
+             * Le fichier config_test.ini (placé au même endroit que config.ini) sera alors chargé à la place
             */
             $nom_fichier_config = (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'phpunit')
                 ? 'config_test.php'
@@ -101,7 +113,9 @@ class Config
             }
             // email à qui on envoie les mails dans le cas de TEST et de non envoi d'email de l'application
             // si non renseigné alors on envoie au support
-            $params['mail_envoi_test'] = empty($params['mail_envoi_test']) ? $params['mail_support'] : $params['mail_envoi_test'];
+            $params['mail_envoi_test'] = empty($params['mail_envoi_test'])
+                ? $params['mail_support']
+                : $params['mail_envoi_test'];
             /**
              * FMUP daily alert
              */
@@ -149,7 +163,8 @@ class Config
     }
 
     /**
-     * Détermine si un envoi de mail est possible, par défaut seulement en production ou en réécrivant le paramètre envoi_mail
+     * Détermine si un envoi de mail est possible,
+     * par défaut seulement en production ou en réécrivant le paramètre envoi_mail
      * @return bool : VRAI si envoi possible
      */
     public static function isEnvoiMailPossible()
@@ -178,7 +193,11 @@ class Config
      */
     public static function consoleActive()
     {
-        return self::isDebug() || (!empty($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur'] == self::getInstance()->get('id_castelis'));
+        return self::isDebug() ||
+        (
+            !empty($_SESSION['id_utilisateur']) &&
+            $_SESSION['id_utilisateur'] == self::getInstance()->get('id_castelis')
+        );
     }
 
     public static function isDebug()
@@ -228,7 +247,7 @@ class Config
     public static function siteOuvert()
     {
         $isMaintenance = (
-            !(self::getInstance()->get('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance'))
+        !(self::getInstance()->get('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance'))
         );
         $retour = !self::getInstance()->get('maintenance_forcee') && $isMaintenance;
 

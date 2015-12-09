@@ -15,14 +15,26 @@ class EmailHelper
      * @param $handle ressource du fichier de log
      * @param $email_cache copie cache
      * @param $params paramètres utilisés pour les accusés de réceptions des mails (stockés dans les emails_log)
-     * @param $options ajouts de paramètres complémentaires tel que le forçage de l'objet ou du message, malgré l'utilisation d'un template de mail.
+     * @param $options ajouts de paramètres complémentaires tel que le forçage de l'objet ou du message,
+     *                  malgré l'utilisation d'un template de mail.
      * @return retour de la fonction mail
      */
-    public static function sendEmail($identifiant, $send_to, $tokens = array(), $files = array(), $handle = false, $email_cache = "", $params = array(), $options = array())
+    public static function sendEmail(
+        $identifiant,
+        $send_to,
+        $tokens = array(),
+        $files = array(),
+        $handle = false,
+        $email_cache = "",
+        $params = array(),
+        $options = array()
+    )
     {
         $my_mail = new PHPMailer(true);
 
-        if (preg_match('|^(?:[^<]*<)?([^>]*)(?:>)?$|i', $send_to, $matches) || !Config::isEnvoiMailPossible($identifiant)) {
+        if (preg_match('|^(?:[^<]*<)?([^>]*)(?:>)?$|i', $send_to, $matches) ||
+            !Config::isEnvoiMailPossible($identifiant)
+        ) {
             $adresse_mail = $matches[1];
             $email = Email::findOne($identifiant);
 
@@ -56,9 +68,15 @@ class EmailHelper
 
                     $my_mail = EmailHelper::parametrerHeaders($my_mail);
 
-                    $my_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
-                    $my_mail = self::addReplyTo($my_mail, Config::paramsVariables('mail_reply'), Config::paramsVariables('mail_reply_name'));
-
+                    $my_mail->SetFrom(
+                        Config::paramsVariables('mail_robot'),
+                        Config::paramsVariables('mail_robot_name')
+                    );
+                    $my_mail = self::addReplyTo(
+                        $my_mail,
+                        Config::paramsVariables('mail_reply'),
+                        Config::paramsVariables('mail_reply_name')
+                    );
                     $my_mail = self::addBCC($my_mail, $email_cache);
 
 
@@ -100,7 +118,10 @@ class EmailHelper
                         'destinataire_cache' => $adress_caches));
                     if (!$log_mail->save()) {
                         if ($handle) {
-                            FileHelper::fLog('mail', "Problème rencontré dans l'enregistrement email_log : " . print_r($log_mail));
+                            FileHelper::fLog(
+                                'mail',
+                                "Problème rencontré dans l'enregistrement email_log : " . print_r($log_mail)
+                            );
                         }
                     } elseif (!empty($params['accuse'])) {
                         // gestion des accusés de reception
@@ -160,14 +181,24 @@ class EmailHelper
         return $my_mail;
     }
 
-    public static function sendEmailErreur($id_email, $erreur, $destinataire_origine, $objet_origine = "", $message_origine = "")
+    public static function sendEmailErreur(
+        $id_email,
+        $erreur,
+        $destinataire_origine,
+        $objet_origine = "",
+        $message_origine = ""
+    )
     {
         $erreur_mail = new PHPMailer(true);
         $erreur_mail->IsHTML(true);
         $erreur_mail->CharSet = "UTF-8";
 
         $erreur_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
-        $erreur_mail = self::addReplyTo($erreur_mail, Config::paramsVariables('mail_reply'), Config::paramsVariables('mail_reply_name'));
+        $erreur_mail = self::addReplyTo(
+            $erreur_mail,
+            Config::paramsVariables('mail_reply'),
+            Config::paramsVariables('mail_reply_name')
+        );
 
         $objet = "";
         if (Config::paramsVariables('version') != 'prod') {
@@ -247,7 +278,11 @@ class EmailHelper
 
         $my_mail = self::parametrerHeaders($my_mail);
         $my_mail->SetFrom(Config::paramsVariables('mail_robot'), Config::paramsVariables('mail_robot_name'));
-        $my_mail = self::addReplyTo($my_mail, Config::paramsVariables('mail_reply'), Config::paramsVariables('mail_reply_name'));
+        $my_mail = self::addReplyTo(
+            $my_mail,
+            Config::paramsVariables('mail_reply'),
+            Config::paramsVariables('mail_reply_name')
+        );
 
         if (Config::paramsVariables('version') == 'dev')
             $objet = ' ** DEV ** ' . $objet;

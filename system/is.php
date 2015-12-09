@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cette classe contient des fonctions de vérification de format ou de type
  * @version 1.0
@@ -19,7 +20,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Vérifie si le paramètre est un entier
      * @param mixed $valeur : La variable testée
@@ -34,7 +35,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Vérifie si le paramètre est un décimal
      * @param mixed $valeur : La variable testée
@@ -49,7 +50,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Cette fonction teste si le paramètre est true ou false
      * @param mixed $valeur : La variable testée
@@ -63,7 +64,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Cette fonction teste si le paramètre un nombre pair
      * @param mixed $valeur : La variable testée
@@ -77,16 +78,17 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Cette fonction teste le type du paramètre
      * @param mixed $valeur : La variable testée
      * @return bool : VRAI si le paramètre n'est pas un tableau, un booléen ou un objet
      */
-    public static function chaineOuNombre ($valeur) {
+    public static function chaineOuNombre($valeur)
+    {
         return !(is_object($valeur) || is_array($valeur) || self::booleen($valeur));
     }
-    
+
     /**
      * Teste si le paramètre passé est alphanumérique
      * @param string $valeur : La valeur doit être comprise entre "0" et "9", "A" et "z", "a" et "z" ou être "_"
@@ -101,11 +103,13 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Fonction vérifiant le numéro de téléphone passé en paramètre
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la chaine passée en paramètre est un numéro de téléphone valide faisant de 10 à 20 caractères, espaces, "+" et "." tolérés
+     * @return bool
+     *          VRAI si la chaine passée en paramètre est un numéro de téléphone valide faisant de 10 à 20 caractères,
+     *          espaces, "+" et "." tolérés
      */
     public static function telephone($valeur)
     {
@@ -116,11 +120,13 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Fonction vérifiant le numéro de téléphone portable
      * @param mixed $valeur : La variable testée
-     * @return VRAI si le paramètre est une chaine numérique de 10 caractères commençant par 06 ou 07, pas de séparateur toléré
+     * @return bool
+     *          VRAI si le paramètre est une chaine numérique de 10 caractères commençant par 06 ou 07,
+     *          pas de séparateur toléré
      */
     public static function telephonePortable($valeur)
     {
@@ -131,7 +137,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Fonction déterminant si une valeur est un numéro de compte général
      * @param mixed $valeur : La variable testée
@@ -146,7 +152,7 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Fonction déterminant si une valeur est un numéro de compte tiers
      * @param mixed $valeur : La variable testée
@@ -161,11 +167,13 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Valide que la date donnée au format français (SANS heure) existe bien
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre une date au format JJ/MM/AAAA ou JJ/MM/AA, avec comme séparateur / ou . ou -
+     * @return bool
+     *      VRAI si la valeur passée en paramètre une date au format JJ/MM/AAAA ou JJ/MM/AA
+     *      avec comme séparateur / ou . ou -
      */
     public static function date($valeur)
     {
@@ -174,9 +182,9 @@ class Is
             if (count($resultat) == 3) {
                 list($jour, $mois, $annee) = $resultat;
                 if (Is::integer($jour) && Is::integer($mois) && Is::integer($annee)) {
-                    if (strlen($annee) == 2) $annee = '20'.$annee;
-                    if ($annee < 1000) return false; 
-                    if ($annee > 9999) return false; 
+                    if (strlen($annee) == 2) $annee = '20' . $annee;
+                    if ($annee < 1000) return false;
+                    if ($annee > 9999) return false;
                     return checkDate($mois, $jour, $annee);
                 }
             }
@@ -187,7 +195,9 @@ class Is
     /**
      * Valide que la date donnée au format américain (SANS heure) existe bien
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre une date zu format AAAA-MM-JJ ou AA-MM-JJ, avec comme séparateur / ou . ou -
+     * @return bool
+     *      VRAI si la valeur passée en paramètre une date zu format AAAA-MM-JJ ou AA-MM-JJ
+     *      avec comme séparateur / ou . ou -
      */
     public static function dateUk($valeur)
     {
@@ -196,7 +206,7 @@ class Is
             if (count($resultat) == 3) {
                 list($annee, $mois, $jour) = $resultat;
                 if (Is::integer($jour) && Is::integer($mois) && Is::integer($annee)) {
-                    if (strlen($annee) == 2) $annee = '20'.$annee;
+                    if (strlen($annee) == 2) $annee = '20' . $annee;
                     if ($annee < 1000) return false;
                     if ($annee > 9999) return false;
                     return checkDate($mois, $jour, $annee);
@@ -209,7 +219,9 @@ class Is
     /**
      * Valide que la date donnée au format français (avec ou sans heure) existe bien
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre une date au format JJ/MM/AAAA ou JJ/MM/AA, avec comme séparateur / ou . ou -
+     * @return bool
+     *          VRAI si la valeur passée en paramètre une date au format JJ/MM/AAAA ou JJ/MM/AA
+     *          avec comme séparateur / ou . ou -
      */
     public static function dateTime($valeur)
     {
@@ -224,11 +236,13 @@ class Is
         }
         return $retour;
     }
-    
+
     /**
      * Valide que la date donnée au format américain (avec ou sans heure) existe bien
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre une date au format AAAA-MM-JJ ou AA-MM-JJ, avec comme séparateur / ou . ou -
+     * @return bool
+     *      VRAI si la valeur passée en paramètre une date au format AAAA-MM-JJ ou AA-MM-JJ
+     *      avec comme séparateur / ou . ou -
      */
     public static function dateTimeUk($valeur)
     {
@@ -265,7 +279,9 @@ class Is
     /**
      * Teste si la chaine passée en paramètre est une heure valide
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre est une heure valide, sous la forme hh:mm:ss, secondes non obligatoires
+     * @return bool
+     *      VRAI si la valeur passée en paramètre est une heure valide
+     *      sous la forme hh:mm:ss, secondes non obligatoires
      */
     public static function heure($valeur)
     {
@@ -280,15 +296,21 @@ class Is
     /**
      * Teste si la chaine passée en paramètre est un RIB valide
      * @param mixed $valeur : La variable testée
-     * @return bool : VRAI si la valeur passée en paramètre est un RIB valide (chaine texte de 24 caractères, espaces bien placés tolérés)
+     * @return bool
+     *      VRAI si la valeur passée en paramètre est un RIB valide
+     *      (chaine texte de 24 caractères, espaces bien placés tolérés)
      */
     public static function rib(&$valeur)
     {
-        if (!self::chaineOuNombre($valeur) || !preg_match('|^\s*(?P<cbanque>\d{5})\s*(?P<cguichet>\d{5})\s*(?P<nocompte>[a-z0-9]{11})\s*(?P<clerib>\d{2})\s*$|i', $valeur, $matches)) {
+        $regexp = '|^\s*(?P<cbanque>\d{5})\s*' .
+            '(?P<cguichet>\d{5})\s*(?P<nocompte>[a-z0-9]{11})\s*(?P<clerib>\d{2})\s*$|i';
+        if (!self::chaineOuNombre($valeur) ||
+            !preg_match($regexp, $valeur, $matches)
+        ) {
             return false;
         }
         extract($matches);
-        $valeur = $cbanque.$cguichet.$nocompte.$clerib;
+        $valeur = $cbanque . $cguichet . $nocompte . $clerib;
         $tabcompte = "";
         $len = strlen($nocompte);
         if ($len != 11) {
