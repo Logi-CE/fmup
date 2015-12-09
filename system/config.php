@@ -58,7 +58,8 @@ class Config
             // Mode DEBUG, il désactive les envois de mail et affiche les erreurs à l'écran. Il active la console
             'is_debug' => true,
             'affichage_erreurs' => true,// Affichage de l'erreur sur la page (false pour phpunit)
-            'limite_mail_erreur' => -1,// Nb de mails d'erreurs autorisés par minute (-1 correspond à pas de limitation)
+            // Nb de mails d'erreurs autorisés par minute (-1 correspond à pas de limitation)
+            'limite_mail_erreur' => -1,
             'envoi_mail' => false,// Force l'envoi de mail sur les autres versions que "prod"
             'mail_robot' => 'no-reply@castelis.com',// Mail d'envoi des mails de l'application
             'mail_robot_name' => 'Application CASTELIS',// Nom des mails d'envoi de l'application

@@ -211,7 +211,7 @@ abstract class Model
             if (!isset($options['fonction']) || $options['fonction'] != 'findOne') {
                 // On retire les éléments supprimés de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                    if (!isset ($where['date_suppression'])) {
+                    if (!isset($where['date_suppression'])) {
                         if ($driver == 'mssql') {
                             $where['date_suppression'] = "ISnull(date_suppression, '') = ''";
                         } else {
@@ -296,7 +296,7 @@ abstract class Model
             }
         } else {
             if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                if (!isset ($where['supprime']) &&
+                if (!isset($where['supprime']) &&
                     (!isset($options['fonction']) || $options['fonction'] != 'findOne')
                 ) {
                     $where['supprime'] = 'supprime = 0';
@@ -657,10 +657,12 @@ abstract class Model
     ************************ */
     /**
      * Sauvegarde ou met à jour l'objet dans la base de donnée
-     * @param $force_enregistrement = si TRUE, alors le système contrepasse le VALIDATE et enregistre quand même l'objet
+     * @param bool $force_enregistrement
+     *      si TRUE, alors le système contrepasse le VALIDATE et enregistre quand même l'objet
      *            (ATTENTION à l'utilisation de ce paramètre)
      * @return bool
      *      VRAI si une action a eu lieu en base (si la requête ne change rien ou le validate bloque, retourne FAUX)
+     * @throws \FMUP\Exception
      */
     public function save($force_enregistrement = false)
     {
