@@ -56,7 +56,7 @@ abstract class Model
         if (substr($classe_appelante, 0, 4) == 'Base') {
             $classe_appelante = substr($classe_appelante, 4);
         }
-        return String::to_Case($classe_appelante);
+        return String::toSnakeCase($classe_appelante);
     }
 
     /**
@@ -955,7 +955,7 @@ abstract class Model
     public function __call($function, $argument = array())
     {
         $ISOtoUTF8 = Config::paramsVariables('ISOtoUTF8');
-        $attribut = String::to_Case(substr($function, 3));
+        $attribut = String::toSnakeCase(substr($function, 3));
         if (property_exists($this, $attribut)) {
             if (preg_match('#^get#i', $function)) {
                 return ($ISOtoUTF8 && !String::isUtf8($this->$attribut))

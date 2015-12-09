@@ -137,7 +137,7 @@ class ConfigObjet
         $this->priorite = $priorite;
         $this->id_necessaire = explode(";", $id_necessaire);
         foreach ($this->id_necessaire as $id) {
-            $this->nom_attribut[$id] = "id_" . \String::to_Case($id);
+            $this->nom_attribut[$id] = "id_" . \String::toSnakeCase($id);
         }
     }
 }

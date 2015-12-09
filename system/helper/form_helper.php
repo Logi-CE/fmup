@@ -51,7 +51,7 @@ class FormHelper
      */
     public static function formaterClassePourInput($object, $attribute, $params)
     {
-        $class_name = String::to_Case(get_class($object));
+        $class_name = String::toSnakeCase(get_class($object));
 
         $params['value'] = $object->getAttribute($attribute);
 
