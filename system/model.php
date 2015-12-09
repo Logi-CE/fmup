@@ -1113,8 +1113,10 @@ abstract class Model
     public function logerChangement($type_action)
     {
         $varconnexion = Config::parametresConnexionDb();
-        if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog')) && $this->id) {
-
+        if (Config::paramsVariables('is_logue') &&
+            call_user_func(array(get_class($this), 'tableToLog')) &&
+            $this->id
+        ) {
             $default_id = (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid'] . "," : "";
             $tab = call_user_func(array(get_class($this), 'listeChampsObjet'));
             $tab = explode(', ', $tab);
