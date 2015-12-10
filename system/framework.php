@@ -21,10 +21,6 @@ date_default_timezone_set("Europe/Paris");
 
 require_once('autoload.php');
 
-$sys_directory = null;
-$sys_controller = null;
-$sys_function = null;
-
 /**
  * Classe d'initialisation du framework
  * @deprecated use \FMUP\Framework instead
@@ -35,10 +31,6 @@ class Framework
 
     public function initialize()
     {
-        global $sys_directory;
-        global $sys_controller;
-        global $sys_function;
-
         if (!defined('APPLICATION')) {
             throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
         } else {
@@ -197,10 +189,6 @@ class Framework
      */
     public function getRoute()
     {
-        global $sys_directory;
-        global $sys_controller;
-        global $sys_function;
-
         if (isset($_REQUEST["sys"]) &&
             preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])
         ) {
@@ -240,34 +228,31 @@ class Framework
         }
         preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
         if (is_null($sys) || count($matches) < 3) {
-            $this->getRouteError();
+            $this->getRouteError(null, null);
         }
 
         $sys_directory = $matches[1];
         $sys_controller = "ctrl_" . $matches[2];
         $sys_function = String::toCamlCase($matches[3]);
 
-
         if (!class_exists(\String::toCamlCase($sys_controller)) ||
             !is_callable(array(\String::toCamlCase($sys_controller), $sys_function))
         ) {
-            $this->getRouteError();
+            $this->getRouteError($sys_directory, $sys_controller);
         }
         return array(\String::toCamlCase($sys_controller), $sys_function);
     }
 
     /**
-     * @uses string $sys_directory
-     * @uses string $sys_controller
+     * @uses string $directory
+     * @uses string $controller
      * @throws \FMUP\Exception\Status\NotFound
      */
-    protected function getRouteError()
+    protected function getRouteError($directory, $controller)
     {
-        global $sys_directory;
-        global $sys_controller;
         throw new \FMUP\Exception\Status\NotFound(
-            "Controlleur introuvable : $sys_directory$sys_controller " .
-            " (application/" . APPLICATION . "/controller/$sys_directory$sys_controller.php)"
+            "Controlleur introuvable : $directory$controller " .
+            " (application/" . APPLICATION . "/controller/$directory$controller.php)"
         );
     }
 
