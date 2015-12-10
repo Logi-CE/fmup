@@ -257,8 +257,8 @@ class Framework
     }
 
     /**
-     * @param string $sys_directory
-     * @param string $sys_controller
+     * @uses string $sys_directory
+     * @uses string $sys_controller
      * @throws \FMUP\Exception\Status\NotFound
      */
     protected function getRouteError()
@@ -266,11 +266,8 @@ class Framework
         global $sys_directory;
         global $sys_controller;
         throw new \FMUP\Exception\Status\NotFound(
-            "Controlleur introuvable : " . $sys_directory . $sys_controller .
-            ' (' .
-            BASE_PATH . "/application/" . APPLICATION . "/controller/" .
-            $sys_directory . $sys_controller . ".php"
-            . ')'
+            "Controlleur introuvable : $sys_directory$sys_controller " .
+            " (application/" . APPLICATION . "/controller/$sys_directory$sys_controller.php)"
         );
     }
 

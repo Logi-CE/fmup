@@ -13,9 +13,10 @@ class FileHelper
      */
     public static function listerFichier($dossier)
     {
+        $basePath = __DIR__ . '/../../../../../';
         $liste_fichiers = array();
-        if (is_dir(BASE_PATH . '/' . $dossier)) {
-            $dir = opendir(BASE_PATH . '/' . $dossier);
+        if (is_dir($basePath . '/' . $dossier)) {
+            $dir = opendir($basePath . '/' . $dossier);
             // on scanne le répertoire
             while ($fichier = readdir($dir)) {
                 // si c'est un fichier

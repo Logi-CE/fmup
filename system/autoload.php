@@ -2,10 +2,6 @@
 if (!defined('APPLICATION')) {
     define('APPLICATION', 'application');
 }
-if (!defined('BASE_PATH')) {
-    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
-}
-
 // pour la manipulation des urls
 require_once 'string.php';
 
