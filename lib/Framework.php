@@ -3,12 +3,6 @@ namespace FMUP;
 
 use FMUP\Exception\Status\NotFound;
 
-require_once __DIR__ . '/../system/framework.php';
-
-if (!defined('BASE_PATH')) {
-    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
-}
-
 /**
  * Class Framework - extends FMU
  * @package FMUP

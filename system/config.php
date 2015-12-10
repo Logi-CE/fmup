@@ -1,8 +1,4 @@
 <?php
-if (!defined('BASE_PATH')) {
-    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
-}
-
 /**
  * Classe comprenant les paramètres de configuration de l'application
  * @deprecated override \FMUP\Config instead and set in your \FMUP\Bootstrap
@@ -34,8 +30,14 @@ class Config
 
     }
 
+    private function getBashPath()
+    {
+        return __DIR__ . '/../../../../';
+    }
+
     private function getParamDefaut()
     {
+
         $param_defaut = array(
             'app_port' => '80',// port par défaut.
             // Indique si les mots de passe sont cryptés en base, et si oui, l'application les encodera directement
@@ -44,11 +46,11 @@ class Config
             //Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
             'maintenance_plages' => array(),
             'is_logue' => false,// Détermine si l'application utilise les logs
-            'log_path' => BASE_PATH . '/log/',// Chemin du dossier ou sont stockés les fichiers de log
+            'log_path' => $this->getBashPath() . '/logs/',// Chemin du dossier ou sont stockés les fichiers de log
             // Chemin physique vers les documents partagés ou générés
-            'data_path' => BASE_PATH . '/public/commun/documents/',
-            'template_path' => BASE_PATH . '/public/commun/templates/',// Chemin physique vers les fichiers templates
-            'translate_path' => BASE_PATH . '/data/translation/',// Chemin physique vers les fichiers de traduction
+            'data_path' => $this->getBashPath() . '/public/commun/documents/',
+            'template_path' => $this->getBashPath() . '/public/commun/templates/',// Chemin physique vers les fichiers templates
+            'translate_path' => $this->getBashPath() . '/data/translation/',// Chemin physique vers les fichiers de traduction
             'data_src' => '/documents/',// Chemin "SRC" des documents partagés et générés (pour les balises img)
             'utilise_parametres' => false,// Utilisation de la table de paramètrage
             // historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
@@ -81,7 +83,7 @@ class Config
             'smtp_username' => '',// Identifiant de connexion au serveur de mail
             'smtp_password' => '',// Mot de passe de connexion au serveur de mail
             'nom_version' => '',//Nom de la version
-            'php_error_log' => BASE_PATH . '/logs/php/error/%date%.log',//Path vers le fichier de log d'erreur de PHP
+            'php_error_log' => $this->getBashPath() . '/logs/php/error/%date%.log',//Path vers le fichier de log d'erreur de PHP
         );
         return $param_defaut;
     }
@@ -110,8 +112,8 @@ class Config
                 ? 'config_test.php'
                 : 'config.php';
 
-            if (file_exists(BASE_PATH . '/' . $nom_fichier_config)) {
-                include_once(BASE_PATH . '/' . $nom_fichier_config);
+            if (file_exists($this->getBashPath() . '/' . $nom_fichier_config)) {
+                include_once($this->getBashPath() . '/' . $nom_fichier_config);
             }
             // email à qui on envoie les mails dans le cas de TEST et de non envoi d'email de l'application
             // si non renseigné alors on envoie au support
@@ -161,7 +163,7 @@ class Config
 
     public static function getCheminData()
     {
-        return BASE_PATH . '/data/';
+        return self::getBashPath() . '/data/';
     }
 
     /**
