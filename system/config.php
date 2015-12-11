@@ -48,14 +48,12 @@ class Config
             'mail_reply' => 'support@castelis.com',// Mail de retour des mails envoyés par l'application
             'mail_reply_name' => 'CASTELIS',// Nom des mails de retour des mails envoyés par l'application
             'mail_support' => 'castelis@castelis.local',// Mail support recevant les erreurs de l'application
-            'taille_max_fichier' => 1024 * 1000 * 20,// Taille maximum autorisé pour un upload de fichier
             'smtp_serveur' => 'smtp.castelis.local',// Nom du serveur de mail
             'smtp_port' => 25,// Numéro de port utilisé pour les mails
             'smtp_authentification' => false,// Indique si le serveur mail nécéssite une authentification
             'smtp_secure' => '',// "", "ssl" ou "tls"
             'smtp_username' => '',// Identifiant de connexion au serveur de mail
             'smtp_password' => '',// Mot de passe de connexion au serveur de mail
-            'nom_version' => '',//Nom de la version
             'php_error_log' => $this->getBashPath() . '/logs/php/error/%date%.log',//Path vers le fichier de log d'erreur de PHP
         );
         return $param_defaut;
