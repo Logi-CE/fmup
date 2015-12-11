@@ -4,19 +4,19 @@ if (!defined('APPLICATION')) {
 }
 
 // Déclaration de l'autoloader pour phpunit
-if (!function_exists('fmu_autoload')) {
+if (!function_exists('fmuAutoload')) {
     /**
      * Chargement automatique des classes
      * Les classes sytème ont priorité
      * puis les classes du modèle
      * puis les helpers
      */
-    function fmu_autoload($class_name)
+    function fmuAutoload($className)
     {
-        $class_name = strtolower(\FMUP\String::getInstance()->toCamelCase($class_name));
+        $className = strtolower(\FMUP\String::getInstance()->toSnakeCase($className));
 
         //liste des repertoires pouvant contenir une classe à include
-        $classes_path = array(
+        $classesPath = array(
             __DIR__ . '/../../../../application',
             __DIR__ . '/../../../../application/model',
             __DIR__ . '/../../../../application/model/base',
@@ -28,26 +28,26 @@ if (!function_exists('fmu_autoload')) {
         );
 
         //recherche de la classe
-        $include_path = '';
-        foreach ($classes_path as $class_path) {
-            if (file_exists($class_path . '/' . $class_name . '.php')) {
-                $include_path = $class_path . '/' . $class_name . '.php';
+        $includePath = '';
+        foreach ($classesPath as $classPath) {
+            if (file_exists($classPath . '/' . $className . '.php')) {
+                $includePath = $classPath . '/' . $className . '.php';
                 break;
             }
         }
 
         //include de la classe
-        if ($include_path) {
-            require $include_path;
+        if ($includePath) {
+            require $includePath;
         }
     }
 }
 
 if (function_exists('spl_autoload_register')) {
-    spl_autoload_register('fmu_autoload');
+    spl_autoload_register('fmuAutoload');
 } elseif (!function_exists('__autoload')) {
     function __autoload($class)
     {
-        fmu_autoload($class);
+        fmuAutoload($class);
     }
 }
