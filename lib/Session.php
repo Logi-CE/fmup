@@ -139,6 +139,28 @@ class Session
     }
 
     /**
+     * Retrieve all session values defined
+     * @return array
+     */
+    public function getAll()
+    {
+        $this->start();
+        return $_SESSION;
+    }
+
+    /**
+     * Define all session values
+     * @param array $values
+     * @return $this
+     */
+    public function setAll(array $values = array())
+    {
+        $this->start();
+        $_SESSION = $values;
+        return $this;
+    }
+
+    /**
      * Retrieve a session value
      * @param string $name
      * @return mixed
