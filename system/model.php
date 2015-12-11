@@ -6,6 +6,7 @@
  */
 abstract class Model
 {
+    public static $is_logue = false;
     protected static $dbInstance = null;
     protected $errors = array();
     protected $nombre_ligne; // pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
@@ -1113,7 +1114,7 @@ abstract class Model
     public function logerChangement($type_action)
     {
         $varconnexion = Config::parametresConnexionDb();
-        if (Config::paramsVariables('is_logue') &&
+        if (self::$is_logue &&
             call_user_func(array(get_class($this), 'tableToLog')) &&
             $this->id
         ) {
@@ -1191,7 +1192,7 @@ abstract class Model
         }
 
 
-        if (Config::paramsVariables('is_logue') && call_user_func(array(get_class($this), 'tableToLog'))) {
+        if (self::$is_logue && call_user_func(array(get_class($this), 'tableToLog'))) {
             // données de la table courante
             $sql = $this->getSqlLog();
             $db = Model::getDb();

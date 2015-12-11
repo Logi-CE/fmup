@@ -39,10 +39,6 @@ class Config
     {
 
         $param_defaut = array(
-            'maintenance_forcee' => false,// Force la page de maintenance
-            //Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
-            'maintenance_plages' => array(),
-            'is_logue' => false,// Détermine si l'application utilise les logs
             'log_path' => $this->getBashPath() . '/logs/',// Chemin du dossier ou sont stockés les fichiers de log
             // Chemin physique vers les documents partagés ou générés
             'data_path' => $this->getBashPath() . '/public/commun/documents/',
