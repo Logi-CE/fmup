@@ -39,9 +39,6 @@ class Config
     {
 
         $param_defaut = array(
-            'app_port' => '80',// port par défaut.
-            // Indique si les mots de passe sont cryptés en base, et si oui, l'application les encodera directement
-            'mot_passe_crypte' => true,
             'maintenance_forcee' => false,// Force la page de maintenance
             //Fixe une plage de maintenance forcée. Format : jour / heure (-1 si parametre omis)
             'maintenance_plages' => array(),
@@ -209,11 +206,6 @@ class Config
         return self::getInstance()->get('is_debug');
     }
 
-    public static function getAppPort()
-    {
-        return self::getInstance()->get('app_port') . "/";
-    }
-
     /**
      * Durée avant expiration de la session filtre-liste
      * @return int : Secondes
@@ -233,36 +225,6 @@ class Config
         } else {
             return 0;
         }
-    }
-
-    /**
-     * Défini si le site est ouvert au public
-     * @return boolean
-     */
-    public static function siteOuvert()
-    {
-        $isMaintenance = (
-        !(self::getInstance()->get('utilise_parametres') && ParametreHelper::getInstance()->trouver('Maintenance'))
-        );
-        $retour = !self::getInstance()->get('maintenance_forcee') && $isMaintenance;
-
-        $day_number = date('w');
-        $heure = date('H');
-        foreach (self::getInstance()->get('maintenance_plages') as $plage) {
-            list($var_jour, $var_heure_debut, $var_heure_fin) = $plage;
-            if ($var_jour == -1) {
-                $var_jour = $day_number;
-            }
-            if ($var_heure_debut == -1) {
-                $var_heure_debut = $heure;
-            }
-            if ($var_heure_fin == -1) {
-                $var_heure_fin = $heure;
-            }
-            $retour = $retour && !($day_number == $var_jour && $heure <= $var_heure_fin && $heure >= $var_heure_debut);
-        }
-
-        return $retour;
     }
 
     /**
