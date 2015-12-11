@@ -55,7 +55,6 @@ class Framework
         $this->defineErrorLog();
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
-        $this->instantiateSession();
         $this->dispatch();
     }
 
@@ -99,51 +98,6 @@ class Framework
         }
         $controllerInstance->postFilter();
         return $controllerInstance;
-    }
-
-    protected function instantiateSession()
-    {
-        if ($this->getSapi()->get() == \FMUP\Sapi::CLI) {
-            return $this;
-        }
-        /*
-         * bloc utilisé pour l'activation de session crée sur un autre domaine
-         * --> reprise d'une session forcée
-         */
-        if (isset($_REQUEST['psid']) && $_REQUEST['psid'] != '') {
-            $multi_onglet = Config::getGestionMultiOnglet();
-
-            //on recharge la session par celle en parametre
-            session_id($_REQUEST['psid']);
-            session_start();
-            $old_session = $_SESSION;
-            if ($multi_onglet) {
-                $old_session["window.name"] = date('YmdHis');
-            }
-
-            session_regenerate_id();
-            $_SESSION = $old_session;
-
-            if ($multi_onglet) {
-                //specifique
-                if (isset($_SESSION['utilisateur'])) {
-                    $_SESSION['utilisateur']->setCookie(
-                        $_SESSION['utilisateur']->getMatricule(),
-                        $_SESSION['utilisateur']->getId(),
-                        $_SESSION['utilisateur']->getPassword()
-                    );
-                }
-            }
-
-            $uri = (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
-            $uri = str_replace($_REQUEST['psid'], '', $uri); // pour ne pas boucler
-
-            $header = new \FMUP\Response\Header\Location($uri);
-            $header->render(); //@todo something better must be done
-            exit; //@todo something better must be done
-        } else {
-            \FMUP\Session::getInstance()->start();
-        }
     }
 
     /**
