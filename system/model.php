@@ -14,6 +14,17 @@ abstract class Model
     public $requete;
     public static $nb_elements;
 
+    public function getIsLogue()
+    {
+        return (bool) self::$is_logue;
+    }
+
+    public function setIsLogue($bool = false)
+    {
+        self::$is_logue = (bool) $bool;
+        return $this;
+    }
+
     /* **********
     * Créateur	*
     ********** */
@@ -1114,7 +1125,7 @@ abstract class Model
     public function logerChangement($type_action)
     {
         $varconnexion = Config::parametresConnexionDb();
-        if (self::$is_logue &&
+        if (call_user_func(array(get_class($this), 'getIsLogue')) &&
             call_user_func(array(get_class($this), 'tableToLog')) &&
             $this->id
         ) {
@@ -1192,7 +1203,7 @@ abstract class Model
         }
 
 
-        if (self::$is_logue && call_user_func(array(get_class($this), 'tableToLog'))) {
+        if (call_user_func(array(get_class($this), 'getIsLogue')) && call_user_func(array(get_class($this), 'tableToLog'))) {
             // données de la table courante
             $sql = $this->getSqlLog();
             $db = Model::getDb();
