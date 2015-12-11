@@ -2,8 +2,6 @@
 if (!defined('APPLICATION')) {
     define('APPLICATION', 'application');
 }
-// pour la manipulation des urls
-require_once 'string.php';
 
 // Déclaration de l'autoloader pour phpunit
 if (!function_exists('fmu_autoload')) {
