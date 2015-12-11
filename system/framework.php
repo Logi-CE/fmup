@@ -29,6 +29,21 @@ class Framework
 {
     use \FMUP\Sapi\OptionalTrait;
 
+    private $request;
+
+    /**
+     * @return \FMUP\Request
+     */
+    public function getRequest()
+    {
+        if (!$this->request) {
+            $this->request = (
+                $this->getSapi()->get() == \FMUP\Sapi::CLI ? new \FMUP\Request\Cli() : new \FMUP\Request\Http()
+            );
+        }
+        return $this->request;
+    }
+
     public function initialize()
     {
         if (!defined('APPLICATION')) {
@@ -36,6 +51,7 @@ class Framework
         } else {
             define('APP', "App" . String::toCamlCase(APPLICATION));
         }
+        $toto = APP;
 
         // On fixe les fonctions appelées lors d'une erreur
         $this->definePhpIni();
@@ -189,45 +205,8 @@ class Framework
      */
     public function getRoute()
     {
-        if (isset($_REQUEST["sys"]) &&
-            preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $_REQUEST["sys"])
-        ) {
-            $sys = $_REQUEST["sys"];
-        } elseif ((isset($_SESSION['id_utilisateur']) && $_SESSION['id_utilisateur']) ||
-            !is_callable(array(APP, "hasAuthentification")) ||
-            !call_user_func(array(APP, "hasAuthentification"))
-        ) {
-            $sys = is_callable(array(APP, "defaultController"))
-                ? call_user_func(array(APP, "defaultController"))
-                : null;
-        } else {
-            $sys = is_callable(array(APP, "authController")) ? call_user_func(array(APP, "authController")) : null;
-        }
-
-        if (!Config::siteOuvert()) {
-            $callables = is_callable(array(APP, "hasAuthentification")) &&
-                is_callable(array(APP, "defaultController")) &&
-                is_callable(array(APP, "authController")) &&
-                is_callable(array(APP, "closedAppController"));
-            if ($callables &&
-                (
-                    (
-                        !call_user_func(array(APP, "hasAuthentification")) &&
-                        $sys == call_user_func(array(APP, "defaultController"))
-                    )
-                    || $sys == call_user_func(array(APP, "authController"))
-                )
-            ) {
-                \FMUP\FlashMessenger::getInstance()->clear();
-                $sys = call_user_func(array(APP, "closedAppController"));
-            } else {
-                \FMUP\FlashMessenger::getInstance()->add(
-                    new \FMUP\FlashMessenger\Message(Constantes::getMessageFlashMaintenance())
-                );
-            }
-        }
-        preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $sys, $matches);
-        if (is_null($sys) || count($matches) < 3) {
+        preg_match("/^(.*\/)?([0-9a-zA-Z\-_]*)\/([0-9a-zA-Z\-_]*)$/", $this->getRequest()->getRequestUri(), $matches);
+        if (count($matches) < 3) {
             $this->getRouteError(null, null);
         }
 

@@ -209,15 +209,6 @@ class Config
         return self::getInstance()->get('is_debug');
     }
 
-
-    /**
-     * La racine du site
-     */
-    public static function siteWWWRoot()
-    {
-        return call_user_func(array(APP, "defaultWWWroot")) . ":" . self::getAppPort();
-    }
-
     public static function getAppPort()
     {
         return self::getInstance()->get('app_port') . "/";
