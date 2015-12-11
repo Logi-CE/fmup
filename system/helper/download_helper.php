@@ -5,57 +5,6 @@
  */
 class DownloadHelper
 {
-    public static function telechargerDocument($id_document, $ouverture_navigateur = false)
-    {
-        $document = Document::findOne($id_document);
-        if ($document) {
-            $chemin = Config::paramsVariables('data_path');
-            $chemin .= "document_" . $document->getId() . self::getExtensionDocument($document->getLibelle());
-
-            self::telechargerFichier($chemin, $document->getLibelle(), $document->getTypeMime(), $ouverture_navigateur);
-
-        } else {
-            echo 'Document introuvable';
-        }
-    }
-
-    public static function getExtensionDocument($value)
-    {
-        if (preg_match('/\.([^\.]*)$/', $value, $matches)) {
-            return '.' . $matches[1];
-        }
-
-        return "";
-    }
-
-    /**
-     * Exporte un tableau de données avec les "instructions" d'un tableau d'entete
-     * @param array $tableau_entete : Un tableau contenant "libelle" de l'entete, "formatage" des données (OPT)
-     * @param array $tableau_donnees : Un tableau avec les clés correspondantes aux clés d'entete
-     * @return array : Un tableau à deux dimensions, les lignes et les colonnes
-     */
-    public static function exporterTableau($tableau_entete, $tableau_donnees)
-    {
-        $fichier = array();
-        $compteur_lignes = 0;
-        foreach ($tableau_entete as $entete) {
-            $fichier[$compteur_lignes][] = $entete['libelle'];
-        }
-        $compteur_lignes++;
-        foreach ($tableau_donnees as $ligne) {
-            foreach ($ligne as $numero_colonne => $donnee) {
-                if (isset($tableau_entete[$numero_colonne]['formatage']) &&
-                    method_exists('UniteHelper', $tableau_entete[$numero_colonne]['formatage'])
-                ) {
-                    $donnee = UniteHelper::$tableau_entete[$numero_colonne]['formatage']($donnee);
-                }
-                $fichier[$compteur_lignes][$numero_colonne] = $donnee;
-            }
-            $compteur_lignes++;
-        }
-        return $fichier;
-    }
-
     /**
      * @param {ouverture_navigateur} : Spécifie si le fichier sera ouvert par firefox (true),
      * ou qu'une boite de dialogue s'ouvrira proposant de télécharger le fichier (false par défaut)

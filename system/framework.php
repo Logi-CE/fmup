@@ -48,10 +48,7 @@ class Framework
     {
         if (!defined('APPLICATION')) {
             throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
-        } else {
-            define('APP', "App" . String::toCamlCase(APPLICATION));
         }
-        $toto = APP;
 
         // On fixe les fonctions appelées lors d'une erreur
         $this->definePhpIni();
@@ -59,21 +56,6 @@ class Framework
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
         $this->instantiateSession();
-
-        //log des pages
-        $url = '';
-        if (isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) {
-            $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        }
-        if (Config::isDebug()) {
-            if (isset($_SESSION['id_utilisateur'])) {
-                FileHelper::fLog('URL_' . $_SESSION['id_utilisateur'], $url);
-                FileHelper::fLog('POST_' . $_SESSION['id_utilisateur'], $url . "\r\n" . print_r($_REQUEST, 1));
-            } else {
-                FileHelper::fLog('URL', $url);
-                FileHelper::fLog('POST', $url . "\r\n" . print_r($_REQUEST, 1));
-            }
-        }
         $this->dispatch();
     }
 

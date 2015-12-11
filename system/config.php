@@ -39,7 +39,6 @@ class Config
     {
 
         $param_defaut = array(
-            'log_path' => $this->getBashPath() . '/logs/',// Chemin du dossier ou sont stockés les fichiers de log
             // Chemin physique vers les documents partagés ou générés
             'data_path' => $this->getBashPath() . '/public/commun/documents/',
             'template_path' => $this->getBashPath() . '/public/commun/templates/',// Chemin physique vers les fichiers templates
