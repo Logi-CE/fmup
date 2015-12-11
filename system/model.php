@@ -126,7 +126,9 @@ abstract class Model
      **/
     public function __toString()
     {
-        return Debug::toString($this);
+        ob_start();
+        var_dump($this);
+        return ob_get_clean();
     }
 
     /**
