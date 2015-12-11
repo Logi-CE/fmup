@@ -39,34 +39,15 @@ class Config
     {
 
         $param_defaut = array(
-            // Chemin physique vers les documents partagés ou générés
-            'data_path' => $this->getBashPath() . '/public/commun/documents/',
-            'template_path' => $this->getBashPath() . '/public/commun/templates/',// Chemin physique vers les fichiers templates
-            'translate_path' => $this->getBashPath() . '/data/translation/',// Chemin physique vers les fichiers de traduction
-            'data_src' => '/documents/',// Chemin "SRC" des documents partagés et générés (pour les balises img)
-            'utilise_parametres' => false,// Utilisation de la table de paramètrage
-            // historisation en BDD de toutes les URL appelées, dans la table hitorique_navigation
-            'historisation_navigation' => false,
-            // historisation en BDD de toutes les requetes lancées, dans la table hitorique_requetes
-            'historisation_requete' => false,
             // Mode DEBUG, il désactive les envois de mail et affiche les erreurs à l'écran. Il active la console
             'is_debug' => true,
-            'affichage_erreurs' => true,// Affichage de l'erreur sur la page (false pour phpunit)
-            // Nb de mails d'erreurs autorisés par minute (-1 correspond à pas de limitation)
-            'limite_mail_erreur' => -1,
             'envoi_mail' => false,// Force l'envoi de mail sur les autres versions que "prod"
             'mail_robot' => 'no-reply@castelis.com',// Mail d'envoi des mails de l'application
             'mail_robot_name' => 'Application CASTELIS',// Nom des mails d'envoi de l'application
             // Mail de test qui se substitue à l'adresse classique en cas d'envoi impossible ou pour les tests
-            'mail_envoi_test' => 'castelis@castelis.local',
             'mail_reply' => 'support@castelis.com',// Mail de retour des mails envoyés par l'application
             'mail_reply_name' => 'CASTELIS',// Nom des mails de retour des mails envoyés par l'application
             'mail_support' => 'castelis@castelis.local',// Mail support recevant les erreurs de l'application
-            'mail_cache' => '',// Mail caché dans tous les envois et recevant tous les mails
-            'id_castelis' => 1,// ID de l'utilisateur CASTELIS
-            'id_cron' => -1,// ID de l'utilisateur CRON
-            'is_multilingue' => false,// Condition site multilingue
-            'ISOtoUTF8' => false,// indique si on doit encoder les valeurs de la Bdd
             'taille_max_fichier' => 1024 * 1000 * 20,// Taille maximum autorisé pour un upload de fichier
             'smtp_serveur' => 'smtp.castelis.local',// Nom du serveur de mail
             'smtp_port' => 25,// Numéro de port utilisé pour les mails
@@ -107,17 +88,6 @@ class Config
             if (file_exists($this->getBashPath() . '/' . $nom_fichier_config)) {
                 include_once($this->getBashPath() . '/' . $nom_fichier_config);
             }
-            // email à qui on envoie les mails dans le cas de TEST et de non envoi d'email de l'application
-            // si non renseigné alors on envoie au support
-            $params['mail_envoi_test'] = empty($params['mail_envoi_test'])
-                ? $params['mail_support']
-                : $params['mail_envoi_test'];
-            /**
-             * FMUP daily alert
-             */
-            $params['affichage_erreurs'] = isset($params['use_daily_alert']) && $params['use_daily_alert']
-                ? false
-                : $params['affichage_erreurs'];
             $this->getFmupConfig()->mergeConfig($params, true);
             $this->inited = true;
         }
@@ -182,18 +152,6 @@ class Config
     public static function crypter($chaine, $grain_sel = '')
     {
         return sha1(self::grainSel() . $chaine . $grain_sel);
-    }
-
-    /**
-     * Debug
-     */
-    public static function consoleActive()
-    {
-        return self::isDebug() ||
-        (
-            !empty($_SESSION['id_utilisateur']) &&
-            $_SESSION['id_utilisateur'] == self::getInstance()->get('id_castelis')
-        );
     }
 
     public static function isDebug()

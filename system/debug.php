@@ -53,20 +53,6 @@ class Debug
     }
 
     /**
-     * Envoie un mail de débuggage
-     *
-     * @param {String} $buffer Le message
-     * @param {String} $title Le titre du message
-     */
-    public static function mail($buffer, $title)
-    {
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= "Content-type: text/html; charset=utf-8 \r\n";
-        $headers .= "From: " . Config::paramsVariables('mail_robot') . "\r\n";
-        return mail(Config::paramsVariables('mail_support'), $title, $buffer, $headers);
-    }
-
-    /**
      * Backtrace
      **/
     public static function backtrace()

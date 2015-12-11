@@ -824,7 +824,7 @@ abstract class Model
         } elseif (!empty($_SESSION['id_utilisateur'])) {
             $this->id_createur = $_SESSION['id_utilisateur'];
         } else {
-            $this->id_createur = Config::paramsVariables('id_cron');
+            $this->id_createur = -1;
         }
         return true;
     }
@@ -966,19 +966,14 @@ abstract class Model
      */
     public function __call($function, $argument = array())
     {
-        $ISOtoUTF8 = Config::paramsVariables('ISOtoUTF8');
         $attribut = String::toSnakeCase(substr($function, 3));
         if (property_exists($this, $attribut)) {
             if (preg_match('#^get#i', $function)) {
-                return ($ISOtoUTF8 && !String::isUtf8($this->$attribut))
-                    ? utf8_encode($this->$attribut)
-                    : $this->$attribut;
+                return $this->$attribut;
             }
 
             if (preg_match('#^set#i', $function) && count($argument)) {
-                $this->$attribut = ($ISOtoUTF8 && String::isUtf8($argument[0]))
-                    ? utf8_decode($argument[0])
-                    : $argument[0];
+                $this->$attribut = $argument[0];
                 return true;
             }
         } else {
