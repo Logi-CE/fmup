@@ -15,7 +15,7 @@ if (!function_exists('fmu_autoload')) {
      */
     function fmu_autoload($class_name)
     {
-        $class_name = strtolower(String::toSnakeCase($class_name));
+        $class_name = strtolower(\FMUP\String::getInstance()->toCamelCase($class_name));
 
         //liste des repertoires pouvant contenir une classe à include
         $classes_path = array(
