@@ -51,7 +51,6 @@ class Framework
         }
 
         // On fixe les fonctions appelées lors d'une erreur
-        $this->definePhpIni();
         $this->defineErrorLog();
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
@@ -183,18 +182,6 @@ class Framework
     protected function defineErrorLog()
     {
         ini_set('error_log', Config::pathToPhpErrorLog());
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function definePhpIni()
-    {
-        // On détermine le niveau d'erreur
-        error_reporting(Config::errorReporting());
-        ini_set('display_errors', Config::isDebug());
-        ini_set('display_startup_errors', Config::isDebug());
         return $this;
     }
 }

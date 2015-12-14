@@ -268,25 +268,12 @@ class Framework extends \Framework
     }
 
     /**
-     * @return $this
-     */
-    public function registerErrorHandler()
-    {
-        if ($this->getBootstrap()->getConfig()->get('is_debug') ||
-            !$this->getBootstrap()->getConfig()->get('use_daily_alert')
-        ) {
-            parent::registerErrorHandler();
-        }
-        return $this;
-    }
-
-    /**
      * @todo rewrite to be SOLID
      */
     public function shutDown()
     {
         $error = error_get_last();
-        $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
+        $isDebug = ini_get('display_errors');
         $code = E_PARSE | E_ERROR | E_USER_ERROR;
         $canHeader = $this->getSapi()->get() != Sapi::CLI;
         if ($error !== null && ($error['type'] & $code) && $canHeader) {
@@ -359,22 +346,6 @@ class Framework extends \Framework
     public function setBootstrap(Bootstrap $bootstrap)
     {
         $this->bootstrap = $bootstrap;
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function definePhpIni()
-    {
-        if ($this->getBootstrap()->getConfig()->get('use_daily_alert')) {
-            ini_set('error_reporting', E_ALL);
-            ini_set('display_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-            ini_set('display_startup_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-            ini_set('html_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-        } else {
-            parent::definePhpIni();
-        }
         return $this;
     }
 

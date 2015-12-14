@@ -152,11 +152,6 @@ class Config
         return sha1(self::grainSel() . $chaine . $grain_sel);
     }
 
-    public static function isDebug()
-    {
-        return self::getInstance()->get('is_debug');
-    }
-
     /**
      * Durée avant expiration de la session filtre-liste
      * @return int : Secondes
@@ -164,18 +159,6 @@ class Config
     public static function getTimeoutSessionId()
     {
         return 24 * 60;
-    }
-
-    /**
-     * Niveau d'error reporting
-     */
-    public static function errorReporting()
-    {
-        if (self::isDebug()) {
-            return E_ALL;
-        } else {
-            return 0;
-        }
     }
 
     /**

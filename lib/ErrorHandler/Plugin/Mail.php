@@ -10,7 +10,7 @@ class Mail extends Abstraction
         $config = $this->getBootstrap()->getConfig();
         return (
             (!$this->getException() instanceof \FMUP\Exception\Status)
-            && !$config->get('use_daily_alert') && !$config->get('is_debug')
+            && !$config->get('use_daily_alert') && !ini_get('display_errors')
         );
     }
 
