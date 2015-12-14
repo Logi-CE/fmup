@@ -10,22 +10,22 @@ class EmailHelper
      * @param PHPMailer $my_mail
      * @return PHPMailer
      */
-    public static function parametrerHeaders(PHPMailer $my_mail)
+    public static function parametrerHeaders(PHPMailer $my_mail, \FMUP\Config\ConfigInterface $config)
     {
-        if (Config::paramsVariables('smtp_serveur') != 'localhost') {
+        if ($config->get('smtp_serveur') != 'localhost') {
             $my_mail->IsSMTP();
         }
         $my_mail->IsHTML(true);
         $my_mail->CharSet = "UTF-8";
-        $my_mail->SMTPAuth = Config::paramsVariables('smtp_authentification');
-        $my_mail->SMTPSecure = Config::paramsVariables('smtp_secure');
+        $my_mail->SMTPAuth = $config->get('smtp_authentification');
+        $my_mail->SMTPSecure = $config->get('smtp_secure');
 
-        $my_mail->Host = Config::paramsVariables('smtp_serveur');
-        $my_mail->Port = Config::paramsVariables('smtp_port');
+        $my_mail->Host = $config->get('smtp_serveur');
+        $my_mail->Port = $config->get('smtp_port');
 
-        if (Config::paramsVariables('smtp_authentification')) {
-            $my_mail->Username = Config::paramsVariables('smtp_username'); // Gmail identifiant
-            $my_mail->Password = Config::paramsVariables('smtp_password'); // Gmail mot de passe
+        if ($config->get('smtp_authentification')) {
+            $my_mail->Username = $config->get('smtp_username'); // Gmail identifiant
+            $my_mail->Password = $config->get('smtp_password'); // Gmail mot de passe
         }
 
         return $my_mail;

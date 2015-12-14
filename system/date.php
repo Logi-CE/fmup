@@ -85,13 +85,8 @@ class Date
     public static function frToSql($ma_date)
     {
         // Si la date est correcte, on essaie de la convertir
-        if (Is::dateTime($ma_date)) {
-            $temp = Config::parametresConnexionDb();
-            if ($temp['driver'] == 'mysql') {
-                $retour = self::frToUk($ma_date);
-            } elseif ($temp['driver'] == 'mssql') {
-                $retour = $ma_date;
-            }
+        if (Is::dateTime($ma_date) && !Is::dateTimeUk($ma_date)) {
+            $retour = self::frToUk($ma_date);
             // Si la date est déjà convertie, on la renvoie
         } elseif (Is::dateTimeUk($ma_date)) {
             $retour = $ma_date;

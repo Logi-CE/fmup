@@ -28,7 +28,7 @@ class Mail extends Abstraction
             : $this->getBootstrap()->getConfig()->get('erreur_mail_sujet');
 
         $mail = new \PHPMailer();
-        $mail = \EmailHelper::parametrerHeaders($mail);
+        $mail = \EmailHelper::parametrerHeaders($mail, $this->getBootstrap()->getConfig());
         $mail->From = $config->get('mail_robot');
         $mail->FromName = $config->get('mail_robot_name');
         $mail->Subject = '[Erreur] ' . $serverName;

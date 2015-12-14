@@ -106,14 +106,9 @@ abstract class Model
      */
     private static function create($params, $class_name)
     {
-        $driver = Config::parametresConnexionDb('driver');
         $class = new $class_name();
         foreach ($params as $attribut => $value) {
-            if (substr($attribut, 0, 5) == 'date_' && $driver == 'mssql') {
-                $class->$attribut = Date::ukToFr(substr($value, 0, 19));
-            } else {
-                $class->$attribut = $value;
-            }
+            $class->$attribut = $value;
         }
         return $class;
     }
@@ -217,7 +212,7 @@ abstract class Model
     public static function findAll($where = array(), $options = array())
     {
         $classe_appelante = get_called_class();
-        $driver = Config::parametresConnexionDb('driver');
+        $driver = self::getDb()->getDriver();
 
         //si on appelle depuis un object complexe, on recupere la requete correspondante
         if (method_exists($classe_appelante, 'getQueryString')) {
@@ -226,7 +221,7 @@ abstract class Model
                 // On retire les éléments supprimés de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
                     if (!isset($where['date_suppression'])) {
-                        if ($driver == 'mssql') {
+                        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
                             $where['date_suppression'] = "ISnull(date_suppression, '') = ''";
                         } else {
                             $where['supprime'] = "supprime = 0";
@@ -239,7 +234,7 @@ abstract class Model
                 // On retire les éléments non visibles de la liste
                 if (call_user_func(array($classe_appelante, 'afficherParDefautDataVisibles'))) {
                     if (!isset($where['visible']) && !isset($where['identifiant'])) {
-                        if ($driver == 'mssql') {
+                        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
                             $where['visible'] = 'ISnull(visible, 0) = 1';
                         } else {
                             $where['visible'] = 'visible = 1';
@@ -253,7 +248,7 @@ abstract class Model
             $orderby = '';
             $limit = '';
 
-            if (isset($options["paging"]) && $driver == 'mssql') {
+            if (isset($options["paging"]) && $driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
                 // Ordre by spécialisé pour la sous-vue générée
                 if (isset($options["order"]) && $options["order"] != '') {
                     $orderby = 'ORDER BY ' . $options["order"];
@@ -282,14 +277,14 @@ abstract class Model
                     $orderby = " ORDER BY " . $options["order"];
                 }
 
-                if ($driver == 'mysql') {
+                if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
                     $SQL .= Sql::parseWhere($where, false, $classe_appelante);
                     $SQL .= ' ' . $orderby;
                     if (!empty($options["limit"])) {
                         $SQL .= ' ' . " LIMIT " . $options["limit"];
                     }
 
-                } elseif ($driver == 'mssql') {
+                } elseif ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
                     if (!empty($options["top"])) {
                         $top = " top " . $options["top"];
                     }
@@ -322,7 +317,7 @@ abstract class Model
 
         // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit
         // (pour la pagination)
-        if ($driver == 'mysql') {
+        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
             $db = Model::getDb();
             self::$nb_elements = $db->fetchRow('SELECT FOUND_ROWS()');
             self::$nb_elements = self::$nb_elements['FOUND_ROWS()'];
@@ -434,9 +429,9 @@ abstract class Model
      */
     protected static function findAllFromTable($table, $where = array(), $options = array())
     {
-        $varconnexion = Config::parametresConnexionDb();
+        $driver = self::getDb()->getDriver();
         $SQL = "SELECT ";
-        if ($varconnexion['driver'] == 'mysql') {
+        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
             $SQL .= ' SQL_CALC_FOUND_ROWS ';
         } else {
             if (isset($options["top"]) && $options["top"]) {
@@ -451,7 +446,7 @@ abstract class Model
         if (isset($options["order"]) && $options["order"]) {
             $SQL .= " ORDER BY " . $options["order"];
         }
-        if ($varconnexion['driver'] == 'mysql') {
+        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
             if (isset($options["top"]) && $options["top"]) {
                 $SQL .= " LIMIT " . $options["top"];
             } elseif (!empty($options['limit'])) {
@@ -770,13 +765,9 @@ abstract class Model
     /**
      * Modifie le champ date_creation par la date actuelle
      **/
-    public function setDateCreation($value = '')
+    public function setDateCreation($value = null)
     {
-        if ($value) {
-            $this->date_creation = Date::frToSql($value);
-        } else {
-            $this->date_creation = Date::frToSql(Date::today(true));
-        }
+        $this->date_creation = date('Y-m-d H:i:s', $value ? strtotime($value) : null);
         return true;
     }
 
@@ -806,15 +797,9 @@ abstract class Model
     /**
      * Modifie le champ date de dernière modification par la date actuelle
      **/
-    public function setDateModification($value = '')
+    public function setDateModification($value = null)
     {
-        if ($value === 'null') {
-            $this->date_modification = '';
-        } elseif ($value) {
-            $this->date_modification = Date::frToSql($value);
-        } else {
-            $this->date_modification = Date::frToSql(Date::today(true));
-        }
+        $this->date_modification = date('Y-m-d H:i:s', $value ? strtotime($value) : null);
         return true;
     }
 
@@ -832,7 +817,7 @@ abstract class Model
         } else {
             // ce cas ne peut arriver que si l'on modifie l'objet dans une page où personne n'est connecté
             // (ex: page de première connexion)
-            $this->id_modificateur = Config::paramsVariables('id_cron');
+            $this->id_modificateur = 1;
         }
         return true;
     }
@@ -1085,12 +1070,8 @@ abstract class Model
      */
     public function logerChangement($type_action)
     {
-        $varconnexion = Config::parametresConnexionDb();
-        if (call_user_func(array(get_class($this), 'getIsLogue')) &&
-            call_user_func(array(get_class($this), 'tableToLog')) &&
-            $this->id
-        ) {
-            $default_id = (!empty($varconnexion['defaultid'])) ? $varconnexion['defaultid'] . "," : "";
+        if ($this->getIsLogue() && $this->tableToLog() && $this->id) {
+            $default_id = "";
             $tab = call_user_func(array(get_class($this), 'listeChampsObjet'));
             $tab = explode(', ', $tab);
 
@@ -1127,7 +1108,7 @@ abstract class Model
                                 \'\',
                                 \'\',
                                 ' . Sql::secureId($id_utilisateur) . ',
-                                ' . Sql::secureDate(Date::frToSql(Date::today(true))) . ',
+                                ' . Sql::secureDate(date('Y-m-d H:i:s')) . ',
                                 ' . Sql::secure($type_action) . '
                         FROM ' . $this->getTableName() . ' T
                         WHERE id = ' . Sql::secureId($this->id) . '

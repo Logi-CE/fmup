@@ -120,12 +120,14 @@ class Framework extends \Framework
     }
 
     /**
+     * @param string $directory
+     * @param string $controller
      * Real 404 errors
      * @throws NotFound
      */
-    public function getRouteError()
+    public function getRouteError($directory, $controller)
     {
-        throw new NotFound('Controller not found');
+        throw new NotFound('Controller not found' . $directory . '/' . $controller);
     }
 
     /**
@@ -361,9 +363,6 @@ class Framework extends \Framework
             $this->getBootstrap()->setConfig($this->getConfig());
         }
         $this->getBootstrap()->warmUp();
-
-        //to be compliant with old system @todo delete
-        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig());
         parent::initialize();
     }
 }

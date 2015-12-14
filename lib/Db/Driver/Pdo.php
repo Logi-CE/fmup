@@ -108,9 +108,10 @@ class Pdo implements DbInterface, Logger\LoggerInterface
 
     /**
      * Dsn Driver to use
+     * @todo put this into protected when \Model is no longer used
      * @return string
      */
-    protected function getDsnDriver()
+    public function getDsnDriver()
     {
         return isset($this->settings['driver']) ? $this->settings['driver'] : 'mysql';
     }

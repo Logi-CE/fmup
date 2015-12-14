@@ -50,8 +50,6 @@ class Framework
             throw new \FMUP\Exception("La variable APPLICATION doit être définie.");
         }
 
-        // On fixe les fonctions appelées lors d'une erreur
-        $this->defineErrorLog();
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
         $this->dispatch();
@@ -146,8 +144,8 @@ class Framework
     }
 
     /**
-     * @uses string $directory
-     * @uses string $controller
+     * @param string $directory
+     * @param string $controller
      * @throws \FMUP\Exception\Status\NotFound
      */
     protected function getRouteError($directory, $controller)
@@ -173,15 +171,6 @@ class Framework
     protected function registerShutdownFunction()
     {
         register_shutdown_function(array($this, 'shutDown'));
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function defineErrorLog()
-    {
-        ini_set('error_log', Config::pathToPhpErrorLog());
         return $this;
     }
 }
