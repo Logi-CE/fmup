@@ -29,11 +29,7 @@ class ParametreHelper
     {
         $sql = 'SELECT nom, valeur FROM parametre';
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($sql);
-        } else {
-            $result = $db->fetchAll($sql);
-        }
+        $result = $db->fetchAll($sql);
         $this->liste = array();
         foreach ($result as $liste) {
             $this->liste[$liste['nom']] = $liste['valeur'];
@@ -71,11 +67,7 @@ class ParametreHelper
                 WHERE nom = ' . Sql::secure($libelle) . '
                     AND modifiable = 1';
         $db = Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $db->execute($sql);
-        } else {
-            $db->query($sql);
-        }
+        $db->query($sql);
         // Mise à jour dans le tampon
         if (!empty($this->liste)) {
             $this->liste[$libelle] = $valeur;

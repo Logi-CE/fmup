@@ -34,11 +34,7 @@ class IdFromField implements Formatter
             WHERE " . $this->champ_origine . " LIKE '%" . $value . "%'    
             ";
             $db = \Model::getDb();
-            if (!$db instanceof \FMUP\Db) {
-                $result = $db->requete($sql);
-            } else {
-                $result = $db->fetchAll($sql);
-            }
+            $result = $db->fetchAll($sql);
             if ($result) {
                 return $result[0]['id'];
             } else {

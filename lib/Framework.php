@@ -199,29 +199,29 @@ class Framework extends \Framework
             if ($errContext) {
                 $message .= ' {' . serialize($errContext) . '}';
             }
-            $fmupMail = new \FMUP\ErrorHandler\Plugin\Mail();
+            $fmupMail = new ErrorHandler\Plugin\Mail();
             $fmupMail->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
-                ->setException(new \FMUP\Exception($message, $code))
+                ->setException(new Exception($message, $code))
                 ->handle();
         }
 
         $translate = array(
-            E_NOTICE => \Monolog\Logger::NOTICE,
-            E_WARNING => \Monolog\Logger::WARNING,
-            E_ERROR => \Monolog\Logger::ERROR,
-            E_PARSE => \Monolog\Logger::CRITICAL,
-            E_DEPRECATED => \Monolog\Logger::INFO,
-            E_USER_ERROR => \Monolog\Logger::NOTICE,
-            E_USER_WARNING => \Monolog\Logger::WARNING,
-            E_USER_ERROR => \Monolog\Logger::ERROR,
-            E_USER_DEPRECATED => \Monolog\Logger::INFO,
-            E_STRICT => \Monolog\Logger::INFO,
-            E_RECOVERABLE_ERROR => \Monolog\Logger::ERROR,
+            E_NOTICE => Logger::NOTICE,
+            E_WARNING => Logger::WARNING,
+            E_ERROR => Logger::ERROR,
+            E_PARSE => Logger::CRITICAL,
+            E_DEPRECATED => Logger::INFO,
+            E_USER_ERROR => Logger::NOTICE,
+            E_USER_WARNING => Logger::WARNING,
+            E_USER_ERROR => Logger::ERROR,
+            E_USER_DEPRECATED => Logger::INFO,
+            E_STRICT => Logger::INFO,
+            E_RECOVERABLE_ERROR => Logger::ERROR,
         );
-        $level = isset($translate[$code]) ? $translate[$code] : \Monolog\Logger::ALERT;
+        $level = isset($translate[$code]) ? $translate[$code] : Logger::ALERT;
         $message = $msg . ' in ' . $errFile . ' on line ' . $errLine;
-        $this->getBootstrap()->getLogger()->log(\FMUP\Logger\Channel\System::NAME, $level, $message, $errContext);
+        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $level, $message, $errContext);
     }
 
     /**
@@ -291,7 +291,7 @@ class Framework extends \Framework
         $canHeader = $this->getSapi()->get() != Sapi::CLI;
         if ($error !== null && ($error['type'] & $code) && $canHeader) {
             $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
-            $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+            $errorHeader = new Response\Header\Status(Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
             $errorHeader->render();
             if (!$isDebug) {
                 echo \Constantes::getMessageErreurApplication();

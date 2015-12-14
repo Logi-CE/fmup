@@ -303,11 +303,7 @@ abstract class Model
 
             // Exécution de la requète
             $db = \Model::getDb();
-            if (!$db instanceof \FMUP\Db) {
-                $result = $db->requete($SQL);
-            } else {
-                $result = $db->fetchAll($SQL);
-            }
+            $result = $db->fetchAll($SQL);
         } else {
             if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
                 if (!isset($where['supprime']) &&
@@ -328,11 +324,7 @@ abstract class Model
         // (pour la pagination)
         if ($driver == 'mysql') {
             $db = Model::getDb();
-            if (!$db instanceof \FMUP\Db) {
-                self::$nb_elements = $db->requeteUneLigne('SELECT FOUND_ROWS()');
-            } else {
-                self::$nb_elements = $db->fetchRow('SELECT FOUND_ROWS()');
-            }
+            self::$nb_elements = $db->fetchRow('SELECT FOUND_ROWS()');
             self::$nb_elements = self::$nb_elements['FOUND_ROWS()'];
         }
 
@@ -469,11 +461,7 @@ abstract class Model
 
         // Exécution de la requète
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($SQL);
-        } else {
-            $result = $db->fetchAll($SQL);
-        }
+        $result = $db->fetchAll($SQL);
         return $result;
     }
 
@@ -501,11 +489,7 @@ abstract class Model
         //echo($SQL);
         // Exécution de la requète
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($SQL);
-        } else {
-            $result = $db->fetchAll($SQL);
-        }
+        $result = $db->fetchAll($SQL);
         return $result;
     }
 
@@ -531,11 +515,7 @@ abstract class Model
         //debug::output($SQL);
         // Exécution de la requète
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($SQL);
-        } else {
-            $result = $db->fetchAll($SQL);
-        }
+        $result = $db->fetchAll($SQL);
         return $result;
     }
 
@@ -553,11 +533,7 @@ abstract class Model
         }
         // Exécution de la requète
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($SQL);
-        } else {
-            $result = $db->fetchAll($SQL);
-        }
+        $result = $db->fetchAll($SQL);
         return $result[0]["nb"];
     }
 
@@ -582,11 +558,7 @@ abstract class Model
         $sql .= $group_by;
         // Exécution de la requête
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $result = $db->requete($sql);
-        } else {
-            $result = $db->fetchAll($sql);
-        }
+        $result = $db->fetchAll($sql);
         return ($group_by != "") ? $result : $result[0]["somme"];
     }
 
@@ -621,22 +593,14 @@ abstract class Model
                         $infos_suppression
                         WHERE id = " . $this->id;
                 $db = Model::getDb();
-                if ($db instanceof \FMUP\Db) {
-                    return (bool)$db->query($SQL);
-                } else {
-                    return (bool)$db->execute($SQL);
-                }
+                return (bool)$db->execute($SQL);
                 // Cas de la suppression physique
             } else {
                 // Loger le changement
                 $this->logerChangement("delete");
                 $SQL = "DELETE FROM $table WHERE id = " . $this->id;
                 $db = Model::getDb();
-                if ($db instanceof \FMUP\Db) {
-                    $return = (bool)$db->query($SQL);
-                } else {
-                    $return = (bool)$db->execute($SQL);
-                }
+                $return = (bool)$db->query($SQL);
                 if ($return) {
                     $this->id = "";
                     return true;
@@ -1169,12 +1133,8 @@ abstract class Model
                         WHERE id = ' . Sql::secureId($this->id) . '
                     ';
             $db = Model::getDb();
-            if ($db instanceof \FMUP\Db) {
-                $db->query($SQL);
-                $this->log_id = $db->lastInsertId();
-            } else {
-                $this->log_id = $db->execute($SQL, '', false);
-            }
+            $db->query($SQL);
+            $this->log_id = $db->lastInsertId();
         }
     }
 
@@ -1204,11 +1164,7 @@ abstract class Model
             // données de la table courante
             $sql = $this->getSqlLog();
             $db = Model::getDb();
-            if (!$db instanceof \FMUP\Db) {
-                $res = $db->requeteUneLigne($sql);
-            } else {
-                $res = $db->fetchRow($sql);
-            }
+            $res = $db->fetchRow($sql);
 
             if ($res) {
                 foreach ($res as $index => $value) {
@@ -1225,11 +1181,7 @@ abstract class Model
             }
             // données de la table de log
             $sql = $this->getSqlLog('log');
-            if (!$db instanceof \FMUP\Db) {
-                $res = $db->requeteUneLigne($sql);
-            } else {
-                $res = $db->fetchRow($sql);
-            }
+            $res = $db->fetchRow($sql);
 
             if ($res) {
                 foreach ($res as $index => $value) {
@@ -1268,11 +1220,7 @@ abstract class Model
                         , contenu_log = " . Sql::secure($contenu) . "
                         WHERE id = " . Sql::secureId($this->log_id);
                 $db = Model::getDb();
-                if (!$db instanceof \FMUP\Db) {
-                    $db->execute($sql);
-                } else {
-                    $db->query($sql);
-                }
+                $db->query($sql);
             }
         }
     }
@@ -1314,11 +1262,7 @@ abstract class Model
                 WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $res = $db->requete($sql);
-        } else {
-            $res = $db->fetchAll($sql);
-        }
+        $res = $db->fetchAll($sql);
         return $res;
     }
 
@@ -1332,11 +1276,7 @@ abstract class Model
                 WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $res = $db->requete($sql);
-        } else {
-            $res = $db->fetchAll($sql);
-        }
+        $res = $db->fetchAll($sql);
         return $res;
     }
 
@@ -1351,11 +1291,7 @@ abstract class Model
                 WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
-        if (!$db instanceof \FMUP\Db) {
-            $res = $db->requete($sql);
-        } else {
-            $res = $db->fetchAll($sql);
-        }
+        $res = $db->fetchAll($sql);
 
         foreach ($res as $rs) {
             $array[$rs["id"]] = array(
