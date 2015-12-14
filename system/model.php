@@ -211,7 +211,6 @@ abstract class Model
     public static function findAll($where = array(), $options = array())
     {
         $classe_appelante = get_called_class();
-        $driver = self::getDb()->getDriver();
 
         //si on appelle depuis un object complexe, on recupere la requete correspondante
         if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
@@ -295,7 +294,6 @@ abstract class Model
     public function delete()
     {
         $classe_appelante = get_called_class();
-        $id = $this->id;
         $retour = $this->deleteFromTable(call_user_func(array($classe_appelante, 'getTableName')));
         return $retour;
     }

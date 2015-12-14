@@ -153,46 +153,6 @@ class Sql
         return $tab;
     }
 
-    public static function parseOrder($order, $class = '')
-    {
-        $order_parse = '';
-
-        if ($order) {
-            $tab1 = explode(', ', $order);
-            $tab2 = self::replaceXFields($tab1, $class);
-            $order_parse = implode(',', $tab2);
-        }
-
-        return $order_parse;
-    }
-
-    public static function parseSelect($select_alias, $class = null, $option = array(), &$join = array())
-    {
-        $select = self::replaceXFields($select_alias, $class, $option, $join);
-        if (!is_array($select)) {
-            throw new \FMUP\Exception(
-                "Erreur à l'utilisation de sqlParseSelect : tableau attendu. Reçu : " . serialize($select)
-            );
-        }
-
-        $select = array_filter($select, function ($i) {
-            return $i <> "";
-        });
-        if ($select == array()) {
-            return "";
-        } else {
-            $result = "SELECT SQL_CALC_FOUND_ROWS ";
-            foreach ($select as $key => $condition) {
-                if ($condition != '') {
-                    $result .= "\n" . $condition . ' AS ' . $select_alias[$key] . ', ';
-                }
-            }
-            // suppression du dernier ,
-            $result = substr($result, 0, -2);
-            return $result;
-        }
-    }
-
     private static function filterWhere($i)
     {
         return $i <> "";
@@ -231,19 +191,6 @@ class Sql
             $result = substr($result, 0, -5);
             return $result;
         }
-    }
-
-    public static function parseJoin($join, $class = null, $option = array(), $table_name = 'S')
-    {
-        $result = "\n" . 'FROM ' . $class::getTableName() . ' ' . $table_name;
-        if (!empty($join)) {
-            foreach ($join as $condition) {
-                if ($condition != '') {
-                    $result .= "\n" . $condition;
-                }
-            }
-        }
-        return $result;
     }
 
     /*     * ********
