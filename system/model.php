@@ -12,7 +12,6 @@ abstract class Model
     protected $nombre_ligne; // pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
     protected $log_id;
     public $requete;
-    public static $nb_elements;
 
     public function getIsLogue()
     {
@@ -215,113 +214,19 @@ abstract class Model
         $driver = self::getDb()->getDriver();
 
         //si on appelle depuis un object complexe, on recupere la requete correspondante
-        if (method_exists($classe_appelante, 'getQueryString')) {
-            // gestion des affichages par défaut, sauf si on appelle un objet bien particulier, via la fonction findone
-            if (!isset($options['fonction']) || $options['fonction'] != 'findOne') {
-                // On retire les éléments supprimés de la liste
-                if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                    if (!isset($where['date_suppression'])) {
-                        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
-                            $where['date_suppression'] = "ISnull(date_suppression, '') = ''";
-                        } else {
-                            $where['supprime'] = "supprime = 0";
-                        }
-                    } elseif (!isset($options['afficher_supprimes'])) {
-                        // cette option va permettre de gérer les date de suppression dans les fonction getQueryString
-                        $options['afficher_supprimes'] = true;
-                    }
-                }
-                // On retire les éléments non visibles de la liste
-                if (call_user_func(array($classe_appelante, 'afficherParDefautDataVisibles'))) {
-                    if (!isset($where['visible']) && !isset($where['identifiant'])) {
-                        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
-                            $where['visible'] = 'ISnull(visible, 0) = 1';
-                        } else {
-                            $where['visible'] = 'visible = 1';
-                        }
-                    }
-                }
+        if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
+            if (!isset($where['supprime']) &&
+                (!isset($options['fonction']) || $options['fonction'] != 'findOne')
+            ) {
+                $where['supprime'] = 'supprime = 0';
             }
-
-            $SQL = call_user_func(array($classe_appelante, 'getQueryString'), $options);
-            $top = '';
-            $orderby = '';
-            $limit = '';
-
-            if (isset($options["paging"]) && $driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
-                // Ordre by spécialisé pour la sous-vue générée
-                if (isset($options["order"]) && $options["order"] != '') {
-                    $orderby = 'ORDER BY ' . $options["order"];
-                } else {
-                    $orderby = 'ORDER BY getdate()';
-                }
-
-                $SQL = 'WITH x AS
-                        (
-                            SELECT REQUETE_NUMERO_LIGNE = ROW_NUMBER() OVER (' . $orderby . ')
-                                    , V.*
-                            FROM
-                            (
-                                ' . $SQL . '
-                            ) V
-                            ' . Sql::parseWhere($where) . '
-                        )
-                        SELECT  (SELECT COUNT(*) FROM x ) AS REQUETE_NOMBRE_LIGNE, *
-                        FROM x
-                        WHERE x.REQUETE_NUMERO_LIGNE BETWEEN (((' .
-                    $options["paging"]["numero_page"] . ' - 1) * ' . $options["paging"]["nb_element"] . ') + 1)
-                            AND ' . $options["paging"]["numero_page"] . ' * ' . $options["paging"]["nb_element"] . '';
-
-            } else {
-                if (!empty($options["order"])) {
-                    $orderby = " ORDER BY " . $options["order"];
-                }
-
-                if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
-                    $SQL .= Sql::parseWhere($where, false, $classe_appelante);
-                    $SQL .= ' ' . $orderby;
-                    if (!empty($options["limit"])) {
-                        $SQL .= ' ' . " LIMIT " . $options["limit"];
-                    }
-
-                } elseif ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mssql') {
-                    if (!empty($options["top"])) {
-                        $top = " top " . $options["top"];
-                    }
-                    $SQL = 'SELECT ' . $top . ' * FROM (' . $SQL . ') V ';
-                    $SQL .= Sql::parseWhere($where);
-                    $SQL .= ' ' . $orderby;
-                }
-            }
-            // if ($classe_appelante == 'Facture')
-            // debug::output($SQL, true);
-
-            // Exécution de la requète
-            $db = \Model::getDb();
-            $result = $db->fetchAll($SQL);
-        } else {
-            if (call_user_func(array($classe_appelante, 'afficherParDefautNonSupprimes'))) {
-                if (!isset($where['supprime']) &&
-                    (!isset($options['fonction']) || $options['fonction'] != 'findOne')
-                ) {
-                    $where['supprime'] = 'supprime = 0';
-                }
-            }
-            //sinon appelle de l'objet de Base généré par le génératOR
-            $result = Model::findAllFromTable(
-                call_user_func(array($classe_appelante, 'getTableName')),
-                $where,
-                $options
-            );
         }
-
-        // On ajoute dans une variable le nombre d'éléments de la dernière requête s'il n'y avait pas eu de limit
-        // (pour la pagination)
-        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
-            $db = Model::getDb();
-            self::$nb_elements = $db->fetchRow('SELECT FOUND_ROWS()');
-            self::$nb_elements = self::$nb_elements['FOUND_ROWS()'];
-        }
+        //sinon appelle de l'objet de Base généré par le génératOR
+        $result = Model::findAllFromTable(
+            call_user_func(array($classe_appelante, 'getTableName')),
+            $where,
+            $options
+        );
 
         // Création d'un tableau d'objets
         return Model::objectsFromMatrix($result, $classe_appelante);
@@ -429,16 +334,7 @@ abstract class Model
      */
     protected static function findAllFromTable($table, $where = array(), $options = array())
     {
-        $driver = self::getDb()->getDriver();
-        $SQL = "SELECT ";
-        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
-            $SQL .= ' SQL_CALC_FOUND_ROWS ';
-        } else {
-            if (isset($options["top"]) && $options["top"]) {
-                $SQL .= " TOP " . $options["top"];
-            }
-        }
-        $SQL .= " * FROM $table";
+        $SQL = "SELECT * FROM $table";
         $SQL .= Sql::parseWhere($where);
         if (isset($options["group_by"]) && $options["group_by"]) {
             $SQL .= " group by " . $options["group_by"];
@@ -446,12 +342,11 @@ abstract class Model
         if (isset($options["order"]) && $options["order"]) {
             $SQL .= " ORDER BY " . $options["order"];
         }
-        if ($driver instanceof \FMUP\Db\Driver\Pdo && $driver->getDsnDriver() == 'mysql') {
-            if (isset($options["top"]) && $options["top"]) {
-                $SQL .= " LIMIT " . $options["top"];
-            } elseif (!empty($options['limit'])) {
-                $SQL .= " LIMIT " . $options["limit"];
-            }
+
+        if (isset($options["top"]) && $options["top"]) {
+            $SQL .= " LIMIT " . $options["top"];
+        } elseif (!empty($options['limit'])) {
+            $SQL .= " LIMIT " . $options["limit"];
         }
 
         // Exécution de la requète

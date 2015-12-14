@@ -106,11 +106,11 @@ class ValidatorIterator extends \IteratorIterator
         }
         $this->valid = $this->current()->validateLine();
         $type = "";
-        foreach ($this->current()->getListeConfigObjet() as $config_objet) {
-            /* @var $config_objet \FMUP\Import\Config\ConfigObjet */
-            if ($config_objet->getStatut() == "insert") {
+        foreach ($this->current()->getListeConfigObjet() as $configObject) {
+            /* @var $configObject \FMUP\Import\Config\ConfigObjet */
+            if ($configObject->getStatut() == "insert") {
                 $type = ($type == "update" ? "update" : "insert");
-            } elseif ($config_objet->getStatut() == "update") {
+            } elseif ($configObject->getStatut() == "update") {
                 $type = "update";
             }
         }

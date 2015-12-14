@@ -14,19 +14,8 @@ class Sql
      */
     public static function sanitize($value)
     {
-        $driver = Model::getDb()->getDriver();
-
         $value = preg_replace('@<script[^>]*?>.*?</script>@si', '[disabled]', $value);
-
-        if ($driver instanceof \FMUP\Db\Driver\Pdo) {
-            switch ($driver->getDsnDriver()) {
-                case 'mysql':
-                    //return mysql_real_escape_string($value);
-                    return addslashes($value);
-                case 'mssql':
-                    return str_replace('\'', '\'\'', $value);
-            }
-        }
+        return str_replace('\'', '\'\'', $value);
     }
 
     /**
