@@ -2,7 +2,8 @@
 
 /**
  * Cette classe contient des fonctions de formatage ou de calcul de date
- * @version 1.0
+ * @deprecated use \DateTime instead
+ * @see http://php.net/manual/fr/datetime.createfromformat.php
  */
 class Date
 {

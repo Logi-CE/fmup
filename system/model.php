@@ -1034,7 +1034,7 @@ abstract class Model
         }
 
 
-        if (call_user_func(array(get_class($this), 'getIsLogue')) && call_user_func(array(get_class($this), 'tableToLog'))) {
+        if ($this->getIsLogue() && call_user_func(array(get_class($this), 'tableToLog'))) {
             // données de la table courante
             $sql = $this->getSqlLog();
             $db = Model::getDb();
