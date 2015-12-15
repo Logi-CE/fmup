@@ -12,7 +12,7 @@ abstract class Model
     protected $errors = array();
     protected $nombre_ligne; // pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
     protected $log_id;
-    protected $session;
+    private static $session;
     public $requete;
 
     public function getIsLogue()
