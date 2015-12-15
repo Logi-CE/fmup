@@ -1034,7 +1034,7 @@ abstract class Model
         }
 
 
-        if ($this->getIsLogue() && call_user_func(array(get_class($this), 'tableToLog'))) {
+        if ($this->getIsLogue() && $this->tableToLog()) {
             // données de la table courante
             $sql = $this->getSqlLog();
             $db = Model::getDb();
@@ -1210,7 +1210,7 @@ abstract class Model
             $where[$attribut] = 'IFnull(' . $attribut . ', 0) = IFnull(' . sql::Secure($this->$attribut) . ', 0)';
         }
         $where['id'] = "IFnull(id, 0) <> IFnull(" . sql::secureId($this->id) . ", 0)";
-        $doublon = call_user_func(array(get_class($this), 'FindFirst'), $where);
+        $doublon = $this->findFirst($where);
 
         if ($doublon) {
             return false;
