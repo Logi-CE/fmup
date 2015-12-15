@@ -3,6 +3,7 @@
 /**
  * Classe mère de tous les modèles
  * @version 1.0
+ * @todo deprecate this. Model is not MVC compliant
  */
 abstract class Model
 {
@@ -11,6 +12,7 @@ abstract class Model
     protected $errors = array();
     protected $nombre_ligne; // pour l'affichage du nombre de lignes des listes (utilisés dans les Xobjets)
     protected $log_id;
+    protected $session;
     public $requete;
 
     public function getIsLogue()
@@ -468,8 +470,8 @@ abstract class Model
                     $this->date_suppression = Date::today(false, 'US');
                 }
                 if (property_exists($this, 'id_suppresseur')) {
-                    if (isset($_SESSION['id_utilisateur'])) {
-                        $id_utilisateur = $_SESSION['id_utilisateur'];
+                    if (self::getSession()->has('id_utilisateur')) {
+                        $id_utilisateur = self::getSession()->get('id_utilisateur');
                     }
                     $infos_suppression .= ', id_suppresseur = ' . Sql::secureId($id_utilisateur);
                     $this->id_suppresseur = $id_utilisateur;
@@ -669,10 +671,11 @@ abstract class Model
      **/
     public function setIdCreateur($value = 0)
     {
+        $sessionIdUser = self::getSession()->get('id_utilisateur');
         if ($value) {
             $this->id_createur = $value;
-        } elseif (!empty($_SESSION['id_utilisateur'])) {
-            $this->id_createur = $_SESSION['id_utilisateur'];
+        } elseif (!empty($sessionIdUser)) {
+            $this->id_createur = $sessionIdUser;
         } else {
             $this->id_createur = -1;
         }
@@ -705,8 +708,8 @@ abstract class Model
             $this->id_modificateur = '';
         } elseif ($value) {
             $this->id_modificateur = $value;
-        } elseif (isset($_SESSION['id_utilisateur'])) {
-            $this->id_modificateur = $_SESSION['id_utilisateur'];
+        } elseif (self::getSession()->has('id_utilisateur')) {
+            $this->id_modificateur = self::getSession()->get('id_utilisateur');
         } else {
             // ce cas ne peut arriver que si l'on modifie l'objet dans une page où personne n'est connecté
             // (ex: page de première connexion)
@@ -986,7 +989,9 @@ abstract class Model
             }
             $liste_champ_valeur = implode(', ', $tab);
 
-            $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : -1;
+            $id_utilisateur = self::getSession()->has('id_utilisateur')
+                ? self::getSession()->get('id_utilisateur')
+                : -1;
 
             $SQL = 'INSERT INTO log__' . $this->getTableName() . '
                             (' . $liste_champ . '
@@ -1217,5 +1222,24 @@ abstract class Model
         } else {
             return true;
         }
+    }
+
+    /**
+     * @param \FMUP\Session $session
+     */
+    public static function setSession(\FMUP\Session $session)
+    {
+        self::$session = $session;
+    }
+
+    /**
+     * @return \FMUP\Session
+     */
+    public static function getSession()
+    {
+        if (!self::$session) {
+            self::setSession(\FMUP\Session::getInstance());
+        }
+        return self::$session;
     }
 }

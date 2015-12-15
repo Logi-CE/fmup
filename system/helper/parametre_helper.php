@@ -63,7 +63,7 @@ class ParametreHelper
         $sql = 'UPDATE parametre
                 SET valeur = ' . Sql::secure($valeur) . '
                     , date_modification = NOW()
-                    , id_modificateur = ' . Sql::secureId($_SESSION['id_utilisateur']) . '
+                    , id_modificateur = ' . Sql::secureId(\FMUP\Session::getInstance()->get('id_utilisateur')) . '
                 WHERE nom = ' . Sql::secure($libelle) . '
                     AND modifiable = 1';
         $db = Model::getDb();

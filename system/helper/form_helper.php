@@ -12,7 +12,10 @@ class FormHelper
      */
     public static function getInputToken()
     {
-        return self::inputSimple('hidden', array('name' => 'tokenform', 'value' => $_SESSION['jeton_formulaire']));
+        return self::inputSimple(
+            'hidden',
+            array('name' => 'tokenform', 'value' => \FMUP\Session::getInstance()->get('jeton_formulaire'))
+        );
     }
 
     /**
@@ -22,8 +25,8 @@ class FormHelper
     public static function checkToken()
     {
         $retour = false;
-        if (isset($_REQUEST['tokenform'], $_SESSION['jeton_formulaire'])) {
-            $retour = ($_SESSION['jeton_formulaire'] == $_REQUEST['tokenform']);
+        if (isset($_REQUEST['tokenform']) && \FMUP\Session::getInstance()->has('jeton_formulaire')) {
+            $retour = (\FMUP\Session::getInstance()->get('jeton_formulaire') == $_REQUEST['tokenform']);
         }
 
         return $retour;
