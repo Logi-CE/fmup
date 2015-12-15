@@ -402,9 +402,9 @@ class FormHelper
         // Création du champ
         if (!empty($params["icone"])) {
             if ($params['value']) {
-                $valeur_formatee = Constantes::imageOui();
+                $valeur_formatee = '<span class="fa fa-check-circle fa-lg" style="color: limegreen;"></span>';
             } else {
-                $valeur_formatee = Constantes::imageNon();
+                $valeur_formatee = '<span class="fa fa-minus-circle fa-lg" style="color: red;"></span>';
             }
             $autoriser_html = true;
             unset($params["icone"]);
@@ -707,94 +707,6 @@ class FormHelper
             }
             $retour .= '>' . htmlspecialchars($text) . '</option>' . "\n";
         }
-
-        return $retour;
-    }
-
-    /**
-     * Crée un input text gérant l'autocompletion avec la value de l'object $object suivant la propriété $attribute
-     * @param mixed $object : L'objet à exploiter
-     * @param string $attribute : Nom de l'attribut de l'objet à utiliser
-     * @param bool $editable : [OPT] Transforme l'input en span, pas défaut non
-     * @param array $params : [OPT] Tableau contenant des paramètres d'utilisation
-     * @return string : l'input sous forme HTML
-     */
-    public static function inputAutocompleteText($object, $attribute, $editable = true, $params = array())
-    {
-        $no_edit = self::getDroitInput($object, $attribute, $editable);
-
-        $params = self::formaterClassePourInput($object, $attribute, $params);
-
-        if (isset($params["id_span"])) {
-            $html_id_span = $params["id_span"];
-            unset($params["id_span"]);
-        } else {
-            $html_id_span = "span_" . $params["id"];
-        }
-
-        // formatage optionnel de la valeur, $params['formatage'] doit etre une fonction de unite helper
-        $valeur_formatee = $params['value'];
-        if (!empty($params['formatage'])) {
-            if (method_exists('UniteHelper', $params['formatage'])) {
-                $valeur_formatee = UniteHelper::$params['formatage']($params['value']);
-            }
-            unset($params['formatage']);
-        }
-
-        if ($no_edit) {
-            $retour = self::spanSimple($valeur_formatee, $html_id_span, $params);
-        } else {
-            $retour = self::inputAutocompleteSimple(get_class($object), $attribute, 'id', $params);
-        }
-
-        return $retour;
-    }
-
-    /**
-     * Crée un input text gérant l'autocompletion
-     * @param string $classe : Nom de l'objet auquel appartient l'attribut
-     * @param string $attribut : Colonne utilisée pour la recherche autocomplétée
-     * @param string $cle : [OPT] Clé de l'objet de retour, par défaut "id"
-     * @param array $params : [OPT] Tableau pouvant contenir les paramètres mane, id, maxlength, valeur et id_valeur
-     * @return string : l'input sous forme HTML
-     */
-    public static function inputAutocompleteSimple($classe, $attribut, $cle = 'id', $params = array())
-    {
-        $html_name = (isset($params['name'])) ? $params['name'] : 'filtre[' . $classe . ']';
-        $html_id = (isset($params['id'])) ? $params['id'] : 'filtre_' . $classe;
-        $valeur = (isset($params['valeur'])) ? $params['valeur'] : '';
-        $id_valeur = (isset($params['id_valeur'])) ? $params['id_valeur'] : '';
-
-        $parametres = array(
-            'name' => $html_name . '[' . $attribut . ']',
-            'id' => $html_id,
-            'value' => $valeur,
-            'autocomplete' => 'off'
-        );
-        if (!empty($params['maxlength'])) {
-            $parametres['maxlength'] = $params['maxlength'];
-        }
-
-        $retour = self::inputSimple('text', $parametres);
-        // Image de suppression
-        $retour .= "\n";
-        if (!empty($params['suppression'])) {
-            $cache = '';
-            if (!$valeur) {
-                $cache = 'display: none; ';
-            }
-            $retour .= '<img src="' . Constantes::getSrcImageSuppressionAutocomplete() . '" '
-                . 'alt="X" title="Retirer la valeur" class="img_action" '
-                . 'style="' . $cache . 'cursor: pointer; position: absolute;" />';
-        }
-        $retour .= self::inputSimple(
-            'hidden',
-            array(
-                'name' => $html_name . '[' . $cle . ']',
-                'id' => $html_id . '_id',
-                'value' => $id_valeur
-            )
-        );
 
         return $retour;
     }

@@ -283,7 +283,11 @@ class Framework extends \Framework
             $errorHeader = new Response\Header\Status(Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
             $errorHeader->render();
             if (!$isDebug) {
-                echo \Constantes::getMessageErreurApplication();
+                echo "<br/>Une erreur est survenue !<br/>"
+                    . "Le support informatique a été prévenu "
+                    . "et règlera le problème dans les plus brefs délais.<br/>"
+                    . "<br/>"
+                    . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
             }
         }
     }

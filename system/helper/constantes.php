@@ -116,16 +116,6 @@ class Constantes
         return "Erreur lors de l'authentification::Erreur::alerte";
     }
 
-    public static function imageOui()
-    {
-        return '<span class="fa fa-check-circle fa-lg" style="color: limegreen;"></span>';
-    }
-
-    public static function imageNon()
-    {
-        return '<span class="fa fa-minus-circle fa-lg" style="color: red;"></span>';
-    }
-
     /**************
      *   filtres   *
      * ************/
