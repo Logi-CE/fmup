@@ -571,21 +571,12 @@ abstract class Model
      */
     abstract protected function update();
 
-
-    /**
-     * Le message affiché à la création
-     */
-    public static function getMessageInsertionOK()
-    {
-        return Constantes::getMessageFlashInsertionOk();
-    }
-
     /**
      * Le message affiché à l'update
      */
     public static function getMessageUpdateOK()
     {
-        return Constantes::getMessageFlashModificationOk();
+        return "Mise à jour réalisée avec succès.";
     }
 
     /**
@@ -593,17 +584,8 @@ abstract class Model
      */
     public static function getMessageSuppressionOK()
     {
-        return Constantes::getMessageFlashSuppressionOk();
+        return "Suppression réalisée avec succès.";
     }
-
-    /**
-     * Le message affiché à l'upload d'un document
-     */
-    public static function getMessageInsersionDocumentOK()
-    {
-        return Constantes::getMessageFlashEnregistrementDocumentOk();
-    }
-
 
     /* ***************************************
     * gestion des créateur et modificateurs *
