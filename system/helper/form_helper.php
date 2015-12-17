@@ -70,7 +70,6 @@ class FormHelper
      * @param bool $editable : [OPT] Transforme l'input en span, pas défaut non
      * @param array $params : [OPT] Tableau contenant des paramètres d'utilisation :
      * - name/id : Obligatoire
-     * - formatage : Fonction de UniteHelper pour formater la valeur
      * - id_span : ID du span en readonly
      * - AUTRE : Sera mis à la suite en attribut sous la forme cle="valeur"
      * @return string : La ou les balises HTML
@@ -88,12 +87,6 @@ class FormHelper
 
         // formatage optionnel de la valeur, $params['formatage'] doit etre une fonction de unite helper
         $valeur_formatee = $params['value'];
-        if (!empty($params['formatage'])) {
-            if (method_exists('UniteHelper', $params['formatage'])) {
-                $valeur_formatee = UniteHelper::$params['formatage']($params['value']);
-            }
-            unset($params['formatage']);
-        }
 
         if (isset($params["id_span"])) {
             $id_span = $params["id_span"];
