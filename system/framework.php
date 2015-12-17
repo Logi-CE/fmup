@@ -1,27 +1,5 @@
 <?php
 /**
- * Patch with old system that passes all request URI in a sys param (GET + REQUEST)
- * @deprecated
- * @todo refactor to avoid use of this code
- */
-if (!isset($_GET['sys']) && \FMUP\Sapi::getInstance()->get() != \FMUP\Sapi::CLI) {
-    $result = preg_match('~/([^&?]+)((\&|\?).*)?$~', $_SERVER['REQUEST_URI'], $matches);
-    $_GET['sys'] = isset($matches[1]) ? $matches[1] : '';
-    if (isset($matches[2])) {
-        $url = ltrim($matches[2], '&?');
-        parse_str($url, $urlDecoded);
-        $_GET = $_REQUEST = array_merge($_REQUEST, $_GET, $urlDecoded);
-    }
-    $_REQUEST['sys'] = $_GET['sys'];
-}
-/**
- * Page principale du site
- **/
-date_default_timezone_set("Europe/Paris");
-
-require_once('autoload.php');
-
-/**
  * Classe d'initialisation du framework
  * @deprecated use \FMUP\Framework instead
  */

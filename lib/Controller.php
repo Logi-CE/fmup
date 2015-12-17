@@ -79,6 +79,15 @@ abstract class Controller
     }
 
     /**
+     * Check if response is set
+     * @return bool
+     */
+    public function hasResponse()
+    {
+        return (bool)$this->response;
+    }
+
+    /**
      * Retrieve current view system
      * @return View
      */

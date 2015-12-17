@@ -8,6 +8,7 @@ class Pragma extends Header
     const TYPE = 'Pragma';
     const MODE_CACHE = 'cache';
     const MODE_NOCACHE = 'no-cache';
+    const MODE_PUBLIC = 'public';
 
     private $mode;
 

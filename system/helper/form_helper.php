@@ -7,32 +7,6 @@
 class FormHelper
 {
     /**
-     * Crée un input hidden contenant le token du formulaire
-     * @return string : L'input HTML
-     */
-    public static function getInputToken()
-    {
-        return self::inputSimple(
-            'hidden',
-            array('name' => 'tokenform', 'value' => \FMUP\Session::getInstance()->get('jeton_formulaire'))
-        );
-    }
-
-    /**
-     * Fonction vérifiant le token retourné dans un formulaire
-     * @return bool : Vrai si le token est validé
-     */
-    public static function checkToken()
-    {
-        $retour = false;
-        if (isset($_REQUEST['tokenform']) && \FMUP\Session::getInstance()->has('jeton_formulaire')) {
-            $retour = (\FMUP\Session::getInstance()->get('jeton_formulaire') == $_REQUEST['tokenform']);
-        }
-
-        return $retour;
-    }
-
-    /**
      * Fonction déterminant si le champ d'un formulaire est considéré comme éditable ou non
      * (non éditable transforme l'input en span)
      * @param Object $object : L'objet de l'attribut
@@ -199,15 +173,27 @@ class FormHelper
         foreach ($params as $param => $valeur_param) {
             if ($param && $valeur_param != '' && $param != 'invite') {
                 if ($param == 'value') {
-                    $valeur_param = DisplayHelper::convertCaracteresSpeciaux($valeur_param);
+                    $valeur_param = self::convertCaracteresSpeciaux($valeur_param);
                 }
-                $retour .= ' ' . DisplayHelper::convertCaracteresSpeciaux($param) . '="'
-                    . DisplayHelper::convertCaracteresSpeciaux($valeur_param) . '"';
+                $retour .= ' ' . self::convertCaracteresSpeciaux($param) . '="'
+                    . self::convertCaracteresSpeciaux($valeur_param) . '"';
             }
         }
         $retour .= ' />';
 
         return $retour;
+    }
+
+    public static function convertCaracteresSpeciaux($chaine)
+    {
+        $chaine = str_replace('"', '&#034;', $chaine);
+        $chaine = str_replace("'", '&#039;', $chaine);
+        $chaine = str_replace('à', '&#224;', $chaine);
+        $chaine = str_replace('è', '&#232;', $chaine);
+        $chaine = str_replace('ê', '&#234;', $chaine);
+        $chaine = str_replace('é', '&#233;', $chaine);
+        $chaine = str_replace('ô', '&#244;', $chaine);
+        return $chaine;
     }
 
     /**
@@ -315,62 +301,6 @@ class FormHelper
     }
 
     /**
-     * Retourne un ensemble d'inputs construit à partir d'une collection
-     * @param Object $object : L'objet qui contient la valeur
-     * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array [Object] $collection : La collection d'options à afficher.
-     * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
-     * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
-     * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
-     * @param array $params : [OPT] Paramètres supplémentaires
-     * @return string : La ou les balises HTML
-     */
-    public static function checkboxesFromCollection(
-        $object,
-        $attribute,
-        $collection,
-        $element_value,
-        $element_text,
-        $editable = true,
-        $params = array()
-    ) {
-        $array = Model::arrayFromCollection($collection, $element_value, $element_text);
-        return FormHelper::checkboxesFromArray($object, $attribute, $array, $editable, $params);
-    }
-
-    /**
-     * Retourne un ensemble d'inputs construit à partir d'un tableau
-     * @param Object $object : L'objet qui contient la valeur
-     * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array $array : La collection d'options à afficher.
-     * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
-     * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
-     * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
-     * @param array $params : [OPT] Paramètres supplémentaires
-     * @return string : La ou les balises HTML
-     */
-    public static function checkboxesFromArray($object, $attribute, $array, $editable = true, $params = array())
-    {
-        $params = self::formaterClassePourInput($object, $attribute, $params);
-
-        $no_edit = self::getDroitInput($object, $attribute, $editable);
-        $nom = $params['name'];
-        $id = $params['id'];
-
-        $retour = "";
-        foreach ($array as $value => $text) {
-            $params['name'] = $nom;
-            $params['name'] .= '[' . $value . ']';
-            $params['id'] = $id;
-            $params['id'] .= '_' . $value;
-
-            $retour .= self::inputCheckbox($object, $attribute, !$no_edit, $params, array('0', $value));
-            $retour .= self::labelSimple($text, $params);
-        }
-        return $retour;
-    }
-
-    /**
      * Retourne une checkbox pour l'object $object suivant la propriété $attribute
      * @param object $object : L'objet utilisé
      * @param string $attribute : L'attribut de l'objet utilisé
@@ -385,7 +315,8 @@ class FormHelper
         $editable = true,
         $params = array(),
         $valeurs = array(0, 1)
-    ) {
+    )
+    {
         $errors = $object->getErrors();
         $differences = $object->compareVersion();
 
@@ -436,59 +367,6 @@ class FormHelper
     }
 
     /**
-     * Retourne un ensemble d'inputs construit à partir d'une collection
-     * @param Object $object : L'objet qui contient la valeur
-     * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array [Object] $collection : La collection d'options à afficher.
-     * @param string $element_value : L'attribut qui contient la value à afficher dans l'option
-     * @param string $element_text : L'attribut qui contient le texte à afficher dans l'option
-     * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
-     * @param array $params : [OPT] Paramètres supplémentaires
-     * @return string : La ou les balises HTML
-     */
-    public static function radiosFromCollection(
-        $object,
-        $attribute,
-        $collection,
-        $element_value,
-        $element_text,
-        $editable = true,
-        $params = array()
-    ) {
-        $array = Model::arrayFromCollection($collection, $element_value, $element_text);
-        return FormHelper::radiosFromArray($object, $attribute, $array, $editable, $params);
-    }
-
-
-    /**
-     * Retourne un ensemble d'inputs construit à partir d'un tableau
-     * @param Object $object : L'objet qui contient la valeur
-     * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
-     * @param array $array : La collection d'options à afficher.
-     * @param bool $editable : [OPT] Transforme le select en span, pas défaut non
-     * @param array $params : [OPT] Paramètres supplémentaires
-     * @return string : La ou les balises HTML
-     */
-    public static function radiosFromArray($object, $attribute, $array, $editable = true, $params = array())
-    {
-        $params = self::formaterClassePourInput($object, $attribute, $params);
-
-        $no_edit = self::getDroitInput($object, $attribute, $editable);
-
-        $id = $params['id'];
-
-        $retour = "";
-        foreach ($array as $value => $text) {
-            $params['id'] = $id;
-            $params['id'] .= '_' . $value;
-
-            $retour .= self::inputRadio($object, $attribute, !$no_edit, $params, $value);
-            $retour .= self::labelSimple($text, $params);
-        }
-        return $retour;
-    }
-
-    /**
      * Retourne un radio pour l'object $object suivant la propriété $attribute
      * @param object $object : L'objet utilisé
      * @param string $attribute : L'attribut de l'objet utilisé
@@ -530,35 +408,6 @@ class FormHelper
     }
 
     /**
-     * Crée un label pour les checkbox/radios
-     * @param string $valeur : Le texte dans le span
-     * @param array $params : Chaque paramètre est un attribut ajouté à l'input
-     * @param bool $autoriser_html : Active ou non htmlentities
-     * @return string : Le HTML
-     */
-    public static function labelSimple($texte, $params, $autoriser_html = false)
-    {
-        if (empty($params["title"])) {
-            $params["title"] = '';
-        }
-
-        if (!isset($params["class"])) {
-            $params["class"] = "radio_label";
-        } else {
-            $params["class"] = "radio_label " . $params["class"];
-        }
-
-        if (!$autoriser_html) {
-            $texte = htmlentities($texte);
-        }
-
-        $retour = '<label title="' . $params["title"] . '" ' .
-            'class="' . $params["class"] . '" for="' . $params['id'] . '">' . $texte . '</label>';
-
-        return $retour;
-    }
-
-    /**
      * Retourne un select construit à partir d'une collection
      * @param Object $object : L'objet qui contient la valeur
      * @param int $attribute : L'attribut qui génère un tableau des valeurs à cocher
@@ -577,7 +426,8 @@ class FormHelper
         $element_text,
         $editable = true,
         $params = array()
-    ) {
+    )
+    {
         $array = Model::arrayFromCollection($collection, $element_value, $element_text);
         return FormHelper::selectFromArray($object, $attribute, $array, $editable, $params);
     }
@@ -648,30 +498,11 @@ class FormHelper
         $retour .= '>';
         $retour .= self::optionsFromArray(
             $tableau,
-            DisplayHelper::convertCaracteresSpeciaux($valeur),
+            self::convertCaracteresSpeciaux($valeur),
             $params['invite']
         );
         $retour .= "</select>";
         return $retour;
-    }
-
-    /**
-     * Construit une liste d'options à partir d'une collection
-     * @param array $tableau : Le tableau sous la forme cle => valeur
-     * @param string $valeur_selectionnee : La valeur sélectionnée
-     * @param mixed $options_supplementaires : [OPT] La ou les options supplémentaires à ajouter,
-     *                                      peut être une chaine ou un tableau
-     * @return string : La ou les balises HTML
-     */
-    public static function optionsFromCollection(
-        $collection,
-        $element_value,
-        $element_text,
-        $selected_value,
-        $options_supplementaires = array()
-    ) {
-        $array = Model::arrayFromCollection($collection, $element_value, $element_text);
-        return FormHelper::optionsFromArray($array, $selected_value, $options_supplementaires);
     }
 
     /**

@@ -42,12 +42,4 @@ if (!function_exists('fmuAutoload')) {
         }
     }
 }
-
-if (function_exists('spl_autoload_register')) {
-    spl_autoload_register('fmuAutoload');
-} elseif (!function_exists('__autoload')) {
-    function __autoload($class)
-    {
-        fmuAutoload($class);
-    }
-}
+spl_autoload_register('fmuAutoload');

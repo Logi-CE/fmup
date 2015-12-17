@@ -30,12 +30,23 @@ class Bootstrap
     public function warmUp()
     {
         if (!$this->isWarmed()) {
+            $this->defineTimezone();
             $this->getLogger();
             $this->initHelperDb();
             $this->getEnvironment();
             //$this->registerErrorHandler(); //@todo activation of this might be very useful
             $this->setIsWarmed();
         }
+        return $this;
+    }
+
+    /**
+     * Define default timezone
+     * @return $this
+     */
+    protected function defineTimezone()
+    {
+        date_default_timezone_set("Europe/Paris");
         return $this;
     }
 
