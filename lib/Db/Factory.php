@@ -1,8 +1,6 @@
 <?php
 namespace FMUP\Db;
 
-use FMUP\Logger\LoggerInterface;
-
 class Factory
 {
     const DRIVER_PDO = 'Pdo';
@@ -10,7 +8,6 @@ class Factory
     const DRIVER_PDO_ODBC = 'Pdo\\Odbc';
     const DRIVER_PDO_SQLSRV = 'Pdo\\SqlSrv';
     const DRIVER_PDO_SQLITE = 'Pdo\\Sqlite';
-    const DRIVER_MOCK = 'Mock';
 
     private static $instance;
 
@@ -25,7 +22,7 @@ class Factory
     /**
      * @return self
      */
-    public static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             $class = get_called_class();
