@@ -1,5 +1,5 @@
 <?php
-namespace FMUP\Helper;
+namespace FMUP\Db;
 
 use FMUP\Config\ConfigInterface;
 use FMUP\Logger;
@@ -8,7 +8,7 @@ use FMUP\Logger;
  * Class Db
  * @package FMUP\Helper
  */
-class Db implements Logger\LoggerInterface
+class Manager implements Logger\LoggerInterface
 {
     use Logger\LoggerTrait;
 

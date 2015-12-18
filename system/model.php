@@ -510,7 +510,7 @@ abstract class Model
     public static function getDb()
     {
         if (!self::$dbInstance) {
-            self::$dbInstance = \FMUP\Helper\Db::getInstance()->get();
+            self::$dbInstance = \FMUP\Db\Manager::getInstance()->get();
         }
         return self::$dbInstance;
     }
