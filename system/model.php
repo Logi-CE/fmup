@@ -467,7 +467,7 @@ abstract class Model
                 $infos_suppression = '';
                 if (property_exists($this, 'date_suppression')) {
                     $infos_suppression .= ', date_suppression = CURRENT_TIMESTAMP()';
-                    $this->date_suppression = Date::today(false, 'US');
+                    $this->date_suppression = date('Y-m-d');
                 }
                 if (property_exists($this, 'id_suppresseur')) {
                     if (self::getSession()->has('id_utilisateur')) {
@@ -617,28 +617,6 @@ abstract class Model
         }
         return $modificateur;
     }
-
-    public function getDateCreationComplete()
-    {
-        return str_replace(' ', ' à ', $this->getDateCreation());
-    }
-
-    /*
-     * retourne la concaténation de la date et l'heure de dernière modification de l'objet
-     */
-    public function getDateModificationComplete()
-    {
-        return str_replace(' ', ' à ', $this->getDateModification());
-    }
-
-    /**
-     * Retourne le champ date_creation
-     **/
-    public function getDateCreation()
-    {
-        return Date::ukToFr($this->date_creation);
-    }
-
     /**
      * Modifie le champ date_creation par la date actuelle
      **/
@@ -662,14 +640,6 @@ abstract class Model
             $this->id_createur = -1;
         }
         return true;
-    }
-
-    /**
-     * Retourne le champ date_modification
-     **/
-    public function getDateModification()
-    {
-        return Date::ukToFr($this->date_modification);
     }
 
     /**
