@@ -23,12 +23,13 @@ class Mail extends Abstraction
     protected function sendMail($body)
     {
         $config = $this->getBootstrap()->getConfig();
+        /** @var \FMUP\Request\Http $request */
+        $request = $this->getRequest();
         $serverName = $this->getBootstrap()->getSapi()->get() != Sapi::CLI
-            ? $this->getRequest()->getServer(\FMUP\Request\Http::SERVER_NAME)
-            : $this->getBootstrap()->getConfig()->get('erreur_mail_sujet');
+            ? $request->getServer(\FMUP\Request\Http::SERVER_NAME)
+            : $config->get('erreur_mail_sujet');
 
-        $mail = new \PHPMailer();
-        $mail = \EmailHelper::parametrerHeaders($mail, $this->getBootstrap()->getConfig());
+        $mail = new \FMUP\Mail($config);
         $mail->From = $config->get('mail_robot');
         $mail->FromName = $config->get('mail_robot_name');
         $mail->Subject = '[Erreur] ' . $serverName;

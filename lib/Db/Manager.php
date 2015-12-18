@@ -1,8 +1,9 @@
 <?php
 namespace FMUP\Db;
 
-use FMUP\Config\ConfigInterface;
+use FMUP\Config;
 use FMUP\Logger;
+use FMUP\Db;
 
 /**
  * Class Db
@@ -11,10 +12,10 @@ use FMUP\Logger;
 class Manager implements Logger\LoggerInterface
 {
     use Logger\LoggerTrait;
+    use Config\RequiredTrait;
 
     const DEFAULT_NAME = 'DEFAULT_NAME';
     private static $instance = null;
-    private $config = null;
     private $instances = array();
 
     private function __construct()
@@ -29,7 +30,7 @@ class Manager implements Logger\LoggerInterface
 
     /**
      * @param string $name
-     * @return \FMUP\Db
+     * @return Db
      * @throws \InvalidArgumentException
      * @throws \OutOfRangeException
      */
@@ -50,7 +51,7 @@ class Manager implements Logger\LoggerInterface
                     throw new \OutOfRangeException('Trying to access a database name ' . $name . ' that not exists');
                 }
             }
-            $instance = new \FMUP\Db((array)$params);
+            $instance = new Db((array)$params);
             if ($this->hasLogger()) {
                 $instance->setLogger($this->getLogger());
             }
@@ -70,27 +71,5 @@ class Manager implements Logger\LoggerInterface
             self::$instance = new $class();
         }
         return self::$instance;
-    }
-
-    /**
-     * @param ConfigInterface $config
-     * @return $this
-     */
-    public function setConfig(ConfigInterface $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * @return ConfigInterface
-     * @throws \LogicException
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            throw new \LogicException('Config is not defined and required!');
-        }
-        return $this->config;
     }
 }
