@@ -25,9 +25,15 @@ class Date implements Validator
 
     public function validate($value)
     {
-        $valid = true;
-        if (!($this->canEmpty() && $value == '') && !\Is::date($value) && !\Is::dateUk($value)) {
-            $valid = false;
+        $valid = false;
+        if (
+                ($this->canEmpty() && $value == '') 
+                || \Is::date($value) 
+                || \Is::dateUk($value) 
+                || \Is::dateUk($value) 
+                || \Is::dateWithoutSeparator($value)
+                ) {
+            $valid = true;
         }
         return $valid;
     }

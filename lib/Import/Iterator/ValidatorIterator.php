@@ -42,7 +42,7 @@ class ValidatorIterator extends \IteratorIterator
      *
      * @var integer
      */
-    private $total_errors = 0;
+    private $total_errors = 0;  
 
     /*
      * ***************************
@@ -98,9 +98,11 @@ class ValidatorIterator extends \IteratorIterator
     /**
      * Valide la ligne et détermine son type
      */
-    public function next()
+    public function next($is_first_line = false)
     {
+        if(!$is_first_line) {
         parent::next();
+        }
         if (!$this->current()) {
             return $this;
         }
@@ -124,6 +126,7 @@ class ValidatorIterator extends \IteratorIterator
             $this->total_errors++;
         }
         $this->type_ligne = $type;
+
         return $this;
     }
 }

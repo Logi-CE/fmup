@@ -9,8 +9,9 @@ namespace FMUP\Import\Iterator;
  */
 class CsvIterator implements \Iterator
 {
-    const COMMA_SEPARATOR     = ',';
-    const SEMICOLON_SEPARATOR = ';';
+    const COMMA_SEPARATOR      = ',';
+    const SEMICOLON_SEPARATOR  = ';';
+    const TABULATION_SEPARATOR = "\t";
 
     protected $path;
 
@@ -22,10 +23,10 @@ class CsvIterator implements \Iterator
 
     private $separator;
 
-    public function __construct($path = "", $separator = self::SEMICOLON_SEPARATOR)
+    public function __construct($path = "", $separator = "")
     {
         $this->setPath($path);
-        $this->setSeparator($separator);
+        $this->assignSeparatorForConstruct($separator);
     }
 
     public function setPath($path)
@@ -50,7 +51,7 @@ class CsvIterator implements \Iterator
     }
 
     public function next()
-    {
+    {   
         $this->current = fgetcsv($this->fHandle, 0, $this->getSeparator());
         $this->ligne++;
         return $this->current;
@@ -63,6 +64,48 @@ class CsvIterator implements \Iterator
             return false;
         }
         return true;
+    }
+    
+     /**
+     * Get separator from a specified file
+     * @param string $file
+     * @param int $checkLines
+     * @return const separator | throw \LogiCE\Exception
+     */
+    function getSeparatorFromFile($file = "", $checkLines = 2)
+    {
+        if ($file == "" && (isset($this->path) && $this->path != "")) {
+            $file = $this->path;
+        }
+        $spl_file_object = new \SplFileObject($file);
+
+        $delimiters = array(
+          self::COMMA_SEPARATOR,
+          self::TABULATION_SEPARATOR,
+          self::SEMICOLON_SEPARATOR
+        );
+        $results = array();
+        for($i = 0; $i <= $checkLines; $i++){
+            $line = $spl_file_object->fgets();
+            foreach ($delimiters as $delimiter){
+                $regExp = '/['.$delimiter.']/';
+                $fields = preg_split($regExp, $line);
+                if(count($fields) > 1){
+                    if(!empty($results[$delimiter])){
+                        $results[$delimiter]++;
+                    } else {
+                        $results[$delimiter] = 1;
+                    }   
+                }
+            }
+        }
+        $results = array_keys($results, max($results));
+
+            if ($results[0] == null) {
+                throw new \LogiCE\Exception("le format du séparateur dans le fichier csv importé n'est pas valide");
+            }
+        
+        return $results[0];
     }
 
     /**
@@ -82,6 +125,20 @@ class CsvIterator implements \Iterator
     public function setSeparator($separator)
     {
         $this->separator = $separator;
+        return $this;
+    }
+    
+     /**
+     * Assign separator for constructor
+     * @param string $separator
+     * @return self
+     */
+    private function assignSeparatorForConstruct($separator = "") {
+        if ($separator == "") {
+            $this->setSeparator($this->getSeparatorFromFile());
+        } else {
+            $this->setSeparator($separator);
+        }
         return $this;
     }
 
