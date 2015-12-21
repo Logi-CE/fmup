@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jmoulin
- * Date: 09/11/2015
- * Time: 09:56
- */
-
 namespace FMUP\Environment;
 
 use FMUP\Environment;

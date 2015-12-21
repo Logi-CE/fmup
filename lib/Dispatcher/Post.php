@@ -4,9 +4,9 @@ namespace FMUP\Dispatcher;
 
 class Post extends \FMUP\Dispatcher
 {
-    public function __construct()
+    public function defaultPlugins()
     {
-        parent::__construct();
         $this->addPlugin(new Plugin\Render());
+        return $this;
     }
 }

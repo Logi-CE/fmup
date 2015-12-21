@@ -11,7 +11,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         $method = $reflector->getMethod('__clone');
-        $this->assertTrue($method->isPublic(), 'Clone must be public');
+        $this->assertTrue($method->isPrivate(), 'Clone must be public');
 
         $cache = \FMUP\Cache::getInstance(\FMUP\Cache\Factory::DRIVER_RAM);
         $this->assertInstanceOf('\FMUP\Cache', $cache, 'Instance of \FMUP\Cache');
@@ -199,5 +199,16 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');
         $this->assertFalse($cache->has('test'), 'Test should\'nt exist');
+    }
+
+    /**
+     * @depends testGetCacheInstance
+     * @param \FMUP\Cache $cache
+     */
+    public function testSetFactory(\FMUP\Cache $cache)
+    {
+        $mockFactory = \FMUP\Cache\Factory::getInstance();
+        $cache->setFactory($mockFactory);
+        $this->assertSame($mockFactory, $cache->getFactory(), 'Factory is not set correctly');
     }
 }

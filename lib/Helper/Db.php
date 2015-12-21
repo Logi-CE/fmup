@@ -50,7 +50,7 @@ class Db implements Logger\LoggerInterface
                     throw new \OutOfRangeException('Trying to access a database name ' . $name . ' that not exists');
                 }
             }
-            $instance = new \FMUP\Db($params);
+            $instance = new \FMUP\Db((array)$params);
             if ($this->hasLogger()) {
                 $instance->setLogger($this->getLogger());
             }

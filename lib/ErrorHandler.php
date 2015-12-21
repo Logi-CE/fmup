@@ -12,13 +12,21 @@ class ErrorHandler
     private $request;
     private $bootstrap;
 
+    const WAY_APPEND = 'WAY_APPEND';
+    const WAY_PREPEND = 'WAY_PREPEND';
+
     /**
      * @param ErrorHandler\Plugin\Abstraction $handler
+     * @param string $way
      * @return $this
      */
-    public function add(ErrorHandler\Plugin\Abstraction $handler)
+    public function add(ErrorHandler\Plugin\Abstraction $handler, $way = self::WAY_APPEND)
     {
-        array_push($this->handlers, $handler);
+        if ($way == self::WAY_PREPEND) {
+            array_unshift($this->handlers, $handler);
+        } else {
+            array_push($this->handlers, $handler);
+        }
         return $this;
     }
 
@@ -47,6 +55,7 @@ class ErrorHandler
      */
     public function handle(\Exception $e)
     {
+        $this->init();
         if (!count($this->get())) {
             throw $e;
         }
@@ -127,5 +136,14 @@ class ErrorHandler
             throw new Exception('Unable to access bootstrap. Not set');
         }
         return $this->bootstrap;
+    }
+
+    /**
+     * Optional way to init some plugins
+     * @return $this
+     */
+    public function init()
+    {
+        return $this;
     }
 }

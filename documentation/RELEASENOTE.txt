@@ -1,4 +1,27 @@
 /*********/
+/* 5.1.1 */
+/*********/
+
+Some Unit Test to make FMUP release stable again on Jenkins
+
+#Fix
+ - Unit tests
+
+/*********/
+/* 5.1.0 */
+/*********/
+
+Performance on Dispatcher / ErrorHandler / Queue / Routing
+
+#Fix
+ - Framework dependency with SAPI
+ - Db can load if config is not defined
+
+# New
+ - LazyLoad on Dispatcher / ErrorHandler / Queue / Routing
+ - Component Routing/ByMask to load a specific route matching a path instead of loading multiple objects that might not be used
+
+/*********/
 /* 5.0.2 */
 /*********/
 

@@ -25,16 +25,6 @@ abstract class Plugin
     private $response;
 
     /**
-     * @var Sapi
-     */
-    private $sapi;
-
-    /**
-     * @var Environment
-     */
-    private $environment;
-
-    /**
      * @param Request $request
      * @return $this
      */

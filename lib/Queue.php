@@ -10,6 +10,7 @@ class Queue
 
     private $driver;
     private $channel;
+    private $channelName;
 
     /**
      * Creates a queue
@@ -17,22 +18,21 @@ class Queue
      */
     public function __construct($name)
     {
-        $this->getOrDefineChannel($name);
+        $this->channelName = (string)$name;
     }
 
     /**
      * Instanciate a channel if not already defined or retrieve defined channel
-     * @param string $name
      * @return Channel
      * @throws QueueException
      */
-    public function getOrDefineChannel($name = null)
+    public function getOrDefineChannel()
     {
         if (!$this->channel) {
-            if (empty($name)) {
+            if (empty($this->channelName)) {
                 throw new QueueException('Unable to create queue with no name');
             }
-            $this->channel = new Channel((string)$name);
+            $this->channel = new Channel((string)$this->channelName);
         }
         return $this->channel;
     }
