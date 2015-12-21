@@ -1,8 +1,10 @@
 <?php
 namespace FMUP\Routing;
 
+use FMUP\Environment;
 use FMUP\Exception;
 use FMUP\Request;
+use FMUP\Sapi;
 
 /**
  * Class Route - Route handling
@@ -10,6 +12,8 @@ use FMUP\Request;
  */
 abstract class Route
 {
+    use Environment\OptionalTrait, Sapi\OptionalTrait;
+
     /**
      * @var Request
      */
