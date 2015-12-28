@@ -69,7 +69,7 @@ abstract class Model
         if (substr($classe_appelante, 0, 4) == 'Base') {
             $classe_appelante = substr($classe_appelante, 4);
         }
-        return \FMUP\String::getInstance()->toCamelCase($classe_appelante);
+        return \FMUP\String::toCamelCase($classe_appelante);
     }
 
     /**
@@ -731,7 +731,7 @@ abstract class Model
      **/
     public function getAttribute($attribute)
     {
-        return call_user_func(array($this, 'get' . \FMUP\String::getInstance()->toCamelCase($attribute)));
+        return call_user_func(array($this, 'get' . \FMUP\String::toCamelCase($attribute)));
     }
 
     /**
@@ -741,7 +741,7 @@ abstract class Model
      **/
     public function setAttribute($attribute, $value)
     {
-        call_user_func(array($this, 'set' . \FMUP\String::getInstance()->toCamelCase($attribute)), $value);
+        call_user_func(array($this, 'set' . \FMUP\String::toCamelCase($attribute)), $value);
         return true;
     }
 
@@ -765,7 +765,7 @@ abstract class Model
      */
     public function __call($function, $argument = array())
     {
-        $attribut = \FMUP\String::getInstance()->toCamelCase(substr($function, 3));
+        $attribut = \FMUP\String::toCamelCase(substr($function, 3));
         if (property_exists($this, $attribut)) {
             if (preg_match('#^get#i', $function)) {
                 return $this->$attribut;

@@ -56,7 +56,7 @@ class Bootstrap
      */
     private function initHelperDb()
     {
-        Helper\Manager::getInstance()
+        Db\Manager::getInstance()
             ->setConfig($this->getConfig())//@todo find a better solution
             ->setLogger($this->getLogger());
         return $this;

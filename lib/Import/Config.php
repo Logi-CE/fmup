@@ -273,7 +273,7 @@ class Config
             }
             // on hydrate toutes les infos sur l'objet
             foreach ($this->liste_field as $field) {
-                if (\FMUP\String::getInstance()->toCamelCase($field->getTableCible()) == $nom_objet) {
+                if (\FMUP\String::toCamelCase($field->getTableCible()) == $nom_objet) {
                     $objet->setAttribute($field->getChampCible(), $field->getValue());
                 }
             }
