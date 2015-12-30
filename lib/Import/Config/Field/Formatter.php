@@ -8,7 +8,6 @@ namespace FMUP\Import\Config\Field;
  */
 interface Formatter
 {
-
     /**
      * Modifie la valeur afin qu'elle corresponde au système
      * @param string $value
@@ -27,5 +26,4 @@ interface Formatter
      * @return boolean
      */
     public function hasError();
-
 }

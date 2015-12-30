@@ -1,4 +1,69 @@
 /*********/
+/* 6.0.0 */
+/*********/
+
+Code Quality + Performance on result sets
+
+#Incompatible
+ - Deleted generateur
+ - Deleted db_connection classes
+ - Deleted db_helper
+ - Deleted console
+ - Deleted debug
+ - Deleted view
+ - Deleted helpers
+ - Deleted unused code
+ - Deleted javascript
+ - Deleted historisation
+ - Deleted config -- Some FMUP components need FMUP\Config now (to be defined in bootstrap)
+ - Deleted BASE_PATH constant
+ - Deleted use of global var ($sys_controller, $sys_directory, $sys_function)
+ - Deleted use of REQUEST['sys']
+ - Deleted usage of APP* constant
+ - Deleted App* components
+ - Deleted all use of flog
+ - Deleted config is_logue -- replaced by Model::setIsLogue
+ - Deleted Model::ISOtoUTF8 (this is a bad patch, fix in your page + file encoding)
+ - Framework::getRouteError needs two parameters ($directory, $controller)
+ - Deleted multi tab from framework
+ - Deleted Framework::instantiateSession
+ - Deleted methods in Sql
+    - parseOrder
+    - parseSelect
+    - parseJoin
+ - Renamed \String::toCamlCase to \FMUP\String::toCamelCase
+ - Deleted Constantes
+ - Deleted FMUP\Db\Driver\Mock
+ - Renamed FMUP\Helper\Db to FMUP\Db\Manager
+ - Deleted emailHelper. use FMUP\Mail decorator instead
+ - Deleted date
+ - Deleted methods in Model
+    - getHistoriqueSurObjet
+    - getHistoriqueSurObjetDiffLibelle
+
+#New
+ - Session can now define all values at once by setting an array
+ - Db\DbInterface allows 2 optional parameters to fetchRow. cursorOrientation + cursorOffset
+ - Db\FetchIterator - This allows to handle result sets without loading all in PHP
+ - array_to_object_iterator - this allows to migrate old Model::objectsFromMatrix with FetchIterator system
+ - Model::objectsFromMatrix allows a third optional parameter to specify to return new iterator system or old array system (iterator by default)
+ - Model::objectsFromArray is now public
+ - Model::findAllFromTable allow a parameter iterator in options to set to false to disable iterator feature
+
+#Compatible
+ - Deleted config/is_debug by using display_errors instead
+ - Deleted use of $_SESSION / use FMUP\Session instead
+ - Model uses fetchRow instead of fetchAll when possible
+
+#Fix
+ - ByMask routing to handle only request uri without query string
+ - Db\Driver\Pdo do not warning when SQL exception occurs
+
+#Compatible
+ - clean up some code
+ - clean up some checkstyle
+
+/*********/
 /* 5.1.1 */
 /*********/
 

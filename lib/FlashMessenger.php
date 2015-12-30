@@ -78,5 +78,4 @@ class FlashMessenger
         $this->getDriver()->clear();
         return $this;
     }
-
 }

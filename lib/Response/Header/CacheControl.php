@@ -16,7 +16,7 @@ class CacheControl extends Header
      * @param \DateTime $dateTime
      * @param string $cacheType
      */
-    public function __construct(\DateTime $dateTime, $cacheType = self::CACHE_TYPE_PUBLIC)
+    public function __construct(\DateTime $dateTime = null, $cacheType = self::CACHE_TYPE_PUBLIC)
     {
         $this->setExpireDate($dateTime);
         $this->setCacheType($cacheType);
@@ -27,6 +27,9 @@ class CacheControl extends Header
      */
     public function getExpireDate()
     {
+        if (!$this->expireDate) {
+            $this->expireDate = new \DateTime();
+        }
         return $this->expireDate;
     }
 
@@ -34,7 +37,7 @@ class CacheControl extends Header
      * @param \DateTime $dateTime
      * @return $this
      */
-    public function setExpireDate(\DateTime $dateTime)
+    public function setExpireDate(\DateTime $dateTime = null)
     {
         $this->expireDate = $dateTime;
         return $this;

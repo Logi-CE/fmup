@@ -3,14 +3,20 @@ namespace FMUP;
 
 class Bootstrap
 {
-    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; setEnvironment as setEnvironmentTrait;}
+    use Environment\OptionalTrait {
+        getEnvironment as getEnvironmentTrait;
+        setEnvironment as setEnvironmentTrait;
+    }
     use Sapi\OptionalTrait;
-    use Logger\LoggerTrait { getLogger as getLoggerTrait; setLogger as setLoggerTrait; }
+    use Config\RequiredTrait;
+    use Logger\LoggerTrait {
+        getLogger as getLoggerTrait;
+        setLogger as setLoggerTrait;
+    }
 
     private $isErrorHandlerRegistered = false;
     private $request;
     private $session;
-    private $config;
     private $flashMessenger;
     private $isWarmed;
 
@@ -24,6 +30,7 @@ class Bootstrap
     public function warmUp()
     {
         if (!$this->isWarmed()) {
+            $this->defineTimezone();
             $this->getLogger();
             $this->initHelperDb();
             $this->getEnvironment();
@@ -34,13 +41,23 @@ class Bootstrap
     }
 
     /**
+     * Define default timezone
+     * @return $this
+     */
+    protected function defineTimezone()
+    {
+        date_default_timezone_set("Europe/Paris");
+        return $this;
+    }
+
+    /**
      * Initialize Config in helper db
      * @return $this
      */
     private function initHelperDb()
     {
-        Helper\Db::getInstance()
-            ->setConfig($this->getConfig()) //@todo find a better solution
+        Db\Manager::getInstance()
+            ->setConfig($this->getConfig())//@todo find a better solution
             ->setLogger($this->getLogger());
         return $this;
     }
@@ -76,9 +93,9 @@ class Bootstrap
         if (!$this->hasLogger()) {
             $this->setLogger(
                 (new Logger())
-                ->setRequest($this->getRequest())
-                ->setConfig($this->getConfig())
-                ->setEnvironment($this->getEnvironment())
+                    ->setRequest($this->getRequest())
+                    ->setConfig($this->getConfig())
+                    ->setEnvironment($this->getEnvironment())
             );
         }
         return $this->getLoggerTrait();
@@ -160,32 +177,6 @@ class Bootstrap
     {
         $this->flashMessenger = $flashMessenger;
         return $this;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->hasConfig()) {
-            throw new \LogicException('Config is not defined');
-        }
-        return $this->config;
-    }
-
-    /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    public function hasConfig()
-    {
-        return !is_null($this->config);
     }
 
     /**

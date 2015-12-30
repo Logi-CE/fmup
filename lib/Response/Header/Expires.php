@@ -12,7 +12,7 @@ class Expires extends Header
     /**
      * @param \DateTime $expireDate
      */
-    public function __construct(\DateTime $expireDate)
+    public function __construct(\DateTime $expireDate = null)
     {
         $this->setExpireDate($expireDate);
     }
@@ -23,6 +23,9 @@ class Expires extends Header
      */
     public function getExpireDate()
     {
+        if (!$this->expireDate) {
+            $this->expireDate = new \DateTime();
+        }
         return $this->expireDate;
     }
 
@@ -31,7 +34,7 @@ class Expires extends Header
      * @param \DateTime $expireDate
      * @return $this
      */
-    public function setExpireDate(\DateTime $expireDate)
+    public function setExpireDate(\DateTime $expireDate = null)
     {
         $this->expireDate = $expireDate;
         return $this;

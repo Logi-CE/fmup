@@ -56,8 +56,7 @@ class Queue
         if (!$this->driver) {
             $this->driver = new Queue\Driver\Native();
         }
-        if (
-            $this->driver instanceof Environment\OptionalTrait &&
+        if ($this->driver instanceof Environment\OptionalTrait &&
             !$this->driver->hasEnvironment() &&
             $this->hasEnvironment()
         ) {

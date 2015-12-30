@@ -37,7 +37,7 @@ trait LoggerTrait
      */
     public function hasLogger()
     {
-        return (bool) $this->logger;
+        return (bool)$this->logger;
     }
 
     /**

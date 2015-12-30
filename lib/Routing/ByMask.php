@@ -17,12 +17,9 @@ abstract class ByMask extends Routing
      */
     public function dispatch(Request $request)
     {
-        $requestUri = $request->getRequestUri(true);
+        $requestUri = $request->getRequestUri();
         foreach ($this->getMasks() as $mask => $routeToLoad) {
-            if (
-                preg_match('~' . str_replace('~', '\~', $mask) . '~', $requestUri) &&
-                class_exists($routeToLoad)
-            ) {
+            if (preg_match('~' . str_replace('~', '\~', $mask) . '~', $requestUri) && class_exists($routeToLoad)) {
                 $route = new $routeToLoad;
                 if ($route instanceof Route) {
                     $this->addRoute($route);

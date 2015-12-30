@@ -1,11 +1,11 @@
 <?php
 namespace FMUP\Dispatcher;
 
+use FMUP\Environment;
 use FMUP\Exception;
 use FMUP\Request;
 use FMUP\Response;
 use FMUP\Sapi;
-use FMUP\Environment;
 
 /**
  * Class Route - Route handling

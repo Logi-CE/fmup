@@ -45,7 +45,7 @@ class Sqlite extends Pdo
     {
         return !is_null($this->getSettings('host'))
             ? $this->getSettings('host')
-            : BASE_PATH . implode(DIRECTORY_SEPARATOR, array('logs'));
+            : __DIR__ . '/../../../../../../../logs';
     }
 
     protected function getDatabase()

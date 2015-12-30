@@ -3,8 +3,8 @@ namespace FMUP;
 
 class Environment
 {
+    use Config\OptionalTrait;
     private static $instance;
-    private $config;
 
     const PROD = 'prod';
     const PREPROD = 'preprod';
@@ -34,36 +34,6 @@ class Environment
     }
 
     /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasConfig()
-    {
-        return (bool)$this->config;
-    }
-
-    /**
-     * @return Config
-     * @throws Exception
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            throw new Exception('Config is not defined');
-        }
-        return $this->config;
-    }
-
-    /**
      * @return string
      * @throws Exception
      */
@@ -73,7 +43,7 @@ class Environment
             return ENVIRONMENT;
         }
         if ($this->getConfig()->has('version')) {
-            return (string) $this->getConfig()->get('version');
+            return (string)$this->getConfig()->get('version');
         }
         throw new Exception('No environment detected');
     }

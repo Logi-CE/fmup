@@ -27,10 +27,14 @@ class ContentDisposition extends Header
     {
         $value = parent::getValue();
         $fileName = $this->getFileName();
-        if (!empty($fileName)) {
-            return $value . ';filename="' . $fileName . '"';
+        $headers = array();
+        if (!empty($value)) {
+            $headers[] = $value;
         }
-        return $value;
+        if (!empty($fileName)) {
+            $headers[] = 'filename="' . $fileName . '"';
+        }
+        return implode(' ;', $headers);
     }
 
     /**

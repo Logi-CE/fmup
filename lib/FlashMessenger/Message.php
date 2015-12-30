@@ -87,5 +87,4 @@ class Message
             return $type;
         }
     }
-
 }

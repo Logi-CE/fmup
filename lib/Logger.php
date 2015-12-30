@@ -3,7 +3,10 @@ namespace FMUP;
 
 class Logger
 {
-    use Environment\OptionalTrait { getEnvironment as getEnvironmentTrait; }
+    use Environment\OptionalTrait {
+        getEnvironment as getEnvironmentTrait;
+    }
+    use Config\OptionalTrait;
     /**
      * Detailed debug information
      */
@@ -60,10 +63,7 @@ class Logger
      * @var Request
      */
     private $request;
-    /**
-     * @var Config
-     */
-    private $config;
+
 
     protected $factory;
 
@@ -140,27 +140,6 @@ class Logger
     }
 
     /**
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            $this->config = new Config();
-        }
-        return $this->config;
-    }
-
-    /**
      * @return Environment
      */
     public function getEnvironment()
@@ -186,6 +165,6 @@ class Logger
         if ($channelType->getName() === \FMUP\Logger\Channel\Standard::NAME) {
             $message = "[Channel $channel] $message";
         }
-        return $channelType->addRecord((int) $level, $message, (array) $context);
+        return $channelType->addRecord((int)$level, $message, (array)$context);
     }
 }

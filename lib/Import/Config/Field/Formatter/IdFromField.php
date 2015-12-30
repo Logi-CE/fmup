@@ -34,13 +34,9 @@ class IdFromField implements Formatter
             WHERE " . $this->champ_origine . " LIKE '%" . $value . "%'    
             ";
             $db = \Model::getDb();
-            if (!$db instanceof \FMUP\Db) {
-                $result = $db->requete($sql);
-            } else {
-                $result = $db->fetchAll($sql);
-            }
+            $result = $db->fetchRow($sql);
             if ($result) {
-                return $result[0]['id'];
+                return $result['id'];
             } else {
                 $this->has_error = true;
                 return $value;
@@ -50,7 +46,8 @@ class IdFromField implements Formatter
 
     public function getErrorMessage($value = null)
     {
-        return "Aucune correspondance n'a été trouvé pour le champ : '" . $this->champ_origine . "' de la table : '" . $this->table_origine . "' pour la valeur : '" . $value . "'";
+        return "Aucune correspondance n'a été trouvé pour le champ : '" . $this->champ_origine . "' de la table : '"
+            . $this->table_origine . "' pour la valeur : '" . $value . "'";
     }
 
     public function hasError()

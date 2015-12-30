@@ -3,6 +3,10 @@ namespace FMUP\Db;
 
 interface DbInterface
 {
+    const CURSOR_FIRST = \Pdo::FETCH_ORI_FIRST;
+    const CURSOR_NEXT = \Pdo::FETCH_ORI_NEXT;
+    const CURSOR_ABS = \Pdo::FETCH_ORI_ABS;
+
     /**
      * Construct instance must allow array of parameters
      * @param array $params
@@ -89,11 +93,13 @@ interface DbInterface
     /**
      * Fetch a row for a given statement
      * @param object $statement
+     * @param int $cursorOrientation Cursor orientation (next by default)
+     * @param int $cursorOffset Cursor offset (0 by default)
      * @return array
      * @throws Exception
      * @throws \Exception
      */
-    public function fetchRow($statement);
+    public function fetchRow($statement, $cursorOrientation = self::CURSOR_NEXT, $cursorOffset = 0);
 
     /**
      * Fetch all rows for a given statement

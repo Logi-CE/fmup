@@ -3,18 +3,14 @@ namespace FMUP;
 
 use FMUP\Exception\Status\NotFound;
 
-require_once __DIR__ . '/../system/framework.php';
-
-if (!defined('BASE_PATH')) {
-    define('BASE_PATH', implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')));
-}
-
 /**
  * Class Framework - extends FMU
  * @package FMUP
  */
 class Framework extends \Framework
 {
+    use Config\OptionalTrait;
+
     /**
      * @var Request
      */
@@ -45,10 +41,6 @@ class Framework extends \Framework
      * @var Bootstrap
      */
     private $bootstrap;
-    /**
-     * @var Config
-     */
-    private $config;
 
     /**
      * @param Routing $routingSystem
@@ -114,29 +106,6 @@ class Framework extends \Framework
     }
 
     /**
-     * Define a config to use
-     * @param Config $config
-     * @return $this
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * Retrieve defined config
-     * @return Config
-     */
-    public function getConfig()
-    {
-        if (!$this->config) {
-            $this->config = new Config;
-        }
-        return $this->config;
-    }
-
-    /**
      * @return array
      */
     public function getRoute()
@@ -151,12 +120,14 @@ class Framework extends \Framework
     }
 
     /**
+     * @param string $directory
+     * @param string $controller
      * Real 404 errors
      * @throws NotFound
      */
-    public function getRouteError()
+    public function getRouteError($directory, $controller)
     {
-        throw new NotFound('Controller not found');
+        throw new NotFound('Controller not found' . $directory . '/' . $controller);
     }
 
     /**
@@ -230,29 +201,29 @@ class Framework extends \Framework
             if ($errContext) {
                 $message .= ' {' . serialize($errContext) . '}';
             }
-            $fmupMail = new \FMUP\ErrorHandler\Plugin\Mail();
+            $fmupMail = new ErrorHandler\Plugin\Mail();
             $fmupMail->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
-                ->setException(new \FMUP\Exception($message, $code))
+                ->setException(new Exception($message, $code))
                 ->handle();
         }
 
         $translate = array(
-            E_NOTICE => \Monolog\Logger::NOTICE,
-            E_WARNING => \Monolog\Logger::WARNING,
-            E_ERROR => \Monolog\Logger::ERROR,
-            E_PARSE => \Monolog\Logger::CRITICAL,
-            E_DEPRECATED => \Monolog\Logger::INFO,
-            E_USER_ERROR => \Monolog\Logger::NOTICE,
-            E_USER_WARNING => \Monolog\Logger::WARNING,
-            E_USER_ERROR => \Monolog\Logger::ERROR,
-            E_USER_DEPRECATED => \Monolog\Logger::INFO,
-            E_STRICT => \Monolog\Logger::INFO,
-            E_RECOVERABLE_ERROR => \Monolog\Logger::ERROR,
+            E_NOTICE => Logger::NOTICE,
+            E_WARNING => Logger::WARNING,
+            E_ERROR => Logger::ERROR,
+            E_PARSE => Logger::CRITICAL,
+            E_DEPRECATED => Logger::INFO,
+            E_USER_ERROR => Logger::NOTICE,
+            E_USER_WARNING => Logger::WARNING,
+            E_USER_ERROR => Logger::ERROR,
+            E_USER_DEPRECATED => Logger::INFO,
+            E_STRICT => Logger::INFO,
+            E_RECOVERABLE_ERROR => Logger::ERROR,
         );
-        $level = isset($translate[$code]) ? $translate[$code] : \Monolog\Logger::ALERT;
+        $level = isset($translate[$code]) ? $translate[$code] : Logger::ALERT;
         $message = $msg . ' in ' . $errFile . ' on line ' . $errLine;
-        $this->getBootstrap()->getLogger()->log(\FMUP\Logger\Channel\System::NAME, $level, $message, $errContext);
+        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $level, $message, $errContext);
     }
 
     /**
@@ -299,34 +270,24 @@ class Framework extends \Framework
     }
 
     /**
-     * @return $this
-     */
-    public function registerErrorHandler()
-    {
-        if (
-            $this->getBootstrap()->getConfig()->get('is_debug') ||
-            !$this->getBootstrap()->getConfig()->get('use_daily_alert')
-        ) {
-            parent::registerErrorHandler();
-        }
-        return $this;
-    }
-
-    /**
      * @todo rewrite to be SOLID
      */
     public function shutDown()
     {
         $error = error_get_last();
-        $isDebug = $this->getBootstrap()->getConfig()->get('is_debug');
+        $isDebug = ini_get('display_errors');
         $code = E_PARSE | E_ERROR | E_USER_ERROR;
         $canHeader = $this->getSapi()->get() != Sapi::CLI;
         if ($error !== null && ($error['type'] & $code) && $canHeader) {
             $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
-            $errorHeader = new \FMUP\Response\Header\Status(\FMUP\Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+            $errorHeader = new Response\Header\Status(Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
             $errorHeader->render();
             if (!$isDebug) {
-                echo \Constantes::getMessageErreurApplication();
+                echo "<br/>Une erreur est survenue !<br/>"
+                    . "Le support informatique a été prévenu "
+                    . "et règlera le problème dans les plus brefs délais.<br/>"
+                    . "<br/>"
+                    . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
             }
         }
     }
@@ -394,22 +355,6 @@ class Framework extends \Framework
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function definePhpIni()
-    {
-        if ($this->getBootstrap()->getConfig()->get('use_daily_alert')) {
-            ini_set('error_reporting', E_ALL);
-            ini_set('display_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-            ini_set('display_startup_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-            ini_set('html_errors', $this->getBootstrap()->getConfig()->get('is_debug'));
-        } else {
-            parent::definePhpIni();
-        }
-        return $this;
-    }
-
     public function initialize()
     {
         if (!$this->getBootstrap()->hasSapi()) {
@@ -422,9 +367,6 @@ class Framework extends \Framework
             $this->getBootstrap()->setConfig($this->getConfig());
         }
         $this->getBootstrap()->warmUp();
-
-        \Config::getInstance()->setFmupConfig($this->getBootstrap()->getConfig()); //to be compliant with old system @todo delete
-        \Model::setDb(Helper\Db::getInstance()->get()); //@todo find a better solution
         parent::initialize();
     }
 }

@@ -9,6 +9,7 @@ class ContentType extends Header
 
     const MIME_TEXT_HTML = 'text/html';
     const MIME_TEXT_CSS = 'text/css';
+    const MIME_APPLICATION_CSV = 'application/csv-tab-delimited-table';
     const MIME_APPLICATION_JS = 'application/javascript';
     const CHARSET_UTF_8 = 'utf-8';
 

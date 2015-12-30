@@ -27,5 +27,4 @@ class Md5 implements CryptInterface
     {
         throw new Exception('Invalid method for this driver');
     }
-
 }

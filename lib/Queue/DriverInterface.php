@@ -1,5 +1,6 @@
 <?php
 namespace FMUP\Queue;
+
 use FMUP\Environment;
 
 /**

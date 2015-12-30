@@ -13,12 +13,8 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 class Launch extends \FMUP\Import
 {
-
-
     private $total_insert;
-
     private $total_update;
-
     private $total_errors;
 
     /**
@@ -51,16 +47,12 @@ class Launch extends \FMUP\Import
     public function parse()
     {
         $db = \Model::getDb();
-        if ($db instanceof \FMUP\Db) {
-            $db->beginTransaction();
-        } else {
-            $db->beginTrans();
-        }
+        $db->beginTransaction();
         try {
             $lci = new LineToConfigIterator($this->fileIterator, $this->config);
             $di = new DoublonIterator($lci);
             $vi = new ValidatorIterator($di);
-            foreach ($vi as $key => $value) {
+            foreach ($vi as $value) {
                 if ($value) {
                     $valid = $vi->getValid();
                     if ($valid && !$value->getDoublonLigne()) {
@@ -72,19 +64,11 @@ class Launch extends \FMUP\Import
             $this->total_insert = $vi->getTotalInsert();
             $this->total_update = $vi->getTotalUpdate();
             echo "Import terminé .\n";
-            if ($db instanceof \FMUP\Db) {
-                $db->commit();
-            } else {
-                $db->commitTrans();
-            }
+            $db->commit();
         } catch (\Exception $e) {
             echo "Une erreur a été détecté lors de l'import.";
             echo $e->getMessage();
-            if ($db instanceof \FMUP\Db) {
-                $db->rollback();
-            } else {
-                $db->rollbackTrans();
-            }
+            $db->rollback();
         }
     }
 }

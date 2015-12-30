@@ -1,10 +1,10 @@
 <?php
 namespace FMUP\Queue\Driver;
 
-use \FMUP\Queue\DriverInterface;
-use \FMUP\Queue\Exception;
-use \FMUP\Queue\Channel;
-use \FMUP\Environment;
+use FMUP\Environment;
+use FMUP\Queue\Channel;
+use FMUP\Queue\DriverInterface;
+use FMUP\Queue\Exception;
 
 class Native implements DriverInterface, Environment\OptionalInterface
 {
@@ -177,7 +177,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
     private function stringToUniqueId($string)
     {
         if (is_numeric($string)) {
-            return (int) $string;
+            return (int)$string;
         }
         if ($this->hasEnvironment()) {
             $string .= $this->getEnvironment()->get();
@@ -187,7 +187,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
         for ($i = 0; $i < $length; $i++) {
             $return += ord($string{$i});
         }
-        return (int) $length . '0' . $return;
+        return (int)$length . '0' . $return;
     }
 
     /**

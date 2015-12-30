@@ -86,6 +86,7 @@ class Db implements Logger\LoggerInterface
      * @param array $params
      * @return mixed
      * @throws Db\Exception
+     * @deprecated use self::getIterator() instead
      */
     public function fetchAll($sql, array $params = array())
     {
@@ -151,5 +152,19 @@ class Db implements Logger\LoggerInterface
     public function forceReconnect()
     {
         return $this->getDriver()->forceReconnect();
+    }
+
+    /**
+     * Retrieve an iterator instead of array for data rows
+     * @param string $sql
+     * @param array $params
+     * @return Db\FetchIterator
+     */
+    public function getIterator($sql, array $params = array())
+    {
+        $statement = $this->getDriver()->prepare($sql);
+        $this->getDriver()->execute($statement, $params);
+
+        return new Db\FetchIterator($statement, $this->getDriver());
     }
 }

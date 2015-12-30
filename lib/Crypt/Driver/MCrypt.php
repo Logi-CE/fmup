@@ -16,7 +16,6 @@ class MCrypt implements CryptInterface
     private $iv = null;
 
     /**
-     *
      * @return string
      */
     private function getKey()
@@ -28,7 +27,6 @@ class MCrypt implements CryptInterface
     }
 
     /**
-     *
      * @param string $key
      * @return \FMUP\Crypt\Driver\MCrypt
      */
@@ -39,7 +37,6 @@ class MCrypt implements CryptInterface
     }
 
     /**
-     * 
      * @return string
      */
     public function getIv()

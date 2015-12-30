@@ -19,8 +19,8 @@ class Cli extends Request
     {
         $long[] = 'route:';
         $this->opt = array(
-            self::SHORT => (string) $short,
-            self::LONG => (array) $long,
+            self::SHORT => (string)$short,
+            self::LONG => (array)$long,
         );
         return $this;
     }
@@ -62,7 +62,7 @@ class Cli extends Request
         $return = $this->get('route');
         if (isset($_SERVER['argc']) && $_SERVER['argc'] > 2 && $withQuerySting) {
             $args = $_SERVER['argv'];
-            unset ($args[0]);
+            unset($args[0]);
             $return = implode(' ', $args);
         }
         return $return;

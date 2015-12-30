@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Queue\Channel;
 
-use \FMUP\Queue\Exception as QueueException;
+use FMUP\Queue\Exception as QueueException;
 
 /**
  * Class Settings - Global channel settings
@@ -9,12 +9,17 @@ use \FMUP\Queue\Exception as QueueException;
  */
 class Settings
 {
-    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
-    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';//(int) max send retry time, default DEFAULT_RETRY_TIMES
+    //(int) in bytes (default system)
+    const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE';
+    //(int) max send retry time, default DEFAULT_RETRY_TIMES
+    const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';
 
-    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
-    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
-    const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
+    //(bool) if process must wait to be sure the message is sent (default false)
+    const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND';
+    //(bool) process will be blocked while no message is received (default false)
+    const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE';
+    //(bool) must serialize a message (default true)
+    const PARAM_SERIALIZE = 'PARAM_SERIALIZE';
 
     const DEFAULT_RETRY_TIMES = 3;
 
@@ -72,7 +77,7 @@ class Settings
             case self::PARAM_MAX_SEND_RETRY_TIME:
                 $this->setMaxSendRetryTime($value);
                 break;
-            default;
+            default:
                 throw new QueueException('Setting is not defined');
                 break;
         }
@@ -86,7 +91,7 @@ class Settings
      */
     public function setMaxMessageSize($size = 0)
     {
-        $this->settings[self::PARAM_MAX_MESSAGE_SIZE] = (int) $size;
+        $this->settings[self::PARAM_MAX_MESSAGE_SIZE] = (int)$size;
         return $this;
     }
 
@@ -168,7 +173,7 @@ class Settings
      */
     public function setMaxSendRetryTime($maxRetry = 0)
     {
-        $this->settings[self::PARAM_MAX_SEND_RETRY_TIME] = (int) $maxRetry;
+        $this->settings[self::PARAM_MAX_SEND_RETRY_TIME] = (int)$maxRetry;
         return $this;
     }
 
@@ -182,5 +187,4 @@ class Settings
             ? (int)$this->settings[self::PARAM_MAX_SEND_RETRY_TIME]
             : self::DEFAULT_RETRY_TIMES;
     }
-
 }

@@ -37,7 +37,7 @@ class DoublonIterator extends \IteratorIterator
         parent::next();
         $current = $this->current();
         if ($current) {
-            $this->VerificationDoublon($current);
+            $this->verificationDoublon($current);
         }
     }
 
@@ -47,7 +47,7 @@ class DoublonIterator extends \IteratorIterator
      * @param Config $current
      * @return string
      */
-    public function VerificationDoublon(Config $current)
+    public function verificationDoublon(Config $current)
     {
         $str = "";
         // on concatène tous les champs obligatoires

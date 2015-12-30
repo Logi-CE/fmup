@@ -102,5 +102,4 @@ class Url
     {
         return $this->build();
     }
-
 }

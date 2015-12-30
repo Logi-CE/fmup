@@ -133,7 +133,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     {
         return array(
             \PDO::ATTR_PERSISTENT => (bool)(
-                isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
+            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true
         );
@@ -181,7 +181,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
             }
             return $this->getDriver()->beginTransaction();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $this->getSettings());
+            $this->log(Logger::ERROR, $e->getMessage(), array('settings' => $this->getSettings()));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -195,7 +195,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->rollBack();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -209,7 +209,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->errorCode();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -223,7 +223,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->errorInfo();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -237,7 +237,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->commit();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -252,7 +252,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->prepare($sql)->execute();
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -307,7 +307,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $this->getDriver()->lastInsertId($name);
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -315,10 +315,12 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     /**
      * Fetch a row for a given statement
      * @param object $statement
+     * @param int $cursorOrientation Cursor orientation (next by default)
+     * @param int $cursorOffset Cursor offset (0 by default)
      * @return array
      * @throws Exception
      */
-    public function fetchRow($statement)
+    public function fetchRow($statement, $cursorOrientation = self::CURSOR_NEXT, $cursorOffset = 0)
     {
         if (!$statement instanceof \PDOStatement) {
             $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
@@ -326,9 +328,9 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         }
 
         try {
-            return $statement->fetch($this->getFetchMode());
+            return $statement->fetch($this->getFetchMode(), (int)$cursorOrientation, (int)$cursorOffset);
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
@@ -349,7 +351,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
         try {
             return $statement->fetchAll($this->getFetchMode());
         } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), $e);
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
