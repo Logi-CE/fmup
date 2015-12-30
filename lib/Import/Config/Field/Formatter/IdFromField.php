@@ -34,9 +34,9 @@ class IdFromField implements Formatter
             WHERE " . $this->champ_origine . " LIKE '%" . $value . "%'    
             ";
             $db = \Model::getDb();
-            $result = $db->fetchAll($sql);
+            $result = $db->fetchRow($sql);
             if ($result) {
-                return $result[0]['id'];
+                return $result['id'];
             } else {
                 $this->has_error = true;
                 return $value;

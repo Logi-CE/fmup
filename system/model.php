@@ -166,10 +166,16 @@ abstract class Model
     /**
      * Crée des objets à partir d'une matrice (typiquement le résultat d'une requète)
      */
-    protected static function objectsFromMatrix($matrix, $class_name)
+    protected static function objectsFromMatrix($matrix, $class_name, $modeIterator = true)
     {
+        if ($modeIterator) {
+            if (!$matrix instanceof \Iterator && is_array($matrix)) {
+                $matrix = new \ArrayIterator($matrix);
+            }
+            return new \ArrayToObjectIterator($matrix, $class_name);
+        }
         $liste = array();
-        if (!empty($matrix) && (is_array($matrix) || $matrix instanceof Traversable)) {
+        if ($matrix instanceof Traversable || is_array($matrix)) {
             foreach ($matrix as $array) {
                 array_push($liste, Model::create($array, $class_name));
             }
@@ -177,7 +183,7 @@ abstract class Model
         return $liste;
     }
 
-    protected static function objectsFromArray($array, $class_name)
+    public static function objectsFromArray($array, $class_name)
     {
         return Model::create($array, $class_name);
     }
@@ -336,6 +342,7 @@ abstract class Model
     {
         $SQL = "SELECT * FROM $table";
         $SQL .= Sql::parseWhere($where);
+        $isIterator = (!isset($options["iterator"]) || $options["iterator"]);
         if (isset($options["group_by"]) && $options["group_by"]) {
             $SQL .= " group by " . $options["group_by"];
         }
@@ -351,7 +358,7 @@ abstract class Model
 
         // Exécution de la requète
         $db = \Model::getDb();
-        $result = $db->fetchAll($SQL);
+        $result = $isIterator ? $db->getIterator($SQL) : $db->fetchAll($SQL);
         return $result;
     }
 
@@ -405,7 +412,7 @@ abstract class Model
         //debug::output($SQL);
         // Exécution de la requète
         $db = \Model::getDb();
-        $result = $db->fetchAll($SQL);
+        $result = $db->getIterator($SQL);
         return $result;
     }
 
@@ -423,8 +430,8 @@ abstract class Model
         }
         // Exécution de la requète
         $db = \Model::getDb();
-        $result = $db->fetchAll($SQL);
-        return $result[0]["nb"];
+        $result = $db->fetchRow($SQL);
+        return $result["nb"];
     }
 
     /**
@@ -448,8 +455,7 @@ abstract class Model
         $sql .= $group_by;
         // Exécution de la requête
         $db = \Model::getDb();
-        $result = $db->fetchAll($sql);
-        return ($group_by != "") ? $result : $result[0]["somme"];
+        return ($group_by != "") ? $db->fetchAll($sql) : $db->fetchRow($sql)["somme"];
     }
 
     /**
@@ -1084,34 +1090,6 @@ abstract class Model
     }
 
     /**
-     * fonction permettant de récupérer les historiques d'un objet
-     */
-    public function getHistoriqueSurObjet()
-    {
-        $sql = "SELECT *
-                FROM log__" . $this->getTableName() . "
-                WHERE id_objet_log = " . Sql::secureId($this->id) . "
-                ORDER BY id";
-        $db = \Model::getDb();
-        $res = $db->fetchAll($sql);
-        return $res;
-    }
-
-    /**
-     * fonction permettant de récupérer les historiques de libelle d'un objet
-     */
-    public function getHistoriqueSurObjetDiffLibelle()
-    {
-        $sql = "SELECT libelle_historisation, id_utilisateur_log, date_action_log, action_log
-                FROM log__" . $this->getTableName() . "
-                WHERE id_objet_log = " . Sql::secureId($this->id) . "
-                ORDER BY id";
-        $db = \Model::getDb();
-        $res = $db->fetchAll($sql);
-        return $res;
-    }
-
-    /**
      * fonction permettant de récupérer les historiques tableau d'un objet
      */
     public function getHistoriqueSurObjetDiffArray()
@@ -1122,7 +1100,7 @@ abstract class Model
                 WHERE id_objet_log = " . Sql::secureId($this->id) . "
                 ORDER BY id";
         $db = \Model::getDb();
-        $res = $db->fetchAll($sql);
+        $res = $db->getIterator($sql);
 
         foreach ($res as $rs) {
             $array[$rs["id"]] = array(
