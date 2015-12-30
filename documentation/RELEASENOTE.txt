@@ -37,6 +37,8 @@ Code Quality + Performance on result sets
  - Renamed FMUP\Helper\Db to FMUP\Db\Manager
  - Deleted emailHelper. use FMUP\Mail decorator instead
  - Deleted date
+ - Deleted Tool\Log
+ - Deleted Import\LiaisonBase
  - Deleted methods in Model
     - getHistoriqueSurObjet
     - getHistoriqueSurObjetDiffLibelle
