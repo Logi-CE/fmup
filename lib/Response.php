@@ -15,6 +15,10 @@ class Response
      * @var string
      */
     private $body;
+    /**
+     * @var int
+     */
+    private $returnCode = 0;
 
     /**
      * Add a header to send in response
@@ -98,5 +102,26 @@ class Response
             }
         }
         echo $this->getBody();
+        if ($this->getReturnCode()) {
+            exit ($this->getReturnCode());
+        }
+    }
+
+    /**
+     * @param int $returnCode
+     * @return $this
+     */
+    public function setReturnCode($returnCode = 0)
+    {
+        $this->returnCode = (int) $returnCode;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReturnCode()
+    {
+        return (int) $this->returnCode;
     }
 }
