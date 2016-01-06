@@ -11,7 +11,6 @@ use FMUP\Import\Config;
  */
 class LineFilterIterator extends \FilterIterator
 {
-
     public function __construct(\Iterator $iterator)
     {
         parent::__construct($iterator);
@@ -25,7 +24,7 @@ class LineFilterIterator extends \FilterIterator
     public function accept()
     {
         $config = $this->getInnerIterator()->current();
-        if (!$config) {
+        if (!$config || !$config instanceof Config) {
             return false;
         }
         return $config->validateLine();
