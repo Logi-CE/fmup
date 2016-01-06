@@ -5,30 +5,6 @@
  */
 class String
 {
-     /**
-     * String instance
-     * @var String
-     */
-    protected static $instance;
-    
-    /**
-     * Singleton - private construct
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * Get String
-     * @return String
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
     /**
      * Convertir une chaine de la casse chameau à la casse 'underscore'
      * @param String la chaîne à convertir
