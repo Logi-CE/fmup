@@ -9,14 +9,16 @@ use FMUP\Import\Config\Field\Validator;
 class RegExp implements Validator
 {
     private $expression;
+    private $allow_empty;
 
     /**
      * Construct enum validator
      * @param string $expression
      */
-    public function __construct($expression = null)
+    public function __construct($expression = null, $allow_empty = false)
     {
         $this->setExpression($expression);
+        $this->setAllowEmpty($allow_empty);
     }
 
     /**
@@ -38,14 +40,26 @@ class RegExp implements Validator
     {
         return $this->expression;
     }
+    
+    public function getAllowEmpty() {
+        return $this->allow_empty;
+    }
+    
+    public function setAllowEmpty($allow_empty) {
+        $this->allow_empty = $allow_empty;
+        return $this;
+    }
 
     public function validate($value)
     {
-        $valid = true;
-        if (!preg_match($this->getExpression(), $value)) {
-            $valid = false;
+        $res = false;
+        if (
+                preg_match($this->getExpression(), $value) 
+                || ($this->getAllowEmpty() && $value == "")
+        ) {
+            $res = true;
         }
-        return $valid;
+        return $res;
     }
 
     public function getErrorMessage()
