@@ -5,7 +5,6 @@ use FMUP\Import\Config\Field\Validator;
 
 class Required implements Validator
 {
-
     public function validate($value)
     {
         $valid = true;

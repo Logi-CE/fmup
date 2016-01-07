@@ -5,22 +5,32 @@ use FMUP\Import\Config\Field\Validator;
 
 class Email implements Validator
 {
-    private $empty;
+    private $empty = false;
 
+    /**
+     * @param bool|false $empty
+     */
     public function __construct($empty = false)
     {
         $this->setCanEmpty($empty);
     }
 
-    public function setCanEmpty($empty)
+    /**
+     * @param bool|false $empty
+     * @return $this
+     */
+    public function setCanEmpty($empty = false)
     {
-        $this->empty = $empty;
+        $this->empty = (bool) $empty;
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function getCanEmpty()
     {
-        return $this->empty;
+        return (bool)$this->empty;
     }
 
     public function validate($value)

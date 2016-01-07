@@ -14,7 +14,7 @@ class Enum implements Validator
      * Construct enum validator
      * @param array $values
      */
-    public function __construct($values = null)
+    public function __construct(array $values = null)
     {
         $this->setValues($values);
     }
@@ -24,9 +24,9 @@ class Enum implements Validator
      * @param array $values
      * @return self
      */
-    public function setValues($values)
+    public function setValues(array $values = null)
     {
-        $this->values = $values;
+        $this->values = (array)$values;
         return $this;
     }
 

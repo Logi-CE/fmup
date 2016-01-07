@@ -5,7 +5,6 @@ use FMUP\Import\Config\Field\Validator;
 
 class HalfOrInteger implements Validator
 {
-
     public function validate($value)
     {
         $valid = true;

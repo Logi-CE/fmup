@@ -12,15 +12,15 @@ class Integer implements Validator
         $this->setCanEmpty($empty);
     }
 
-    public function setCanEmpty($empty)
+    public function setCanEmpty($empty = false)
     {
-        $this->empty = $empty;
+        $this->empty = (bool)$empty;
         return $this;
     }
 
     public function getCanEmpty()
     {
-        return $this->empty;
+        return (bool)$this->empty;
     }
 
     public function validate($value)

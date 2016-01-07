@@ -14,11 +14,12 @@ class RegExp implements Validator
     /**
      * Construct enum validator
      * @param string $expression
+     * @param bool $allowEmpty optional default false
      */
-    public function __construct($expression = null, $allow_empty = false)
+    public function __construct($expression = null, $allowEmpty = false)
     {
         $this->setExpression($expression);
-        $this->setAllowEmpty($allow_empty);
+        $this->setAllowEmpty($allowEmpty);
     }
 
     /**
@@ -43,10 +44,10 @@ class RegExp implements Validator
 
     public function getAllowEmpty()
     {
-        return $this->allow_empty;
+        return (bool)$this->allow_empty;
     }
 
-    public function setAllowEmpty($allow_empty)
+    public function setAllowEmpty($allow_empty = false)
     {
         $this->allow_empty = $allow_empty;
         return $this;
