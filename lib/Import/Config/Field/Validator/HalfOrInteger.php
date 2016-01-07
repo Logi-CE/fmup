@@ -3,12 +3,12 @@ namespace FMUP\Import\Config\Field\Validator;
 
 use FMUP\Import\Config\Field\Validator;
 
-class Required implements Validator
+class HalfOrInteger implements Validator
 {
     public function validate($value)
     {
         $valid = true;
-        if ($value === false || $value === null || $value === "") {
+        if ((\Is::integer($value) === false) && (\Is::half($value) === false)) {
             $valid = false;
         }
         return $valid;
@@ -16,6 +16,6 @@ class Required implements Validator
 
     public function getErrorMessage()
     {
-        return "Ce champ est obligatoire mais aucune donnée n'a été reçue";
+        return "Le champ reçu n'est un nombre entier où la décimale ne correspond pas à un demi de un";
     }
 }

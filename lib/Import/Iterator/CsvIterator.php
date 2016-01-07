@@ -9,30 +9,38 @@ namespace FMUP\Import\Iterator;
  */
 class CsvIterator implements \Iterator
 {
-    const COMMA_SEPARATOR     = ',';
+    const COMMA_SEPARATOR = ',';
     const SEMICOLON_SEPARATOR = ';';
+    const TABULATION_SEPARATOR = "\t";
 
     protected $path;
-
     private $fHandle;
-
     private $current;
-
-    private $ligne;
-
+    private $line;
     private $separator;
 
+    /**
+     * @param string $path
+     * @param string $separator optional (if null, autodetect)
+     */
     public function __construct($path = "", $separator = self::SEMICOLON_SEPARATOR)
     {
-        $this->setPath($path);
-        $this->setSeparator($separator);
+        $this->setPath($path)->setSeparator($separator);
     }
 
+    /**
+     * @param string $path
+     * @return $this
+     */
     public function setPath($path)
     {
         $this->path = $path;
+        return $this;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function rewind()
     {
         if (!file_exists($this->path)) {
@@ -41,9 +49,12 @@ class CsvIterator implements \Iterator
         $this->fHandle = fopen($this->path, "r");
         rewind($this->fHandle);
         $this->next();
-        $this->ligne = 0;
+        $this->line = 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function current()
     {
         return $this->current;
@@ -52,10 +63,12 @@ class CsvIterator implements \Iterator
     public function next()
     {
         $this->current = fgetcsv($this->fHandle, 0, $this->getSeparator());
-        $this->ligne++;
-        return $this->current;
+        $this->line++;
     }
 
+    /**
+     * @return bool
+     */
     public function valid()
     {
         if (feof($this->fHandle)) {
@@ -87,6 +100,6 @@ class CsvIterator implements \Iterator
 
     public function key()
     {
-        return $this->ligne;
+        return $this->line;
     }
 }

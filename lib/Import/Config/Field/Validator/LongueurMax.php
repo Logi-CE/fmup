@@ -5,7 +5,6 @@ use FMUP\Import\Config\Field\Validator;
 
 class LongueurMax implements Validator
 {
-
     private $longueur;
 
     public function __construct($longueur)

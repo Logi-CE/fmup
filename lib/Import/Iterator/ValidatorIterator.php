@@ -95,18 +95,16 @@ class ValidatorIterator extends \IteratorIterator
         return $this->total_errors;
     }
 
-    /**
-     * Valide la ligne et détermine son type
-     */
     public function next()
     {
         parent::next();
-        if (!$this->current()) {
-            return $this;
+        $current = $this->current();
+        if (!$current || !$current instanceof Config) {
+            return;
         }
-        $this->valid = $this->current()->validateLine();
+        $this->valid = $current->validateLine();
         $type = "";
-        foreach ($this->current()->getListeConfigObjet() as $configObject) {
+        foreach ($current->getListeConfigObjet() as $configObject) {
             /* @var $configObject \FMUP\Import\Config\ConfigObjet */
             if ($configObject->getStatut() == "insert") {
                 $type = ($type == "update" ? "update" : "insert");
@@ -114,7 +112,7 @@ class ValidatorIterator extends \IteratorIterator
                 $type = "update";
             }
         }
-        if ($this->valid && !$this->current()->getDoublonLigne()) {
+        if ($this->valid && !$current->getDoublonLigne()) {
             if ($type == "insert") {
                 $this->total_insert++;
             } elseif ($type == "update") {
@@ -124,6 +122,5 @@ class ValidatorIterator extends \IteratorIterator
             $this->total_errors++;
         }
         $this->type_ligne = $type;
-        return $this;
     }
 }

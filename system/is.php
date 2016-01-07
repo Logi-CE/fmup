@@ -36,6 +36,16 @@ class Is
         return $retour;
     }
 
+     /**
+     * Vérifie si la valeur décimale du paramètre est égale à un demi de un
+     * @param mixed $valeur : La variable testée
+     * @return bool : VRAI si la valeur décimale du paramètre est égale à un demi de un
+     */
+    public static function half($valeur)
+    {
+        return (bool) (self::chaineOuNombre($valeur) && abs($valeur - floor($valeur) - 0.5) < 0.0001);
+    }
+    
     /**
      * Vérifie si le paramètre est un décimal
      * @param mixed $valeur : La variable testée
@@ -188,6 +198,37 @@ class Is
                     }
                     return ($annee < 1000 || $annee > 9999) ? false : checkDate($mois, $jour, $annee);
                 }
+            }
+        }
+        return false;
+    }
+    
+     /**
+     * Valide que la date donnée au format français (SANS heure) existe bien
+     * @param mixed $valeur : La variable testée
+     * @return bool : VRAI si la valeur passée en paramètre une date au format JJMMAAAA ou JJMMAA, sans séparateur
+     */
+    public static function dateWithoutSeparator($valeur) {
+        if (is_string($valeur)) {
+            if (strlen($valeur) == 8) {
+                $jour = substr($valeur, -8, 2);
+                $mois = substr($valeur, -6, 2);
+                $annee = substr($valeur, -4);
+            } elseif (strlen($valeur) == 6) {
+                $jour = substr($valeur, -6, 2);
+                $mois = substr($valeur, -4, 2);
+                $annee = substr($valeur, -2);
+            } else {
+                return false;
+            }
+            if (Is::integer($jour) && Is::integer($mois) && Is::integer($annee)) {
+                if (strlen($annee) == 2)
+                    $annee = '20' . $annee;
+                if ($annee < 1000)
+                    return false;
+                if ($annee > 9999)
+                    return false;
+                return checkDate($mois, $jour, $annee);
             }
         }
         return false;

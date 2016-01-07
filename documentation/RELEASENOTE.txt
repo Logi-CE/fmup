@@ -1,4 +1,19 @@
 /*********/
+/* 6.1.0 */
+/*********/
+
+Add some Import validators (merge 5.2.0)
+
+#New
+ - Component Import\Config\Field\Validator
+    - Date can now check date without separator
+    - Email can allow empty
+    - Integer can allow empty
+    - RegExp can allow empty
+    - Telephone can allow empty
+    - HalfOrInteger
+
+/*********/
 /* 6.0.0 */
 /*********/
 
@@ -64,6 +79,21 @@ Code Quality + Performance on result sets
 #Compatible
  - clean up some code
  - clean up some checkstyle
+
+/*********/
+/* 5.2.0 */
+/*********/
+
+Add some Import validators
+
+#New
+ - Component Import\Config\Field\Validator
+    - Date can now check date without separator
+    - Email can allow empty
+    - Integer can allow empty
+    - RegExp can allow empty
+    - Telephone can allow empty
+    - HalfOrInteger
 
 /*********/
 /* 5.1.1 */

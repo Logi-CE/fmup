@@ -9,7 +9,6 @@ namespace FMUP\Import\Iterator;
  */
 class CsvToConfigIterator extends \IteratorIterator
 {
-
     private $config;
 
     public function __construct(\Iterator $fIterator, \FMUP\Import\Config $config)
@@ -20,9 +19,9 @@ class CsvToConfigIterator extends \IteratorIterator
 
     public function current()
     {
-        $liste_champ = $this->getInnerIterator()->current();
-        if (count($liste_champ) > 1) {
-            foreach ($liste_champ as $key => $champ) {
+        $listFields = $this->getInnerIterator()->current();
+        if (count($listFields) > 1) {
+            foreach ($listFields as $key => $champ) {
                 $field = $this->config->getField($key);
                 $field->setValue($champ);
             }
