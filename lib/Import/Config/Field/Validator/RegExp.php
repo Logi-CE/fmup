@@ -40,12 +40,14 @@ class RegExp implements Validator
     {
         return $this->expression;
     }
-    
-    public function getAllowEmpty() {
+
+    public function getAllowEmpty()
+    {
         return $this->allow_empty;
     }
-    
-    public function setAllowEmpty($allow_empty) {
+
+    public function setAllowEmpty($allow_empty)
+    {
         $this->allow_empty = $allow_empty;
         return $this;
     }
@@ -54,8 +56,8 @@ class RegExp implements Validator
     {
         $res = false;
         if (
-                preg_match($this->getExpression(), $value) 
-                || ($this->getAllowEmpty() && $value == "")
+            preg_match($this->getExpression(), $value)
+            || ($this->getAllowEmpty() && $value == "")
         ) {
             $res = true;
         }
