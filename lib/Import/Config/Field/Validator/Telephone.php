@@ -6,12 +6,12 @@ use FMUP\Import\Config\Field\Validator;
 class Telephone implements Validator
 {
     private $empty;
-    
+
     public function __construct($empty = false)
     {
         $this->setCanEmpty($empty);
     }
-    
+
     public function setCanEmpty($empty)
     {
         $this->empty = $empty;
@@ -22,7 +22,7 @@ class Telephone implements Validator
     {
         return $this->empty;
     }
-    
+
     public function validate($value)
     {
         $valid = false;

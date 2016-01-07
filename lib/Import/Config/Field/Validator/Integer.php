@@ -6,12 +6,12 @@ use FMUP\Import\Config\Field\Validator;
 class Integer implements Validator
 {
     private $empty;
-    
+
     public function __construct($empty = false)
     {
         $this->setCanEmpty($empty);
     }
-    
+
     public function setCanEmpty($empty)
     {
         $this->empty = $empty;
