@@ -55,14 +55,7 @@ class RegExp implements Validator
 
     public function validate($value)
     {
-        $res = false;
-        if (
-            preg_match($this->getExpression(), $value)
-            || ($this->getAllowEmpty() && $value == "")
-        ) {
-            $res = true;
-        }
-        return $res;
+        return (bool)(preg_match($this->getExpression(), $value) || ($this->getAllowEmpty() && $value == ""));
     }
 
     public function getErrorMessage()

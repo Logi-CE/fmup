@@ -1,4 +1,14 @@
 /*********/
+/* 6.1.1 */
+/*********/
+
+Code clean
+
+#Compatible
+ - Code clean
+ - Fix release note to added feature
+
+/*********/
 /* 6.1.0 */
 /*********/
 
@@ -12,6 +22,7 @@ Add some Import validators (merge 5.2.0)
     - RegExp can allow empty
     - Telephone can allow empty
     - HalfOrInteger
+  - Response can now return code for cli with method setReturnCode
 
 /*********/
 /* 6.0.0 */
@@ -94,6 +105,7 @@ Add some Import validators
     - RegExp can allow empty
     - Telephone can allow empty
     - HalfOrInteger
+  - Response can now return code for cli with method setReturnCode
 
 /*********/
 /* 5.1.1 */

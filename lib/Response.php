@@ -103,7 +103,7 @@ class Response
         }
         echo $this->getBody();
         if ($this->getReturnCode()) {
-            exit ($this->getReturnCode());
+            exit($this->getReturnCode());
         }
     }
 
@@ -113,7 +113,7 @@ class Response
      */
     public function setReturnCode($returnCode = 0)
     {
-        $this->returnCode = (int) $returnCode;
+        $this->returnCode = (int)$returnCode;
         return $this;
     }
 
@@ -122,6 +122,6 @@ class Response
      */
     public function getReturnCode()
     {
-        return (int) $this->returnCode;
+        return (int)$this->returnCode;
     }
 }
