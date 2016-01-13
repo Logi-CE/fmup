@@ -1,4 +1,13 @@
 /*********/
+/* 6.1.2 */
+/*********/
+
+Encoding clean
+
+#Fix
+ - Clean message in Framework to be utf8 encoded
+
+/*********/
 /* 6.1.1 */
 /*********/
 
