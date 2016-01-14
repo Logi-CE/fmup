@@ -42,14 +42,7 @@ class Is
      */
     public static function half($valeur)
     {
-        if (!self::chaineOuNombre($valeur)) {
-            $retour = false;
-        } else {
-            if (abs($valeur - floor($valeur) - 0.5) < 0.0001) {
-                $retour = true;
-            }
-        }
-        return $retour; 
+        return (bool)(self::chaineOuNombre($valeur) && (abs($valeur - floor($valeur) - 0.5) < 0.0001));
     }
     
     /**

@@ -1,4 +1,14 @@
 /*********/
+/* 5.2.1 */
+/*********/
+
+Fix Import CsvIterator
+
+#Fix
+ - Import\Iterator\CsvIterator now reads the last line
+ - Is::half() cannot have unexpected null return
+
+/*********/
 /* 5.2.0 */
 /*********/
 
