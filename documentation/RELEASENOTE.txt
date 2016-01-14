@@ -1,4 +1,14 @@
 /*********/
+/* 6.1.3 */
+/*********/
+
+Fix Import CsvIterator (merge 5.2.1)
+
+#Fix
+ - Import\Iterator\CsvIterator now reads the last line
+ - Is::half() cannot have unexpected null return
+
+/*********/
 /* 6.1.2 */
 /*********/
 
@@ -99,6 +109,16 @@ Code Quality + Performance on result sets
 #Compatible
  - clean up some code
  - clean up some checkstyle
+
+/*********/
+/* 5.2.1 */
+/*********/
+
+Fix Import CsvIterator
+
+#Fix
+ - Import\Iterator\CsvIterator now reads the last line
+ - Is::half() cannot have unexpected null return
 
 /*********/
 /* 5.2.0 */
