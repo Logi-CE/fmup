@@ -1,4 +1,13 @@
 /*********/
+/* 5.2.2 */
+/*********/
+
+Fix Import CsvToConfigIterator
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator now doesn't read the column not set and reinitialise the config if the line has less columns
+
+/*********/
 /* 5.2.1 */
 /*********/
 
