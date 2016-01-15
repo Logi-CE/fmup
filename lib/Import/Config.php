@@ -155,9 +155,7 @@ class Config
     {
         // Réinitialisation du tableau d'erreur
         $this->errors = array();
-
         foreach ($this->getListeField() as $field) {
-            $field->formatField();
             $valid_field = $field->validateField();
             if (!$valid_field) {
                 $this->errors[$field->getName()] = "non valide";

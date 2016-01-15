@@ -8,7 +8,7 @@ trait LoggerTrait
     /**
      * @var Logger
      */
-    private $logger;
+    //private $logger;
 
     /**
      * @param Logger $logger

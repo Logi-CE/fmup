@@ -22,8 +22,15 @@ class CsvToConfigIterator extends \IteratorIterator
         $listFields = $this->getInnerIterator()->current();
         if (count($listFields) > 1) {
             foreach ($listFields as $key => $champ) {
+                if ($key >= count($this->config->getListeField())) {
+                    break;
+                }
                 $field = $this->config->getField($key);
                 $field->setValue($champ);
+            }
+            for ($i = count($listFields) ; $i <  count($this->config->getListeField()) ; $i++) {
+                $field = $this->config->getField($i);
+                $field->setValue(null);
             }
             return $this->config;
         } else {

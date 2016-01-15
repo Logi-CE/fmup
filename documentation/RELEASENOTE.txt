@@ -1,4 +1,14 @@
 /*********/
+/* 6.1.4 */
+/*********/
+
+Fix Import CsvToConfigIterator
+Merge 5.2.2
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator now doesn't read the column not set and reinitialise the config if the line has less columns
+
+/*********/
 /* 6.1.3 */
 /*********/
 
@@ -109,6 +119,15 @@ Code Quality + Performance on result sets
 #Compatible
  - clean up some code
  - clean up some checkstyle
+ 
+/*********/
+/* 5.2.2 */
+/*********/
+
+Fix Import CsvToConfigIterator
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator now doesn't read the column not set and reinitialise the config if the line has less columns
 
 /*********/
 /* 5.2.1 */
