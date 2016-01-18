@@ -284,10 +284,10 @@ class Framework extends \Framework
             $errorHeader->render();
             if (!$isDebug) {
                 echo "<br/>Une erreur est survenue !<br/>"
-                    . "Le support informatique a été prévenu "
-                    . "et règlera le problème dans les plus brefs délais.<br/>"
+                    . "Le support informatique a Ã©tÃ© prÃ©venu "
+                    . "et rÃ¨glera le problÃªme dans les plus brefs dÃ©lais.<br/>"
                     . "<br/>"
-                    . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
+                    . "L'Ã©quipe des dÃ©veloppeurs vous prie de l'excuser pour le dÃ©sagrÃ©ment.<br/>";
             }
         }
     }
