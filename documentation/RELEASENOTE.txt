@@ -1,4 +1,11 @@
 /*********/
+/* 5.2.4 */
+/*********/
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator Bugfix import ligne vide
+
+/*********/
 /* 5.2.3 */
 /*********/
 
