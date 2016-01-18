@@ -34,7 +34,11 @@ class CsvToConfigIterator extends \IteratorIterator
             }
             return $this->config;
         } else {
-            return null;
+            for ($i = 0 ; $i <  count($this->config->getListeField()) ; $i++) {
+                $field = $this->config->getField($i);
+                $field->setValue(null);
+            }
+            return $this->config;
         }
     }
 

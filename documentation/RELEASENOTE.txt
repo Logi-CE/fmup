@@ -1,4 +1,11 @@
 /*********/
+/* 6.1.6 */
+/*********/
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator Bugfix import ligne vide
+
+/*********/
 /* 6.1.5 */
 /*********/
 
@@ -126,7 +133,13 @@ Code Quality + Performance on result sets
 #Compatible
  - clean up some code
  - clean up some checkstyle
-<<<<<<< HEAD
+
+/*********/
+/* 5.2.4 */
+/*********/
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator Bugfix import ligne vide
 
 /*********/
 /* 5.2.3 */
