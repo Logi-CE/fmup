@@ -1,4 +1,13 @@
 /*********/
+/* 5.2.3 */
+/*********/
+
+Fix LoggerTrait
+
+#Fix
+ - LoggerTrait notice - uses real protected logger
+
+/*********/
 /* 5.2.2 */
 /*********/
 
