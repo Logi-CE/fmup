@@ -1,6 +1,8 @@
 <?php
 namespace FMUP\Import\Iterator;
 
+use FMUP\Import\Exception;
+
 /**
  * Permet de parcourir un csv ligne par ligne
  *
@@ -39,12 +41,12 @@ class CsvIterator implements \Iterator
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function rewind()
     {
         if (!file_exists($this->path)) {
-            throw new \Exception("Le fichier specifie n'existe pas ou est introuvable");
+            throw new Exception("Le fichier specifie n'existe pas ou est introuvable");
         }
         $this->fHandle = fopen($this->path, "r");
         rewind($this->fHandle);
@@ -62,7 +64,12 @@ class CsvIterator implements \Iterator
 
     public function next()
     {
-        $this->current = fgetcsv($this->fHandle, 0, $this->getSeparator());
+        if (feof($this->fHandle)) {
+            fclose($this->fHandle);
+            $this->current = null;
+        } else {
+            $this->current = fgetcsv($this->fHandle, 0, $this->getSeparator());
+        }
         $this->line++;
     }
 
@@ -71,11 +78,7 @@ class CsvIterator implements \Iterator
      */
     public function valid()
     {
-        if (feof($this->fHandle)) {
-            fclose($this->fHandle);
-            return false;
-        }
-        return true;
+        return !is_null($this->current());
     }
 
     /**

@@ -43,7 +43,7 @@ class Is
      */
     public static function half($valeur)
     {
-        return (bool)(self::chaineOuNombre($valeur) && abs($valeur - floor($valeur) - 0.5) < 0.0001);
+        return (bool)(self::chaineOuNombre($valeur) && (abs($valeur - floor($valeur) - 0.5) < 0.0001));
     }
 
     /**

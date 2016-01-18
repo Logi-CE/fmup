@@ -92,6 +92,34 @@ Code Quality + Performance on result sets
  - clean up some checkstyle
 
 /*********/
+/* 5.2.3 */
+/*********/
+
+Fix LoggerTrait
+
+#Fix
+ - LoggerTrait notice - uses real protected logger
+
+/*********/
+/* 5.2.2 */
+/*********/
+
+Fix Import CsvToConfigIterator
+
+#Fix
+ - Import\Iterator\CsvToConfigIterator now doesn't read the column not set and reinitialise the config if the line has less columns
+
+/*********/
+/* 5.2.1 */
+/*********/
+
+Fix Import CsvIterator
+
+#Fix
+ - Import\Iterator\CsvIterator now reads the last line
+ - Is::half() cannot have unexpected null return
+
+/*********/
 /* 5.2.0 */
 /*********/
 
