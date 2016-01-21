@@ -103,11 +103,8 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     public function rewind()
     {
         $this->row = 0;
+        $this->statement->execute();
         $this->current = $this->getDbInterface()->fetchRow($this->statement, DbInterface::CURSOR_FIRST);
-        if ($this->current === false) {
-            $this->statement->execute();
-            $this->current = $this->getDbInterface()->fetchRow($this->statement, DbInterface::CURSOR_FIRST);
-        }
     }
 
     /**
