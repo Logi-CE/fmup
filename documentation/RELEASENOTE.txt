@@ -1,4 +1,13 @@
 /*********/
+/* 6.1.7 */
+/*********/
+
+Fix FetchIterator rewind
+
+#Fix
+ - FetchIterator now execute query on rewind instead of continuing iterations
+
+/*********/
 /* 6.1.6 */
 /*********/
 
