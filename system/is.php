@@ -292,6 +292,9 @@ class Is
      */
     public static function dateTimeUk($valeur)
     {
+        if ($valeur instanceof \DateTime) {
+            return true;
+        }
         $retour = false;
         if (is_string($valeur)) {
             $resultat = preg_split('|\ |', $valeur);
