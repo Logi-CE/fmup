@@ -10,6 +10,7 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
 {
     private $className;
     private $current;
+    private $row = 0;
 
     public function __construct(\Iterator $fIterator, $className)
     {
@@ -26,6 +27,7 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
 
     public function rewind()
     {
+        $this->row = 0;
         $this->getInnerIterator()->rewind();
         $this->defineCurrentToObject();
     }
@@ -48,11 +50,20 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
         } else {
             $this->current = null;
         }
+        $this->row++;
     }
 
     public function count()
     {
         return iterator_count($this->getInnerIterator());
+    }
+
+    /**
+     * @return int
+     */
+    public function key()
+    {
+        return (int)$this->row;
     }
 
     /**
@@ -99,6 +110,7 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
      */
     public function seek($position)
     {
+        $this->row = (int)$position;
         $iterator = $this->getInnerIterator();
         if ($iterator instanceof \SeekableIterator) {
             $iterator->seek($position);
