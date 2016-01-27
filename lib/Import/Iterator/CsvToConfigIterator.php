@@ -28,13 +28,13 @@ class CsvToConfigIterator extends \IteratorIterator
                 $field = $this->config->getField($key);
                 $field->setValue($champ);
             }
-            for ($i = count($listFields) ; $i <  count($this->config->getListeField()) ; $i++) {
+            for ($i = count($listFields); $i < count($this->config->getListeField()); $i++) {
                 $field = $this->config->getField($i);
                 $field->setValue(null);
             }
             return $this->config;
         } else {
-            for ($i = 0 ; $i <  count($this->config->getListeField()) ; $i++) {
+            for ($i = 0; $i < count($this->config->getListeField()); $i++) {
                 $field = $this->config->getField($i);
                 $field->setValue(null);
             }
