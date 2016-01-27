@@ -102,6 +102,9 @@ class Sql
      **/
     public static function secureDate($value)
     {
+        if ($value instanceof \DateTime) {
+            return '"' . $value->format('Y-m-d H:i:s') . '"';
+        }
         if (Is::dateTime($value) || Is::dateTimeUk($value)) {
             return "'" . $value . "'";
         } else {
