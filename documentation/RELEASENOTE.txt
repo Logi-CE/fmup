@@ -1,4 +1,13 @@
 /*********/
+/* 5.3.0 */
+/*********/
+
+Add application/json header
+
+#New
+ - Response\Header\ContentType adds application/json header
+
+/*********/
 /* 5.2.4 */
 /*********/
 
