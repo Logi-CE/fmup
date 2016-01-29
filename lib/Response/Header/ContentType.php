@@ -12,6 +12,7 @@ class ContentType extends Header
     const MIME_APPLICATION_CSV = 'application/csv-tab-delimited-table';
     const MIME_APPLICATION_JS = 'application/javascript';
     const CHARSET_UTF_8 = 'utf-8';
+    const MIME_APPLICATION_JSON = 'application/json';
 
     private $mime;
     private $charset;

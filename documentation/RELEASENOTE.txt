@@ -1,4 +1,13 @@
 /*********/
+/* 6.2.0 */
+/*********/
+
+Add application/json header (Merge 5.3.0)
+
+#New
+ - Response\Header\ContentType adds application/json header
+
+/*********/
 /* 6.1.7 */
 /*********/
 
@@ -142,6 +151,15 @@ Code Quality + Performance on result sets
 #Compatible
  - clean up some code
  - clean up some checkstyle
+
+/*********/
+/* 5.3.0 */
+/*********/
+
+Add application/json header
+
+#New
+ - Response\Header\ContentType adds application/json header
 
 /*********/
 /* 5.2.4 */
