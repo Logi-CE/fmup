@@ -1,4 +1,17 @@
 /*********/
+/* 6.2.1 */
+/*********/
+
+Code Clean + fix date + iterator issues
+
+#Compatible
+ - Code Clean
+ 
+#Fix
+  - Iterator ArrayToObjectIterator now returns indexes
+  - Date conversion
+
+/*********/
 /* 6.2.0 */
 /*********/
 
