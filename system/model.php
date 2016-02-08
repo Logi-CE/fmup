@@ -628,7 +628,13 @@ abstract class Model
      **/
     public function setDateCreation($value = null)
     {
-        $this->date_creation = date('Y-m-d H:i:s', $value ? strtotime($value) : null);
+        $creationDate = null;
+        try {
+            $creationDate = new \DateTime($value);
+        } catch (\Exception $e) {
+            $creationDate = \DateTime::createFromFormat('d/m/Y H:i:s', $value);
+        }
+        $this->date_creation = $creationDate->format('Y-m-d H:i:s');
         return true;
     }
 
