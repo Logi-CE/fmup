@@ -473,7 +473,7 @@ abstract class Model
                 $infos_suppression = '';
                 if (property_exists($this, 'date_suppression')) {
                     $infos_suppression .= ', date_suppression = CURRENT_TIMESTAMP()';
-                    $this->date_suppression = date('Y-m-d');
+                    $this->date_suppression = date('Y-m-d H:i:s');
                 }
                 if (property_exists($this, 'id_suppresseur')) {
                     if (self::getSession()->has('id_utilisateur')) {
