@@ -148,6 +148,7 @@ class EmailHelper
         $my_mail->CharSet = "UTF-8";
         $my_mail->SMTPAuth = Config::paramsVariables('smtp_authentification');
         $my_mail->SMTPSecure = Config::paramsVariables('smtp_secure');
+        $my_mail->SMTPAutoTLS = Config::paramsVariables('smtp_secure') == 'tls';
 
         $my_mail->Host = Config::paramsVariables('smtp_serveur');
         $my_mail->Port = Config::paramsVariables('smtp_port');
