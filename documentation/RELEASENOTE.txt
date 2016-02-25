@@ -1,4 +1,14 @@
 /*********/
+/* 6.2.2 */
+/*********/
+
+FMUP\Mail configure auto tls
+
+#Fix
+  - FMUP\Mail configure auto tls
+  - use of php-amqplib/php-amqplib that is maintained
+
+/*********/
 /* 6.2.1 */
 /*********/
 
