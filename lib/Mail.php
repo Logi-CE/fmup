@@ -26,6 +26,7 @@ class Mail extends \PHPMailer
         $this->CharSet = "UTF-8";
         $this->SMTPAuth = $config->get('smtp_authentification');
         $this->SMTPSecure = $config->get('smtp_secure');
+        $this->SMTPAutoTLS = $config->get('smtp_secure') == 'tls';
 
         $this->Host = $config->get('smtp_serveur');
         $this->Port = $config->get('smtp_port');
