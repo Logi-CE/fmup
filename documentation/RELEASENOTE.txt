@@ -5,7 +5,7 @@
 Fix auto tls configuration for PHPMailer
 
 #Fix
- - auto tls configuration for PHPMailer
+ - auto tls configuration for PHPMailer 
 
 /*********/
 /* 5.3.0 */
