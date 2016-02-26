@@ -166,6 +166,15 @@ Code Quality + Performance on result sets
  - clean up some checkstyle
 
 /*********/
+/* 5.3.1 */
+/*********/
+
+Fix auto tls configuration for PHPMailer
+
+#Fix
+ - auto tls configuration for PHPMailer 
+
+/*********/
 /* 5.3.0 */
 /*********/
 
