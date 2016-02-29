@@ -10,7 +10,7 @@ use FMUP\Crypt\CryptInterface;
  */
 class MCrypt implements CryptInterface
 {
-    const KEY = 'secret_test_key';
+    const KEY = 'very_secret_key!';
 
     private $key = null;
     private $iv = null;

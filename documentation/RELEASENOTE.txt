@@ -176,6 +176,16 @@ Code Quality + Performance on result sets
  - clean up some checkstyle
 
 /*********/
+/* 5.3.2 */
+/*********/
+
+Fix Mcrypt security
+
+#Fix
+ - Mcrypt IV security needs to be 16 char long
+ - renamed documentation to index
+
+/*********/
 /* 5.3.1 */
 /*********/
 
