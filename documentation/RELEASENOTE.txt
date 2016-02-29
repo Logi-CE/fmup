@@ -1,4 +1,17 @@
 /*********/
+/* 6.2.3 */
+/*********/
+
+Fix Mcrypt security - merged 5.3.2
+
+#Fix
+ - Mcrypt IV security needs to be 16 char long
+ - renamed documentation to index
+
+#New fix
+ - add some documentation in Response
+
+/*********/
 /* 6.2.2 */
 /*********/
 
