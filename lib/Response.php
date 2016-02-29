@@ -108,6 +108,7 @@ class Response
     }
 
     /**
+     * Define a PHP Cli return code - 0 (default) is success, another error code > 0 for whatever
      * @param int $returnCode
      * @return $this
      */
@@ -118,6 +119,7 @@ class Response
     }
 
     /**
+     * Get defined PHP Cli return code - 0 (default) is success, another error code > 0 for whatever
      * @return int
      */
     public function getReturnCode()
