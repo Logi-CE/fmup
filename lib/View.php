@@ -24,6 +24,7 @@ class View
     }
 
     /**
+     * Define multiple value for key (associative array)
      * @param array $params
      * @return $this
      */
@@ -34,6 +35,7 @@ class View
     }
 
     /**
+     * Define a value for a specific key
      * @param string $name
      * @param mixed $value
      * @throws UnexpectedValue
@@ -52,6 +54,7 @@ class View
     }
 
     /**
+     * Get defined value for a specific key
      * @param string $name
      * @throws UnexpectedValue
      * @return mixed
@@ -68,6 +71,7 @@ class View
     }
 
     /**
+     * Return defined params
      * @return array
      */
     public function getParams()
@@ -76,6 +80,7 @@ class View
     }
 
     /**
+     * Return string of interpreted template
      * @return string
      * @throws UnexpectedValue
      */
@@ -85,7 +90,7 @@ class View
             throw new UnexpectedValue('View must be defined', UnexpectedValue::CODE_VALUE_NULL);
         }
         if (!file_exists($this->getViewPath())) {
-            throw new UnexpectedValue('File does not exist', UnexpectedValue::CODE_VALUE_INVALID_FILEPATH);
+            throw new UnexpectedValue('File does not exist', UnexpectedValue::CODE_VALUE_INVALID_FILE_PATH);
         }
         ob_start();
         $vars = $this->getParams();
@@ -114,6 +119,7 @@ class View
     }
 
     /**
+     * Return defined view path
      * @return mixed
      */
     public function getViewPath()
@@ -135,10 +141,11 @@ class View
      * Implements object use
      * @param string $param
      * @param mixed $value
+     * @throws UnexpectedValue
      * @return View
      */
     public function __set($param, $value)
     {
-        return $this->setParam($param, $param);
+        return $this->setParam($param, $value);
     }
 }

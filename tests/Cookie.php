@@ -13,6 +13,8 @@ class CookieTest extends \PHPUnit_Framework_TestCase
     {
         $cookie = Cookie::getInstance();
         $this->assertInstanceOf('\FMUP\Cookie', $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, 'FMUP\Cookie'));
+        $cookie2 = Cookie::getInstance();
+        $this->assertSame($cookie, $cookie2, sprintf(self::ERROR_NOT_INSTANCE_OF, 'FMUP\Cookie'));
         return $cookie;
     }
 

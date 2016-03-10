@@ -121,6 +121,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view6->setParam($paramKey,$paramValue);
         $this->assertEquals($paramValue, $view6->getParam($paramKey), 'The value returned is not the expected value for the param \'' .  $paramKey . '\'');
 
+        $view7 = clone $view;
+        $view7->test = self::PARAM_VALUE;
+        $this->assertEquals(self::PARAM_VALUE, $view7->test, 'The value returned is not the expected value for the param test');
+
         return $view;
     }
 
@@ -243,7 +247,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             $view3->setViewPath('test.php');
             $view3->render();
         } catch (ExceptionUnexpectedValue $e) {
-            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_INVALID_FILEPATH, $e->getCode(), $e->getMessage());
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_INVALID_FILE_PATH, $e->getCode(), $e->getMessage());
         }
 
         // check view result (expected and not expected)
