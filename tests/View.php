@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use FMUP\Exception;
+use FMUP\Exception\UnexpectedValue as ExceptionUnexpectedValue;
 use FMUP\View;
 use InvalidArgumentException;
 use OutOfBoundsException;
@@ -10,13 +12,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 {
     const PARAM_KEY  = 'key';
     const PARAM_VALUE  = 'value';
-
     const WRONG_EXCEPTION_CODE = 'Wrong exception code.';
     const ERROR_NOT_INSTANCE_OF = 'Not an instance of %s';
-    // const EXCEPTION_EXPECTED_TYPE_ERROR_STRING_INSTEAD_OF = 'Exception expected : type error (string instead of %s)';
-    // const EXCEPTION_EXPECTED_TYPE_ERROR_NULL_INSTEAD_OF = 'Exception expected : type error (null instead of %s)';
-    // const EXCEPTION_EXPECTED_TYPE_ERROR_BOOLEAN_INSTEAD_OF = 'Exception expected : type error (boolean instead of %s)';
-    const EXCEPTION_EXPECTED_TYPE_ERROR_OBJECT_INSTEAD_OF = 'Exception expected : type error (object instead of %s)';
 
     public function testConstruct()
     {
@@ -36,15 +33,6 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view4 = new View(array(self::PARAM_KEY, new \stdClass()));
         $this->assertInstanceOf('\FMUP\View', $view4, sprintf(self::ERROR_NOT_INSTANCE_OF, 'FMUP\View'));
 
-/*
-        // check with object as key in array
-        try {
-            $view5 = new View(array(new \stdClass() => self::PARAM_VALUE));
-            $this->assertInstanceOf('\FMUP\View', $view5, 'Exception expected : an object can\'t be used as key in an array');
-        } catch (\Exception $e) {
-            $this->assertEquals('2', $e->getCode(), self::WRONG_EXCEPTION_CODE);
-        }
-*/
         return $view;
     }
 
@@ -77,31 +65,17 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view6->addParams(array());
         $this->assertFalse(count($view6->getParams())!=0, 'Error : params not empty');
 
-        // check with array of params with 1 element & check param exists
+        // check with array of params with 1 element & check param exists and its value
         $view7 = clone $view;
         $view7->addParams(array(self::PARAM_KEY => self::PARAM_VALUE));
         $this->assertArrayHasKey(self::PARAM_KEY,$view7->getParams(), 'The param ' . self::PARAM_KEY . ' doesn\'t exist');
-
-        // check with array of params with 1 element & check param value exists
-        $view8 = clone $view;
-        $view8->addParams(array(self::PARAM_KEY => self::PARAM_VALUE));
-        $this->assertContains(self::PARAM_VALUE,$view8->getParams(), 'The value' . self::PARAM_VALUE . ' doesn\'t exist in params');
+        $this->assertContains(self::PARAM_VALUE,$view7->getParams(), 'The value' . self::PARAM_VALUE . ' doesn\'t exist in params');
 
         // check with object as value in array
-        $view9 = clone $view;
-        $view9->addParams(array(self::PARAM_KEY => new \stdClass()));
-        $this->assertArrayHasKey(self::PARAM_KEY,$view9->getParams(), 'The value' . self::PARAM_VALUE . ' doesn\'t exist in params');
+        $view8 = clone $view;
+        $view8->addParams(array(self::PARAM_KEY => new \stdClass()));
+        $this->assertArrayHasKey(self::PARAM_KEY,$view8->getParams(), 'The value' . self::PARAM_VALUE . ' doesn\'t exist in params');
 
-/*
-        // check with object as key in array
-        try {
-            $view10 = clone $view;
-            $view10->addParams(array(new \stdClass() => self::PARAM_VALUE));
-            $this->assertInstanceOf('\FMUP\View', $view10, 'Exception expected : an object can\'t be used as key in an array');
-        } catch (\Exception $e) {
-            $this->assertEquals('2', $e->getCode(), self::WRONG_EXCEPTION_CODE);
-        }
-*/
         return $view;
     }
 
@@ -116,6 +90,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view2 = clone $view;
         $paramKey = self::PARAM_KEY;
         $view2->getParam('test');
+        $this->assertArrayNotHasKey(self::PARAM_KEY,$view2->getParams(),'The param ' . self::PARAM_KEY . ' exists');
         $this->assertEquals(null, $view2->getParam($paramKey), 'The value returned \''. $view2->getParam('test') .'\' is not the expected value \'null\' for the param \'' .  $paramKey . '\'');
 
         // check string param value
@@ -146,26 +121,102 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view6->setParam($paramKey,$paramValue);
         $this->assertEquals($paramValue, $view6->getParam($paramKey), 'The value returned is not the expected value for the param \'' .  $paramKey . '\'');
 
-        // check boolean param key
+        return $view;
+    }
+
+    /**
+     * @depends testConstruct
+     * @param View $view
+     * @return View
+     */
+    public function testSetParamExceptions($view) {
+        // check set param with null
         try {
-            $view7 = clone $view;
-            $paramKey = null;
-            $paramValue = self::PARAM_VALUE;
-            $view7->setParam($paramKey,$paramValue);
-            $this->assertEquals($paramValue, $view7->getParam($paramKey), 'The value returned \''. $view7->getParam($paramKey) .'\' is not the expected value \''. $paramValue .'\' for the param \'' .  $paramKey . '\'');
-        } catch (\Exception $e) {
-            $this->assertEquals('8', $e->getCode(), self::WRONG_EXCEPTION_CODE);
+            $view2 = clone $view;
+            $view2->setParam(null,self::PARAM_VALUE);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
         }
 
-        // check object param key
+        // check set param with boolean
         try {
-            $view8 = clone $view;
-            $paramKey = true;
-            $paramValue = self::PARAM_VALUE;
-            $view8->setParam($paramKey,$paramValue);
-            $this->assertEquals($paramValue, $view8->getParam($paramKey), 'The value returned \''. $view8->getParam($paramKey) .'\' is not the expected value \''. $paramValue .'\' for the param \'' .  $paramKey . '\'');
-        } catch (\Exception $e) {
-            $this->assertEquals('8', $e->getCode(), self::WRONG_EXCEPTION_CODE);
+            $view3 = clone $view;
+            $view3->setParam(true,self::PARAM_VALUE);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check set param with string containing whitespace
+        try {
+            $view4 = clone $view;
+            $view4->setParam(new \stdClass(),self::PARAM_VALUE);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check set param with empty string
+        try {
+            $view5 = clone $view;
+            $view5->setParam('',self::PARAM_VALUE);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
+        }
+
+        // check set param with string containing whitespace
+        try {
+            $view6 = clone $view;
+            $view6->setParam(' ',self::PARAM_VALUE);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
+        }
+        return $view;
+    }
+
+    /**
+     * @depends testConstruct
+     * @param View $view
+     * @return View
+     */
+    public function testGetParamExceptions($view) {
+
+        // check get param with null
+        try {
+            $view2 = clone $view;
+            $view2->getParam(null);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get param with boolean
+        try {
+            $view3 = clone $view;
+            $view3->getParam(true);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get param with string containing whitespace
+        try {
+            $view4 = clone $view;
+            $view4->getParam(new \stdClass());
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get param with empty string
+        try {
+            $view5 = clone $view;
+            $view5->getParam('');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
+        }
+
+        // check get param with string containing whitespace
+        try {
+            $view6 = clone $view;
+            $view6->getParam(' ');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
         }
 
         return $view;
@@ -182,8 +233,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         try {
             $view2 = clone $view;
             $view2->render();
-         } catch (\InvalidArgumentException $e) {
-            $this->assertEquals('0', $e->getCode(), 'Exception expected : the ViewPath is null');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_NULL, $e->getCode(), $e->getMessage());
         }
 
         // check case ViewPath file not exists
@@ -191,16 +242,19 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             $view3 = clone $view;
             $view3->setViewPath('test.php');
             $view3->render();
-        } catch (\OutOfBoundsException $e) {
-            $this->assertEquals('0', $e->getCode(), 'Exception expected : the ViewPath file not exists');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_INVALID_FILEPATH, $e->getCode(), $e->getMessage());
         }
 
-        // check case ViewPath file exists
+        // check view result (expected and not expected)
         $view4 = clone $view;
-        $view4->setViewPath(__DIR__ . '/String.php');
-        $view4->addParams(array(self::PARAM_KEY => self::PARAM_VALUE));
+        $view4->setViewPath(__DIR__ . '/.files/testView.phtml');
+        $view4->addParams(array('test' => 'View'));
         $viewResult = $view4->render();
-        $this->assertFalse((is_string($viewResult) && !empty($viewResult)), 'Error : invalid view result');
+        $expectedResult = 'The value of the param test is View';
+        $this->assertEquals($expectedResult, $viewResult, 'Error : invalid view result');
+        $notExpectedResult = 'The value of the param test is NULL';
+        $this->assertNotEquals($notExpectedResult, $viewResult, 'Error : the view result is the result expected');
     }
 
     /**
@@ -216,32 +270,52 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view2->setViewPath($viewPath);
         $this->assertEquals($viewPath, $view2->getViewPath(), 'View path is not set correctly');
 
-        // check with null
-        $view3 = clone $view;
-        $view3->setViewPath(null);
-        $this->assertFalse(!is_string($view3->getViewPath()), 'View path is not set correctly');
-
-        // check with boolean
-        $view4 = clone $view;
-        $view4->setViewPath(true);
-        $this->assertFalse(!is_string($view4->getViewPath()), 'View path is not set correctly');
-
-        // check with array
+        // check set with null
         try {
-            $view5 = clone $view;
-            $view5->setViewPath(array('test'));
-            $this->assertFalse(!is_string($view5->getViewPath()), 'View path is not set correctly');
-        } catch (\Exception $e) {
-            $this->assertEquals('8', $e->getCode(), self::WRONG_EXCEPTION_CODE);
+            $view3 = clone $view;
+            $view3->setViewPath(null);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
         }
 
-        // check with object
+        // check set with boolean
+        try {
+            $view4 = clone $view;
+            $view4->setViewPath(true);
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get with object
+        try {
+            $view5 = clone $view;
+            $view5->setViewPath(new \stdClass());
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get with array
         try {
             $view6 = clone $view;
-            $view6->setViewPath(new \stdClass());
-            $this->assertFalse(true, sprintf(self::EXCEPTION_EXPECTED_TYPE_ERROR_OBJECT_INSTEAD_OF, 'string'));
-        } catch (\Exception $e) {
-            $this->assertEquals('4096', $e->getCode(), self::WRONG_EXCEPTION_CODE);
+            $view6->setViewPath(array('test'));
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_TYPE_NOT_STRING, $e->getCode(), $e->getMessage());
+        }
+
+        // check get with empty string
+        try {
+            $view7 = clone $view;
+            $view7->setViewPath('');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
+        }
+
+        // check get with string containing whitespace
+        try {
+            $view8 = clone $view;
+            $view8->setViewPath(' ');
+        } catch (ExceptionUnexpectedValue $e) {
+            $this->assertEquals(ExceptionUnexpectedValue::CODE_VALUE_EMPTY, $e->getCode(), $e->getMessage());
         }
 
         return $view;
