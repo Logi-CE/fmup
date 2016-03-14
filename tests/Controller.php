@@ -356,6 +356,15 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         return $controller;
     }
 
+    public function getHasResponse(FMUPController $controller)
+    {
+        $this->assertFalse($controller->hasResponse(), 'Controller must not have reponse at creation');
+        $controller2 = clone $controller;
+        $controller2->setResponse($this->getMock(\FMUP\Response::class));
+        $this->assertTrue($controller2->hasResponse(), 'Controller must not have reponse at creation');
+        return $controller;
+    }
+
     /**
      * @param $obj
      * @param $method
