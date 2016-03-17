@@ -18,11 +18,6 @@ class Error extends Standard
 
     private $projectVersion;
 
-    public function getName()
-    {
-        return self::NAME;
-    }
-
     public function configure()
     {
         parent::configure();
