@@ -56,6 +56,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
                 $return = $cache->set($case[0], $case[1]);
             } catch (\FMUP\Cache\Exception $e) {
                 $this->assertTrue(false, 'Unable to store ' . $case[1] . ' in ' . $case[0] . ' : ' . $e->getMessage());
+                $return = false;
             }
             $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
