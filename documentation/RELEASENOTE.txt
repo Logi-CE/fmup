@@ -1,4 +1,26 @@
 /*********/
+/* 6.3.0 */
+/*********/
+
+Syslog Logger channel by default + phpunit native HTML report
+
+#New
+  - View component now throws \FMUP\Exception\UnexpectedValue instead of OutOfBoundsException and InvalidArgumentException with a specific code
+  - Component Logger\Channel\Syslog - This channel is now base for Standard (default) channel
+  - add phpunit configuration to generate neat native code coverage HTML report + color in CLI
+
+#Fix
+  - View::getParam, View::setParam and View::setViewPath throw \FMUP\Exception\UnexpectedValue in case of non string parameter
+
+#Compatible
+  - New Unit test
+    - Cookie
+    - View
+  - Controller unit test 100% code coverage
+  - Add PHP documentation on Logger\Interface
+  - Add PHP documentation on Controller
+
+/*********/
 /* 6.2.3 */
 /*********/
 
