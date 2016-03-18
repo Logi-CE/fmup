@@ -1,6 +1,8 @@
 <?php
 namespace FMUP;
 
+use FMUP\Exception\UnexpectedValue;
+
 /**
  * Class View
  * /!\ Beware this version is not compliant with FMU View since layout are hardcoded.
@@ -22,6 +24,7 @@ class View
     }
 
     /**
+     * Define multiple value for key (associative array)
      * @param array $params
      * @return $this
      */
@@ -32,26 +35,43 @@ class View
     }
 
     /**
+     * Define a value for a specific key
      * @param string $name
      * @param mixed $value
+     * @throws UnexpectedValue
      * @return $this
      */
     public function setParam($name, $value)
     {
+        if(!is_string($name)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
+        }
+        if(empty($name)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
+        }
         $this->params[$name] = $value;
         return $this;
     }
 
     /**
+     * Get defined value for a specific key
      * @param string $name
+     * @throws UnexpectedValue
      * @return mixed
      */
     public function getParam($name)
     {
+        if(!is_string($name)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
+        }
+        if(empty($name)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
+        }
         return isset($this->params[$name]) ? $this->params[$name] : null;
     }
 
     /**
+     * Return defined params
      * @return array
      */
     public function getParams()
@@ -60,15 +80,17 @@ class View
     }
 
     /**
+     * Return string of interpreted template
      * @return string
+     * @throws UnexpectedValue
      */
     public function render()
     {
         if (is_null($this->getViewPath())) {
-            throw new \InvalidArgumentException('View must be defined');
+            throw new UnexpectedValue('View must be defined', UnexpectedValue::CODE_VALUE_NULL);
         }
         if (!file_exists($this->getViewPath())) {
-            throw new \OutOfBoundsException("File does not exist");
+            throw new UnexpectedValue('File does not exist', UnexpectedValue::CODE_VALUE_INVALID_FILE_PATH);
         }
         ob_start();
         $vars = $this->getParams();
@@ -80,15 +102,24 @@ class View
     /**
      * Define view to use
      * @param string $viewPath Full path to view
+     * @throws UnexpectedValue
      * @return $this
      */
     public function setViewPath($viewPath)
     {
-        $this->viewPath = (string)$viewPath;
+        if(!is_string($viewPath)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
+        }
+        if(empty($viewPath)) {
+            throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
+        }
+
+        $this->viewPath = $viewPath;
         return $this;
     }
 
     /**
+     * Return defined view path
      * @return mixed
      */
     public function getViewPath()
@@ -110,10 +141,11 @@ class View
      * Implements object use
      * @param string $param
      * @param mixed $value
+     * @throws UnexpectedValue
      * @return View
      */
     public function __set($param, $value)
     {
-        return $this->setParam($param, $param);
+        return $this->setParam($param, $value);
     }
 }
