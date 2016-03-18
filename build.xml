@@ -35,6 +35,11 @@
         <phingcall target="pdepend" />
     </target>
 
+    <!--
+    <target name="phpunit">
+        <phpunit configuration="${project.basedir}/phpunit.xml"/>
+    </target>
+    -->
     <target name="phpunit">
         <coverage-setup database="${project.basedir}/build/coverage/database">
             <fileset dir="${project.basedir}/">
@@ -60,6 +65,7 @@
             <report styleDir="${project.basedir}/vendor/phing/phing/etc/" toDir="${project.basedir}/build/coverage/report/" />
         </coverage-report>
     </target>
+    <!-- -->
 
     <target name="phpcs">
         <phpcodesniffer standard="PSR2">
