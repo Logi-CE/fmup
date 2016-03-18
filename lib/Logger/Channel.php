@@ -5,6 +5,7 @@ use FMUP\Config;
 use FMUP\Environment;
 use FMUP\Request;
 use FMUP\Response;
+use FMUP\Sapi;
 use Monolog\Logger as MonologLogger;
 
 abstract class Channel
@@ -13,6 +14,7 @@ abstract class Channel
         getEnvironment as getEnvironmentTrait;
     }
     use Config\OptionalTrait;
+    use Sapi\OptionalTrait;
 
     /**
      * @var MonologLogger

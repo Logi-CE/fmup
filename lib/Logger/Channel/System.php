@@ -7,11 +7,6 @@ class System extends Standard
 {
     const NAME = 'System';
 
-    public function getName()
-    {
-        return self::NAME;
-    }
-
     public function configure()
     {
         parent::configure();
