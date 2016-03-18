@@ -35,6 +35,7 @@ abstract class Controller
     }
 
     /**
+     * Returns request received (defined by Framework)
      * @throws \LogicException
      * @return Request
      */
@@ -47,6 +48,7 @@ abstract class Controller
     }
 
     /**
+     * Define a request
      * @param Request $request
      * @return $this
      */
@@ -57,6 +59,7 @@ abstract class Controller
     }
 
     /**
+     * Returns Response to send (set by framework)
      * @throws \LogicException
      * @return Response
      */
@@ -69,6 +72,7 @@ abstract class Controller
     }
 
     /**
+     * Define Response
      * @param Response $response
      * @return $this
      */
@@ -111,6 +115,7 @@ abstract class Controller
     }
 
     /**
+     * Returns Bootstrap defined (set by framework)
      * @throws \LogicException
      * @return Bootstrap
      */
@@ -123,6 +128,7 @@ abstract class Controller
     }
 
     /**
+     * Define Bootstrap
      * @param Bootstrap $bootstrap
      * @return $this
      */
@@ -133,6 +139,7 @@ abstract class Controller
     }
 
     /**
+     * facade for session defined in bootstrap
      * @return Session
      */
     protected function getSession()
