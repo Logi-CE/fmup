@@ -1,4 +1,13 @@
 /*********/
+/* 6.3.1 */
+/*********/
+
+Fix Controller unit test for Jenkins compilation
+
+#Fix
+ - Controller unit test don't compile class referencies
+
+/*********/
 /* 6.3.0 */
 /*********/
 
