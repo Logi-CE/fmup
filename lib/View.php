@@ -43,10 +43,10 @@ class View
      */
     public function setParam($name, $value)
     {
-        if(!is_string($name)) {
+        if (!is_string($name)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
         }
-        if(empty($name)) {
+        if (empty($name)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
         }
         $this->params[$name] = $value;
@@ -61,10 +61,10 @@ class View
      */
     public function getParam($name)
     {
-        if(!is_string($name)) {
+        if (!is_string($name)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
         }
-        if(empty($name)) {
+        if (empty($name)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
         }
         return isset($this->params[$name]) ? $this->params[$name] : null;
@@ -107,10 +107,10 @@ class View
      */
     public function setViewPath($viewPath)
     {
-        if(!is_string($viewPath)) {
+        if (!is_string($viewPath)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_TYPE_NOT_STRING, UnexpectedValue::CODE_TYPE_NOT_STRING);
         }
-        if(empty($viewPath)) {
+        if (empty($viewPath)) {
             throw new UnexpectedValue(UnexpectedValue::MESSAGE_VALUE_EMPTY, UnexpectedValue::CODE_VALUE_EMPTY);
         }
 
