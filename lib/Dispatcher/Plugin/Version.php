@@ -3,6 +3,7 @@ namespace FMUP\Dispatcher\Plugin;
 
 class Version extends \FMUP\Dispatcher\Plugin
 {
+    protected $name = 'Version';
     /**
      * Can be used to apply something on request object
      */

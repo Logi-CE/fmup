@@ -13,10 +13,20 @@ class Dispatcher
     const WAY_PREPEND = 'WAY_PREPEND';
 
     /**
-     * List of routes to check on routing
+     * List of plugins to execute on Dispatch
      * @var array
      */
     private $plugins = array();
+
+    /**
+     * List of plugins name
+     */
+    private $pluginsName = array();
+
+    /**
+     * @var boolean
+     */
+    private $isInitDefaultPlugin = false;
 
     /**
      * @var Request
@@ -32,7 +42,9 @@ class Dispatcher
     public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
-        $this->defaultPlugins();
+        if (!$this->isInitDefaultPlugin) {
+            $this->defaultPlugins();
+        }
         foreach ($this->plugins as $plugin) {
             /* @var $plugin Plugin */
             $plugin->setRequest($request)->setResponse($response)
@@ -71,6 +83,21 @@ class Dispatcher
     public function clear()
     {
         $this->plugins = array();
+        $this->pluginsName = array();
+        return $this;
+    }
+
+    /**
+     * Remove a plugin in stack
+     * @param Plugin $plugin
+     * @return $this
+     */
+    public function removePlugin(Plugin $plugin)
+    {
+        if (($key = array_search($plugin->getName(), $this->pluginsName)) !== false) {
+            unset($this->pluginsName[$key]);
+            unset($this->plugins[$key]);
+        }
         return $this;
     }
 
@@ -82,10 +109,16 @@ class Dispatcher
      */
     public function addPlugin(Plugin $plugin, $way = self::WAY_APPEND)
     {
-        if ($way == self::WAY_APPEND) {
-            array_push($this->plugins, $plugin);
+        if (($key = array_search($plugin->getName(), $this->pluginsName)) !== false) {
+            $this->plugins[$key] = $plugin;
         } else {
-            array_unshift($this->plugins, $plugin);
+            if ($way == self::WAY_APPEND) {
+                array_push($this->plugins, $plugin);
+                array_push($this->pluginsName, $plugin->getName());
+            } else {
+                array_unshift($this->plugins, $plugin);
+                array_unshift($this->pluginsName, $plugin->getName());
+            }
         }
         return $this;
     }
@@ -96,6 +129,9 @@ class Dispatcher
      */
     public function defaultPlugins()
     {
+        $this->isInitDefaultPlugin = true;
         return $this;
     }
+
+
 }
