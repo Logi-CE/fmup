@@ -20,11 +20,6 @@ class Field
     private $formatters = array();
     private $errors = array();
 
-    /*
-     * *********
-     * *GETTERS*
-     * *********
-     */
     public function __construct($name, $value, $table_cible, $champ_cible, $required, $type)
     {
         $this->name = $name;
@@ -75,14 +70,10 @@ class Field
         return $this->errors;
     }
 
-    /*
-     * *********
-     * SETTERS
-     * *********
-     */
     public function setValue($valeur)
     {
         $this->value = trim($valeur);
+        return $this;
     }
 
     /**

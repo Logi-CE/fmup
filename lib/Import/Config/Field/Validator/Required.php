@@ -7,11 +7,7 @@ class Required implements Validator
 {
     public function validate($value)
     {
-        $valid = true;
-        if ($value === false || $value === null || $value === "") {
-            $valid = false;
-        }
-        return $valid;
+        return ($value !== false && $value !== null && $value !== "");
     }
 
     public function getErrorMessage()
