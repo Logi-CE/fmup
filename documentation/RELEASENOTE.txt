@@ -704,7 +704,7 @@ Fix Some accent
 #Fix
  - MathHelper::getPourcentageEvolution now returns something without number_format
  - FiltreListe attribute now encodes in utf-8
- - \Date::getTableauLibelleMois() fix Ao�t encoding
+ - \Date::getTableauLibelleMois() fix Août encoding
  
 /*********/
 /* 2.1.2 */

@@ -9,24 +9,16 @@ namespace FMUP\Import\Config;
  */
 class Field
 {
-
+    const TYPE_IGNORED = 'ignored';
     private $name;
-
     private $value;
-
     private $table_cible;
-
     private $champ_cible;
-
     private $required;
-
     private $type;
-
-    private $liste_validator = array();
-
+    private $validators = array();
     private $formatters = array();
-
-    private $liste_erreur = array();
+    private $errors = array();
 
     /*
      * *********
@@ -41,8 +33,8 @@ class Field
         $this->champ_cible = $champ_cible;
         $this->required = $required;
         $this->type = $type;
-        if ($type != "ignored" && $type != "") {
-            $classe = '\FMUP\Import\Config\Field\Validator\\' . ucfirst($type);
+        if ($type != self::TYPE_IGNORED && $type != "") {
+            $classe = __NAMESPACE__ . '\Validator\\' . ucfirst($type);
             $validator = new $classe();
             $this->addValidator($validator);
         }
@@ -80,7 +72,7 @@ class Field
 
     public function getErreurs()
     {
-        return $this->liste_erreur;
+        return $this->errors;
     }
 
     /*
@@ -100,7 +92,7 @@ class Field
      */
     public function addValidator(Field\Validator $validator)
     {
-        array_push($this->liste_validator, $validator);
+        array_push($this->validators, $validator);
         return $this;
     }
 
@@ -115,7 +107,7 @@ class Field
         if ($key === null) {
             $this->addValidator($validator);
         } else {
-            $this->liste_validator[$key] = $validator;
+            $this->validators[$key] = $validator;
         }
         return $this;
     }
@@ -127,34 +119,19 @@ class Field
      */
     public function getValidator($key)
     {
-        if (isset($this->liste_validator[$key])) {
-            return $this->liste_validator[$key];
+        if (isset($this->validators[$key])) {
+            return $this->validators[$key];
         }
         return null;
     }
 
     /**
-     *
-     * @param Field\Formatter $formatter
-     * @deprecated use self::addFormatter instead
-     * @see self::addFormatter
-     * @return $this
+     * Get defined validators
+     * @return Field\Validator[]
      */
-    public function addFormatterFin(Field\Formatter $formatter)
+    public function getValidators()
     {
-        return $this->addFormatter($formatter);
-    }
-
-    /**
-     *
-     * @param Field\Formatter $formatter
-     * @deprecated use self::addFormatter instead
-     * @see self::addFormatter
-     * @return $this
-     */
-    public function addFormatterDebut(Field\Formatter $formatter)
-    {
-        return $this->addFormatter($formatter);
+        return $this->validators;
     }
 
     /**
@@ -168,29 +145,43 @@ class Field
         return $this;
     }
 
+    /**
+     * Get defined formaters
+     * @return Field\Formatter[]
+     */
+    public function getFormatters()
+    {
+        return $this->formatters;
+    }
+
+    /**
+     * Is field valid
+     * @return bool
+     */
     public function validateField()
     {
         $valid = true;
-        if (count($this->liste_validator) > 0) {
-            foreach ($this->liste_validator as $validator) {
-                if (!$validator->validate($this->value)) {
-                    $valid = false;
-                    $this->liste_erreur[get_class($validator)] = $validator->getErrorMessage();
-                }
+        foreach ($this->getValidators() as $validator) {
+            if (!$validator->validate($this->value)) {
+                $valid = false;
+                $this->errors[get_class($validator)] = $validator->getErrorMessage();
             }
         }
         return $valid;
     }
 
+    /**
+     * Format field with defined formatters
+     * @return $this
+     */
     public function formatField()
     {
-        if (count($this->formatters) > 0) {
-            foreach ($this->formatters as $formatter) {
-                $this->value = $formatter->format($this->value) ?: "";
-                if ($formatter->hasError()) {
-                    $this->liste_erreur[get_class($formatter)] = $formatter->getErrorMessage();
-                }
+        foreach ($this->getFormatters() as $formatter) {
+            $this->value = $formatter->format($this->value) ?: "";
+            if ($formatter->hasError()) {
+                $this->errors[get_class($formatter)] = $formatter->getErrorMessage();
             }
         }
+        return $this;
     }
 }

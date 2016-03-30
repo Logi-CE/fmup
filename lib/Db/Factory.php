@@ -57,6 +57,6 @@ class Factory
      */
     protected function getClassNameForDriver($driver)
     {
-        return 'FMUP\\Db\\Driver\\' . $driver;
+        return __NAMESPACE__ . '\Driver\\' . $driver;
     }
 }
