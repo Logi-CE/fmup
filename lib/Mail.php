@@ -48,7 +48,7 @@ class Mail extends \PHPMailer
     {
         $search = array_keys($tokens);
         $replace = array_values($tokens);
-        $search = array_map(array('\FMUP\Mail', 'tokenReplaceMap'), $search);
+        $search = array_map(array(\FMUP\Mail::class, 'tokenReplaceMap'), $search);
         return str_replace($search, $replace, $message);
     }
 

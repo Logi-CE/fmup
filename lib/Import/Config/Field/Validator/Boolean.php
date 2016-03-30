@@ -8,11 +8,7 @@ class Boolean implements Validator
 
     public function validate($value)
     {
-        $valid = true;
-        if (!\Is::booleen($value)) {
-            $valid = false;
-        }
-        return $valid;
+        return (bool) \Is::booleen($value);
     }
 
     public function getErrorMessage()
