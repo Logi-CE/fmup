@@ -94,7 +94,9 @@ class Dispatcher
      */
     public function removePlugin(Plugin $plugin)
     {
-        if (($key = array_search($plugin->getName(), $this->pluginsName)) !== false) {
+        $names = array_flip($this->pluginsName);
+        if (isset($names[$plugin->getName()])) {
+            $key = $names[$plugin->getName()];
             unset($this->pluginsName[$key]);
             unset($this->plugins[$key]);
         }
@@ -109,8 +111,9 @@ class Dispatcher
      */
     public function addPlugin(Plugin $plugin, $way = self::WAY_APPEND)
     {
-        if (($key = array_search($plugin->getName(), $this->pluginsName)) !== false) {
-            $this->plugins[$key] = $plugin;
+        $names = array_flip($this->pluginsName);
+        if (isset($names[$plugin->getName()])) {
+            $this->plugins[$names[$plugin->getName()]] = $plugin;
         } else {
             if ($way == self::WAY_APPEND) {
                 array_push($this->plugins, $plugin);
@@ -132,6 +135,4 @@ class Dispatcher
         $this->isInitDefaultPlugin = true;
         return $this;
     }
-
-
 }
