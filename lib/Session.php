@@ -145,7 +145,7 @@ class Session
     public function getAll()
     {
         $this->start();
-        return $_SESSION;
+        return $this->isStarted() ? $_SESSION : array();
     }
 
     /**
@@ -156,7 +156,9 @@ class Session
     public function setAll(array $values = array())
     {
         $this->start();
-        $_SESSION = $values;
+        if ($this->isStarted()) {
+            $_SESSION = $values;
+        }
         return $this;
     }
 
