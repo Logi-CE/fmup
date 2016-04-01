@@ -19,6 +19,10 @@ class Bootstrap
     private $session;
     private $flashMessenger;
     private $isWarmed;
+    /**
+     * @var Cookie
+     */
+    private $cookie;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -223,17 +227,19 @@ class Bootstrap
     }
 
     /**
+     * Retriever Cookie component
      * @return Cookie
      */
     public function getCookie()
     {
-        if ($this->cookie === null) {
+        if (!$this->cookie) {
             $this->cookie = Cookie::getInstance();
         }
         return $this->cookie;
     }
 
     /**
+     * Define cookie component
      * @param Cookie $cookie
      * @return $this
      */
@@ -242,5 +248,4 @@ class Bootstrap
         $this->cookie = $cookie;
         return $this;
     }
-
 }
