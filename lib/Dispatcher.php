@@ -111,7 +111,7 @@ class Dispatcher
      */
     public function addPlugin(Plugin $plugin, $way = self::WAY_APPEND)
     {
-        $names = array_flip($this->pluginsName);
+        $names = array_flip(array_values($this->pluginsName));
         if (isset($names[$plugin->getName()])) {
             $this->plugins[$names[$plugin->getName()]] = $plugin;
         } else {

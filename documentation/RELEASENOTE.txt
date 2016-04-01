@@ -1,4 +1,14 @@
 /*********/
+/* 6.4.2 */
+/*********/
+
+Smart start Session + fix notice dispatcher
+
+#Fix
+  - Session start on set/get
+  - Dispatcher warning on array_flip()
+
+/*********/
 /* 6.4.1 */
 /*********/
 
