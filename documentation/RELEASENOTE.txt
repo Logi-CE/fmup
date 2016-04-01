@@ -1,4 +1,13 @@
 /*********/
+/* 6.4.1 */
+/*********/
+
+Fix Session in CLI
+
+#Fix
+  - Session start only if available / Now uses Sapi to avoid CLI session_start
+
+/*********/
 /* 6.4.0 */
 /*********/
 
