@@ -221,4 +221,26 @@ class Bootstrap
         $this->setEnvironmentTrait($environment);
         return $this;
     }
+
+    /**
+     * @return Cookie
+     */
+    public function getCookie()
+    {
+        if ($this->cookie === null) {
+            $this->cookie = Cookie::getInstance();
+        }
+        return $this->cookie;
+    }
+
+    /**
+     * @param Cookie $cookie
+     * @return $this
+     */
+    public function setCookie(Cookie $cookie)
+    {
+        $this->cookie = $cookie;
+        return $this;
+    }
+
 }
