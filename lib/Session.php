@@ -12,7 +12,7 @@ class Session
     const SESSION_STARTED = true;
     const SESSION_NOT_STARTED = false;
 
-    private $sessionState;
+    private $sessionState = self::SESSION_NOT_STARTED;
     private $name;
     private $id;
     private static $instance;
@@ -33,7 +33,7 @@ class Session
     public function regenerate($deleteOldSession = false)
     {
         $success = false;
-        if ($this->start()) {
+        if ($this->isStarted()) {
             $success = session_regenerate_id((bool)$deleteOldSession);
         }
         return $success;
@@ -75,7 +75,7 @@ class Session
      */
     public function getName()
     {
-        if ($this->start()) {
+        if ($this->isStarted()) {
             $this->name = session_name();
         }
         return $this->name;
@@ -103,7 +103,7 @@ class Session
      */
     public function getId()
     {
-        if ($this->start()) {
+        if ($this->isStarted()) {
             $this->id = session_id();
         }
         return $this->id;
@@ -118,7 +118,7 @@ class Session
         if (is_null($this->sessionState)) {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 $this->sessionState = (
-                session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
+                    session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
                 );
             } else {
                 $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
