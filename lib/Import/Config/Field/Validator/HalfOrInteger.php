@@ -7,11 +7,7 @@ class HalfOrInteger implements Validator
 {
     public function validate($value)
     {
-        $valid = true;
-        if ((\Is::integer($value) === false) && (\Is::half($value) === false)) {
-            $valid = false;
-        }
-        return $valid;
+        return (\Is::integer($value)) || (\Is::half($value));
     }
 
     public function getErrorMessage()

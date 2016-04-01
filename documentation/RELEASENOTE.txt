@@ -1,4 +1,30 @@
 /*********/
+/* 6.4.1 */
+/*********/
+
+Fix Session in CLI
+
+#Fix
+  - Session start only if available / Now uses Sapi to avoid CLI session_start
+
+/*********/
+/* 6.4.0 */
+/*********/
+
+Dispatcher plugin Version + Dispatcher plugins can be manually removed
+
+#New
+  - Component Dispatcher\Plugin\Version - add project version behind script + link url to allow version browser cache
+  - Dispatcher can now remove a plugin
+
+#Compatible
+  - Code clean
+  - Renamed Import\Config\Field\Validator\LongueurMax to Import\Config\Field\Validator\MaxLength
+
+#Fix
+  - Session start only if available
+
+/*********/
 /* 6.3.1 */
 /*********/
 
@@ -704,7 +730,7 @@ Fix Some accent
 #Fix
  - MathHelper::getPourcentageEvolution now returns something without number_format
  - FiltreListe attribute now encodes in utf-8
- - \Date::getTableauLibelleMois() fix Ao�t encoding
+ - \Date::getTableauLibelleMois() fix Août encoding
  
 /*********/
 /* 2.1.2 */

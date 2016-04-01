@@ -25,6 +25,11 @@ abstract class Plugin
     private $response;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @param Request $request
      * @return $this
      */
@@ -81,4 +86,13 @@ abstract class Plugin
      * Can be used to apply something on request object
      */
     abstract public function handle();
+
+    /**
+     * Get the name of the plugin
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 }

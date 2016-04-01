@@ -60,6 +60,6 @@ class Factory
      */
     protected function getClassForName($driver)
     {
-        return 'FMUP\\Cache\\Driver\\' . ucfirst($driver);
+        return __NAMESPACE__ . '\Driver\\' . ucfirst($driver);
     }
 }

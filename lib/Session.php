@@ -7,6 +7,8 @@ namespace FMUP;
  */
 class Session
 {
+    use Sapi\OptionalTrait;
+
     const SESSION_STARTED = true;
     const SESSION_NOT_STARTED = false;
 
@@ -26,12 +28,15 @@ class Session
 
     /**
      * @param bool $deleteOldSession
-     * @return $this
+     * @return bool
      */
     public function regenerate($deleteOldSession = false)
     {
-        session_regenerate_id((bool)$deleteOldSession);
-        return $this;
+        $success = false;
+        if ($this->start()) {
+            $success = session_regenerate_id((bool)$deleteOldSession);
+        }
+        return $success;
     }
 
     /**
@@ -70,7 +75,7 @@ class Session
      */
     public function getName()
     {
-        if ($this->isStarted()) {
+        if ($this->start()) {
             $this->name = session_name();
         }
         return $this->name;
@@ -98,7 +103,7 @@ class Session
      */
     public function getId()
     {
-        if ($this->isStarted()) {
+        if ($this->start()) {
             $this->id = session_id();
         }
         return $this->id;
@@ -113,13 +118,13 @@ class Session
         if (is_null($this->sessionState)) {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 $this->sessionState = (
-                    session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
+                session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
                 );
             } else {
                 $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
             }
         }
-        return $this->sessionState == self::SESSION_STARTED;
+        return $this->sessionState === self::SESSION_STARTED;
     }
 
     /**
@@ -128,7 +133,7 @@ class Session
      */
     public function start()
     {
-        if (!$this->isStarted()) {
+        if (!$this->isStarted() && $this->getSapi()->get() != Sapi::CLI) {
             if ($this->getName()) {
                 session_name($this->getName());
             }
@@ -144,8 +149,7 @@ class Session
      */
     public function getAll()
     {
-        $this->start();
-        return $_SESSION;
+        return $this->start() ? $_SESSION : array();
     }
 
     /**
@@ -155,8 +159,9 @@ class Session
      */
     public function setAll(array $values = array())
     {
-        $this->start();
-        $_SESSION = $values;
+        if ($this->start()) {
+            $_SESSION = $values;
+        }
         return $this;
     }
 
@@ -177,8 +182,7 @@ class Session
      */
     public function has($name)
     {
-        $this->start();
-        return array_key_exists($name, $_SESSION);
+        return $this->start() && array_key_exists($name, $_SESSION);
     }
 
     /**
@@ -189,8 +193,9 @@ class Session
      */
     public function set($name, $value)
     {
-        $this->start();
-        $_SESSION[$name] = $value;
+        if ($this->start()) {
+            $_SESSION[$name] = $value;
+        }
         return $this;
     }
 
@@ -200,8 +205,9 @@ class Session
      */
     public function clear()
     {
-        $this->start();
-        $_SESSION = array();
+        if ($this->start()) {
+            $_SESSION = array();
+        }
         return $this;
     }
 
@@ -224,7 +230,7 @@ class Session
      */
     public function destroy()
     {
-        if ($this->isStarted()) {
+        if ($this->start()) {
             $this->sessionState = !session_destroy();
             unset($_SESSION);
 
