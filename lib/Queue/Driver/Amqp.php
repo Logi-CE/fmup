@@ -116,7 +116,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
         if ($channel->getSettings()->getBlockReceive()) {
             $queue->basic_consume(
                 $name,
-                $channel->getSettings()->getConsumerName(),
+                '',
                 false,
                 !$channel->getSettings()->getAutoAck(),
                 false,
