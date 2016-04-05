@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Queue\Channel;
 
-use \FMUP\Queue\Exception as QueueException;
+use FMUP\Queue\Exception as QueueException;
 
 /**
  * Class Settings - Global channel settings
@@ -96,7 +96,7 @@ class Settings
      */
     public function setConsumerName($consumerName = '')
     {
-        $this->consumerName = (string) $consumerName;
+        $this->consumerName = (string)$consumerName;
         return $this;
     }
 
@@ -116,7 +116,7 @@ class Settings
      */
     public function setMaxMessageSize($size = 0)
     {
-        $this->settings[self::PARAM_MAX_MESSAGE_SIZE] = (int) $size;
+        $this->settings[self::PARAM_MAX_MESSAGE_SIZE] = (int)$size;
         return $this;
     }
 
@@ -218,7 +218,7 @@ class Settings
      */
     public function setMaxSendRetryTime($maxRetry = 0)
     {
-        $this->settings[self::PARAM_MAX_SEND_RETRY_TIME] = (int) $maxRetry;
+        $this->settings[self::PARAM_MAX_SEND_RETRY_TIME] = (int)$maxRetry;
         return $this;
     }
 
