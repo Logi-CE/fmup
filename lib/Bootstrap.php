@@ -19,6 +19,10 @@ class Bootstrap
     private $session;
     private $flashMessenger;
     private $isWarmed;
+    /**
+     * @var Cookie
+     */
+    private $cookie;
 
     /**
      * Prepare needed configuration in bootstrap.
@@ -219,6 +223,29 @@ class Bootstrap
             $environment->setConfig($this->getConfig());
         }
         $this->setEnvironmentTrait($environment);
+        return $this;
+    }
+
+    /**
+     * Retriever Cookie component
+     * @return Cookie
+     */
+    public function getCookie()
+    {
+        if (!$this->cookie) {
+            $this->cookie = Cookie::getInstance();
+        }
+        return $this->cookie;
+    }
+
+    /**
+     * Define cookie component
+     * @param Cookie $cookie
+     * @return $this
+     */
+    public function setCookie(Cookie $cookie)
+    {
+        $this->cookie = $cookie;
         return $this;
     }
 }
