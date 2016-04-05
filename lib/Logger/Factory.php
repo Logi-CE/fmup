@@ -53,9 +53,9 @@ class Factory
      */
     protected function getClassNameForChannel($channel)
     {
-        $className = '\FMUP\Logger\Channel\\' . ucfirst($channel);
+        $className = __NAMESPACE__ . '\Channel\\' . ucfirst($channel);
         if (!class_exists($className)) {
-            $className = '\FMUP\Logger\Channel\Standard';
+            $className = \FMUP\Logger\Channel\Standard::class;
         }
         return $className;
     }
