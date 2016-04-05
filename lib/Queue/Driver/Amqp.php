@@ -114,7 +114,15 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
         $this->currentChannel = $channel;
         $name = $channel->getName();
         if ($channel->getSettings()->getBlockReceive()) {
-            $queue->basic_consume($name, '', false, false, false, false, array($this, 'onPull'));
+            $queue->basic_consume(
+                $name,
+                $channel->getSettings()->getConsumerName(),
+                false,
+                !$channel->getSettings()->getAutoAck(),
+                false,
+                false,
+                array($this, 'onPull')
+            );
             do {
                 $queue->wait();
             } while (is_null($this->currentMsg));

@@ -11,18 +11,22 @@ class Settings
 {
     const PARAM_MAX_MESSAGE_SIZE = 'PARAM_MAX_MESSAGE_SIZE'; //(int) in bytes (default system)
     const PARAM_MAX_SEND_RETRY_TIME = 'PARAM_MAX_SEND_RETRY_TIME';//(int) max send retry time, default DEFAULT_RETRY_TIMES
+    const PARAM_CONSUMER_NAME = 'PARAM_CONSUMER_NAME';//(string) define consumer name - default empty
 
     const PARAM_BLOCK_SEND = 'PARAM_BLOCK_SEND'; //(bool) if process must wait to be sure the message is sent (default false)
     const PARAM_BLOCK_RECEIVE = 'PARAM_BLOCK_RECEIVE'; //(bool) process will be blocked while no message is received (default false)
     const PARAM_SERIALIZE = 'PARAM_SERIALIZE'; //(bool) must serialize a message (default true)
+    const PARAM_AUTO_ACK = 'PARAM_AUTO_ACK'; //(bool) must ack a message as soon as it is retrieved (default false)
 
     const DEFAULT_RETRY_TIMES = 3;
 
     const FLAG_BLOCK_SEND = 1;
     const FLAG_BLOCK_RECEIVE = 2;
     const FLAG_SERIALIZE = 4;
+    const FLAG_AUTO_ACK = 8;
 
     private $settings = array();
+    private $consumerName = '';
     private $flags = self::FLAG_SERIALIZE;
 
     /**
@@ -72,11 +76,37 @@ class Settings
             case self::PARAM_MAX_SEND_RETRY_TIME:
                 $this->setMaxSendRetryTime($value);
                 break;
+            case self::PARAM_AUTO_ACK:
+                $this->setAutoAck($value);
+                break;
+            case self::PARAM_CONSUMER_NAME:
+                $this->setConsumerName($value);
+                break;
             default;
                 throw new QueueException('Setting is not defined');
                 break;
         }
         return $this;
+    }
+
+    /**
+     * Define consumer name
+     * @param string $consumerName
+     * @return $this
+     */
+    public function setConsumerName($consumerName = '')
+    {
+        $this->consumerName = (string) $consumerName;
+        return $this;
+    }
+
+    /**
+     * Retrieve defined consumer name
+     * @return string
+     */
+    public function getConsumerName()
+    {
+        return (string)$this->consumerName;
     }
 
     /**
@@ -159,6 +189,26 @@ class Settings
     public function getBlockReceive()
     {
         return (bool)($this->flags & self::FLAG_BLOCK_RECEIVE);
+    }
+
+    /**
+     * Define if message are auto ack-ed (default false)
+     * @param bool|false $autoAck
+     * @return $this
+     */
+    public function setAutoAck($autoAck = false)
+    {
+        $this->flags |= ($autoAck) ? self::FLAG_AUTO_ACK : ~self::FLAG_AUTO_ACK;
+        return $this;
+    }
+
+    /**
+     * Get if message are auto acked on this channel
+     * @return bool
+     */
+    public function getAutoAck()
+    {
+        return (bool)($this->flags & self::FLAG_AUTO_ACK);
     }
 
     /**
