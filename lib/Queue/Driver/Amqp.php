@@ -114,7 +114,15 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
         $this->currentChannel = $channel;
         $name = $channel->getName();
         if ($channel->getSettings()->getBlockReceive()) {
-            $queue->basic_consume($name, '', false, false, false, false, array($this, 'onPull'));
+            $queue->basic_consume(
+                $name,
+                '',
+                false,
+                !$channel->getSettings()->getAutoAck(),
+                false,
+                false,
+                array($this, 'onPull')
+            );
             do {
                 $queue->wait();
             } while (is_null($this->currentMsg));
@@ -146,5 +154,21 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
     public function getStats(Channel $channel)
     {
         throw new Exception('Stats not available on AMQP Driver');
+    }
+
+    /**
+     * Ack a specified message
+     * @param Channel $channel
+     * @param mixed $message
+     * @return $this
+     * @throws Exception
+     */
+    public function ackMessage(Channel $channel, $message)
+    {
+        if (!$message instanceof AMQPMessage) {
+            throw new Exception('Unable to ACK this mixed message. Need AMQPMessage');
+        }
+        $this->getQueue($channel)->basic_ack($message->delivery_info['delivery_tag']);
+        return $this;
     }
 }

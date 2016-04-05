@@ -1,4 +1,15 @@
 /*********/
+/* 6.5.0 */
+/*********/
+
+Cookies in bootstrap + Queue message acknowledgement
+
+#New
+  - Component Bootstrap can now return Cookie object
+  - Component Queue allows to ack a message
+    - Settings allows to define auto-ack but set to false by default
+
+/*********/
 /* 6.4.2 */
 /*********/
 

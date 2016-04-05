@@ -104,4 +104,15 @@ class Queue
     {
         return $this->getDriver()->getStats($this->getOrDefineChannel());
     }
+
+    /**
+     * Acknowledge a message
+     * @param mixed $message
+     * @return $this
+     * @throws QueueException
+     */
+    public function ackMessage($message)
+    {
+        return $this->getDriver()->ackMessage($this->getOrDefineChannel(), $message);
+    }
 }

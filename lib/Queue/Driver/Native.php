@@ -272,4 +272,15 @@ class Native implements DriverInterface, Environment\OptionalInterface
         }
         return $this->getConfiguration($channel->getResource());
     }
+
+    /**
+     * This methods do nothing since messages are auto-acked in SystemV. Sorry :(
+     * @param Channel $channel
+     * @param mixed $message
+     * @return $this
+     */
+    public function ackMessage(Channel $channel, $message)
+    {
+        return $this;
+    }
 }
