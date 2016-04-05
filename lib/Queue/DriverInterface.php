@@ -36,4 +36,12 @@ interface DriverInterface
      * @return array
      */
     public function getStats(Channel $channel);
+
+    /**
+     * Acknowledge a message
+     * @param Channel $channel
+     * @param mixed $message
+     * @return $this
+     */
+    public function ackMessage(Channel $channel, $message);
 }

@@ -147,4 +147,20 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
     {
         throw new Exception('Stats not available on AMQP Driver');
     }
+
+    /**
+     * Ack a specified message
+     * @param Channel $channel
+     * @param mixed $message
+     * @return $this
+     * @throws Exception
+     */
+    public function ackMessage(Channel $channel, $message)
+    {
+        if (!$message instanceof AMQPMessage) {
+            throw new Exception('Unable to ACK this mixed message. Need AMQPMessage');
+        }
+        $this->getQueue($channel)->basic_ack($message->delivery_info['delivery_tag']);
+        return $this;
+    }
 }
