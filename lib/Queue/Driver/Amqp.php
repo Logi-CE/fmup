@@ -5,6 +5,7 @@ use FMUP\Environment;
 use FMUP\Queue\Channel;
 use FMUP\Queue\DriverInterface;
 use FMUP\Queue\Exception;
+use FMUP\Queue\Message;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -104,7 +105,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
     /**
      * @param Channel $channel
      * @param null $messageType
-     * @return null
+     * @return Message|null
      * @throws Exception
      */
     public function pull(Channel $channel, $messageType = null)
@@ -118,7 +119,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
                 $name,
                 '',
                 false,
-                !$channel->getSettings()->getAutoAck(),
+                $channel->getSettings()->getAutoAck(),
                 false,
                 false,
                 array($this, 'onPull')
@@ -141,8 +142,11 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
      */
     public function onPull(AMQPMessage $msg)
     {
+        $message = new Message();
         $serialize = $this->currentChannel->getSettings()->getSerialize();
-        $this->currentMsg = $serialize ? unserialize($msg->body) : $msg->body;
+        $message->setTranslated($serialize ? unserialize($msg->body) : $msg->body);
+        $message->setOriginal($msg);
+        $this->currentMsg = $message;
         return $this;
     }
 
@@ -159,16 +163,17 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
     /**
      * Ack a specified message
      * @param Channel $channel
-     * @param mixed $message
+     * @param Message $message
      * @return $this
      * @throws Exception
      */
-    public function ackMessage(Channel $channel, $message)
+    public function ackMessage(Channel $channel, Message $message)
     {
-        if (!$message instanceof AMQPMessage) {
+        $originalMessage = $message->getOriginal();
+        if (!$originalMessage instanceof AMQPMessage) {
             throw new Exception('Unable to ACK this mixed message. Need AMQPMessage');
         }
-        $this->getQueue($channel)->basic_ack($message->delivery_info['delivery_tag']);
+        $this->getQueue($channel)->basic_ack($originalMessage->delivery_info['delivery_tag']);
         return $this;
     }
 }

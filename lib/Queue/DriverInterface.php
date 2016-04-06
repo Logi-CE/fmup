@@ -20,7 +20,7 @@ interface DriverInterface
      * Get a message from a queue
      * @param Channel $channel
      * @param string $messageType
-     * @return mixed
+     * @return Message|null
      */
     public function pull(Channel $channel, $messageType = null);
 
@@ -41,8 +41,8 @@ interface DriverInterface
     /**
      * Acknowledge a message
      * @param Channel $channel
-     * @param mixed $message
+     * @param Message $message
      * @return $this
      */
-    public function ackMessage(Channel $channel, $message);
+    public function ackMessage(Channel $channel, Message $message);
 }

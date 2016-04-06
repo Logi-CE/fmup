@@ -5,6 +5,7 @@ use FMUP\Environment;
 use FMUP\Queue\Channel;
 use FMUP\Queue\DriverInterface;
 use FMUP\Queue\Exception;
+use FMUP\Queue\Message;
 
 class Native implements DriverInterface, Environment\OptionalInterface
 {
@@ -83,7 +84,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
         if (!$success && !$isNonBlockingPlusNoMessage) {
             throw new Exception("Error while receiving message", $error);
         }
-        return $message;
+        return $message ? (new Message())->setOriginal($message)->setTranslated($message) : null;
     }
 
     /**
@@ -276,10 +277,10 @@ class Native implements DriverInterface, Environment\OptionalInterface
     /**
      * This methods do nothing since messages are auto-acked in SystemV. Sorry :(
      * @param Channel $channel
-     * @param mixed $message
+     * @param Message $message
      * @return $this
      */
-    public function ackMessage(Channel $channel, $message)
+    public function ackMessage(Channel $channel, Message $message)
     {
         return $this;
     }

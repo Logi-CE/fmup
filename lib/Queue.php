@@ -3,6 +3,7 @@ namespace FMUP;
 
 use FMUP\Queue\Channel;
 use FMUP\Queue\Exception as QueueException;
+use FMUP\Queue\Message;
 
 class Queue
 {
@@ -79,7 +80,7 @@ class Queue
     /**
      * Get a message from current queue
      * @param string $messageType (optional message type requested)
-     * @return mixed|null null if no message
+     * @return Message|null null if no message
      */
     public function pull($messageType = null)
     {
@@ -107,11 +108,11 @@ class Queue
 
     /**
      * Acknowledge a message
-     * @param mixed $message
+     * @param Message $message
      * @return $this
      * @throws QueueException
      */
-    public function ackMessage($message)
+    public function ackMessage(Message $message)
     {
         return $this->getDriver()->ackMessage($this->getOrDefineChannel(), $message);
     }
