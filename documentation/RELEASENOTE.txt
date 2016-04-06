@@ -8,6 +8,7 @@ Cookies in bootstrap + Queue message acknowledgement
   - Component Bootstrap can now return Cookie object
   - Component Queue allows to ack a message
     - Settings allows to define auto-ack but set to false by default
+  - Logger Standard extends from System which extends from Syslog
 
 /*********/
 /* 6.4.2 */

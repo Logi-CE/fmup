@@ -6,7 +6,7 @@ use FMUP\Sapi;
 use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\FirePHPHandler;
 
-class Standard extends Syslog
+class Standard extends System
 {
     const NAME = 'Standard';
 

@@ -3,7 +3,7 @@ namespace FMUP\Logger\Channel;
 
 use Monolog\Handler\ErrorLogHandler;
 
-class System extends Standard
+class System extends Syslog
 {
     const NAME = 'System';
 
