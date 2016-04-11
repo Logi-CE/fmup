@@ -1,4 +1,13 @@
 /*********/
+/* 6.5.2 */
+/*********/
+
+Phpunit centralization
+
+#Compatible
+  - Phpunit centralized to use configuration file on build (need to be refactored when phing can do that)
+
+/*********/
 /* 6.5.1 */
 /*********/
 
