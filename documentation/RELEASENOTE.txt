@@ -1,4 +1,13 @@
 /*********/
+/* 6.5.1 */
+/*********/
+
+Version plugin with multiple version
+
+#Fix
+  - Dispatch Plugin Version can now handle url with parameter to avoid multiple project version tagging
+
+/*********/
 /* 6.5.0 */
 /*********/
 
