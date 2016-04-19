@@ -89,10 +89,11 @@ class Session
     public function setId($id)
     {
         if (!$this->isStarted()) {
-            if (preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
-                throw new Exception('Session name could not anything but letters + numbers');
+            if (!preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id)) {
+                throw new Exception('Session name is not valid');
             }
             $this->id = (string)$id;
+            session_id($this->id);
         }
         return $this;
     }
@@ -103,7 +104,7 @@ class Session
      */
     public function getId()
     {
-        if ($this->isStarted()) {
+        if ($this->isStarted() && !is_null($this->id)) {
             $this->id = session_id();
         }
         return $this->id;
