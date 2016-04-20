@@ -150,7 +150,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testMkdir(\FMUP\Cache\Driver\File $cache)
     {
-        $folder = '/home/root/test';
+        $folder = '~/test';
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, $folder);
         $test = array(
             array('test', 'test'),
