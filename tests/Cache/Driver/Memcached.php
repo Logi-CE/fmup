@@ -11,8 +11,8 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\Memcached();
-        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
-        $this->assertInstanceOf('\FMUP\Cache\Driver\Memcached', $cache, 'Instance of \FMUP\Cache\Driver\Memcached');
+        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
+        $this->assertInstanceOf(\FMUP\Cache\Driver\Memcached::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\Memcached::class);
         $cache2 = new \FMUP\Cache\Driver\Memcached(array(\FMUP\Cache\Driver\Memcached::SETTINGS_CACHE_PREFIX => 'TestCase'));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');

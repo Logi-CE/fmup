@@ -6,8 +6,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\File();
-        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
-        $this->assertInstanceOf('\FMUP\Cache\Driver\File', $cache, 'Instance of \FMUP\Cache\Driver\File');
+        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
+        $this->assertInstanceOf(\FMUP\Cache\Driver\File::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\File::class);
         $cache2 = new \FMUP\Cache\Driver\File(array(\FMUP\Cache\Driver\File::SETTING_SERIALIZE => true));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $cache2->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, sys_get_temp_dir());
@@ -32,7 +32,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
             array('1', new \stdClass()),
-            array('1', $this->getMockBuilder('\stdClass')->getMock()),
+            array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
         );
         foreach ($test as $case) {
             try {
@@ -150,7 +150,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testMkdir(\FMUP\Cache\Driver\File $cache)
     {
-        $folder = '~/test';
+        $folder = '~' . DIRECTORY_SEPARATOR . 'test';
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, $folder);
         $test = array(
             array('test', 'test'),
@@ -171,6 +171,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
             $this->assertSame($cache, $return, 'Set settings must return its instance');
         }
+
         return $cache;
     }
 }

@@ -12,9 +12,9 @@ class CookieTest extends \PHPUnit_Framework_TestCase
     public function testGetInstance()
     {
         $cookie = Cookie::getInstance();
-        $this->assertInstanceOf('\FMUP\Cookie', $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, 'FMUP\Cookie'));
+        $this->assertInstanceOf(\FMUP\Cookie::class, $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\Cookie::class));
         $cookie2 = Cookie::getInstance();
-        $this->assertSame($cookie, $cookie2, sprintf(self::ERROR_NOT_INSTANCE_OF, 'FMUP\Cookie'));
+        $this->assertSame($cookie, $cookie2, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\Cookie::class));
         return $cookie;
     }
 
@@ -38,7 +38,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($cookie->has(true), 'The cookie doesn\'t exist');
 
         // check with object
-        try{
+        try {
             $this->assertFalse($cookie->has(new \stdClass()), 'The cookie doesn\'t exist');
         } catch (\Exception $e) {
             $this->assertEquals('2', $e->getCode(), self::WRONG_EXCEPTION_CODE);

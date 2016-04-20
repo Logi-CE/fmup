@@ -45,8 +45,10 @@ abstract class String
      */
     final public static function sanitize($string)
     {
-        $a = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ@!?.:/,;-(){}"= \'\\';
-        $b = 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY__________________';
+        $a = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿ'
+          . 'ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ@!?.:/,;-(){}"= \'\\';
+        $b = 'aaaaaceeeeiiiinooooouuuuyy'
+          . 'AAAAACEEEEIIIINOOOOOUUUUY__________________';
         return strtr(utf8_decode($string), utf8_decode($a), $b);
     }
 }

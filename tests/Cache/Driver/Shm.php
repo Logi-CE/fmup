@@ -11,10 +11,9 @@ class ShmTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        //$this->markTestIncomplete('Must test settings'); //@todo remove this
         $cache = new \FMUP\Cache\Driver\Shm();
-        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
-        $this->assertInstanceOf('\FMUP\Cache\Driver\Shm', $cache, 'Instance of \FMUP\Cache\Driver\Shm');
+        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
+        $this->assertInstanceOf(\FMUP\Cache\Driver\Shm::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\Shm::class);
         if (!$cache->isAvailable()) {
             $this->markTestSkipped("SHM not available");
         }

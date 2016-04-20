@@ -10,7 +10,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\Apc();
-        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
+        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of \FMUP\Cache\CacheInterface');
         $cache2 = new \FMUP\Cache\Driver\Apc(array(\FMUP\Cache\Driver\Apc::SETTING_CACHE_TYPE => \FMUP\Cache\Driver\Apc::CACHE_TYPE_USER));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
@@ -38,7 +38,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
             array('1', new \stdClass()),
-            array('1', $this->getMockBuilder('\stdClass')->getMock()),
+            array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
         );
         foreach ($test as $case) {
             try {

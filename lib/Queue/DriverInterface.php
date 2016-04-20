@@ -28,6 +28,7 @@ interface DriverInterface
      * @param Channel $channel
      * @param mixed $message
      * @param string $messageType
+     * @throws Exception
      * @return bool true on success
      */
     public function push(Channel $channel, $message, $messageType = null);

@@ -26,11 +26,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $controller = $this->getMockBuilder('\FMUP\Controller')
+        $controller = $this->getMockBuilder(\FMUP\Controller::class)
             ->setMethods(null)
             ->getMockForAbstractClass();
 
-        $this->assertInstanceOf('\FMUP\Controller', $controller, 'Not an instance of FMUP\Controller');
+        $this->assertInstanceOf(\FMUP\Controller::class, $controller, 'Not an instance of ' . \FMUP\Controller::class);
 
         return $controller;
     }
@@ -252,7 +252,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($controller2->getView(), "View should be not null");
 
         $controller3 = clone $controller;
-        $this->assertInstanceOf('\FMUP\View', $controller3->getView(), "Issue with Lazy Loading initialization.");
+        $this->assertInstanceOf(\FMUP\View::class, $controller3->getView(), "Issue with Lazy Loading initialization.");
 
         return $controller;
     }
@@ -361,11 +361,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * @param FMUPController $controller
      * @return FMUPController
      */
-    public function getHasResponse(FMUPController $controller)
+    public function testHasResponse(FMUPController $controller)
     {
         $this->assertFalse($controller->hasResponse(), 'Controller must not have reponse at creation');
         $controller2 = clone $controller;
-        $controller2->setResponse($this->getMock('\FMUP\Response'));
+        /** @var $mock \FMUP\Response */
+        $mock = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $controller2->setResponse($mock);
         $this->assertTrue($controller2->hasResponse(), 'Controller must not have reponse at creation');
         return $controller;
     }
