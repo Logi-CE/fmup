@@ -1,4 +1,14 @@
 /*********/
+/* 6.6.2 */
+/*********/
+
+Code Coverage + unit test
+
+#Compatible
+ - Fix Cache\File unit test compilation
+ - String code clean to have 11.8% code coverage + better checkstyle trend
+
+/*********/
 /* 6.6.1 */
 /*********/
 
