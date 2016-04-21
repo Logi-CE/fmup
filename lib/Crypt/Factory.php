@@ -12,6 +12,9 @@ class Factory
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
     }
@@ -54,6 +57,6 @@ class Factory
      */
     protected function getClassNameForDriver($driver)
     {
-        return __NAMESPACE__ . '\Driver\\' . $driver;
+        return __NAMESPACE__ . '\Driver\\' . (string)$driver;
     }
 }
