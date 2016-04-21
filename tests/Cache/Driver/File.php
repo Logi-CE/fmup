@@ -119,6 +119,19 @@ class FileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param \FMUP\Cache\Driver\File $cacheOriginal
+     * @depends testConstruct
+     */
+    public function testWhenUnableToCreateDirectory(\FMUP\Cache\Driver\File $cacheOriginal)
+    {
+        $err = error_reporting(0);
+        $cache = clone $cacheOriginal;
+        $this->setExpectedException(\FMUP\Cache\Exception::class);
+        $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, null)->set('test', 1);
+        error_reporting($err);
+    }
+
+    /**
      * @depends testSetGet
      * @param \FMUP\Cache\Driver\File $cache
      * @return \FMUP\Cache\Driver\File
