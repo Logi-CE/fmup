@@ -3,6 +3,7 @@
     <testsuites>
         <testsuite name="FMUP Test suite">
             <directory suffix=".php">tests</directory>
+            <directory suffix=".php">tests/*</directory>
         </testsuite>
     </testsuites>
 
