@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Cache\Driver;
 
+use FMUP\Cache\Driver;
 /**
  * Created by PhpStorm.
  * User: jmoulin
@@ -88,5 +89,90 @@ class ShmTest extends \PHPUnit_Framework_TestCase
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');
         $this->assertFalse($cache->has('test'), 'Test should\'nt exist');
+    }
+
+
+    public function testHasWhenShmNotAvailable()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('isAvailable'));
+        $cache->method('isAvailable')->willReturn(false);
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'SHM is not available');
+        /** @var $cache Driver\Shm */
+        $cache->has('bob');
+    }
+
+    public function testGetWhenShmNotAvailable()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('isAvailable'));
+        $cache->method('isAvailable')->willReturn(false);
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'SHM is not available');
+        /** @var $cache Driver\Shm */
+        $cache->get('bob');
+    }
+
+    public function testSetWhenShmNotAvailable()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('isAvailable'));
+        $cache->method('isAvailable')->willReturn(false);
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'SHM is not available');
+        /** @var $cache Driver\Shm */
+        $cache->set('bob', 'bob');
+    }
+
+    public function testRemoveWhenShmNotAvailable()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('isAvailable'));
+        $cache->method('isAvailable')->willReturn(false);
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'SHM is not available');
+        /** @var $cache Driver\Shm */
+        $cache->remove('bob');
+    }
+
+    /**
+     * @depends testConstruct
+     * @param Driver\Shm $cache
+     */
+    public function testSetGetSettings(Driver\Shm $cache)
+    {
+        $testValue = 'testValue';
+        $testKey = 'testKey';
+        $this->assertSame($cache, $cache->setSetting($testKey, $testValue));
+        $this->assertSame($testValue, $cache->getSetting($testKey));
+        $this->assertNull($cache->getSetting('nonExistingKey'));
+    }
+
+    public function testGetShmWhenShmNotAvailable()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('isAvailable'));
+        $cache->method('isAvailable')->willReturn(false);
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'SHM is not available');
+        /** @var $cache Driver\Shm */
+        $reflectionMethod = new \ReflectionMethod(Driver\Shm::class, 'getShm');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($cache);
+    }
+
+    public function testRemoveWhenShmRemoveFails()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('shmRemoveVar'));
+        $cache->method('shmRemoveVar')->willReturn(false);
+        /** @var $cache Driver\Shm */
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to delete key from cache Shm');
+        $cache->set('test', 'test')->remove('test');
+    }
+
+    public function testSetWhenShmPutFails()
+    {
+        $cache = $this->getMock(Driver\Shm::class, array('shmPutVar'));
+        $cache->method('shmRemoveVar')->willReturn(false);
+        /** @var $cache Driver\Shm */
+        if (!$cache->isAvailable()) {
+            $this->markTestSkipped("SHM not available");
+        }
+        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to define key into cache Shm');
+        $cache->set('test', 'test');
     }
 }
