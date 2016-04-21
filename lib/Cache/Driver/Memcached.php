@@ -23,7 +23,7 @@ class Memcached implements CacheInterface
     private $settings = array();
 
     /**
-     * Check whether apc is available
+     * Check whether memcached is available
      * @return bool
      */
     public function isAvailable()
@@ -163,7 +163,7 @@ class Memcached implements CacheInterface
      */
     public function setSetting($setting, $value)
     {
-        $this->settings[$setting] = $value;
+        $this->settings[(string)$setting] = $value;
         return $this;
     }
 
@@ -174,6 +174,7 @@ class Memcached implements CacheInterface
      */
     public function getSetting($setting)
     {
+        $setting = (string) $setting;
         return isset($this->settings[$setting]) ? $this->settings[$setting] : null;
     }
 }
