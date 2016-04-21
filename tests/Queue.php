@@ -147,7 +147,6 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testConstruct
      * @param \FMUP\Queue $queueOriginal
-     * @return \FMUP\Queue
      */
     public function testGetStats(\FMUP\Queue $queueOriginal)
     {
@@ -160,7 +159,6 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $stats['stats'], 'Stats not returned');
         $this->setExpectedException(\FMUP\Queue\Exception::class);
         $queue->getStats();
-        return $queueOriginal;
     }
 
     /**

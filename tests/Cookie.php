@@ -4,13 +4,51 @@ namespace Tests;
 
 use FMUP\Cookie;
 
+class Mock extends Cookie
+{
+    public function __construct()
+    {
+
+    }
+
+    protected function setCookie()
+    {
+
+    }
+}
+
 class CookieTest extends \PHPUnit_Framework_TestCase
 {
     const WRONG_EXCEPTION_CODE = 'Wrong exception code.';
     const ERROR_NOT_INSTANCE_OF = 'Not an instance of %s';
 
+    private function getCookieMock()
+    {
+        $cookie = $this->getMock(Mock::class, array('setCookie'));
+        $reflection = new \ReflectionProperty(\FMUP\Cookie::class, 'instance');
+        $reflection->setAccessible(true);
+        $reflection->setValue($cookie);
+        return $cookie;
+    }
+
+    /**
+     * @return Cookie
+     */
     public function testGetInstance()
     {
+        $reflector = new \ReflectionClass(\FMUP\Cookie::class);
+        $method = $reflector->getMethod('__construct');
+        $this->assertTrue($method->isPrivate(), 'Construct must be private');
+        try {
+            $reflector->getMethod('__clone')->invoke(\FMUP\Cookie::getInstance());
+            $this->fail('Clone must fail');
+        } catch (\ReflectionException $e) {
+            $this->assertEquals(
+                'Trying to invoke private method FMUP\Cookie::__clone() from scope ReflectionMethod',
+                $e->getMessage()
+            );
+        }
+
         $cookie = Cookie::getInstance();
         $this->assertInstanceOf(\FMUP\Cookie::class, $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\Cookie::class));
         $cookie2 = Cookie::getInstance();
@@ -23,7 +61,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
      * @param Cookie $cookie
      * @return Cookie
      */
-    public function testHas($cookie)
+    public function testHas(Cookie $cookie)
     {
         // check with empty string
         $this->assertFalse($cookie->has(''), 'The cookie doesn\'t exist');
@@ -32,91 +70,117 @@ class CookieTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($cookie->has('test'), 'The cookie doesn\'t exist');
 
         // check with null
-        $this->assertFalse($cookie->has(null), 'The cookie doesn\'t exist');
+        try {
+            $this->assertFalse($cookie->has(null), 'The cookie doesn\'t exist');
+            $this->fail('Parameter must be a string');
+        } catch (\FMUP\Exception $e) {
+            $this->assertEquals('Parameter must be a string', $e->getMessage());
+        }
 
         // check with boolean
-        $this->assertFalse($cookie->has(true), 'The cookie doesn\'t exist');
+        try {
+            $this->assertFalse($cookie->has(true), 'The cookie doesn\'t exist');
+            $this->fail('Parameter must be a string');
+        } catch (\FMUP\Exception $e) {
+            $this->assertEquals('Parameter must be a string', $e->getMessage());
+        }
 
         // check with object
         try {
             $this->assertFalse($cookie->has(new \stdClass()), 'The cookie doesn\'t exist');
-        } catch (\Exception $e) {
-            $this->assertEquals('2', $e->getCode(), self::WRONG_EXCEPTION_CODE);
+            $this->fail('Parameter must be a string');
+        } catch (\FMUP\Exception $e) {
+            $this->assertEquals('Parameter must be a string', $e->getMessage());
         }
-
         return $cookie;
     }
 
-    /**
-     * @depends testGetInstance
-     * @param Cookie $cookie
-     * @return Cookie
-     */
-    public function testSetGet($cookie)
+    public function testSet()
     {
-        $this->markTestSkipped('Test skipped because the error \'Cannot modify header information - headers already sent\'');
+        $cookie = $this->getCookieMock();
+        $cookie->expects($this->exactly(3))->method('setCookie');
+        $cookie->expects($this->at(1))->method('setCookie')->with(
+            $this->equalTo('cookie1'),
+            $this->equalTo('cookie1'),
+            $this->greaterThanOrEqual(time() + 10)
+        );
+
+
+        /** @var Cookie $cookie */
+        $cookieName = 'cookie0';
+        $cookieValue = 'cookie0';
+        $return = $cookie->set($cookieName, $cookieValue);
+        $this->assertSame($cookie, $return);
+
+        $cookieName = 14563;
+        $cookieValue = 14563;
+        try {
+            $return = $cookie->set($cookieName, $cookieValue);
+            $this->fail('Cannot set cookie with numeric Id');
+        } catch (\FMUP\Exception $e) {
+            $this->assertEquals('Parameter must be a string', $e->getMessage());
+        }
+        $this->assertSame($return, $cookie);
 
         $cookieName = 'cookie1';
-        $cookieValue = 'value1';
-
-        $cookie->set($cookieName, $cookieValue);
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
+        $cookieValue = 'cookie1';
+        $cookieExpire = 10;
+        $return = $cookie->set($cookieName, $cookieValue, $cookieExpire);
+        $this->assertSame($return, $cookie);
 
         $cookieName = 'cookie2';
-        $cookieValue = 'value2';
-        $cookie->set($cookieName, $cookieValue, 200);
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
-
-        $cookieName = 'cookie3';
-        $cookieValue = 'value3';
-        $cookie->set($cookieName, $cookieValue, 200, 'tests/');
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
-
-        $cookieName = 'cookie4';
-        $cookieValue = 'value4';
-        $cookie->set($cookieName, $cookieValue, 200, 'tests/', 'unitTests');
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
-
-        $cookieName = 'cookie5';
-        $cookieValue = 'value5';
-        $cookie->set($cookieName, $cookieValue, 200, 'tests/', 'unitTests', true);
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
-
-        $cookieName = 'cookie6';
-        $cookieValue = 'value6';
-        $cookie->set($cookieName, $cookieValue, 200, 'tests/', 'unitTests', true, true);
-        $this->assertEquals($cookieValue, $cookie->get($cookieName), 'The value returned is not the expected value for the cookie');
+        $cookieValue = 'cookie2';
+        $expire = time() + 24 * 60 * 60;
+        $return = $cookie->set($cookieName, $cookieValue, $expire);
+        $this->assertSame($return, $cookie);
 
         return $cookie;
     }
 
     /**
-     * @depends testGetInstance
-     * @param Cookie $cookie
-     * @return Cookie
+     * test method get
+     * @depends testHas
      */
-    public function testGet($cookie)
+    public function testGet(Cookie $cookie)
     {
-        $this->markTestSkipped('Test skipped because not written');
+        $this->assertEquals(null, $cookie->get('test'));
+        try {
+            $cookie->get(10);
+            $this->fail();
+        } catch (\FMUP\Exception $e) {
+            $this->assertSame('Parameter must be a string', $e->getMessage());
+        }
+        $_COOKIE['bob'] = '12';
+        $this->assertEquals($_COOKIE['bob'], $cookie->get('bob'));
+        return $cookie;
     }
 
     /**
-     * @depends testGetInstance
-     * @param Cookie $cookie
-     * @return Cookie
+     * test method remove
      */
-    public function testRemove($cookie)
+    public function testRemove()
     {
-        $this->markTestSkipped('Test skipped because not written');
+        $cookie = $this->getCookieMock();
+        $cookie->expects($this->exactly(1))->method('setCookie');
+        $this->assertSame($cookie, $cookie->remove('bleu'));
+        $_COOKIE['bob'] = '12';
+        $this->assertSame($cookie, $cookie->remove('bob'));
+        $this->assertFalse(isset($_COOKIE['bob']));
+        try {
+            $cookie->remove(12);
+            $this->fail('Must not be able to remove a non string');
+        } catch (\FMUP\Exception $e) {
+            $this->assertSame('Parameter must be a string', $e->getMessage());
+        }
+        return $cookie;
     }
 
-    /**
-     * @depends testGetInstance
-     * @param Cookie $cookie
-     * @return Cookie
-     */
-    public function testDestroy($cookie)
+    public function testDestroy()
     {
-        $this->markTestSkipped('Test skipped because not written');
+        $cookie = $this->getCookieMock();
+        $_COOKIE = array('test1' => 'test1', 'hello' => 1);
+        $cookie->expects($this->exactly(2))->method('setCookie');
+        $cookie->destroy();
+        $this->assertSame(array(), $_COOKIE);
     }
 }
