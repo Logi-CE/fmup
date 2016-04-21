@@ -109,7 +109,7 @@ class Queue implements Environment\OptionalInterface
     /**
      * Acknowledge a message
      * @param Message $message
-     * @return $this
+     * @return Queue\DriverInterface
      * @throws QueueException
      */
     public function ackMessage(Message $message)
