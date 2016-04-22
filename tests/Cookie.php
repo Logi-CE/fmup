@@ -4,16 +4,18 @@ namespace Tests;
 
 use FMUP\Cookie;
 
-class Mock extends Cookie
-{
-    public function __construct()
+if (!class_exists('\Tests\CookieMock')) {
+    class CookieMock extends Cookie
     {
+        public function __construct()
+        {
 
-    }
+        }
 
-    protected function setCookie()
-    {
+        protected function setCookie()
+        {
 
+        }
     }
 }
 
@@ -24,7 +26,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 
     private function getCookieMock()
     {
-        $cookie = $this->getMock(Mock::class, array('setCookie'));
+        $cookie = $this->getMock(CookieMock::class, array('setCookie'));
         $reflection = new \ReflectionProperty(\FMUP\Cookie::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($cookie);

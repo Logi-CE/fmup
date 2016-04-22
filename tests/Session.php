@@ -8,19 +8,23 @@ namespace Tests;
 
 use FMUP\Session;
 
-class Mock extends Session
-{
-    public function __construct()
+if (!class_exists('\Tests\SessionMock')) {
+    class SessionMock extends Session
     {
+        public function __construct()
+        {
 
+        }
     }
 }
 
-class SapiMock extends \FMUP\Sapi
-{
-    public function __construct()
+if (!class_exists('\Tests\SapiMock')) {
+    class SapiMock extends \FMUP\Sapi
     {
+        public function __construct()
+        {
 
+        }
     }
 }
 
@@ -58,7 +62,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testRegenerateFails()
     {
-        $session = $this->getMock(Mock::class, array('isStarted'));
+        $session = $this->getMock(SessionMock::class, array('isStarted'));
         $session->method('isStarted')->willReturn(false);
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
         $reflection->setAccessible(true);
@@ -68,7 +72,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testRegenerateFailsWhenSessionStart()
     {
-        $session = $this->getMock(Mock::class, array('isStarted', 'sessionRegenerateId'));
+        $session = $this->getMock(SessionMock::class, array('isStarted', 'sessionRegenerateId'));
         $session->method('isStarted')->willReturn(true);
         $session->expects($this->exactly(1))->method('sessionRegenerateId')->willReturn(false);
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -79,7 +83,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetNameWhenSessionIsStarted()
     {
-        $session = $this->getMock(Mock::class, array('isStarted', 'sessionName'));
+        $session = $this->getMock(SessionMock::class, array('isStarted', 'sessionName'));
         $session->method('isStarted')->willReturn(true);
         $session->method('sessionName')->willReturn(uniqid());
 
@@ -93,7 +97,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetName()
     {
-        $session = $this->getMock(Mock::class, array('isStarted'));
+        $session = $this->getMock(SessionMock::class, array('isStarted'));
         $session->method('isStarted')->willReturn(false);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -106,7 +110,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetNameFails()
     {
-        $session = $this->getMock(Mock::class, array('isStarted'));
+        $session = $this->getMock(SessionMock::class, array('isStarted'));
         $session->method('isStarted')->willReturn(false);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -118,7 +122,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIdWhenSessionIsStarted()
     {
-        $session = $this->getMock(Mock::class, array('isStarted', 'sessionId'));
+        $session = $this->getMock(SessionMock::class, array('isStarted', 'sessionId'));
         $session->method('isStarted')->willReturn(true);
         $session->method('sessionId')->willReturn(uniqid());
 
@@ -132,7 +136,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetId()
     {
-        $session = $this->getMock(Mock::class, array('isStarted', 'sessionId'));
+        $session = $this->getMock(SessionMock::class, array('isStarted', 'sessionId'));
         $session->method('isStarted')->willReturn(false);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -145,7 +149,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIdWhenSessionIsNotValid()
     {
-        $session = $this->getMock(Mock::class, array('isStarted', 'sessionId'));
+        $session = $this->getMock(SessionMock::class, array('isStarted', 'sessionId'));
         $session->method('isStarted')->willReturn(false);
         $session->method('sessionId')->willReturn(uniqid());
 
@@ -179,7 +183,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStartedFailsPhp53()
     {
-        $session = $this->getMock(Mock::class, array('phpVersion', 'sessionId'));
+        $session = $this->getMock(SessionMock::class, array('phpVersion', 'sessionId'));
         $session->method('phpVersion')->willReturn('5.3.0');
         $session->method('sessionId')->willReturn('');
 
@@ -192,7 +196,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStartedFailsPhp54()
     {
-        $session = $this->getMock(Mock::class, array('phpVersion', 'sessionStatus'));
+        $session = $this->getMock(SessionMock::class, array('phpVersion', 'sessionStatus'));
         $session->method('phpVersion')->willReturn('5.4.0');
         $session->method('sessionStatus')->willReturn('');
 
@@ -205,7 +209,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStartedSucceedPhp53()
     {
-        $session = $this->getMock(Mock::class, array('phpVersion', 'sessionId'));
+        $session = $this->getMock(SessionMock::class, array('phpVersion', 'sessionId'));
         $session->method('phpVersion')->willReturn('5.3.0');
         $session->method('sessionId')->willReturn(uniqid());
 
@@ -218,7 +222,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStartedSucceedPhp54()
     {
-        $session = $this->getMock(Mock::class, array('phpVersion', 'sessionStatus'));
+        $session = $this->getMock(SessionMock::class, array('phpVersion', 'sessionStatus'));
         $session->method('phpVersion')->willReturn('5.4.0');
         $session->method('sessionStatus')->willReturn(PHP_SESSION_ACTIVE);
 
@@ -231,7 +235,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetAllWhenSessionStart()
     {
-        $session = $this->getMock(Mock::class, array('start'));
+        $session = $this->getMock(SessionMock::class, array('start'));
         $session->method('start')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -254,7 +258,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetAllWhenSessionFails()
     {
-        $session = $this->getMock(Mock::class, array('start'));
+        $session = $this->getMock(SessionMock::class, array('start'));
         $session->method('start')->willReturn(false);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -279,7 +283,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMock(SapiMock::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
-        $session = $this->getMock(Mock::class, array('sessionStart'));
+        $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -298,7 +302,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMock(SapiMock::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CLI);
-        $session = $this->getMock(Mock::class, array('sessionStart'));
+        $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -317,7 +321,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMock(SapiMock::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
-        $session = $this->getMock(Mock::class, array('sessionStart'));
+        $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -337,7 +341,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMock(SapiMock::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
-        $session = $this->getMock(Mock::class, array('sessionStart'));
+        $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
