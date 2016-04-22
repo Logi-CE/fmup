@@ -1,7 +1,7 @@
 <?php
 namespace FMUP;
 
-class Bootstrap
+class Bootstrap implements Environment\OptionalInterface, Sapi\OptionalInterface, Logger\LoggerInterface
 {
     use Environment\OptionalTrait {
         getEnvironment as getEnvironmentTrait;
@@ -217,7 +217,7 @@ class Bootstrap
      * @param Environment $environment
      * @return $this
      */
-    public function setEnvironment(Environment $environment)
+    public function setEnvironment(Environment $environment = null)
     {
         if (!$environment->hasConfig()) {
             $environment->setConfig($this->getConfig());
