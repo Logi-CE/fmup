@@ -8,6 +8,7 @@ abstract class String
 {
     /**
      * private construct - singleton
+     * @codeCoverageIgnore
      */
     final private function __construct()
     {
@@ -15,6 +16,7 @@ abstract class String
 
     /**
      * private clone - singleton
+     * @codeCoverageIgnore
      */
     final private function __clone()
     {
