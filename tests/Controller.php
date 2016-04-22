@@ -93,22 +93,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a request doesn't affect the controller.");
 
         try {
-            $controller3 = clone $controller;
-            $controller3->setRequest('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Request)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setRequest($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Request)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
             $controller5 = clone $controller;
             $controller5->setRequest(null);
             $this->assertFalse(true, 'Exception expected : type error (null instead of Request)');
@@ -151,22 +135,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setResponse(new \FMUP\Response());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Response doesn't affect the controller.");
-
-        try {
-            $controller3 = clone $controller;
-            $controller3->setResponse('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Response)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setResponse($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Response)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         try {
             $controller5 = clone $controller;
@@ -213,22 +181,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a View doesn't affect the controller.");
 
         try {
-            $controller3 = clone $controller;
-            $controller3->setView('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of View)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setView($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of View)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
             $controller5 = clone $controller;
             $controller5->setView(null);
             $this->assertFalse(true, 'Exception expected : type error (null instead of View)');
@@ -266,22 +218,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setBootstrap(new Bootstrap());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Bootstrap doesn't affect the controller.");
-
-        try {
-            $controller3 = clone $controller;
-            $controller3->setBootstrap('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Bootstrap)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setBootstrap($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Bootstrap)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         try {
             $controller5 = clone $controller;

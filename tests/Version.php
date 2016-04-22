@@ -65,6 +65,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
         $this->setExpectedException(\FMUP\Exception::class, 'composer.json does not exist');
+        /** @var $version \FMUP\Version */
         $version->get();
     }
 
@@ -78,6 +79,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
         $this->setExpectedException(\FMUP\Exception::class, 'composer.json invalid structure');
+        /** @var $version \FMUP\Version */
         $version->get();
     }
 }

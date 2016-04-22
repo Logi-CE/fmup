@@ -67,6 +67,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($session);
+        /** @var $session \FMUP\Session */
         $this->assertFalse($session->regenerate());
     }
 
@@ -78,6 +79,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($session);
+        /** @var $session \FMUP\Session */
         $this->assertFalse($session->regenerate());
     }
 
@@ -91,6 +93,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertSame($session, $session->setName('test'));
         $this->assertNotSame('test', $session->getName());
     }
@@ -104,6 +107,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertSame($session, $session->setName('test'));
         $this->assertSame('test', $session->getName());
     }
@@ -117,6 +121,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
         $this->setExpectedException(\FMUP\Exception::class, 'Session name could not contain only numbers');
+        /** @var $session \FMUP\Session */
         $session->setName('123');
     }
 
@@ -130,6 +135,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertSame($session, $session->setId('test'));
         $this->assertNotSame('test', $session->getId());
     }
@@ -143,6 +149,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertSame($session, $session->setId('test'));
         $this->assertSame('test', $session->getId());
     }
@@ -171,6 +178,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         }
         $invalidNames[] = $string;
 
+        /** @var $session \FMUP\Session */
         foreach ($invalidNames as $invalidName) {
             try {
                 $this->assertSame($session, $session->setId($invalidName));
@@ -191,6 +199,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertFalse($session->isStarted());
     }
 
@@ -204,6 +213,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertFalse($session->isStarted());
     }
 
@@ -217,6 +227,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertTrue($session->isStarted());
     }
 
@@ -230,6 +241,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($session);
 
+        /** @var $session \FMUP\Session */
         $this->assertTrue($session->isStarted());
     }
 
@@ -250,6 +262,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
                 '1' => 1,
             ),
         );
+        /** @var $session \FMUP\Session */
         foreach ($sessions as $array) {
             $this->assertSame($session, $session->setAll($array));
             $this->assertSame($array, $session->getAll());
@@ -273,6 +286,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
                 '1' => 1,
             ),
         );
+        /** @var $session \FMUP\Session */
         foreach ($sessions as $array) {
             $this->assertSame($session, $session->setAll($array));
             $this->assertSame(array(), $session->getAll());
@@ -294,6 +308,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
 
+        /** @var $session \FMUP\Session */
         $session->setSapi($sapi);
         $this->assertTrue($session->start());
     }
@@ -313,6 +328,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
 
+        /** @var $session \FMUP\Session */
         $session->setSapi($sapi);
         $this->assertFalse($session->start());
     }
@@ -331,7 +347,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
-
+        /** @var $session \FMUP\Session */
         $session->setSapi($sapi);
         $this->assertTrue($session->setId('id')->start());
         $this->assertSame('id', $session->getId());
@@ -352,6 +368,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
 
+        /** @var $session \FMUP\Session */
         $session->setSapi($sapi);
         $this->assertTrue($session->setName('id')->start());
         $this->assertSame('id', $session->getName());

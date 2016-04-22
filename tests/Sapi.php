@@ -55,7 +55,7 @@ class SapiTest extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
-
+        /** @var $sapi \FMUP\Sapi */
         $this->assertTrue($sapi->is(SapiMock::CLI));
     }
 }

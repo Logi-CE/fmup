@@ -54,6 +54,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
         $cache->method('apcFetch')->willReturn(true);
         $cache->method('apcAdd')->willReturn(false);
         $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to set key into cache APC');
+        /** @var $cache Driver\Apc */
         $cache->set('bob', 'bob');
     }
 
@@ -130,6 +131,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
             array('notexists', true),
         );
         foreach ($test as $key => $case) {
+            /** @var $cache Driver\Apc */
             $hasCase = $cache->has($case[0]);
             $this->assertTrue(is_bool($hasCase), 'Return should be boolean');
             $this->assertSame($case[1], $hasCase, 'Assert case : ' . $case[0] . ' on ' . ($key + 1));
@@ -180,6 +182,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
     public function testIsAvailable()
     {
         $cache = $this->getMock(Driver\Apc::class, null);
+        /** @var $cache Driver\Apc */
         $this->assertTrue(is_bool($cache->isAvailable()));
     }
 
@@ -223,7 +226,8 @@ class ApcTest extends \PHPUnit_Framework_TestCase
     {
         $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcFetch'));
         $cache->method('isAvailable')->willReturn(true);
-        $cache->method('apcFetch')->will($this->returnCallback(function ($key, &$success) { $success = false; return false;}));
+        $cache->method('apcFetch')
+            ->will($this->returnCallback(function ($key, &$success) { $success = $key && false; return false;}));
         $key = 'unitTest';
         $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to get ' . $key . ' from APC');
         /** @var Driver\Apc $cache */

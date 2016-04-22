@@ -22,6 +22,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame(clone $cache, $cache);
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
 
+        /** @var $memcachedMock \Memcached */
         $memcachedMock = $this->getMock(\Memcached::class);
         $cache3 = new Driver\Memcached(array(Driver\Memcached::SETTINGS_MEMCACHED => $memcachedMock));
         $this->assertSame($memcachedMock, $cache3->getMemcachedInstance());
@@ -42,7 +43,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         }
 
         try {
-            $return = $cache->set('testError', 'testError');
+            $cache->set('testError', 'testError');
             $this->assertTrue(false, 'You might not be able to define value in memcached without setting server');
         } catch (\FMUP\Cache\Exception $e) {
             $this->assertEquals(20, $e->getCode(), 'Unable to store testError because no server is defined // code');
@@ -125,6 +126,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
         $memcached = $this->getMock(\Memcached::class);
         $memcached->method('delete')->willReturn(false);
+        /** @var $memcached \Memcached */
         $cache->setMemcachedInstance($memcached);
         $this->setExpectedException(\FMUP\Cache\Exception::class, 'Error while deleting key in memcached');
         $cache->remove('test');

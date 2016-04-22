@@ -52,10 +52,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $driver3 = $factory->create('apc', array('bob' => 'bob'));
         $this->assertInstanceOf(\FMUP\Cache\Driver\Apc::class, $driver3, 'Driver requested must be apc');
         $this->assertNotSame($driver2, $driver3, 'Driver requested must not be same driver');
+        /** @var $driver3 \FMUP\Cache\Driver\Apc */
         $this->assertEquals('bob', $driver3->getSetting('bob'), 'Driver settings must be set on construct');
 
         try {
-            $driver4 = $factory->create('mock', array('bob' => 'bob'));
+            $factory->create('mock', array('bob' => 'bob'));
+            $this->fail();
         } catch (\FMUP\Cache\Exception $e) {
             $this->assertEquals(
                 'Unable to create ' . \FMUP\Cache\Driver\Mock::class,

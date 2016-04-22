@@ -36,7 +36,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
             $crypt->getDriver(),
             'Instance of ' . \FMUP\Crypt\CryptInterface::class
         );
-
+        /** @var $mock \FMUP\Crypt\CryptInterface */
         $return = $crypt->setDriver($mock);
         $this->assertSame($mock, $return->getDriver(), 'Set settings must return its instance');
 
@@ -65,7 +65,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMockBuilder(\FMUP\Crypt\CryptInterface::class)->getMock();
 
         $mock->method('hash')->willReturn('e2fc714c4727ee9395f324cd2e7f331f');
-
+        /** @var $mock \FMUP\Crypt\CryptInterface */
         $this->assertEquals($mock->hash("abcd"), $crypt->hash("abcd"), 'Hashed values must be same');
         $this->assertTrue(is_string($crypt->hash("abcd")), "Hash must return a string");
 
@@ -89,6 +89,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
         );
 
         $mock->method('unHash')->willReturn('abcd');
+        /** @var $mock \FMUP\Crypt\CryptInterface */
         $crypt->setDriver($mock);
 
         $this->assertEquals($mock->unHash($res), $crypt->unHash($res), 'unHashed values must be same');

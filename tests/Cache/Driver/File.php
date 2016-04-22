@@ -47,6 +47,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             array('1', new \stdClass()),
             array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
         );
+        $return = null;
         foreach ($test as $case) {
             try {
                 $return = $cache->set($case[0], $case[1]);
@@ -108,6 +109,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
         );
+        $return = null;
         foreach ($test as $case) {
             try {
                 $return = $cache->set($case[0], $case[1]);
@@ -126,6 +128,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $cache->method('mkDir')->willReturn(false);
         $cache->method('fileExists')->willReturn(false);
         $this->setExpectedException(\FMUP\Cache\Exception::class);
+        /** @var $cache Driver\File */
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, null)->set('test', 1);
     }
 
@@ -151,6 +154,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
                 array('1', '1'),
                 array('1', '2'),
             );
+            $return = null;
             foreach ($test as $case) {
                 try {
                     $return = $cache->set($case[0], $case[1]);
@@ -183,6 +187,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
         );
+        $return = null;
         foreach ($test as $case) {
             try {
                 $return = $cache->set($case[0], $case[1]);

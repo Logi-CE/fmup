@@ -75,6 +75,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         }
 
         $driver = $this->getDriverMock();
+        /** @var $driver \FMUP\Queue\DriverInterface */
         $queue2->setDriver($driver);
         $this->assertSame($driver, $queue2->getDriver(), 'Get Driver must use set driver');
         return $queue;
@@ -87,7 +88,9 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetDriver(\FMUP\Queue $queue)
     {
-        $return = $queue->setDriver($this->getDriverMock());
+        /** @var $driver \FMUP\Queue\DriverInterface */
+        $driver = $this->getDriverMock();
+        $return = $queue->setDriver($driver);
         $this->assertEquals($queue, $return, 'Set Driver instance must return its instance');
         return $queue;
     }
@@ -105,6 +108,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $messageSent = 0;
         $mockDriver = $this->getDriverMock();
         $mockDriver->method('push')->willReturn(true);
+        /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
         foreach ($messagesToSend as $message) {
             $return = $queue->push($message);
@@ -114,9 +118,10 @@ class QueueTest extends \PHPUnit_Framework_TestCase
             }
         }
         $this->assertEquals($nbMessageToSend, $messageSent, 'Fail asserting message to send VS messages sent');
-        $mockDriver = $this->getDriverMock();
-        $mockDriver->method('push')->willReturn(false);
-        $queue->setDriver($mockDriver);
+        $mockDriver2 = $this->getDriverMock();
+        $mockDriver2->method('push')->willReturn(false);
+        /** @var $mockDriver2 \FMUP\Queue\DriverInterface */
+        $queue->setDriver($mockDriver2);
         foreach ($messagesToSend as $message) {
             $this->assertFalse($queue->push($message), 'Unable to send ' . serialize($message));
         }
@@ -134,6 +139,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $values = array(1, -2, '12', '');
         $mockDriver = $this->getDriverMock();
         $mockDriver->method('pull')->will($this->onConsecutiveCalls(1, -2, '12', ''));
+        /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
         while ($array[] = $queue->pull()) ;
         foreach ($array as $key => $msgReceived) {
@@ -152,6 +158,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $mockDriver = $this->getDriverMock();
         $mockDriver->expects($this->at(0))->method('getStats')->willReturn(array('stats' => 1));
         $mockDriver->expects($this->at(1))->method('getStats')->willThrowException(new \FMUP\Queue\Exception());
+        /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
         $stats = $queue->getStats();
         $this->assertEquals(1, $stats['stats'], 'Stats not returned');
@@ -169,8 +176,11 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $queue = clone $queueOriginal;
         $mockDriver = $this->getDriverMock();
         $mockDriver->expects($this->atLeast(1))->method('ackMessage')->willReturn($mockDriver);
+        /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
-        $return = $queue->ackMessage($this->getMock(\FMUP\Queue\Message::class));
+        $message = $this->getMock(\FMUP\Queue\Message::class);
+        /** @var $message \FMUP\Queue\Message */
+        $return = $queue->ackMessage($message);
         $this->assertSame($mockDriver, $return);
         return $queueOriginal;
     }

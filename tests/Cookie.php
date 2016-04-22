@@ -164,6 +164,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
     {
         $cookie = $this->getCookieMock();
         $cookie->expects($this->exactly(1))->method('setCookie');
+        /** @var $cookie Cookie */
         $this->assertSame($cookie, $cookie->remove('bleu'));
         $_COOKIE['bob'] = '12';
         $this->assertSame($cookie, $cookie->remove('bob'));
@@ -182,6 +183,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
         $cookie = $this->getCookieMock();
         $_COOKIE = array('test1' => 'test1', 'hello' => 1);
         $cookie->expects($this->exactly(2))->method('setCookie');
+        /** @var $cookie Cookie */
         $cookie->destroy();
         $this->assertSame(array(), $_COOKIE);
     }
