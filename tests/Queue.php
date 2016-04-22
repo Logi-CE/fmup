@@ -133,9 +133,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $array = array();
         $values = array(1, -2, '12', '');
         $mockDriver = $this->getDriverMock();
-        foreach ($values as $index => $value) {
-            $mockDriver->expects($this->at($index))->method('pull')->willReturn($value);
-        }
+        $mockDriver->method('pull')->will($this->onConsecutiveCalls(1, -2, '12', ''));
         $queue->setDriver($mockDriver);
         while ($array[] = $queue->pull()) ;
         foreach ($array as $key => $msgReceived) {
