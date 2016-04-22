@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Cache\Driver;
 
+use FMUP\Cache\Driver;
+
 class FileTest extends \PHPUnit_Framework_TestCase
 {
     const TMP_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'test';
@@ -118,17 +120,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
         return $cache;
     }
 
-    /**
-     * @param \FMUP\Cache\Driver\File $cacheOriginal
-     * @depends testConstruct
-     */
-    public function testWhenUnableToCreateDirectory(\FMUP\Cache\Driver\File $cacheOriginal)
+    public function testWhenUnableToCreateDirectory()
     {
-        $err = error_reporting(0);
-        $cache = clone $cacheOriginal;
+        $cache = $this->getMock(Driver\File::class, array('mkDir', 'fileExists'));
+        $cache->method('mkDir')->willReturn(false);
+        $cache->method('fileExists')->willReturn(false);
         $this->setExpectedException(\FMUP\Cache\Exception::class);
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, null)->set('test', 1);
-        error_reporting($err);
     }
 
     /**
