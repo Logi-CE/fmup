@@ -8,23 +8,19 @@ namespace Tests;
 
 use FMUP\Session;
 
-if (!class_exists('\Tests\SessionMock')) {
-    class SessionMock extends Session
+class SessionMock extends Session
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
     }
 }
 
-if (!class_exists('\Tests\SapiMock')) {
-    class SapiMock extends \FMUP\Sapi
+class SapiMockSession extends \FMUP\Sapi
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
     }
 }
 
@@ -295,7 +291,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testStart()
     {
-        $sapi = $this->getMock(SapiMock::class, array('get'));
+        $sapi = $this->getMock(SapiMockSession::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
         $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
@@ -315,7 +311,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testStartFailsWhenCli()
     {
-        $sapi = $this->getMock(SapiMock::class, array('get'));
+        $sapi = $this->getMock(SapiMockSession::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CLI);
         $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
@@ -335,7 +331,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testStartAndSessionId()
     {
-        $sapi = $this->getMock(SapiMock::class, array('get'));
+        $sapi = $this->getMock(SapiMockSession::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
         $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);
@@ -355,7 +351,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testStartAndSessionName()
     {
-        $sapi = $this->getMock(SapiMock::class, array('get'));
+        $sapi = $this->getMock(SapiMockSession::class, array('get'));
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
         $session = $this->getMock(SessionMock::class, array('sessionStart'));
         $session->method('sessionStart')->willReturn(true);

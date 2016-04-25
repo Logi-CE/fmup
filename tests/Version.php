@@ -6,13 +6,11 @@
 
 namespace Tests;
 
-if (!class_exists('\Tests\VersionMock')) {
-    class VersionMock extends \FMUP\Version
+class VersionMock extends \FMUP\Version
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
     }
 }
 

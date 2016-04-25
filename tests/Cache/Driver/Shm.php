@@ -167,7 +167,6 @@ class ShmTest extends \PHPUnit_Framework_TestCase
     public function testSetWhenShmPutFails()
     {
         $cache = $this->getMock(Driver\Shm::class, array('shmPutVar'));
-        $cache->method('shmRemoveVar')->willReturn(false);
         /** @var $cache Driver\Shm */
         if (!$cache->isAvailable()) {
             $this->markTestSkipped("SHM not available");

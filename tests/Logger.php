@@ -5,15 +5,14 @@
  */
 namespace Tests\Logger;
 
-if (!class_exists('\Tests\Logger\FactoryMock')) {
-    class FactoryMock extends \FMUP\Logger\Factory
+class FactoryMockLogger extends \FMUP\Logger\Factory
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
     }
 }
+
 
 namespace Tests;
 
@@ -26,15 +25,15 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\FMUP\Logger\Factory::class, $factory);
 
         $logger2 = new \FMUP\Logger();
-        $factoryMock = $this->getMock(\Tests\Logger\FactoryMock::class);
+        $factoryMock = $this->getMock(\Tests\Logger\FactoryMockLogger::class);
 
         $reflection = new \ReflectionProperty(\FMUP\Logger\Factory::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Logger\Factory::getInstance(), $factoryMock);
 
-        /** @var $factoryMock \Tests\Logger\FactoryMock */
+        /** @var $factoryMock \Tests\Logger\FactoryMockLogger */
         $logger->setFactory($factoryMock);
-        $this->assertInstanceOf(\Tests\Logger\FactoryMock::class, $logger2->getFactory());
+        $this->assertInstanceOf(\Tests\Logger\FactoryMockLogger::class, $logger2->getFactory());
     }
 
     public function testGetRequestWhenNotSet()

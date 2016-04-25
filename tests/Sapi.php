@@ -8,13 +8,11 @@ namespace Tests;
 
 use FMUP\Sapi;
 
-if (!class_exists('\Tests\SapiMock')) {
-    class SapiMock extends \FMUP\Sapi
+class SapiMock extends \FMUP\Sapi
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
     }
 }
 
@@ -22,6 +20,10 @@ class SapiTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
+        $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
+        $reflection->setAccessible(true);
+        $reflection->setValue(\FMUP\Sapi::getInstance(), null);
+
         $reflector = new \ReflectionClass(\FMUP\Sapi::class);
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');

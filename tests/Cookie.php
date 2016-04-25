@@ -4,18 +4,16 @@ namespace Tests;
 
 use FMUP\Cookie;
 
-if (!class_exists('\Tests\CookieMock')) {
-    class CookieMock extends Cookie
+class CookieMock extends Cookie
+{
+    public function __construct()
     {
-        public function __construct()
-        {
 
-        }
+    }
 
-        protected function setCookie()
-        {
+    protected function setCookie()
+    {
 
-        }
     }
 }
 

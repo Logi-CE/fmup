@@ -6,12 +6,10 @@
 
 namespace Tests;
 
-if (!class_exists('\Tests\MockResponseHeader')) {
-    class MockResponseHeader extends \FMUP\Response\Header
+class ResponseHeaderMockResponse extends \FMUP\Response\Header
+{
+    public function getType()
     {
-        public function getType()
-        {
-        }
     }
 }
 
@@ -27,11 +25,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testAddHeader()
     {
         $response = new \FMUP\Response;
-        $header1 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header1 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header1->method('getType')->willReturn('type');
-        $header2 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header2 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header2->method('getType')->willReturn('type2');
-        $header3 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header3 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header3->method('getType')->willReturn('type');
 
         /**
@@ -56,11 +54,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testClearHeader()
     {
         $response = new \FMUP\Response;
-        $header1 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header1 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header1->method('getType')->willReturn('type');
-        $header2 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header2 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header2->method('getType')->willReturn('type2');
-        $header3 = $this->getMock(MockResponseHeader::class, array('getType'));
+        $header3 = $this->getMock(ResponseHeaderMockResponse::class, array('getType'));
         $header3->method('getType')->willReturn('type');
 
         /**
@@ -99,13 +97,13 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testSend()
     {
         $response = new \FMUP\Response;
-        $header1 = $this->getMock(MockResponseHeader::class, array('render', 'getType'));
+        $header1 = $this->getMock(ResponseHeaderMockResponse::class, array('render', 'getType'));
         $header1->method('render')->will($this->returnCallback(function () { echo 'header1';}));
         $header1->method('getType')->willReturn('type1');
-        $header2 = $this->getMock(MockResponseHeader::class, array('render', 'getType'));
+        $header2 = $this->getMock(ResponseHeaderMockResponse::class, array('render', 'getType'));
         $header2->method('render')->will($this->returnCallback(function () { echo 'header2';}));
         $header2->method('getType')->willReturn('type2');
-        $header3 = $this->getMock(MockResponseHeader::class, array('render', 'getType'));
+        $header3 = $this->getMock(ResponseHeaderMockResponse::class, array('render', 'getType'));
         $header3->method('render')->will($this->returnCallback(function () { echo 'header3';}));
         $header3->method('getType')->willReturn('type1');
 
