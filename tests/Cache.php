@@ -7,14 +7,25 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass('\FMUP\Cache\Factory');
+        $reflector = new \ReflectionClass(\FMUP\Cache\Factory::class);
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         $method = $reflector->getMethod('__clone');
-        $this->assertTrue($method->isPrivate(), 'Clone must be public');
+        $this->assertTrue($method->isPrivate(), 'Clone must be private');
 
         $cache = \FMUP\Cache::getInstance(\FMUP\Cache\Factory::DRIVER_RAM);
         $this->assertInstanceOf('\FMUP\Cache', $cache, 'Instance of \FMUP\Cache');
+
+        try {
+            $reflector->getMethod('__clone')->invoke($cache);
+            $this->assertTrue(false, 'We must not be able to clone environments');
+        } catch (\ReflectionException $e) {
+            $this->assertEquals(
+                'Trying to invoke private method FMUP\Cache\Factory::__clone() from scope ReflectionMethod',
+                $e->getMessage()
+            );
+        }
+
         $cache2 = \FMUP\Cache::getInstance(\FMUP\Cache\Factory::DRIVER_RAM);
         $this->assertSame($cache, $cache2, 'Must be same instance of the driver');
         $cache3 = \FMUP\Cache::getInstance('test');

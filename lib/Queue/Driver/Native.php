@@ -108,7 +108,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
      * @param Channel $channel
      * @param mixed $message
      * @param string|int $messageType
-     * @return $this
+     * @return bool
      * @throws Exception
      */
     public function push(Channel $channel, $message, $messageType = null)
@@ -134,7 +134,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
-        return $this;
+        return $success;
     }
 
     /**

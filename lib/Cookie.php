@@ -13,6 +13,9 @@ class Cookie
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
     }
@@ -33,10 +36,14 @@ class Cookie
     /**
      * Check whether a specific information exists in cookie
      * @param string $name
+     * @throws Exception if parameter is not a string
      * @return bool
      */
     public function has($name)
     {
+        if (!is_string($name)) {
+            throw new Exception('Parameter must be a string');
+        }
         return isset($_COOKIE[$name]);
     }
 
@@ -49,21 +56,50 @@ class Cookie
      * @param string $domain
      * @param bool $secure
      * @param bool $httpOnly
+     * @throws Exception if parameter is not a string
      * @return $this
      */
     public function set($name, $value, $expire = 0, $path = "/", $domain = "", $secure = false, $httpOnly = false)
     {
+        if (!is_string($name)) {
+            throw new Exception('Parameter must be a string');
+        }
         $time = time();
         if ($expire < $time) {
             $expire = $time + $expire;
         }
-        setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        $this->setCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         return $this;
+    }
+
+    /**
+     * Method that sends cookie - Unit test only
+     * @codeCoverageIgnore
+     * @param $name
+     * @param $value
+     * @param int $expire
+     * @param string $path
+     * @param string $domain
+     * @param bool|false $secure
+     * @param bool|false $httpOnly
+     * @return bool
+     */
+    protected function setCookie(
+        $name,
+        $value,
+        $expire = 0,
+        $path = "/",
+        $domain = "",
+        $secure = false,
+        $httpOnly = false
+    ) {
+        return setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
     /**
      * Retrieve a specific Cookie value
      * @param string $name
+     * @throws Exception if parameter is not a string
      * @return mixed
      */
     public function get($name)
@@ -82,7 +118,8 @@ class Cookie
     public function remove($name, $path = "/", $domain = "", $secure = false)
     {
         if ($this->has($name)) {
-            setcookie($name, "", time() - 3600, $path, $domain, $secure);
+            $this->setCookie($name, "", time() - (3600 * 24), $path, $domain, $secure);
+            unset($_COOKIE[$name]);
         }
         return $this;
     }
@@ -93,8 +130,7 @@ class Cookie
      */
     public function destroy()
     {
-        $cookiesSet = array_keys($_COOKIE);
-        foreach ($cookiesSet as $cookie) {
+        foreach (array_keys($_COOKIE) as $cookie) {
             $this->remove($cookie);
         }
         return $this;

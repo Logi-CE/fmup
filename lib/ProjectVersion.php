@@ -32,6 +32,7 @@ class ProjectVersion
 
     /**
      * private clone - singleton
+     * @codeCoverageIgnore
      */
     private function __clone()
     {

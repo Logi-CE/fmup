@@ -14,6 +14,21 @@ class Authentication
     private $driver;
 
     /**
+     * private constructor - design pattern Singleton
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * private clone - design pattern Singleton
+     * @codeCoverageIgnore
+     */
+    private function __clone()
+    {
+    }
+
+    /**
      * @return $this
      */
     final public static function getInstance()

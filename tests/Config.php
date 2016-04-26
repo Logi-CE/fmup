@@ -6,7 +6,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $config = new \FMUP\Config;
-        $this->assertInstanceOf('\FMUP\Config\ConfigInterface', $config, 'Instance of \FMUP\Config\ConfigInterface');
+        $this->assertInstanceOf(\FMUP\Config\ConfigInterface::class, $config, 'Instance of ' . \FMUP\Config\ConfigInterface::class);
         return $config;
     }
 

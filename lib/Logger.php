@@ -90,10 +90,11 @@ class Logger
 
     /**
      * @param string $instanceName
-     * @return \Monolog\Logger
+     * @return Logger\Channel
      */
     public function get($instanceName)
     {
+        $instanceName = (string)$instanceName;
         if (!isset($this->instances[$instanceName])) {
             $channel = $this->getFactory()->getChannel($instanceName);
             $channel->setConfig($this->getConfig())->setEnvironment($this->getEnvironment());
@@ -103,12 +104,13 @@ class Logger
     }
 
     /**
-     * @param \Monolog\Logger $logger
+     * @param Logger\Channel $logger
      * @param string $instanceName
      * @return $this
      */
-    public function set(\Monolog\Logger $logger, $instanceName)
+    public function set(Logger\Channel $logger, $instanceName)
     {
+        $instanceName = (string)$instanceName;
         if (!is_null($logger) && !is_null($instanceName)) {
             $this->instances[$instanceName] = $logger;
         }
@@ -161,8 +163,10 @@ class Logger
      */
     public function log($channel, $level, $message, array $context = array())
     {
+        $channel = (string)$channel;
+        $message = (string)$message;
         $channelType = $this->get($channel);
-        if ($channelType->getName() === \FMUP\Logger\Channel\Standard::NAME) {
+        if ($channelType->getName() === Logger\Channel\Standard::NAME) {
             $message = "[Channel $channel] $message";
         }
         return $channelType->addRecord((int)$level, $message, (array)$context);

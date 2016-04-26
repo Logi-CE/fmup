@@ -31,7 +31,7 @@ class ErrorHandler
     }
 
     /**
-     * @return array
+     * @return ErrorHandler\Plugin\Abstraction[]
      */
     public function get()
     {
@@ -60,7 +60,6 @@ class ErrorHandler
             throw $e;
         }
         foreach ($this->get() as $handler) {
-            /* @var $handler ErrorHandler\Plugin\Abstraction */
             $handler->setResponse($this->getResponse())
                 ->setRequest($this->getRequest())
                 ->setBootstrap($this->getBootstrap())

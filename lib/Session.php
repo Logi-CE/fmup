@@ -12,7 +12,7 @@ class Session
     const SESSION_STARTED = true;
     const SESSION_NOT_STARTED = false;
 
-    private $sessionState = self::SESSION_NOT_STARTED;
+    private $sessionState;
     private $name;
     private $id;
     private static $instance;
@@ -21,9 +21,11 @@ class Session
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
-
     }
 
     /**
@@ -34,9 +36,19 @@ class Session
     {
         $success = false;
         if ($this->isStarted()) {
-            $success = session_regenerate_id((bool)$deleteOldSession);
+            $success = $this->sessionRegenerateId((bool)$deleteOldSession);
         }
         return $success;
+    }
+
+    /**
+     * @param bool|false $deleteOldSession
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function sessionRegenerateId($deleteOldSession = false)
+    {
+        return session_regenerate_id((bool)$deleteOldSession);
     }
 
     /**
@@ -75,14 +87,25 @@ class Session
      */
     public function getName()
     {
-        if ($this->isStarted()) {
-            $this->name = session_name();
+        if ($this->isStarted() && is_null($this->name)) {
+            $this->name = $this->sessionName();
         }
         return $this->name;
     }
 
     /**
-     * @param $id
+     * @param string $name
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function sessionName($name = null)
+    {
+        return session_name($name);
+    }
+
+    /**
+     * Define session id
+     * @param string $id
      * @return $this
      * @throws Exception
      */
@@ -93,9 +116,18 @@ class Session
                 throw new Exception('Session name is not valid');
             }
             $this->id = (string)$id;
-            session_id($this->id);
         }
         return $this;
+    }
+
+    /**
+     * @param string|null $sessionId
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function sessionId($sessionId = null)
+    {
+        return session_id($sessionId);
     }
 
     /**
@@ -104,8 +136,8 @@ class Session
      */
     public function getId()
     {
-        if ($this->isStarted() && !is_null($this->id)) {
-            $this->id = session_id();
+        if ($this->isStarted() && is_null($this->id)) {
+            $this->id = $this->sessionId();
         }
         return $this->id;
     }
@@ -117,15 +149,33 @@ class Session
     public function isStarted()
     {
         if (is_null($this->sessionState)) {
-            if (version_compare(phpversion(), '5.4.0', '>=')) {
+            if (version_compare($this->phpVersion(), '5.4.0', '>=')) {
                 $this->sessionState = (
-                    session_status() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
+                    $this->sessionStatus() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
                 );
             } else {
-                $this->sessionState = (session_id() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
+                $this->sessionState = ($this->sessionId() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
             }
         }
-        return $this->sessionState === self::SESSION_STARTED;
+        return ($this->sessionState === self::SESSION_STARTED);
+    }
+
+    /**
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function phpVersion()
+    {
+        return phpversion();
+    }
+
+    /**
+     * @return int
+     * @codeCoverageIgnore
+     */
+    protected function sessionStatus()
+    {
+        return session_status();
     }
 
     /**
@@ -135,13 +185,25 @@ class Session
     public function start()
     {
         if (!$this->isStarted() && $this->getSapi()->get() != Sapi::CLI) {
-            if ($this->getName()) {
-                session_name($this->getName());
+            if ($this->getId()) {
+                $this->sessionId($this->getId());
             }
-            $this->sessionState = session_start();
+            if ($this->getName()) {
+                $this->sessionName($this->getName());
+            }
+            $this->sessionState = $this->sessionStart();
         }
 
-        return $this->sessionState;
+        return (bool)$this->sessionState;
+    }
+
+    /**
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function sessionStart()
+    {
+        return session_start();
     }
 
     /**
@@ -170,9 +232,11 @@ class Session
      * Retrieve a session value
      * @param string $name
      * @return mixed
+     * @codeCoverageIgnore
      */
     public function get($name)
     {
+        $name = (string) $name;
         return $this->has($name) ? $_SESSION[$name] : null;
     }
 
@@ -180,9 +244,11 @@ class Session
      * Check whether a specific information exists in session
      * @param string $name
      * @return bool
+     * @codeCoverageIgnore
      */
     public function has($name)
     {
+        $name = (string) $name;
         return $this->start() && array_key_exists($name, $_SESSION);
     }
 
@@ -191,10 +257,12 @@ class Session
      * @param string $name
      * @param mixed $value
      * @return $this
+     * @codeCoverageIgnore
      */
     public function set($name, $value)
     {
         if ($this->start()) {
+            $name = (string) $name;
             $_SESSION[$name] = $value;
         }
         return $this;
@@ -203,6 +271,7 @@ class Session
     /**
      * Forget all values in session without destructing it
      * @return $this
+     * @codeCoverageIgnore
      */
     public function clear()
     {
@@ -216,6 +285,7 @@ class Session
      * Delete a specific information from session
      * @param string $name
      * @return $this
+     * @codeCoverageIgnore
      */
     public function remove($name)
     {
@@ -227,7 +297,8 @@ class Session
 
     /**
      * Destroy current session
-     * @return bool
+     * @return bool success or failure on session destruction
+     * @codeCoverageIgnore
      */
     public function destroy()
     {
@@ -238,6 +309,6 @@ class Session
             return !$this->sessionState;
         }
 
-        return self::SESSION_NOT_STARTED;
+        return false;
     }
 }

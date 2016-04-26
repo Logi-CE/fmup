@@ -1,7 +1,7 @@
 <?php
 namespace FMUP;
 
-class Bootstrap
+class Bootstrap implements Environment\OptionalInterface, Sapi\OptionalInterface, Logger\LoggerInterface
 {
     use Environment\OptionalTrait {
         getEnvironment as getEnvironmentTrait;
@@ -47,6 +47,7 @@ class Bootstrap
     /**
      * Define default timezone
      * @return $this
+     * @codeCoverageIgnore
      */
     protected function defineTimezone()
     {
@@ -122,7 +123,7 @@ class Bootstrap
     public function registerErrorHandler()
     {
         if (!$this->isErrorHandlerRegistered) {
-            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME));
+            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME)->getLogger());
             $this->isErrorHandlerRegistered = true;
         }
         return $this;
@@ -217,7 +218,7 @@ class Bootstrap
      * @param Environment $environment
      * @return $this
      */
-    public function setEnvironment(Environment $environment)
+    public function setEnvironment(Environment $environment = null)
     {
         if (!$environment->hasConfig()) {
             $environment->setConfig($this->getConfig());

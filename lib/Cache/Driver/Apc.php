@@ -60,11 +60,22 @@ class Apc implements CacheInterface
         }
         $key = $this->getCacheKey($key);
         $success = null;
-        $return = apc_fetch($key, $success);
+        $return = $this->apcFetch($key, $success);
         if (false === $success) {
             throw new Exception('Unable to get ' . $key . ' from APC');
         }
         return $return;
+    }
+
+    /**
+     * @param string $key
+     * @param bool &$success
+     * @return mixed
+     * @codeCoverageIgnore
+     */
+    protected function apcFetch($key, &$success)
+    {
+        return apc_fetch($key, $success);
     }
 
     /**
@@ -79,7 +90,17 @@ class Apc implements CacheInterface
             throw new Exception('APC is not available');
         }
         $key = $this->getCacheKey($key);
-        return (bool)apc_exists($key);
+        return (bool)$this->apcExists($key);
+    }
+
+    /**
+     * @param string $key
+     * @return bool|\string[]
+     * @codeCoverageIgnore
+     */
+    protected function apcExists($key)
+    {
+        return apc_exists($key);
     }
 
     /**
@@ -95,14 +116,34 @@ class Apc implements CacheInterface
         }
         $key = $this->getCacheKey($key);
         if ($this->getCacheType() == self::CACHE_TYPE_OP_CODE) {
-            $success = apc_delete_file($key);
+            $success = $this->apcDeleteFile($key);
         } else {
-            $success = apc_delete($key);
+            $success = $this->apcDelete($key);
         }
         if (!$success) {
             throw new Exception('Unable to delete key from cache APC');
         }
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return bool|\string[]
+     * @codeCoverageIgnore
+     */
+    protected function apcDelete($key)
+    {
+        return apc_delete($key);
+    }
+
+    /**
+     * @param string $key
+     * @return bool|\string[]
+     * @codeCoverageIgnore
+     */
+    protected function apcDeleteFile($key)
+    {
+        return apc_delete_file($key);
     }
 
     /**
@@ -121,10 +162,34 @@ class Apc implements CacheInterface
         $ttl = $this->getSetting(self::CACHE_TTL_DEFAULT)
             ? (int)$this->getSetting(self::CACHE_TTL_DEFAULT)
             : self::CACHE_TTL_DEFAULT;
-        if (!apc_store($key, $value, $ttl) && !apc_add($key, $value, $ttl)) {
+        if (!$this->apcStore($key, $value, $ttl) && !$this->apcAdd($key, $value, $ttl)) {
             throw new Exception('Unable to set key into cache APC');
         }
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param int $ttl
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function apcAdd($key, $value, $ttl = 0)
+    {
+        return apc_add($key, $value, $ttl);
+    }
+
+    /**
+     * @param string|array $key
+     * @param mixed $value
+     * @param int $ttl
+     * @return array|bool
+     * @codeCoverageIgnore
+     */
+    protected function apcStore($key, $value, $ttl = 0)
+    {
+        return apc_store($key, $value, $ttl);
     }
 
     /**
@@ -137,7 +202,17 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
-        return apc_clear_cache($this->getCacheType());
+        return $this->apcClearCache($this->getCacheType());
+    }
+
+    /**
+     * @param string $cacheType
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function apcClearCache($cacheType = '')
+    {
+        return apc_clear_cache($cacheType);
     }
 
     /**
@@ -153,7 +228,18 @@ class Apc implements CacheInterface
         if (!$this->isAvailable()) {
             throw new Exception('APC is not available');
         }
-        return apc_cache_info($this->getCacheType(), (bool)$limited);
+        return $this->apcCacheInfo($this->getCacheType(), (bool)$limited);
+    }
+
+    /**
+     * @param string $cacheType
+     * @param bool|false $limited
+     * @return array|bool
+     * @codeCoverageIgnore
+     */
+    protected function apcCacheInfo($cacheType, $limited = false)
+    {
+        return apc_cache_info($cacheType, (bool)$limited);
     }
 
     /**
@@ -199,7 +285,7 @@ class Apc implements CacheInterface
     {
         if (is_null($this->isAvailable)) {
             $iniValue = ini_get('apc.enabled');
-            $iniEnabled = (strtolower($iniValue) == 'on' || $iniValue == 1);
+            $iniEnabled = ($iniValue == 1 || strtolower($iniValue) == 'on');
             $this->isAvailable = function_exists('apc_clear_cache') && $iniEnabled;
         }
         return $this->isAvailable;
