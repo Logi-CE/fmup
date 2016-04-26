@@ -92,9 +92,6 @@ class Db implements Logger\LoggerInterface
     {
         $statement = $this->getDriver()->prepare($sql);
         $this->getDriver()->execute($statement, $params);
-        /**
-         * @todo tune with DB cursor if available // move this to driver
-         */
         $arrayResult = $this->getDriver()->fetchAll($statement);
         return empty($arrayResult) ? array() : new \ArrayIterator($arrayResult);
     }
@@ -147,7 +144,7 @@ class Db implements Logger\LoggerInterface
 
     /**
      * Force reconnection
-     * @return string
+     * @return Db\DbInterface
      */
     public function forceReconnect()
     {
