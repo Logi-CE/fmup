@@ -12,6 +12,21 @@ class FlashMessenger
     private $driver;
 
     /**
+     * private constructor - design pattern Singleton
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * private clone - design pattern Singleton
+     * @codeCoverageIgnore
+     */
+    private function __clone()
+    {
+    }
+
+    /**
      * Set the singleton messenger instance
      * @return FlashMessenger
      */
