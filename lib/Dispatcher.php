@@ -43,6 +43,7 @@ class Dispatcher
     {
         $this->setOriginalRequest($request);
         if (!$this->isInitDefaultPlugin) {
+            $this->isInitDefaultPlugin = true;
             $this->defaultPlugins();
         }
         foreach ($this->plugins as $plugin) {
@@ -132,7 +133,6 @@ class Dispatcher
      */
     public function defaultPlugins()
     {
-        $this->isInitDefaultPlugin = true;
         return $this;
     }
 }
