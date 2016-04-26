@@ -47,6 +47,7 @@ class Bootstrap implements Environment\OptionalInterface, Sapi\OptionalInterface
     /**
      * Define default timezone
      * @return $this
+     * @codeCoverageIgnore
      */
     protected function defineTimezone()
     {
@@ -122,7 +123,7 @@ class Bootstrap implements Environment\OptionalInterface, Sapi\OptionalInterface
     public function registerErrorHandler()
     {
         if (!$this->isErrorHandlerRegistered) {
-            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME));
+            \Monolog\ErrorHandler::register($this->getLogger()->get(\FMUP\Logger\Channel\System::NAME)->getLogger());
             $this->isErrorHandlerRegistered = true;
         }
         return $this;
