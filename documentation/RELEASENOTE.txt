@@ -1,4 +1,42 @@
 /*********/
+/* 6.6.3 */
+/*********/
+
+Code Coverage 40.5% overall
+
+#Compatible
+ - add Sapi\OptionalInterface component
+ - add getRoutes method on Routing Component
+ - code clean unit test
+ - add Queue 100% code coverage
+ - add Cookie 100% code coverage
+ - add Environment\OptionalTrait 100% code coverage
+ - add Crypt\Factory 100% code coverage
+ - add Crypt\Driver\MCrypt 100% code coverage
+ - add Crypt\Driver\Md5 100% code coverage
+ - add Cache\Driver\File 100% code coverage
+ - add Cache\Memcached 100% code coverage
+ - add Cache\Driver\Shm 100% code coverage
+ - add Cache\Driver\Apc 100% code coverage
+ - add String 100% code coverage
+ - add Session 100% code coverage
+ - add Sapi 100% code coverage
+ - add Sapi\OptionalTrait 100% code coverage
+ - add Version 100% code coverage
+ - add Routing 100% code coverage
+ - add Response 100% code coverage
+ - add ProjectVersion 100% code coverage
+ - add Mail 100% code coverage
+ - add Logger 100% code coverage
+ - add Import 100% code coverage
+ - add Framework class 100% code coverage
+ - add ErrorHandler 100% code coverage
+ - add Dispatcher 100% code coverage
+ - add Db 100% code coverage
+ - add Bootstrap 100% code coverage
+ - add Authentication 100% code coverage
+
+/*********/
 /* 6.6.2 */
 /*********/
 
