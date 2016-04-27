@@ -34,7 +34,7 @@ class ContentDisposition extends Header
         if (!empty($fileName)) {
             $headers[] = 'filename="' . $fileName . '"';
         }
-        return implode(' ;', $headers);
+        return implode('; ', $headers);
     }
 
     /**
@@ -43,12 +43,12 @@ class ContentDisposition extends Header
      */
     public function setFileName($fileName = null)
     {
-        $this->fileName = $fileName;
+        $this->fileName = is_null($fileName) ? null : (string) $fileName;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFileName()
     {
