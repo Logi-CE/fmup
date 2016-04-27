@@ -6,42 +6,47 @@ use FMUP\Config;
 class Ini implements ConfigInterface
 {
     private $filePath;
-    private $environment;
+    private $section;
     private $config = array();
 
     /**
      * @param string $filePath
-     * @param string|null $environment
+     * @param string|null $section
      */
-    public function __construct($filePath, $environment = null)
+    public function __construct($filePath, $section = null)
     {
-        $this->filePath = $filePath;
-        $this->environment = $environment;
+        $this->filePath = (string)$filePath;
+        $this->section = is_null($section) ? null : (string) $section;
     }
 
     /**
      * @return string
+     * @throws Exception if file do not exists
      */
     protected function getFilePath()
     {
+        if (!file_exists($this->filePath)) {
+            throw new Exception('File does not exist');
+        }
         return $this->filePath;
     }
 
     /**
      * @return null|string
      */
-    protected function getEnvironment()
+    protected function getSection()
     {
-        return $this->environment;
+        return $this->section;
     }
 
     /**
      * @return array
+     * @throws Exception if file do not exists
      */
     protected function getConfig()
     {
         if (!$this->config) {
-            $this->config = parse_ini_file($this->getFilePath(), $this->getEnvironment());
+            $this->config = parse_ini_file($this->getFilePath(), $this->getSection());
         }
         return $this->config;
     }

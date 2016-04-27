@@ -22,7 +22,7 @@ class Extended extends Ini
     public function getConfig()
     {
         if (!$this->config) {
-            $this->config = new Extended\ZendConfig\Ini($this->getFilePath(), $this->getEnvironment(), true);
+            $this->config = new Extended\ZendConfig\Ini($this->getFilePath(), $this->getSection(), true);
         }
         return $this->config;
     }
