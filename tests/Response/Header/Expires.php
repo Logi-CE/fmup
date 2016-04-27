@@ -31,6 +31,7 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
     public function testGetValue()
     {
         $expires = new \FMUP\Response\Header\Expires();
+        $this->assertInstanceOf(\FMUP\Response\Header::class, $expires);
         $dateTime = new \DateTime('+2 months');
         $this->assertSame($expires, $expires->setExpireDate($dateTime));
         $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
