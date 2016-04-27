@@ -17,7 +17,8 @@ class Extended extends Ini
 
     /**
      * @uses FMUP\Config
-     * @return $this
+     * @uses Extended\ZendConfig\Ini
+     * @return Extended\ZendConfig\Ini
      */
     public function getConfig()
     {
@@ -44,7 +45,7 @@ class Extended extends Ini
     public function get($key = null)
     {
         if (is_null($key)) {
-            return $this->getConfig();
+            return (array)$this->getConfig();
         }
         return $this->has($key) ? $this->getConfig()->$key : null;
     }
