@@ -12,6 +12,7 @@ class CacheControlTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cacheControl = new \FMUP\Response\Header\CacheControl();
+        $this->assertInstanceOf(\FMUP\Response\Header::class, $cacheControl);
         $this->assertInstanceOf(\DateTime::class, $cacheControl->getExpireDate());
         $this->assertEquals(time(), $cacheControl->getExpireDate()->getTimestamp());
         $this->assertSame(\FMUP\Response\Header\CacheControl::CACHE_TYPE_PUBLIC, $cacheControl->getCacheType());

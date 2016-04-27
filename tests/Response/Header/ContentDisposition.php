@@ -11,27 +11,28 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $cacheControl = new \FMUP\Response\Header\ContentDisposition();
-        $this->assertSame('attachment', $cacheControl->getValue());
-        $cacheControl = new \FMUP\Response\Header\ContentDisposition('', 'test.png');
-        $this->assertSame('filename="test.png"', $cacheControl->getValue());
-        $cacheControl = new \FMUP\Response\Header\ContentDisposition('disp', 'test.png');
-        $this->assertSame('disp; filename="test.png"', $cacheControl->getValue());
+        $contentDisposition = new \FMUP\Response\Header\ContentDisposition();
+        $this->assertInstanceOf(\FMUP\Response\Header::class, $contentDisposition);
+        $this->assertSame('attachment', $contentDisposition->getValue());
+        $contentDisposition = new \FMUP\Response\Header\ContentDisposition('', 'test.png');
+        $this->assertSame('filename="test.png"', $contentDisposition->getValue());
+        $contentDisposition = new \FMUP\Response\Header\ContentDisposition('disp', 'test.png');
+        $this->assertSame('disp; filename="test.png"', $contentDisposition->getValue());
     }
 
     public function testSetGetFilename()
     {
-        $cacheControl = new \FMUP\Response\Header\ContentDisposition();
-        $this->assertNull($cacheControl->getFileName());
-        $this->assertSame($cacheControl, $cacheControl->setFileName('billy'));
-        $this->assertSame('billy', $cacheControl->getFileName());
-        $this->assertSame($cacheControl, $cacheControl->setFileName());
-        $this->assertNull($cacheControl->getFileName());
+        $contentDisposition = new \FMUP\Response\Header\ContentDisposition();
+        $this->assertNull($contentDisposition->getFileName());
+        $this->assertSame($contentDisposition, $contentDisposition->setFileName('billy'));
+        $this->assertSame('billy', $contentDisposition->getFileName());
+        $this->assertSame($contentDisposition, $contentDisposition->setFileName());
+        $this->assertNull($contentDisposition->getFileName());
     }
 
     public function testGetType()
     {
-        $cacheControl = new \FMUP\Response\Header\ContentDisposition();
-        $this->assertSame(\FMUP\Response\Header\ContentDisposition::TYPE, $cacheControl->getType());
+        $contentDisposition = new \FMUP\Response\Header\ContentDisposition();
+        $this->assertSame(\FMUP\Response\Header\ContentDisposition::TYPE, $contentDisposition->getType());
     }
 }
