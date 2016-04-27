@@ -23,7 +23,7 @@ class ContentLength extends Header
      */
     public function getContentLength()
     {
-        return $this->contentLength;
+        return (int)$this->contentLength;
     }
 
     /**
@@ -33,7 +33,7 @@ class ContentLength extends Header
      */
     public function setContentLength($contentLength)
     {
-        $this->contentLength = $contentLength;
+        $this->contentLength = (int)$contentLength;
         return $this;
     }
 
@@ -43,7 +43,7 @@ class ContentLength extends Header
      */
     public function getValue()
     {
-        return $this->getContentLength();
+        return (string)$this->getContentLength();
     }
 
     /**
