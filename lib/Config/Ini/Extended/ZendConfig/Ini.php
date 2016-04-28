@@ -128,7 +128,6 @@ class Ini extends ZendConfig
                     throw new Exception("Section '$sectionName' cannot be found in $filename");
                 }
                 $dataArray = $this->arrayMergeRecursive($this->processSection($iniArray, $sectionName), $dataArray);
-
             }
             parent::__construct($dataArray, $allowModifications);
         }
