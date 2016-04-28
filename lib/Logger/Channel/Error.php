@@ -39,7 +39,7 @@ class Error extends Standard
     /**
      * @return \FMUP\ProjectVersion
      */
-    private function getProjectVersion()
+    public function getProjectVersion()
     {
         if (!$this->projectVersion) {
             $this->projectVersion = \FMUP\ProjectVersion::getInstance();
