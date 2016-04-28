@@ -47,7 +47,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock(\FMUP\Request\Cli::class, null);
         $bootstrap = $this->getMock(
             \FMUP\Bootstrap::class,
-            array('defineTimezone', 'getLogger', 'initHelperDb', 'getEnvironment', 'getConfig', 'getRequest', 'hasRequest')
+            array('defineTimezone', 'getLogger', 'initHelperDb', 'getSection', 'getConfig', 'getRequest', 'hasRequest')
         );
         $bootstrap->expects($this->exactly(1))->method('defineTimezone');
         $bootstrap->method('getLogger')->willReturn($logger);

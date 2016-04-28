@@ -15,7 +15,7 @@ abstract class Header
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->value = (string)$value;
         return $this;
     }
 
@@ -25,7 +25,7 @@ abstract class Header
      */
     public function getValue()
     {
-        return $this->value;
+        return (string)$this->value;
     }
 
     /**
@@ -40,7 +40,16 @@ abstract class Header
      */
     public function render()
     {
-        header($this->getType() . ': ' . $this->getValue());
+        $this->header($this->getType() . ': ' . $this->getValue());
         return $this;
+    }
+
+    /**
+     * @param string $value
+     * @codeCoverageIgnore
+     */
+    protected function header($value)
+    {
+        header($value);
     }
 }

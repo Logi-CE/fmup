@@ -13,6 +13,7 @@ use FMUP\Config\Ini\Extended\ZendConfig;
  * @package    Zend_Config
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @codeCoverageIgnore since its an open source component
  */
 class Ini extends ZendConfig
 {
@@ -127,7 +128,6 @@ class Ini extends ZendConfig
                     throw new Exception("Section '$sectionName' cannot be found in $filename");
                 }
                 $dataArray = $this->arrayMergeRecursive($this->processSection($iniArray, $sectionName), $dataArray);
-
             }
             parent::__construct($dataArray, $allowModifications);
         }

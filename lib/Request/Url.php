@@ -89,7 +89,7 @@ class Url
         }
         $params = array_merge($params, $this->getParams());
         if (!empty($params)) {
-            $url .= '?' . http_build_query($params);
+            $url .= '?' . urldecode(http_build_query($params));
         }
         return $url;
     }

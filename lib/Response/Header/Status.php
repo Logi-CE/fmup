@@ -13,6 +13,7 @@ class Status extends Header
     const TYPE = 'Status';
 
     const VALUE_OK = '200 OK';
+
     const VALUE_BAD_REQUEST= '400 Bad Request';
     const VALUE_UNAUTHORIZED = '401 Unauthorized';
     const VALUE_PAYMENT_REQUIRED = '402 Payment Required';
@@ -48,8 +49,17 @@ class Status extends Header
      */
     public function render()
     {
-        header('HTTP/1.1 ' . $this->getValue());
+        $this->header('HTTP/1.1 ' . $this->getValue());
         return $this;
+    }
+
+    /**
+     * @param string $value
+     * @codeCoverageIgnore
+     */
+    protected function header($value)
+    {
+        header($value);
     }
 
     /**

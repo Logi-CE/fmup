@@ -26,7 +26,7 @@ class Pragma extends Header
      */
     public function getMode()
     {
-        return $this->mode;
+        return (string)$this->mode;
     }
 
     /**
@@ -36,7 +36,7 @@ class Pragma extends Header
      */
     public function setMode($mode)
     {
-        $this->mode = $mode;
+        $this->mode = (string)$mode;
         return $this;
     }
 

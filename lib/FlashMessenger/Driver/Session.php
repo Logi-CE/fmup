@@ -16,7 +16,7 @@ class Session implements DriverInterface
     /**
      * @return \FMUP\Session
      */
-    private function getSession()
+    protected function getSession()
     {
         if (!$this->session) {
             $this->session = \FMUP\Session::getInstance();
@@ -49,7 +49,7 @@ class Session implements DriverInterface
 
     /**
      * Get all the messages in the session
-     * @return array|null $flashes
+     * @return Message[]|null $flashes
      */
     public function get()
     {

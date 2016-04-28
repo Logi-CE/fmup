@@ -10,7 +10,7 @@ class CacheControl extends Header
     const CACHE_TYPE_PRIVATE = 'private';
 
     private $expireDate;
-    private $cacheType;
+    private $cacheType = self::CACHE_TYPE_PUBLIC;
 
     /**
      * @param \DateTime $dateTime
