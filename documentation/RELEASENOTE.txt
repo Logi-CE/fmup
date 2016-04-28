@@ -1,4 +1,63 @@
 /*********/
+/* 6.6.4 */
+/*********/
+
+Code Coverage 64.8% overall + Url encoding bugfix + String referencies bugfix
+
+#Fix
+ - Component Request\Url now produces correct parameters on url
+ - Fix string referencies. Will be available on PHP >= 5.5
+
+#Compatible
+ - add Authentication\Driver\Session 100% code coverage
+ - add Config\RequiredTrait 100% code coverage
+ - add Config\OptionalTrait 100% code coverage
+ - add Config\Ini 100% code coverage
+ - add Config\Ini\Extended 100% code coverage
+ - add Controller\Error 100% code coverage
+ - add Controller\Helper\Download 100% code coverage
+ - add Exception\Status\Unauthorized 100% code coverage
+ - add Exception\Status\Forbidden 100% code coverage
+ - add Exception\Status\NotFound 100% code coverage
+ - add Response\Header\CacheControl 100% code coverage
+ - add Response\Header\ContentDisposition 100% code coverage
+ - add Response\Header\ContentLength 100% code coverage
+ - add Response\Header\ContentTransferEncoding 100% code coverage
+ - add Response\Header\ContentType 100% code coverage
+ - add Response\Header\Expires 100% code coverage
+ - add Response\Header\LastModified 100% code coverage
+ - add Response\Header\Location 100% code coverage
+ - add Response\Header\Pragma 100% code coverage
+ - add Response\Header\Status 100% code coverage
+ - add Response\Header 100% code coverage
+ - add FlashMessenger\Message 100% code coverage
+ - add FlashMessenger\View 100% code coverage
+ - add FlashMessenger\Driver\Session 100% code coverage
+ - add ErrorHandler\Base 100% code coverage
+ - add ErrorHandler\Plugin\Abstraction 100% code coverage
+ - add ErrorHandler\Plugin\HttpHeader 100% code coverage
+ - add ErrorHandler\Plugin\Log 100% code coverage
+ - add ErrorHandler\Plugin\Mail 100% code coverage
+ - add ErrorHandler\Plugin\ErrorController 100% code coverage
+ - add Routing\Route 100% code coverage
+ - add Routing\ByMask 100% code coverage
+ - add Routing\Route\Cli 100% code coverage
+ - add Request\Cli 100% code coverage
+ - add Request\Http 100% code coverage
+ - add Request\Url 100% code coverage
+ - add Dispatcher\Post 100% code coverage
+ - add Dispatcher\Plugin 100% code coverage
+ - add Dispatcher\Plugin\Version 100% code coverage
+ - add Dispatcher\Plugin\Render 100% code coverage
+ - add Logger\LoggerTrait 100% code coverage
+ - add Logger\Factory 100% code coverage
+ - add Logger\Channel 100% code coverage
+ - add Logger\Channel\System 100% code coverage
+ - add Logger\Channel\Error 100% code coverage
+ - add Logger\Channel\Standard 100% code coverage
+ - add \Logger\Channel\Syslog 100% code coverage
+
+/*********/
 /* 6.6.3 */
 /*********/
 
