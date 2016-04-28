@@ -26,6 +26,9 @@ class Factory
         return self::$instance;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
 
@@ -55,7 +58,7 @@ class Factory
     {
         $className = __NAMESPACE__ . '\Channel\\' . ucfirst($channel);
         if (!class_exists($className)) {
-            $className = \FMUP\Logger\Channel\Standard::class;
+            $className = __NAMESPACE__ . '\Channel\Standard';
         }
         return $className;
     }
