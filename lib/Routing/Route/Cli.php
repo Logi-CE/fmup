@@ -34,11 +34,11 @@ class Cli extends Route
     public function getControllerName()
     {
         if (!class_exists($this->controller)) {
-            throw new NotFound('Controller ' . $this->controller . ' does not exists', self::ERROR_NOT_FOUND);
+            throw new NotFound('Controller ' . $this->controller . ' does not exist', self::ERROR_NOT_FOUND);
         }
         $controller = new $this->controller;
         if (!$controller instanceof Controller) {
-            throw new NotFound('Controller ' . $this->controller . ' does not exists', self::ERROR_LOGIC);
+            throw new NotFound('Controller ' . $this->controller . ' does not exist', self::ERROR_LOGIC);
         }
         return $this->controller;
     }
