@@ -64,7 +64,7 @@ interface DbInterface
 
     /**
      * Execute a statement for given values
-     * @param object $statement
+     * @param object|\PDOStatement $statement
      * @param array $values
      * @return bool
      * @throws Exception
@@ -75,7 +75,7 @@ interface DbInterface
     /**
      * Prepare a SQL string to a statement
      * @param string $sql
-     * @return object
+     * @return object|\PDOStatement
      * @throws Exception
      * @throws \Exception
      */
@@ -92,7 +92,7 @@ interface DbInterface
 
     /**
      * Fetch a row for a given statement
-     * @param object $statement
+     * @param object|\PDOStatement $statement
      * @param int $cursorOrientation Cursor orientation (next by default)
      * @param int $cursorOffset Cursor offset (0 by default)
      * @return array
@@ -103,7 +103,7 @@ interface DbInterface
 
     /**
      * Fetch all rows for a given statement
-     * @param object $statement
+     * @param object|\PDOStatement $statement
      * @return array
      * @throws Exception
      * @throws \Exception
