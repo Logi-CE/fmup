@@ -11,11 +11,16 @@ class SqlSrv extends Pdo
     {
         $options = parent::getOptions();
         $charset = $this->getCharset();
-        $mustSetUtf8Option = (defined('\PDO::SQLSRV_ENCODING_UTF8') && !isset($options[\PDO::SQLSRV_ENCODING_UTF8]));
+        $mustSetUtf8Option = (!isset($options[$this->getSqlSrvEncodingUtf8Const()]));
         if ($charset == self::CHARSET_UTF8 && $mustSetUtf8Option) {
-            $options[\PDO::SQLSRV_ENCODING_UTF8] = true;
+            $options[$this->getSqlSrvEncodingUtf8Const()] = true;
         }
         return $options;
+    }
+
+    protected function getSqlSrvEncodingUtf8Const()
+    {
+        return defined('\PDO::SQLSRV_ENCODING_UTF8') ? \PDO::SQLSRV_ENCODING_UTF8 : 'utf8';
     }
 
     protected function getDsn()
