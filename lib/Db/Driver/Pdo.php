@@ -46,7 +46,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
                     $this->getOptions()
                 );
             } catch (\Exception $e) {
-                $this->log(Logger::CRITICAL, 'Unable to connect database', $this->getSettings());
+                $this->log(Logger::CRITICAL, 'Unable to connect database', (array)$this->getSettings());
                 throw new Exception('Unable to connect database', $e->getCode(), $e);
             }
             $this->defaultConfiguration($this->instance);
