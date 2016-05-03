@@ -159,10 +159,18 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     public function seek($offset)
     {
         $this->row = (int)$offset;
-        $this->current = $this->getDbInterface()->fetchRow($this->getStatement(), DbInterface::CURSOR_FIRST, $this->row);
+        $this->current = $this->getDbInterface()->fetchRow(
+            $this->getStatement(),
+            DbInterface::CURSOR_FIRST,
+            $this->row
+        );
         if ($this->current === false) {
             $this->getStatement()->execute();
-            $this->current = $this->getDbInterface()->fetchRow($this->getStatement(), DbInterface::CURSOR_FIRST, $this->row);
+            $this->current = $this->getDbInterface()->fetchRow(
+                $this->getStatement(),
+                DbInterface::CURSOR_FIRST,
+                $this->row
+            );
         }
     }
 }
