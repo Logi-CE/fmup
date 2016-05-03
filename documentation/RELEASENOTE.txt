@@ -1,4 +1,13 @@
 /*********/
+/* 6.6.5 */
+/*********/
+
+Fix dispatcher to avoid multiple default plugins instantiations if externally called
+
+#Fix
+ - Dispatcher avoid multiple default plugins instantiations if externally called
+
+/*********/
 /* 6.6.4 */
 /*********/
 
