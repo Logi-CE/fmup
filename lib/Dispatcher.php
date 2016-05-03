@@ -42,8 +42,7 @@ class Dispatcher
     public function dispatch(Request $request, Response $response)
     {
         $this->setOriginalRequest($request);
-        if (!$this->isInitDefaultPlugin) {
-            $this->isInitDefaultPlugin = true;
+        if ($this->canInitDefaultPlugin()) {
             $this->defaultPlugins();
         }
         foreach ($this->plugins as $plugin) {
@@ -55,6 +54,16 @@ class Dispatcher
             }
         }
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canInitDefaultPlugin()
+    {
+        $bool = $this->isInitDefaultPlugin;
+        $this->isInitDefaultPlugin = true;
+        return !$bool;
     }
 
     /**
@@ -133,6 +142,7 @@ class Dispatcher
      */
     public function defaultPlugins()
     {
+        $this->canInitDefaultPlugin(); // if externally called, avoid to re-init plugins and execute them multiple times
         return $this;
     }
 }
