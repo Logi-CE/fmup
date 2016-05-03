@@ -143,7 +143,7 @@ class Settings
      */
     public function setBlockSend($blockSend = false)
     {
-        $this->flags |= ($blockSend) ? self::FLAG_BLOCK_SEND : ~self::FLAG_BLOCK_SEND;
+        $this->flags = ($blockSend) ? $this->flags | self::FLAG_BLOCK_SEND : $this->flags & ~self::FLAG_BLOCK_SEND;
         return $this;
     }
 
@@ -163,7 +163,7 @@ class Settings
      */
     public function setSerialize($serialize = true)
     {
-        $this->flags |= ($serialize) ? self::FLAG_SERIALIZE : ~self::FLAG_SERIALIZE;
+        $this->flags = ($serialize) ? $this->flags | self::FLAG_SERIALIZE : $this->flags & ~self::FLAG_SERIALIZE;
         return $this;
     }
 
@@ -183,7 +183,9 @@ class Settings
      */
     public function setBlockReceive($blockReceive = false)
     {
-        $this->flags |= ($blockReceive) ? self::FLAG_BLOCK_RECEIVE : ~self::FLAG_BLOCK_RECEIVE;
+        $this->flags = ($blockReceive)
+            ? $this->flags | self::FLAG_BLOCK_RECEIVE
+            : $this->flags & ~self::FLAG_BLOCK_RECEIVE;
         return $this;
     }
 
@@ -203,7 +205,7 @@ class Settings
      */
     public function setAutoAck($autoAck = false)
     {
-        $this->flags |= ($autoAck) ? self::FLAG_AUTO_ACK : ~self::FLAG_AUTO_ACK;
+        $this->flags = ($autoAck) ? $this->flags | self::FLAG_AUTO_ACK : $this->flags & ~self::FLAG_AUTO_ACK;
         return $this;
     }
 

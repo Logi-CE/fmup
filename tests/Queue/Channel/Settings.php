@@ -55,7 +55,7 @@ class SettingsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(10, $settings->getMaxSendRetryTime());
         $this->assertSame($settings, $settings->setMaxSendRetryTime(0));
-        $this->assertSame(0, $settings->getAutoAck());
+        $this->assertSame(0, $settings->getMaxSendRetryTime());
 
         $this->assertSame('consumerName', $settings->getConsumerName());
         $this->assertSame($settings, $settings->setConsumerName());
