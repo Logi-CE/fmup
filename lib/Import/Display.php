@@ -46,9 +46,9 @@ abstract class Display extends \FMUP\Import
     public function parse()
     {
         try {
-            $lci = new LineToConfigIterator($this->fileIterator, $this->config);
-            $di = new DoublonIterator($lci);
-            $vi = new ValidatorIterator($di);
+            $lci = $this->getLineToConfigIterator($this->fileIterator, $this->config);
+            $di = $this->getDoublonIterator($lci);
+            $vi = $this->getValidatorIterator($di);
             foreach ($vi as $key => $value) {
                 if ($value) {
                     $this->displayImport($value, $vi, $di, $lci, $key);
@@ -69,7 +69,7 @@ abstract class Display extends \FMUP\Import
      * @param ValidatorIterator $vi
      * @param DoublonIterator $di
      * @param LineToConfigIterator $lci
-     * @param integer $key
+     * @param int $key
      */
     abstract public function displayImport(
         Config $value,
@@ -78,4 +78,35 @@ abstract class Display extends \FMUP\Import
         LineToConfigIterator $lci,
         $key
     );
+
+    /**
+     * @param \Iterator $fIterator
+     * @param Config $config
+     * @return LineToConfigIterator
+     * @codeCoverageIgnore
+     */
+    protected function getLineToConfigIterator(\Iterator $fIterator, \FMUP\Import\Config $config)
+    {
+        return new LineToConfigIterator($fIterator, $config);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return DoublonIterator
+     * @codeCoverageIgnore
+     */
+    protected function getDoublonIterator(\Traversable $iterator)
+    {
+        return new DoublonIterator($iterator);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return ValidatorIterator
+     * @codeCoverageIgnore
+     */
+    protected function getValidatorIterator(\Traversable $iterator)
+    {
+        return new ValidatorIterator($iterator);
+    }
 }
