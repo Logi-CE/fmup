@@ -8,7 +8,7 @@ class Id implements Validator
 
     public function validate($value)
     {
-        return (bool) \Is::id($value);
+        return (bool)\Is::id($value);
     }
 
     public function getErrorMessage()

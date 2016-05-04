@@ -5,17 +5,19 @@ use FMUP\Import\Config\Field\Formatter;
 
 class IdFromField implements Formatter
 {
+    private $originField;
+    private $originTable;
 
-    private $champ_origine;
+    private $hasError = false;
 
-    private $table_origine;
-
-    private $has_error = false;
-
-    public function __construct($champ_origine, $table_origine)
+    /**
+     * @param string $originField
+     * @param string $originTable
+     */
+    public function __construct($originField, $originTable)
     {
-        $this->champ_origine = $champ_origine;
-        $this->table_origine = $table_origine;
+        $this->originField = (string)$originField;
+        $this->originTable = (string)$originTable;
     }
 
     /**
@@ -25,20 +27,16 @@ class IdFromField implements Formatter
     public function format($value)
     {
         if ($value == "") {
-            $this->has_error = true;
+            $this->hasError = true;
             return "";
         } else {
-            $sql = "
-            SELECT id
-            FROM " . $this->table_origine . "
-            WHERE " . $this->champ_origine . " LIKE '%" . $value . "%'    
-            ";
+            $sql = "SELECT id FROM {$this->originTable} WHERE {$this->originField} LIKE '%$value%'";
             $db = \Model::getDb();
             $result = $db->fetchRow($sql);
             if ($result) {
                 return $result['id'];
             } else {
-                $this->has_error = true;
+                $this->hasError = true;
                 return $value;
             }
         }
@@ -46,12 +44,12 @@ class IdFromField implements Formatter
 
     public function getErrorMessage($value = null)
     {
-        return "Aucune correspondance n'a été trouvé pour le champ : '" . $this->champ_origine . "' de la table : '"
-            . $this->table_origine . "' pour la valeur : '" . $value . "'";
+        return 'Aucune correspondance n\'a été trouvé pour le champ : ' .
+        "'{$this->originField}' de la table '{$this->originTable}' pour la valeur : '$value'";
     }
 
     public function hasError()
     {
-        return $this->has_error;
+        return $this->hasError;
     }
 }

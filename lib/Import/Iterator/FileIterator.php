@@ -1,6 +1,8 @@
 <?php
 namespace FMUP\Import\Iterator;
 
+use \FMUP\Import\Exception;
+
 /**
  * Permet de parcourir un fichier ligne par ligne
  *
@@ -31,7 +33,7 @@ class FileIterator implements \Iterator
     public function rewind()
     {
         if (!file_exists($this->path)) {
-            throw new \Exception("Le fichier specifie n'existe pas ou est introuvable");
+            throw new Exception("Le fichier specifie n'existe pas ou est introuvable");
         }
         $this->ligne = 0;
         $this->fHandle = fopen($this->path, "r");

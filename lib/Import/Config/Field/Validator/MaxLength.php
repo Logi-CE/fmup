@@ -14,7 +14,7 @@ class MaxLength implements Validator
 
     public function validate($value)
     {
-        return (bool) strlen($value) <= $this->length;
+        return (bool)strlen($value) <= $this->length;
     }
 
     public function getErrorMessage()

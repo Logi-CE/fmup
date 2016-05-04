@@ -5,13 +5,16 @@ use FMUP\Import\Config\Field\Formatter;
 
 class TextToBool implements Formatter
 {
+    private $hasError = false;
 
-    private $has_error = false;
-
+    /**
+     * @param string $value
+     * @return bool|string
+     */
     public function format($value)
     {
         if ($value == "") {
-            $this->has_error = true;
+            $this->hasError = true;
             return "";
         } else {
             if (strtolower($value) == "oui") {
@@ -25,11 +28,11 @@ class TextToBool implements Formatter
 
     public function getErrorMessage($value = null)
     {
-        return "La valeur  " . $value . "n'est pas convertible";
+        return "La valeur $value n'est pas convertible";
     }
 
     public function hasError()
     {
-        return $this->has_error;
+        return $this->hasError;
     }
 }

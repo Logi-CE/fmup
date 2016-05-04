@@ -5,24 +5,31 @@ use FMUP\Import\Config\Field\Formatter;
 
 class DateSQL implements Formatter
 {
+    /**
+     * @var bool
+     */
+    private $hasError = false;
 
-    private $has_error = false;
-
+    /**
+     * @param string $value
+     * @return string
+     */
     public function format($value)
     {
         if ($value == "") {
-            $this->has_error = true;
+            $this->hasError = true;
             return "Champ vide";
         } else {
             $result = $this->toDate($value);
             if ($result) {
                 return $result;
             } else {
-                $this->has_error = true;
+                $this->hasError = true;
                 return $value;
             }
         }
     }
+
     protected function toDate($value)
     {
         $date = \DateTime::createFromFormat('d/m/Y', $value);
@@ -39,6 +46,6 @@ class DateSQL implements Formatter
 
     public function hasError()
     {
-        return $this->has_error;
+        return $this->hasError;
     }
 }

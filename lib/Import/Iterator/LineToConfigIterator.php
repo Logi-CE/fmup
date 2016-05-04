@@ -19,9 +19,9 @@ class LineToConfigIterator extends \IteratorIterator
 
     public function current()
     {
-        $liste_champ = explode(";", $this->getInnerIterator()->current());
-        if (count($liste_champ) > 1) {
-            foreach ($liste_champ as $key => $champ) {
+        $filedList = explode(";", $this->getInnerIterator()->current());
+        if (count($filedList) > 1) {
+            foreach ($filedList as $key => $champ) {
                 $field = $this->config->getField($key);
                 $field->setValue($champ);
             }

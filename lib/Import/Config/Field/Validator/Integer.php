@@ -25,7 +25,7 @@ class Integer implements Validator
 
     public function validate($value)
     {
-        return (bool) ($this->getCanEmpty() && $value == '') || \Is::integer($value);
+        return (bool)($this->getCanEmpty() && $value == '') || \Is::integer($value);
     }
 
     public function getErrorMessage()

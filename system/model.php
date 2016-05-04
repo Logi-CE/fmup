@@ -511,7 +511,7 @@ abstract class Model
 
     /**
      * Retourne l'instance de base de données du controlleur actif
-     * @return DbConnectionMysql|DbConnectionMssql|\FMUP\Db
+     * @return \FMUP\Db
      */
     public static function getDb()
     {

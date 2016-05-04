@@ -6,7 +6,7 @@ use FMUP\Import\Config\Field;
 use FMUP\Import\Config\Field\Validator\Required;
 
 /**
- * Répresente une ligne d'un fichier
+ * Répresente une line d'un fichier
  *
  * @author csanz
  *
@@ -24,7 +24,7 @@ class Config
      *
      * @var Field[]
      */
-    private $liste_field = array();
+    private $fiedList = array();
 
     /**
      * liste des erreurs
@@ -38,14 +38,14 @@ class Config
      *
      * @var int
      */
-    private $doublon_ligne;
+    private $duplicatedLines;
 
     /**
      * Liste des objets config
      *
      * @var ConfigObjet[]
      */
-    private $liste_config_objet = array();
+    private $configList = array();
 
     /*
      * ***************************
@@ -60,7 +60,7 @@ class Config
      */
     public function addField(Field $field)
     {
-        array_push($this->liste_field, $field);
+        array_push($this->fiedList, $field);
         if ($field->getRequired()) {
             $field->addValidator(new Required());
         }
@@ -69,20 +69,20 @@ class Config
     /**
      * Ajoute un ConfigObjet
      *
-     * @param ConfigObjet $config_objet
+     * @param ConfigObjet $configObject
      */
-    public function addConfigObjet(ConfigObjet $config_objet)
+    public function addConfigObjet(ConfigObjet $configObject)
     {
-        array_push($this->liste_config_objet, $config_objet);
+        array_push($this->configList, $configObject);
     }
 
     /**
      *
-     * @param integer $ligne
+     * @param int $line
      */
-    public function setDoublonLigne($ligne)
+    public function setDoublonLigne($line)
     {
-        $this->doublon_ligne = $ligne;
+        $this->duplicatedLines = (int)$line;
     }
 
     /*
@@ -97,7 +97,7 @@ class Config
      */
     public function getListeField()
     {
-        return $this->liste_field;
+        return $this->fiedList;
     }
 
     /**
@@ -107,7 +107,7 @@ class Config
      */
     public function getField($index)
     {
-        return $this->liste_field[$index];
+        return $this->fiedList[$index];
     }
 
     /**
@@ -116,7 +116,7 @@ class Config
      */
     public function getListeConfigObjet()
     {
-        return $this->liste_config_objet;
+        return $this->configList;
     }
 
     /**
@@ -125,7 +125,7 @@ class Config
      */
     public function getDoublonLigne()
     {
-        return $this->doublon_ligne;
+        return $this->duplicatedLines;
     }
 
     /**
@@ -156,20 +156,24 @@ class Config
         // Réinitialisation du tableau d'erreur
         $this->errors = array();
         foreach ($this->getListeField() as $field) {
-            $valid_field = $field->validateField();
-            if (!$valid_field) {
+            $validField = $field->validateField();
+            if (!$validField) {
                 $this->errors[$field->getName()] = "non valide";
             }
         }
-        $line_valid = count($this->errors) > 0 ? false : true;
-        if ($line_valid) {
+        $validLine = count($this->errors) > 0 ? false : true;
+        if ($validLine) {
             $this->validateObjects();
         }
-        return $line_valid;
+        return $validLine;
     }
 
-    private function sortByPrio($a, $b)
+    private function sortByPriority($a, $b)
     {
+        /**
+         * @var $a \FMUP\Import\Config\ConfigObjet
+         * @var $b \FMUP\Import\Config\ConfigObjet
+         */
         if ($a->getPriorite() == $b->getPriorite()) {
             return 0;
         }
@@ -177,36 +181,37 @@ class Config
     }
 
     /**
-     * @uses $this->sortByPrio
+     * @uses $this->sortByPriority
      */
     public function validateObjects()
     {
-        $tableau_id = array();
-        $liste_config = $this->liste_config_objet;
+        $ids = array();
+        $configList = $this->getListeConfigObjet();
         // on trie le tableau par priorité
-        usort($liste_config, array($this, 'sortByPrio'));
-        // pour chaque config_objet
-        foreach ($liste_config as $config_objet) {
-            $nom_objet = $config_objet->getNomObjet();
+        usort($configList, array($this, 'sortByPriority'));
+        // pour chaque configObject
+        foreach ($configList as $configObject) {
+            $objectName = $configObject->getNomObjet();
             // On créé un objet du type donnée
-            $objet = new $nom_objet();
+            /** @var \Model $objectInstance */
+            $objectInstance = new $objectName();
             $where = array();
             // Si on a besoin d'un id, on va le chercher dans le tableau
-            if (count($config_objet->getIdNecessaire()) > 0 && count($config_objet->getNomAttribut()) > 0) {
-                $liste_attribut = $config_objet->getNomAttribut();
-                foreach ($config_objet->getIdNecessaire() as $id_necessaire) {
-                    if (isset($tableau_id[$id_necessaire])) {
+            if (count($configObject->getIdNecessaire()) > 0 && count($configObject->getNomAttribut()) > 0) {
+                $attributeList = $configObject->getNomAttribut();
+                foreach ($configObject->getIdNecessaire() as $mandatoryId) {
+                    if (isset($ids[$mandatoryId])) {
                         // et on le set
-                        $objet->setAttribute($liste_attribut[$id_necessaire], $tableau_id[$id_necessaire]);
-                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire]
-                            . "LIKE '%" . $tableau_id[$id_necessaire] . "%'";
+                        $objectInstance->setAttribute($attributeList[$mandatoryId], $ids[$mandatoryId]);
+                        $where[$attributeList[$mandatoryId]] = $attributeList[$mandatoryId]
+                            . "LIKE '%" . $ids[$mandatoryId] . "%'";
                     }
                 }
             }
             // pour tous les champs renseignés
-            foreach ($config_objet->getListeIndexChamp() as $index) {
+            foreach ($configObject->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objet->setAttribute($this->getField($index)
+                $objectInstance->setAttribute($this->getField($index)
                     ->getChampCible(), $this->getField($index)
                     ->getValue());
                 // et on prépare le filtre
@@ -215,19 +220,18 @@ class Config
                     . $this->getField($index)->getValue() . "%'";
             }
             // on va chercher l'objet en base
-            $objet_trouve = $nom_objet::findFirst($where);
-            if (!$objet_trouve) {
+            if (!$objectInstance::findFirst($where)) {
                 // si on l'a pas trouvé, il va falloir l'insérer
-                $config_objet->setStatutInsertion();
+                $configObject->setStatutInsertion();
             } else {
                 // sinon on va mettre à jours
-                $config_objet->setStatutMaj();
+                $configObject->setStatutMaj();
             }
         }
     }
 
     /**
-     * Génère des objets à partir de la ligne
+     * Génère des objets à partir de la line
      * puis les rentres en base
      * Via un insert si on ne l'a pas trouvé en base
      * Via un update si on l'a trouvé
@@ -235,34 +239,34 @@ class Config
     public function insertLine()
     {
         $tableau_id = array();
-        $liste_config = $this->liste_config_objet;
+        $configList = $this->getListeConfigObjet();
         // on trie le tableau par priorité
-        usort($liste_config, "self::sortByPrio");
-        // pour chaque config_objet
-        foreach ($liste_config as $config_objet) {
-            $nom_objet = $config_objet->getNomObjet();
+        usort($configList, array($this, "sortByPriority"));
+        // pour chaque configObject
+        foreach ($configList as $configObject) {
+            $objectName = $configObject->getNomObjet();
             // On créé un objet du type donnée
-            /* @var $objet \Model */
-            $objet = new $nom_objet();
+            /* @var $objectInstance \Model */
+            $objectInstance = new $objectName();
             $where = array();
 
             // Si on a besoin d'un id, on va le chercher dans le tableau
-            if (count($config_objet->getIdNecessaire()) > 0 && count($config_objet->getNomAttribut()) > 0) {
-                $liste_attribut = $config_objet->getNomAttribut();
-                foreach ($config_objet->getIdNecessaire() as $id_necessaire) {
-                    if (isset($tableau_id[$id_necessaire])) {
+            if (count($configObject->getIdNecessaire()) > 0 && count($configObject->getNomAttribut()) > 0) {
+                $attributeList = $configObject->getNomAttribut();
+                foreach ($configObject->getIdNecessaire() as $mandatoryId) {
+                    if (isset($tableau_id[$mandatoryId])) {
                         // on le set
-                        $objet->setAttribute($liste_attribut[$id_necessaire], $tableau_id[$id_necessaire]);
+                        $objectInstance->setAttribute($attributeList[$mandatoryId], $tableau_id[$mandatoryId]);
                         // et on prépare le filtre
-                        $where[$liste_attribut[$id_necessaire]] = $liste_attribut[$id_necessaire] . " LIKE '%"
-                            . $tableau_id[$id_necessaire] . "%'";
+                        $where[$attributeList[$mandatoryId]] = $attributeList[$mandatoryId] . " LIKE '%"
+                            . $tableau_id[$mandatoryId] . "%'";
                     }
                 }
             }
             // pour tous les champs obligatoires renseignés
-            foreach ($config_objet->getListeIndexChamp() as $index) {
+            foreach ($configObject->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objet->setAttribute($this->getField($index)
+                $objectInstance->setAttribute($this->getField($index)
                     ->getChampCible(), $this->getField($index)
                     ->getValue());
                 // et on prépare le filtre
@@ -270,29 +274,29 @@ class Config
                     . $this->getField($index)->getValue() . "%'";
             }
             // on hydrate toutes les infos sur l'objet
-            foreach ($this->liste_field as $field) {
-                if (\FMUP\String::toCamelCase($field->getTableCible()) == $nom_objet) {
-                    $objet->setAttribute($field->getChampCible(), $field->getValue());
+            foreach ($this->fiedList as $field) {
+                if (\FMUP\String::toCamelCase($field->getTableCible()) == $objectName) {
+                    $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
                 }
             }
             // on va chercher l'objet en base
-            $objet_trouve = $nom_objet::findFirst($where);
+            $foundInstance = $objectInstance::findFirst($where);
 
-            if (!$objet_trouve) {
+            if (!$foundInstance) {
                 // si on l'a pas trouvé, on l'enregiste et on récupère l'id
-                $result = $objet->save();
+                $result = $objectInstance->save();
                 if ($result) {
-                    $tableau_id[$nom_objet] = $result;
+                    $tableau_id[$objectName] = $result;
                 } else {
-                    throw new \Exception(implode(';', $objet->getErrors()));
+                    throw new Exception(implode(';', $objectInstance->getErrors()));
                 }
             } else {
                 // sinon on récupère directement l'id
-                $tableau_id[$nom_objet] = $objet_trouve->getId();
+                $tableau_id[$objectName] = $foundInstance->getId();
 
                 // puis on met à jours
-                $objet->setAttribute("Id", $objet_trouve->getId());
-                $objet->save();
+                $objectInstance->setAttribute("Id", $foundInstance->getId());
+                $objectInstance->save();
             }
         }
     }
@@ -303,9 +307,9 @@ class Config
      */
     public function __toString()
     {
-        $string = "";
+        $string = '';
         foreach ($this->getListeField() as $key => $field) {
-            $string .= $key . " \t" . $field->getName() . " \t" . $field->getValue() . " \t \n";
+            $string .= $key . " \t" . $field->getName() . " \t" . $field->getValue() . " \t" . PHP_EOL;
         }
         return $string;
     }

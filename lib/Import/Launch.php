@@ -13,45 +13,45 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 class Launch extends \FMUP\Import
 {
-    private $total_insert;
-    private $total_update;
-    private $total_errors;
+    private $totalInsert;
+    private $totalUpdate;
+    private $totalErrors;
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalUpdate()
     {
-        return $this->total_update;
+        return $this->totalUpdate;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalInsert()
     {
-        return $this->total_insert;
+        return $this->totalInsert;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalErrors()
     {
-        return $this->total_errors;
+        return $this->totalErrors;
     }
 
     public function parse()
     {
-        $db = \Model::getDb();
+        $db = $this->getDb();
         $db->beginTransaction();
         try {
-            $lci = new LineToConfigIterator($this->fileIterator, $this->config);
-            $di = new DoublonIterator($lci);
-            $vi = new ValidatorIterator($di);
+            $lci = $this->getLineToConfigIterator($this->fileIterator, $this->config);
+            $di = $this->getDoublonIterator($lci);
+            $vi = $this->getValidatorIterator($di);
             foreach ($vi as $value) {
                 if ($value) {
                     $valid = $vi->getValid();
@@ -60,15 +60,55 @@ class Launch extends \FMUP\Import
                     }
                 }
             }
-            $this->total_errors = $vi->getTotalErrors();
-            $this->total_insert = $vi->getTotalInsert();
-            $this->total_update = $vi->getTotalUpdate();
-            echo "Import terminé .\n";
+            $this->totalErrors = $vi->getTotalErrors();
+            $this->totalInsert = $vi->getTotalInsert();
+            $this->totalUpdate = $vi->getTotalUpdate();
+            echo "Import terminé." . PHP_EOL;
             $db->commit();
         } catch (\Exception $e) {
-            echo "Une erreur a été détecté lors de l'import.";
+            echo "Une erreur a été détecté lors de l'import." . PHP_EOL;
             echo $e->getMessage();
             $db->rollback();
         }
+    }
+
+    /**
+     * @return \FMUP\Db
+     * @codeCoverageIgnore
+     */
+    protected function getDb()
+    {
+        return \Model::getDb();
+    }
+
+    /**
+     * @param \Iterator $fIterator
+     * @param Config $config
+     * @return LineToConfigIterator
+     * @codeCoverageIgnore
+     */
+    protected function getLineToConfigIterator(\Iterator $fIterator, \FMUP\Import\Config $config)
+    {
+        return new LineToConfigIterator($fIterator, $config);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return DoublonIterator
+     * @codeCoverageIgnore
+     */
+    protected function getDoublonIterator(\Traversable $iterator)
+    {
+        return new DoublonIterator($iterator);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return ValidatorIterator
+     * @codeCoverageIgnore
+     */
+    protected function getValidatorIterator(\Traversable $iterator)
+    {
+        return new ValidatorIterator($iterator);
     }
 }

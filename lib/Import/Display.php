@@ -12,35 +12,35 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 abstract class Display extends \FMUP\Import
 {
-    private $total_insert;
-    private $total_update;
-    private $total_errors;
+    private $totalInsert;
+    private $totalUpdate;
+    private $totalErrors;
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalUpdate()
     {
-        return $this->total_update;
+        return (int)$this->totalUpdate;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalInsert()
     {
-        return $this->total_insert;
+        return (int)$this->totalInsert;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalErrors()
     {
-        return $this->total_errors;
+        return (int)$this->totalErrors;
     }
 
     public function parse()
@@ -54,9 +54,9 @@ abstract class Display extends \FMUP\Import
                     $this->displayImport($value, $vi, $di, $lci, $key);
                 }
             }
-            $this->total_errors = $vi->getTotalErrors();
-            $this->total_insert = $vi->getTotalInsert();
-            $this->total_update = $vi->getTotalUpdate();
+            $this->totalErrors = $vi->getTotalErrors();
+            $this->totalInsert = $vi->getTotalInsert();
+            $this->totalUpdate = $vi->getTotalUpdate();
         } catch (\Exception $e) {
             echo $e->getMessage();
         }

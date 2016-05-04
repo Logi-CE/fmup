@@ -24,25 +24,25 @@ class ValidatorIterator extends \IteratorIterator
      *
      * @var string
      */
-    private $type_ligne;
+    private $lineType;
 
     /**
      *
      * @var integer
      */
-    private $total_insert = 0;
+    private $totalInsert = 0;
 
     /**
      *
      * @var Integer
      */
-    private $total_update = 0;
+    private $totalUpdate = 0;
 
     /**
      *
      * @var integer
      */
-    private $total_errors = 0;
+    private $totalErrors = 0;
 
     /*
      * ***************************
@@ -52,11 +52,11 @@ class ValidatorIterator extends \IteratorIterator
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function getValid()
     {
-        return $this->valid;
+        return (bool)$this->valid;
     }
 
     /**
@@ -65,34 +65,34 @@ class ValidatorIterator extends \IteratorIterator
      */
     public function getType()
     {
-        return $this->type_ligne;
+        return $this->lineType;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalUpdate()
     {
-        return $this->total_update;
+        return (int)$this->totalUpdate;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalInsert()
     {
-        return $this->total_insert;
+        return (int)$this->totalInsert;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalErrors()
     {
-        return $this->total_errors;
+        return (int)$this->totalErrors;
     }
 
     public function next()
@@ -114,13 +114,13 @@ class ValidatorIterator extends \IteratorIterator
         }
         if ($this->valid && !$current->getDoublonLigne()) {
             if ($type == "insert") {
-                $this->total_insert++;
+                $this->totalInsert++;
             } elseif ($type == "update") {
-                $this->total_update++;
+                $this->totalUpdate++;
             }
         } else {
-            $this->total_errors++;
+            $this->totalErrors++;
         }
-        $this->type_ligne = $type;
+        $this->lineType = $type;
     }
 }
