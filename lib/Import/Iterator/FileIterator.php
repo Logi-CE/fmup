@@ -18,7 +18,7 @@ class FileIterator implements \Iterator
 
     private $current;
 
-    private $ligne;
+    private $line;
 
     public function __construct($path = "")
     {
@@ -35,9 +35,10 @@ class FileIterator implements \Iterator
         if (!file_exists($this->path)) {
             throw new Exception("Le fichier specifie n'existe pas ou est introuvable");
         }
-        $this->ligne = 0;
+        $this->line = -1;
         $this->fHandle = fopen($this->path, "r");
         rewind($this->fHandle);
+        $this->next();
     }
 
     public function current()
@@ -48,8 +49,7 @@ class FileIterator implements \Iterator
     public function next()
     {
         $this->current = fgets($this->fHandle);
-        $this->ligne++;
-        return $this->current;
+        $this->line++;
     }
 
     public function valid()
@@ -63,6 +63,6 @@ class FileIterator implements \Iterator
 
     public function key()
     {
-        return $this->ligne;
+        return $this->line;
     }
 }
