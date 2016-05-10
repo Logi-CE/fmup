@@ -35,7 +35,7 @@ class Field
         $this->required = (bool)$isRequired;
         $this->type = $type;
         if ($type != self::TYPE_IGNORED && $type != "") {
-            $class = __NAMESPACE__ . '\Validator\\' . ucfirst($type);
+            $class = __NAMESPACE__ . '\Field\Validator\\' . ucfirst($type);
             $validator = new $class();
             $this->addValidator($validator);
         }
