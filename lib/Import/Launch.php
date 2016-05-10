@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Iterator\DoublonIterator;
+use FMUP\Import\Iterator\DuplicateIterator;
 use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\ValidatorIterator;
 
@@ -94,12 +94,12 @@ class Launch extends \FMUP\Import
 
     /**
      * @param \Traversable $iterator
-     * @return DoublonIterator
+     * @return DuplicateIterator
      * @codeCoverageIgnore
      */
     protected function getDoublonIterator(\Traversable $iterator)
     {
-        return new DoublonIterator($iterator);
+        return new DuplicateIterator($iterator);
     }
 
     /**

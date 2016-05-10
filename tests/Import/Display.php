@@ -35,7 +35,7 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
         )
             ->willReturn($this->getMock(\FMUP\Import\Iterator\LineToConfigIterator::class, array(), array(), '', false));
         $display->expects($this->once())->method('getDoublonIterator')
-            ->willReturn($this->getMock(\FMUP\Import\Iterator\DoublonIterator::class, array(), array(), '', false));
+            ->willReturn($this->getMock(\FMUP\Import\Iterator\DuplicateIterator::class, array(), array(), '', false));
         $display->expects($this->once())->method('getValidatorIterator')->willReturn($validIterator);
         /** @var $display \FMUP\Import\Launch */
         $display->parse();
@@ -70,7 +70,7 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
         )
             ->willReturn($this->getMock(\FMUP\Import\Iterator\LineToConfigIterator::class, array(), array(), '', false));
         $display->expects($this->once())->method('getDoublonIterator')
-            ->willReturn($this->getMock(\FMUP\Import\Iterator\DoublonIterator::class, array(), array(), '', false));
+            ->willReturn($this->getMock(\FMUP\Import\Iterator\DuplicateIterator::class, array(), array(), '', false));
         $display->expects($this->once())->method('getValidatorIterator')->willReturn($validIterator);
         /** @var $display \FMUP\Import\Launch */
         $this->expectOutputString('test message error');
