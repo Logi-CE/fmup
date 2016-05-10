@@ -12,7 +12,6 @@ use FMUP\Import\Exception;
  */
 class DuplicateIterator extends \IteratorIterator
 {
-
     /**
      *
      * @var int[]

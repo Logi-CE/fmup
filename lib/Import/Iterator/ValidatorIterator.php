@@ -2,6 +2,7 @@
 namespace FMUP\Import\Iterator;
 
 use FMUP\Import\Config;
+use FMUP\Import\Exception;
 
 /**
  * Valide une ligne et compte le nombre de ligne MAJ ou CRÉÉ
@@ -11,7 +12,8 @@ use FMUP\Import\Config;
  */
 class ValidatorIterator extends \IteratorIterator
 {
-
+    const INSERT = 'insert';
+    const UPDATE = 'update';
     /**
      * Si la ligne est validée
      *
@@ -95,32 +97,36 @@ class ValidatorIterator extends \IteratorIterator
         return (int)$this->totalErrors;
     }
 
-    public function next()
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function current()
     {
-        parent::next();
-        $current = $this->current();
-        if (!$current || !$current instanceof Config) {
-            return;
+        $current = $this->getInnerIterator()->current();
+        if (!$current instanceof Config) {
+            throw new Exception('Iterator can only validate Config');
         }
         $this->valid = $current->validateLine();
         $type = "";
         foreach ($current->getListeConfigObjet() as $configObject) {
-            /* @var $configObject \FMUP\Import\Config\ConfigObjet */
-            if ($configObject->getStatut() == "insert") {
-                $type = ($type == "update" ? "update" : "insert");
-            } elseif ($configObject->getStatut() == "update") {
-                $type = "update";
+            $status = $configObject->getStatut();
+            if ($status == self::INSERT) {
+                $type = ($type == self::UPDATE ? self::UPDATE : self::INSERT);
+            } elseif ($status == self::UPDATE) {
+                $type = self::UPDATE;
             }
         }
         if ($this->valid && !$current->getDoublonLigne()) {
-            if ($type == "insert") {
+            if ($type == self::INSERT) {
                 $this->totalInsert++;
-            } elseif ($type == "update") {
+            } elseif ($type == self::UPDATE) {
                 $this->totalUpdate++;
             }
         } else {
             $this->totalErrors++;
         }
         $this->lineType = $type;
+        return $current;
     }
 }
