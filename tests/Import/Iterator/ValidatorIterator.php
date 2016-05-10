@@ -6,6 +6,7 @@
 
 namespace Tests\Import\Iterator;
 
+use FMUP\Import\Config\ConfigObjet;
 
 class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,12 +23,12 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $configObject = $this->getMock(\FMUP\Import\Config\ConfigObjet::class, array('getStatut'), array(), '', false);
         $configObject->method('getStatut')
             ->willReturnOnConsecutiveCalls(
-                'insert', 'update', '', //result update
-                'insert', 'update', '', //result update
-                'insert', 'update', '', //result update
-                'insert', 'update', '', //result update
-                'insert', '', 'insert', //result insert
-                '', 'insert', 'update', //result update
+                ConfigObjet::INSERT, ConfigObjet::UPDATE, '', //result update
+                ConfigObjet::INSERT, ConfigObjet::UPDATE, '', //result update
+                ConfigObjet::INSERT, ConfigObjet::UPDATE, '', //result update
+                ConfigObjet::INSERT, ConfigObjet::UPDATE, '', //result update
+                ConfigObjet::INSERT, '', ConfigObjet::INSERT, //result insert
+                '', ConfigObjet::INSERT, ConfigObjet::UPDATE, //result update
                 '', '', '' //result ''
             );
         $config = $this->getMock(\FMUP\Import\Config::class, array('validateLine', 'getListeConfigObjet', 'getDoublonLigne'));
@@ -54,12 +55,12 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
             new \ArrayIterator(array($config, $config, $config, $config, $config, $config, $config))
         );
         $types = array(
-            'update',
-            'update',
-            'update',
-            'update',
-            'insert',
-            'update',
+            ConfigObjet::UPDATE,
+            ConfigObjet::UPDATE,
+            ConfigObjet::UPDATE,
+            ConfigObjet::UPDATE,
+            ConfigObjet::INSERT,
+            ConfigObjet::UPDATE,
             ''
         );
         $count = 0;

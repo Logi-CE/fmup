@@ -2,6 +2,7 @@
 namespace FMUP\Import\Iterator;
 
 use FMUP\Import\Config;
+use FMUP\Import\Config\ConfigObjet;
 use FMUP\Import\Exception;
 
 /**
@@ -12,8 +13,6 @@ use FMUP\Import\Exception;
  */
 class ValidatorIterator extends \IteratorIterator
 {
-    const INSERT = 'insert';
-    const UPDATE = 'update';
     /**
      * Si la ligne est validée
      *
@@ -111,16 +110,16 @@ class ValidatorIterator extends \IteratorIterator
         $type = "";
         foreach ($current->getListeConfigObjet() as $configObject) {
             $status = $configObject->getStatut();
-            if ($status == self::INSERT) {
-                $type = ($type == self::UPDATE ? self::UPDATE : self::INSERT);
-            } elseif ($status == self::UPDATE) {
-                $type = self::UPDATE;
+            if ($status == ConfigObjet::INSERT) {
+                $type = ($type == ConfigObjet::UPDATE ? ConfigObjet::UPDATE : ConfigObjet::INSERT);
+            } elseif ($status == ConfigObjet::UPDATE) {
+                $type = ConfigObjet::UPDATE;
             }
         }
         if ($this->valid && !$current->getDoublonLigne()) {
-            if ($type == self::INSERT) {
+            if ($type == ConfigObjet::INSERT) {
                 $this->totalInsert++;
-            } elseif ($type == self::UPDATE) {
+            } elseif ($type == ConfigObjet::UPDATE) {
                 $this->totalUpdate++;
             }
         } else {

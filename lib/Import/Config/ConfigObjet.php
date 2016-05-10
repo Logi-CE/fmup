@@ -9,6 +9,8 @@ namespace FMUP\Import\Config;
  */
 class ConfigObjet
 {
+    const INSERT = 'insert';
+    const UPDATE = 'update';
 
     /**
      * Nom de la classe de l'objet
@@ -109,13 +111,13 @@ class ConfigObjet
      */
     public function setStatutInsertion()
     {
-        $this->status = "insert";
+        $this->status = self::INSERT;
         return $this;
     }
 
     public function setStatutMaj()
     {
-        $this->status = "update";
+        $this->status = self::UPDATE;
         return $this;
     }
 
@@ -152,7 +154,7 @@ class ConfigObjet
      */
     public function __construct($objectName, $priority, $mandatoryId = "")
     {
-        $this->objectName = $objectName;
+        $this->setNomObjet($objectName);
         $this->priority = $priority;
         $this->mandatoryId = explode(";", $mandatoryId);
         foreach ($this->mandatoryId as $id) {
