@@ -17,20 +17,20 @@ class LineToConfigIterator extends \IteratorIterator
         $this->config = $config;
     }
 
+    /**
+     * @return \FMUP\Import\Config
+     */
     public function current()
     {
-        $filedList = explode(";", $this->getInnerIterator()->current());
-        if (count($filedList) > 1) {
-            foreach ($filedList as $key => $champ) {
-                $field = $this->config->getField($key);
-                $field->setValue($champ);
-            }
-            return $this->config;
-        } else {
-            return null;
+        foreach (explode(';', (string)$this->getInnerIterator()->current()) as $key => $field) {
+            $this->getConfig()->getField($key)->setValue($field);
         }
+        return $this->getConfig();
     }
 
+    /**
+     * @return \FMUP\Import\Config
+     */
     public function getConfig()
     {
         return $this->config;

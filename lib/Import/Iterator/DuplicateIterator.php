@@ -24,6 +24,8 @@ class DuplicateIterator extends \IteratorIterator
      * (non-PHPdoc)
      *
      * @see IteratorIterator::next()
+     * @return mixed
+     * @throws Exception
      */
     public function current()
     {
@@ -36,6 +38,7 @@ class DuplicateIterator extends \IteratorIterator
             }
             $this->checkDuplicate($current);
         }
+        return $current;
     }
 
     /**

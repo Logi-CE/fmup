@@ -43,6 +43,8 @@ class DuplicateIteratorTest extends \PHPUnit_Framework_TestCase
         $config->expects($this->at(9))->method('setDoublonLigne')->with($this->isFalse());
         $config->expects($this->at(14))->method('setDoublonLigne')->with($this->equalTo(0));
         $iterator = new \FMUP\Import\Iterator\DuplicateIterator(new \ArrayIterator(array($config, $config, $config)));
-        foreach ($iterator as $current);
+        foreach ($iterator as $current) {
+            $this->assertSame($config, $current);
+        }
     }
 }
