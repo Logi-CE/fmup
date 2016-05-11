@@ -9,6 +9,7 @@ class IdFromField implements Formatter
     private $originTable;
 
     private $hasError = false;
+    private $db;
 
     /**
      * @param string $originField
@@ -26,13 +27,13 @@ class IdFromField implements Formatter
      */
     public function format($value)
     {
+        $value = (string) $value;
         if ($value == "") {
             $this->hasError = true;
             return "";
         } else {
             $sql = "SELECT id FROM {$this->originTable} WHERE {$this->originField} LIKE '%$value%'";
-            $db = \Model::getDb();
-            $result = $db->fetchRow($sql);
+            $result = $this->getDb()->fetchRow($sql);
             if ($result) {
                 return $result['id'];
             } else {
@@ -42,10 +43,40 @@ class IdFromField implements Formatter
         }
     }
 
+    /**
+     * @return \FMUP\Db
+     * @codeCoverageIgnore
+     */
+    protected function getModelDb()
+    {
+        return \Model::getDb();
+    }
+
+    /**
+     * @return \FMUP\Db
+     */
+    public function getDb()
+    {
+        if (!$this->db) {
+            $this->db = $this->getModelDb();
+        }
+        return $this->db;
+    }
+
+    /**
+     * @param \FMUP\Db $db
+     * @return $this
+     */
+    public function setDb(\FMUP\Db $db)
+    {
+        $this->db = $db;
+        return $this;
+    }
+
     public function getErrorMessage($value = null)
     {
-        return 'Aucune correspondance n\'a été trouvé pour le champ : ' .
-        "'{$this->originField}' de la table '{$this->originTable}' pour la valeur : '$value'";
+        return 'Aucune correspondance n\'a été trouvé pour le champ : '
+            . "'{$this->originField}' de la table '{$this->originTable}' pour la valeur : '$value'";
     }
 
     public function hasError()
