@@ -1,4 +1,50 @@
 /*********/
+/* 6.6.6 */
+/*********/
+
+100% Code Coverage + Import\Iterators first/last line handling fixes
+
+#Fix
+ - Import\Iterator\FileIterator handle last line
+ - Import\Iterator\CsvToConfigIterator config filler
+ - Import\Iterator\DuplicateIterator handle first line
+ - Import\Iterator\ValidatorIterator handle first line
+
+#Compatible
+ - add Queue\Channel\Settings 100% code coverage
+ - add Queue\Channel\Settings\Native 100% code coverage
+ - add Queue\Driver\Amqp 100% code coverage
+ - add Queue\Driver\Native 100% code coverage
+ - add Import\Launch 100% code coverage
+ - add Import\Display 100% code coverage
+ - add Import\Config 100% code coverage
+ - add Import\Iterator\FileIterator 100% code coverage
+ - add Import\Iterator\CsvIterator 100% code coverage
+ - add Import\Iterator\LineFilterIterator 100% code coverage
+ - add Import\Iterator\CsvToConfigIterator 100% code coverage
+ - add Import\Iterator\DuplicateIterator 100% code coverage
+ - add Import\Iterator\LineToConfigIterator 100% code coverage
+ - add Import\Iterator\ValidatorIterator 100% code coverage
+ - add Import\Config\Field 100% code coverage
+ - add Import\Config\ConfigObjet 100% code coverage
+ - add Import\Config\Field\Formatter\DateSQL 100% code coverage
+ - add Import\Config\Field\Formatter\IdFromField 100% code coverage
+ - add Import\Config\Field\Formatter\TextToBool 100% code coverage
+ - add Import\Config\Field\Validator\Alphanum 100% code coverage
+ - add Import\Config\Field\Validator\Boolean 100% code coverage
+ - add Import\Config\Field\Validator\Date 100% code coverage
+ - add Import\Config\Field\Validator\Email 100% code coverage
+ - add Import\Config\Field\Validator\Enum 100% code coverage
+ - add Import\Config\Field\Validator\Id 100% code coverage
+ - add Import\Config\Field\Validator\Integer 100% code coverage
+ - add Import\Config\Field\Validator\MaxLength 100% code coverage
+ - add Import\Config\Field\Validator\RegExp 100% code coverage
+ - add Import\Config\Field\Validator\Required 100% code coverage
+ - add Import\Config\Field\Validator\Telephone 100% code coverage
+ - improve Import\Iterator\CsvToConfigIterator optimization
+ - renamed Import\Iterator\DoublonIterator to Import\Iterator\DuplicateIterator
+
+/*********/
 /* 6.6.5 */
 /*********/
 
@@ -64,7 +110,7 @@ Code Coverage 64.8% overall + Url encoding bugfix + String referencies bugfix
  - add Logger\Channel\System 100% code coverage
  - add Logger\Channel\Error 100% code coverage
  - add Logger\Channel\Standard 100% code coverage
- - add \Logger\Channel\Syslog 100% code coverage
+ - add Logger\Channel\Syslog 100% code coverage
 
 /*********/
 /* 6.6.3 */
