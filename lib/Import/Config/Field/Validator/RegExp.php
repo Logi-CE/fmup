@@ -29,7 +29,7 @@ class RegExp implements Validator
      */
     public function setExpression($expression)
     {
-        $this->expression = $expression;
+        $this->expression = (string)$expression;
         return $this;
     }
 
