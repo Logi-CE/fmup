@@ -9,44 +9,46 @@ namespace FMUP\Import\Config;
  */
 class ConfigObjet
 {
+    const INSERT = 'insert';
+    const UPDATE = 'update';
 
     /**
      * Nom de la classe de l'objet
      *
-     * @var String
+     * @var string
      */
-    private $nom_objet;
+    private $objectName;
 
     /**
      *
-     * @var integer
+     * @var int
      */
-    private $priorite;
+    private $priority;
 
     /**
      *
-     * @var Array[string]
+     * @var string[]
      */
-    private $id_necessaire = null;
+    private $mandatoryId = null;
 
     /**
      *
-     * @var Array[string]
+     * @var string[]
      */
-    private $nom_attribut = array();
+    private $attributeName = array();
 
     /**
      *
      * @var string
      */
-    private $statut = "";
+    private $status = "";
 
     /**
      * liste des index correspondant aux champs associés à l'objet
      *
-     * @var array[int]
+     * @var int[]
      */
-    private $liste_index_champ = array();
+    private $indexFieldList = array();
 
     /*
      * ***************************
@@ -55,36 +57,51 @@ class ConfigObjet
      */
 
     /**
-     * @return array[int]
+     * @return int[]
      */
     public function getListeIndexChamp()
     {
-        return $this->liste_index_champ;
+        return $this->indexFieldList;
     }
 
+    /**
+     * @return int
+     */
     public function getPriorite()
     {
-        return $this->priorite;
+        return $this->priority;
     }
 
+    /**
+     * @return string
+     */
     public function getNomObjet()
     {
-        return $this->nom_objet;
+        return $this->objectName;
     }
 
+    /**
+     * @return array|\string[]
+     */
     public function getIdNecessaire()
     {
-        return $this->id_necessaire;
+        return $this->mandatoryId;
     }
 
+    /**
+     * @return string
+     */
     public function getStatut()
     {
-        return $this->statut;
+        return $this->status;
     }
 
+    /**
+     * @return \string[]
+     */
     public function getNomAttribut()
     {
-        return $this->nom_attribut;
+        return $this->attributeName;
     }
 
     /*
@@ -94,22 +111,26 @@ class ConfigObjet
      */
     public function setStatutInsertion()
     {
-        $this->statut = "insert";
+        $this->status = self::INSERT;
+        return $this;
     }
 
     public function setStatutMaj()
     {
-        $this->statut = "update";
+        $this->status = self::UPDATE;
+        return $this;
     }
 
     public function setNomObjet($nom)
     {
-        $this->nom_objet = $nom;
+        $this->objectName = (string)$nom;
+        return $this;
     }
 
-    public function setNomAttribut($nom_objet, $nom_attribut)
+    public function setNomAttribut($objectName, $attributeName)
     {
-        $this->nom_attribut[$nom_objet] = $nom_attribut;
+        $this->attributeName[$objectName] = $attributeName;
+        return $this;
     }
 
     /**
@@ -118,26 +139,26 @@ class ConfigObjet
      */
     public function addIndex($index)
     {
-        array_push($this->liste_index_champ, $index);
+        array_push($this->indexFieldList, $index);
         return $this;
     }
 
     /**
      *
-     * @param string $nom_objet
+     * @param string $objectName
      *            : Nom de l'objet présent dans le model
-     * @param integer $priorite
+     * @param integer $priority
      *            : Niveau de priorité et de dépendance
-     * @param string $id_necessaire
+     * @param string $mandatoryId
      *            : Nom de l'objet dont l'id est necessaire pour remplir l'objet this
      */
-    public function __construct($nom_objet, $priorite, $id_necessaire = "")
+    public function __construct($objectName, $priority, $mandatoryId = "")
     {
-        $this->nom_objet = $nom_objet;
-        $this->priorite = $priorite;
-        $this->id_necessaire = explode(";", $id_necessaire);
-        foreach ($this->id_necessaire as $id) {
-            $this->nom_attribut[$id] = "id_" . \FMUP\String::toCamelCase($id);
+        $this->setNomObjet($objectName);
+        $this->priority = $priority;
+        $this->mandatoryId = explode(";", $mandatoryId);
+        foreach ($this->mandatoryId as $id) {
+            $this->attributeName[$id] = "id_" . \FMUP\String::toCamelCase($id);
         }
     }
 }

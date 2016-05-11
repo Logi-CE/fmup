@@ -38,14 +38,32 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     public function getDriver()
     {
         if (is_null($this->instance)) {
-            $this->instance = new \PDO($this->getDsn(), $this->getLogin(), $this->getPassword(), $this->getOptions());
-            if (!$this->instance) {
-                $this->log(Logger::CRITICAL, 'Unable to connect database', $this->getSettings());
-                throw new Exception('Unable to connect database');
+            try {
+                $this->instance = $this->getPdo(
+                    $this->getDsn(),
+                    $this->getLogin(),
+                    $this->getPassword(),
+                    $this->getOptions()
+                );
+            } catch (\Exception $e) {
+                $this->log(Logger::CRITICAL, 'Unable to connect database', (array)$this->getSettings());
+                throw new Exception('Unable to connect database', $e->getCode(), $e);
             }
             $this->defaultConfiguration($this->instance);
         }
         return $this->instance;
+    }
+
+    /**
+     * @param $dsn
+     * @param $login
+     * @param $password
+     * @param $options
+     * @return \PDO
+     */
+    protected function getPdo($dsn, $login, $password, $options)
+    {
+        return new \PDO($dsn, $login, $password, $options);
     }
 
     /**
@@ -135,7 +153,7 @@ class Pdo implements DbInterface, Logger\LoggerInterface
             \PDO::ATTR_PERSISTENT => (bool)(
             isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
-            \PDO::ATTR_EMULATE_PREPARES => true
+            \PDO::ATTR_EMULATE_PREPARES => true,
         );
     }
 

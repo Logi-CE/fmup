@@ -11,10 +11,14 @@ class Factory
 
     private static $instance;
 
-    protected function __construct()
+    private function __construct()
     {
     }
 
+    /**
+     * Design pattern Singleton
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
     }

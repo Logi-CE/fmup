@@ -9,7 +9,7 @@ use FMUP\Import\Config\Field\Validator;
 class RegExp implements Validator
 {
     private $expression;
-    private $allow_empty;
+    private $allowEmpty;
 
     /**
      * Construct enum validator
@@ -29,7 +29,7 @@ class RegExp implements Validator
      */
     public function setExpression($expression)
     {
-        $this->expression = $expression;
+        $this->expression = (string)$expression;
         return $this;
     }
 
@@ -44,12 +44,12 @@ class RegExp implements Validator
 
     public function getAllowEmpty()
     {
-        return (bool)$this->allow_empty;
+        return (bool)$this->allowEmpty;
     }
 
-    public function setAllowEmpty($allow_empty = false)
+    public function setAllowEmpty($allowEmpty = false)
     {
-        $this->allow_empty = $allow_empty;
+        $this->allowEmpty = $allowEmpty;
         return $this;
     }
 

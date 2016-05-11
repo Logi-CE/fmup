@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Import;
 
-use FMUP\Import\Iterator\DoublonIterator;
+use FMUP\Import\Iterator\DuplicateIterator;
 use FMUP\Import\Iterator\LineToConfigIterator;
 use FMUP\Import\Iterator\ValidatorIterator;
 
@@ -12,51 +12,51 @@ use FMUP\Import\Iterator\ValidatorIterator;
  */
 abstract class Display extends \FMUP\Import
 {
-    private $total_insert;
-    private $total_update;
-    private $total_errors;
+    private $totalInsert;
+    private $totalUpdate;
+    private $totalErrors;
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalUpdate()
     {
-        return $this->total_update;
+        return (int)$this->totalUpdate;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalInsert()
     {
-        return $this->total_insert;
+        return (int)$this->totalInsert;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalErrors()
     {
-        return $this->total_errors;
+        return (int)$this->totalErrors;
     }
 
     public function parse()
     {
         try {
-            $lci = new LineToConfigIterator($this->fileIterator, $this->config);
-            $di = new DoublonIterator($lci);
-            $vi = new ValidatorIterator($di);
+            $lci = $this->getLineToConfigIterator($this->fileIterator, $this->config);
+            $di = $this->getDoublonIterator($lci);
+            $vi = $this->getValidatorIterator($di);
             foreach ($vi as $key => $value) {
                 if ($value) {
                     $this->displayImport($value, $vi, $di, $lci, $key);
                 }
             }
-            $this->total_errors = $vi->getTotalErrors();
-            $this->total_insert = $vi->getTotalInsert();
-            $this->total_update = $vi->getTotalUpdate();
+            $this->totalErrors = $vi->getTotalErrors();
+            $this->totalInsert = $vi->getTotalInsert();
+            $this->totalUpdate = $vi->getTotalUpdate();
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
@@ -67,15 +67,46 @@ abstract class Display extends \FMUP\Import
      *
      * @param Config $value
      * @param ValidatorIterator $vi
-     * @param DoublonIterator $di
+     * @param DuplicateIterator $di
      * @param LineToConfigIterator $lci
-     * @param integer $key
+     * @param int $key
      */
     abstract public function displayImport(
         Config $value,
         ValidatorIterator $vi,
-        DoublonIterator $di,
+        DuplicateIterator $di,
         LineToConfigIterator $lci,
         $key
     );
+
+    /**
+     * @param \Iterator $fIterator
+     * @param Config $config
+     * @return LineToConfigIterator
+     * @codeCoverageIgnore
+     */
+    protected function getLineToConfigIterator(\Iterator $fIterator, \FMUP\Import\Config $config)
+    {
+        return new LineToConfigIterator($fIterator, $config);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return DuplicateIterator
+     * @codeCoverageIgnore
+     */
+    protected function getDoublonIterator(\Traversable $iterator)
+    {
+        return new DuplicateIterator($iterator);
+    }
+
+    /**
+     * @param \Traversable $iterator
+     * @return ValidatorIterator
+     * @codeCoverageIgnore
+     */
+    protected function getValidatorIterator(\Traversable $iterator)
+    {
+        return new ValidatorIterator($iterator);
+    }
 }

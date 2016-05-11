@@ -21,7 +21,7 @@ class Email implements Validator
      */
     public function setCanEmpty($empty = false)
     {
-        $this->empty = (bool) $empty;
+        $this->empty = (bool)$empty;
         return $this;
     }
 

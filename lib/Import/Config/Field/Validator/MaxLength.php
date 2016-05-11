@@ -9,12 +9,16 @@ class MaxLength implements Validator
 
     public function __construct($length)
     {
-        $this->length = $length;
+        $this->length = (int)$length;
     }
 
+    /**
+     * @param string $value
+     * @return bool
+     */
     public function validate($value)
     {
-        return (bool) strlen($value) <= $this->length;
+        return (bool)(strlen($value) <= $this->length);
     }
 
     public function getErrorMessage()

@@ -39,7 +39,7 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     }
 
     /**
-     * @param $statement
+     * @param mixed $statement
      * @return $this
      */
     public function setStatement($statement)
@@ -49,7 +49,7 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     }
 
     /**
-     * @return mixed
+     * @return mixed|\PDOStatement
      */
     public function getStatement()
     {
@@ -88,7 +88,7 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
      */
     public function next()
     {
-        $this->current = $this->getDbInterface()->fetchRow($this->statement);
+        $this->current = $this->getDbInterface()->fetchRow($this->getStatement());
         $this->row++;
     }
 
@@ -103,8 +103,8 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     public function rewind()
     {
         $this->row = 0;
-        $this->statement->execute();
-        $this->current = $this->getDbInterface()->fetchRow($this->statement, DbInterface::CURSOR_FIRST);
+        $this->getStatement()->execute();
+        $this->current = $this->getDbInterface()->fetchRow($this->getStatement(), DbInterface::CURSOR_FIRST);
     }
 
     /**
@@ -159,10 +159,18 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
     public function seek($offset)
     {
         $this->row = (int)$offset;
-        $this->current = $this->getDbInterface()->fetchRow($this->statement, DbInterface::CURSOR_FIRST, $this->row);
+        $this->current = $this->getDbInterface()->fetchRow(
+            $this->getStatement(),
+            DbInterface::CURSOR_FIRST,
+            $this->row
+        );
         if ($this->current === false) {
-            $this->statement->execute();
-            $this->current = $this->getDbInterface()->fetchRow($this->statement, DbInterface::CURSOR_FIRST, $this->row);
+            $this->getStatement()->execute();
+            $this->current = $this->getDbInterface()->fetchRow(
+                $this->getStatement(),
+                DbInterface::CURSOR_FIRST,
+                $this->row
+            );
         }
     }
 }

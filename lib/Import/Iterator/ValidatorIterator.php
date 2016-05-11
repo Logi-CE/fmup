@@ -2,6 +2,8 @@
 namespace FMUP\Import\Iterator;
 
 use FMUP\Import\Config;
+use FMUP\Import\Config\ConfigObjet;
+use FMUP\Import\Exception;
 
 /**
  * Valide une ligne et compte le nombre de ligne MAJ ou CRÉÉ
@@ -11,7 +13,6 @@ use FMUP\Import\Config;
  */
 class ValidatorIterator extends \IteratorIterator
 {
-
     /**
      * Si la ligne est validée
      *
@@ -24,25 +25,25 @@ class ValidatorIterator extends \IteratorIterator
      *
      * @var string
      */
-    private $type_ligne;
+    private $lineType;
 
     /**
      *
      * @var integer
      */
-    private $total_insert = 0;
+    private $totalInsert = 0;
 
     /**
      *
      * @var Integer
      */
-    private $total_update = 0;
+    private $totalUpdate = 0;
 
     /**
      *
      * @var integer
      */
-    private $total_errors = 0;
+    private $totalErrors = 0;
 
     /*
      * ***************************
@@ -52,11 +53,11 @@ class ValidatorIterator extends \IteratorIterator
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function getValid()
     {
-        return $this->valid;
+        return (bool)$this->valid;
     }
 
     /**
@@ -65,62 +66,66 @@ class ValidatorIterator extends \IteratorIterator
      */
     public function getType()
     {
-        return $this->type_ligne;
+        return $this->lineType;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalUpdate()
     {
-        return $this->total_update;
+        return (int)$this->totalUpdate;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalInsert()
     {
-        return $this->total_insert;
+        return (int)$this->totalInsert;
     }
 
     /**
      *
-     * @return number
+     * @return int
      */
     public function getTotalErrors()
     {
-        return $this->total_errors;
+        return (int)$this->totalErrors;
     }
 
-    public function next()
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function current()
     {
-        parent::next();
-        $current = $this->current();
-        if (!$current || !$current instanceof Config) {
-            return;
+        $current = $this->getInnerIterator()->current();
+        if (!$current instanceof Config) {
+            throw new Exception('Iterator can only validate Config');
         }
         $this->valid = $current->validateLine();
         $type = "";
         foreach ($current->getListeConfigObjet() as $configObject) {
-            /* @var $configObject \FMUP\Import\Config\ConfigObjet */
-            if ($configObject->getStatut() == "insert") {
-                $type = ($type == "update" ? "update" : "insert");
-            } elseif ($configObject->getStatut() == "update") {
-                $type = "update";
+            $status = $configObject->getStatut();
+            if ($status == ConfigObjet::INSERT) {
+                $type = ($type == ConfigObjet::UPDATE ? ConfigObjet::UPDATE : ConfigObjet::INSERT);
+            } elseif ($status == ConfigObjet::UPDATE) {
+                $type = ConfigObjet::UPDATE;
             }
         }
         if ($this->valid && !$current->getDoublonLigne()) {
-            if ($type == "insert") {
-                $this->total_insert++;
-            } elseif ($type == "update") {
-                $this->total_update++;
+            if ($type == ConfigObjet::INSERT) {
+                $this->totalInsert++;
+            } elseif ($type == ConfigObjet::UPDATE) {
+                $this->totalUpdate++;
             }
         } else {
-            $this->total_errors++;
+            $this->totalErrors++;
         }
-        $this->type_ligne = $type;
+        $this->lineType = $type;
+        return $current;
     }
 }

@@ -23,6 +23,9 @@ class Manager implements Logger\LoggerInterface
 
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
 
@@ -36,7 +39,7 @@ class Manager implements Logger\LoggerInterface
      */
     public function get($name = self::DEFAULT_NAME)
     {
-        if (is_null($name)) {
+        if (empty($name)) {
             throw new \InvalidArgumentException('Name must be set');
         }
         $name = (string)$name;
