@@ -29,6 +29,7 @@ use FMUP\Config\Exception;
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @codeCoverageIgnore since its an open source component
+ * @SuppressWarnings(PHPMD)
  */
 class ZendConfig implements \Countable, \Iterator
 {

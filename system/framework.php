@@ -84,7 +84,6 @@ class Framework
      */
     public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
-
     }
 
     /**

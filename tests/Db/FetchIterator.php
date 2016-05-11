@@ -125,11 +125,13 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
         );
         $dbInterface->expects($this->exactly(3))->method('fetchRow')->willReturnOnConsecutiveCalls(1, false, 2);
         $iterator = $this->getMock(\FMUP\Db\FetchIterator::class, null, array($statement, $dbInterface));
+        $reflector = new \ReflectionMethod(\FMUP\Db\FetchIterator::class, 'seek');
+        $reflector->setAccessible(true);
         /** @var $iterator \FMUP\Db\FetchIterator */
-        $iterator->seek(10);
+        $reflector->invoke($iterator, 10);
         $this->assertSame(10, $iterator->key());
         $this->assertSame(1, $iterator->current());
-        $iterator->seek(2540);
+        $reflector->invoke($iterator, 2540);
         $this->assertSame(2540, $iterator->key());
         $this->assertSame(2, $iterator->current());
     }
@@ -191,8 +193,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
         $iterator = $this->getMock(\FMUP\Db\FetchIterator::class, null, array($statement, $dbInterface));
         /** @var $iterator \FMUP\Db\FetchIterator */
         $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to set index on iterator');
-        $iterator[10] = 10;
+        $this->expectExceptionMessage('Unable to set offset 10 to value 12 on iterator');
+        $iterator[10] = 12;
     }
 
     public function testOffsetUnset()
@@ -220,7 +222,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
         $iterator = $this->getMock(\FMUP\Db\FetchIterator::class, null, array($statement, $dbInterface));
         /** @var $iterator \FMUP\Db\FetchIterator */
         $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to unset index on iterator');
+        $this->expectExceptionMessage('Unable to unset offset 10 on iterator');
         unset($iterator[10]);
     }
 }

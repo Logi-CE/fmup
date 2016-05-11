@@ -29,7 +29,7 @@ class ConfigObjet
      *
      * @var string[]
      */
-    private $mandatoryId = null;
+    private $mandatoryId = array();
 
     /**
      *
@@ -81,7 +81,7 @@ class ConfigObjet
     }
 
     /**
-     * @return array|\string[]
+     * @return \string[]
      */
     public function getIdNecessaire()
     {

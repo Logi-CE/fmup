@@ -175,6 +175,13 @@ class Config
         return $validLine;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return int
+     * @usedby self::usort
+     * @SuppressWarnings(PMD.UnusedPrivateMethod)
+     */
     private function sortByPriority($a, $b)
     {
         /**
@@ -189,6 +196,7 @@ class Config
 
     /**
      * @param $configList
+     * @uses self::sortByPriority
      * @codeCoverageIgnore
      */
     protected function usort($configList)
@@ -197,7 +205,6 @@ class Config
     }
 
     /**
-     * @uses $this->sortByPriority
      * @return $this
      */
     public function validateObjects()
@@ -215,13 +222,10 @@ class Config
             // pour tous les champs renseignés
             foreach ($configObject->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objectInstance->setAttribute($this->getField($index)
-                    ->getChampCible(), $this->getField($index)
-                    ->getValue());
+                $field = $this->getField($index);
+                $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
                 // et on prépare le filtre
-                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible()
-                    . " LIKE '%"
-                    . $this->getField($index)->getValue() . "%'";
+                $where[$field->getChampCible()] = $field->getChampCible() . " LIKE '%" . $field->getValue() . "%'";
             }
             // on va chercher l'objet en base
             if (!$objectInstance->findFirst($where)) {
@@ -259,34 +263,26 @@ class Config
             $where = array();
 
             // Si on a besoin d'un id, on va le chercher dans le tableau
-            if (count($configObject->getIdNecessaire()) > 0 && count($configObject->getNomAttribut()) > 0) {
-                $attributeList = $configObject->getNomAttribut();
-                foreach ($configObject->getIdNecessaire() as $mandatoryId) {
-                    if (isset($ids[$mandatoryId])) {
-                        // on le set
-                        $objectInstance->setAttribute($attributeList[$mandatoryId], $ids[$mandatoryId]);
-                        // et on prépare le filtre
-                        $where[$attributeList[$mandatoryId]] = $attributeList[$mandatoryId] . " LIKE '%"
-                            . $ids[$mandatoryId] . "%'";
-                    }
+            $attributeList = $configObject->getNomAttribut();
+            foreach ($configObject->getIdNecessaire() as $mandatoryId) {
+                if (isset($ids[$mandatoryId]) && isset($attributeList[$mandatoryId])) {
+                    // on le set
+                    $objectInstance->setAttribute($attributeList[$mandatoryId], $ids[$mandatoryId]);
+                    // et on prépare le filtre
+                    $where[$attributeList[$mandatoryId]] = $attributeList[$mandatoryId] . " LIKE '%"
+                        . $ids[$mandatoryId] . "%'";
                 }
             }
             // pour tous les champs obligatoires renseignés
             foreach ($configObject->getListeIndexChamp() as $index) {
                 // on hydrate l'objet
-                $objectInstance->setAttribute($this->getField($index)
-                    ->getChampCible(), $this->getField($index)
-                    ->getValue());
+                $field = $this->getField($index);
+                $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
                 // et on prépare le filtre
-                $where[$this->getField($index)->getChampCible()] = $this->getField($index)->getChampCible() . " LIKE '%"
-                    . $this->getField($index)->getValue() . "%'";
+                $where[$field->getChampCible()] = $field->getChampCible() . " LIKE '%" . $field->getValue() . "%'";
             }
             // on hydrate toutes les infos sur l'objet
-            foreach ($this->getListeField() as $field) {
-                if (\FMUP\String::toCamelCase($field->getTableCible()) == $objectName) {
-                    $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
-                }
-            }
+            $this->hydrateInstance($objectInstance, $objectName);
             // on va chercher l'objet en base
             $foundInstance = $objectInstance->findFirst($where);
 
@@ -305,6 +301,22 @@ class Config
                 // puis on met à jours
                 $objectInstance->setAttribute("Id", $foundInstance->getId());
                 $objectInstance->save();
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param \Model $objectInstance
+     * @param $objectName
+     * @return $this
+     */
+    protected function hydrateInstance($objectInstance, $objectName)
+    {
+        /** @var $objectInstance \Model */
+        foreach ($this->getListeField() as $field) {
+            if (\FMUP\String::toCamelCase($field->getTableCible()) == $objectName) {
+                $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
             }
         }
         return $this;

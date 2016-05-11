@@ -117,15 +117,26 @@ class ValidatorIterator extends \IteratorIterator
             }
         }
         if ($this->valid && !$current->getDoublonLigne()) {
-            if ($type == ConfigObjet::INSERT) {
-                $this->totalInsert++;
-            } elseif ($type == ConfigObjet::UPDATE) {
-                $this->totalUpdate++;
-            }
+            $this->increaseCounter($type);
         } else {
             $this->totalErrors++;
         }
         $this->lineType = $type;
         return $current;
+    }
+
+    /**
+     * Increase update/insert counter depending on type
+     * @param string $type
+     * @return $this
+     */
+    protected function increaseCounter($type)
+    {
+        if ($type == ConfigObjet::INSERT) {
+            $this->totalInsert++;
+        } elseif ($type == ConfigObjet::UPDATE) {
+            $this->totalUpdate++;
+        }
+        return $this;
     }
 }

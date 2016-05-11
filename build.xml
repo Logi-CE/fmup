@@ -52,8 +52,6 @@
             <fileset dir="${project.basedir}/">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
             </fileset>
             <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
         </phpcodesniffer>
@@ -64,8 +62,6 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
             </fileset>
         </phpdoc2>
     </target>
@@ -75,8 +71,6 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
             </fileset>
             <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
         </phpmd>
@@ -87,15 +81,13 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
             </fileset>
             <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
         </phpcpd>
     </target>
 
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command='"${project.basedir}/vendor/bin/phploc" --log-csv "${project.basedir}/build/logs/phploc.csv" system lib' escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command='"${project.basedir}/vendor/bin/phploc" --log-csv "${project.basedir}/build/logs/phploc.csv" lib' escape="false" />
     </target>
 
     <target name="pdepend">
@@ -103,8 +95,6 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
             </fileset>
             <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
             <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />
