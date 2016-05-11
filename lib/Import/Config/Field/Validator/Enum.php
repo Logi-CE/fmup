@@ -41,11 +41,7 @@ class Enum implements Validator
 
     public function validate($value)
     {
-        $valid = true;
-        if (!in_array($value, $this->getValues())) {
-            $valid = false;
-        }
-        return $valid;
+        return in_array($value, $this->getValues());
     }
 
     public function getErrorMessage()
