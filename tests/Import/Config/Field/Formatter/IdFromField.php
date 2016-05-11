@@ -23,6 +23,7 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
         );
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
+        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
         $this->assertSame('test', $formatter->format('test'));
         $this->assertTrue($formatter->hasError());
         $this->assertSame(
@@ -43,6 +44,7 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
         );
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
+        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
         $this->assertSame('', $formatter->format(''));
         $this->assertTrue($formatter->hasError());
         $this->assertSame(
@@ -65,6 +67,7 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
         );
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
+        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
         $this->assertSame(10, $formatter->format('test'));
         $this->assertFalse($formatter->hasError());
     }
