@@ -12,10 +12,6 @@ class Framework extends \Framework
     use Config\OptionalTrait;
 
     /**
-     * @var Request
-     */
-    private $request;
-    /**
      * @var Response
      */
     private $response;
@@ -61,27 +57,6 @@ class Framework extends \Framework
             $this->routingSystem = new Routing();
         }
         return $this->routingSystem;
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        if (!$this->request) {
-            $this->request = ($this->getSapi()->get() == Sapi::CLI ? new Request\Cli() : new Request\Http());
-        }
-        return $this->request;
-    }
-
-    /**
-     * @param Request $request
-     * @return $this
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-        return $this;
     }
 
     /**

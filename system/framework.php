@@ -1,4 +1,7 @@
 <?php
+
+use \FMUP\Request;
+
 /**
  * Classe d'initialisation du framework
  * @deprecated use \FMUP\Framework instead
@@ -7,6 +10,9 @@ class Framework
 {
     use \FMUP\Sapi\OptionalTrait;
 
+    /**
+     * @var Request
+     */
     private $request;
 
     /**
@@ -20,6 +26,16 @@ class Framework
             );
         }
         return $this->request;
+    }
+
+    /**
+     * @param Request $request
+     * @return $this
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
     }
 
     public function initialize()
