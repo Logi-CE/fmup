@@ -9,9 +9,6 @@ class Session
 {
     use Sapi\OptionalTrait;
 
-    const SESSION_STARTED = true;
-    const SESSION_NOT_STARTED = false;
-
     private $sessionState;
     private $name;
     private $id;
@@ -149,15 +146,11 @@ class Session
     public function isStarted()
     {
         if (is_null($this->sessionState)) {
-            if (version_compare($this->phpVersion(), '5.4.0', '>=')) {
-                $this->sessionState = (
-                    $this->sessionStatus() === PHP_SESSION_ACTIVE ? self::SESSION_STARTED : self::SESSION_NOT_STARTED
-                );
-            } else {
-                $this->sessionState = ($this->sessionId() === '' ? self::SESSION_NOT_STARTED : self::SESSION_STARTED);
-            }
+            $this->sessionState = version_compare($this->phpVersion(), '5.4.0', '>=')
+                ? $this->sessionStatus() === PHP_SESSION_ACTIVE
+                : $this->sessionId() !== '';
         }
-        return ($this->sessionState === self::SESSION_STARTED);
+        return $this->sessionState;
     }
 
     /**

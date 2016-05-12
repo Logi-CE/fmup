@@ -7,7 +7,7 @@ namespace FMUP\Db;
  * @author csanz@castelis.com
  * @author jmoulin@castelis.com
  */
-class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
+class FetchIterator implements \Iterator, \ArrayAccess
 {
     /**
      * @var mixed
@@ -141,7 +141,7 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
      */
     public function offsetSet($offset, $value)
     {
-        throw new Exception('Unable to set index on iterator');
+        throw new Exception("Unable to set offset $offset to value $value on iterator");
     }
 
     /**
@@ -150,13 +150,13 @@ class FetchIterator implements \Iterator, \ArrayAccess, \SeekableIterator
      */
     public function offsetUnset($offset)
     {
-        throw new Exception('Unable to unset index on iterator');
+        throw new Exception("Unable to unset offset $offset on iterator");
     }
 
     /**
      * @param int $offset
      */
-    public function seek($offset)
+    protected function seek($offset)
     {
         $this->row = (int)$offset;
         $this->current = $this->getDbInterface()->fetchRow(

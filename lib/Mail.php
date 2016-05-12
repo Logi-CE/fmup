@@ -42,7 +42,7 @@ class Mail extends \PHPMailer
      * @param string $message Text to parse
      * @param array $tokens Associative array for tokens to replace
      * @return string treated message
-     * @uses $this->tokenReplaceMap
+     * @uses self::tokenReplaceMap
      */
     public static function replaceTokens($message = '', array $tokens = array())
     {
@@ -56,6 +56,8 @@ class Mail extends \PHPMailer
      * Replace map
      * @param string $o
      * @return string
+     * @usedby self::replaceTokens
+     * @SuppressWarnings(PMD.UnusedPrivateMethod)
      */
     private static function tokenReplaceMap($o)
     {

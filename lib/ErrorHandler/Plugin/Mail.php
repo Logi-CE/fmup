@@ -87,71 +87,12 @@ class Mail extends Abstraction
      */
     protected function getBody()
     {
-        ob_start();
-        $exception = $this->getException();
-        echo "<strong>Erreur : " . $exception->getMessage() . "</strong><br/>";
-        echo "Erreur sur la ligne <strong>" . $exception->getLine() . "</strong> dans le fichier ";
-        echo '<strong>' . $exception->getFile() . "</strong><br/>";
-
-        if (isset($_SERVER["REMOTE_ADDR"])) {
-            echo "Adresse IP de l'internaute : " . $_SERVER["REMOTE_ADDR"];
-            echo ' ' . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "<br/>";
-        }
-        if (isset($_SERVER["HTTP_HOST"])) {
-            echo "URL appelée : http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "<br/><br/>";
-        }
-
-        echo "Trace complète :<br/>";
-
-        $retour = $exception->getTrace();
-        ksort($retour);
-        echo '<style>td{padding: 3px 5px;}</style>';
-        echo '<table border="1"><tr><th>Fichier</th><th>Ligne</th><th>Fonction</th></tr>';
-        unset($retour[0]);
-        $this->renderTraces($retour);
-        echo '</table>';
-        $tampon = ob_get_clean();
-
-        return $tampon;
+        $view = new \FMUP\View(array('exception' => $this->getException()));
+        return $view->setViewPath($this->getViewPath())->render();
     }
 
-    /**
-     * @param array $traces
-     * @return $this
-     */
-    protected function renderTraces(array $traces = array())
+    protected function getViewPath()
     {
-        $exception = $this->getException();
-        foreach ($traces as $trace) {
-            echo '<tr>';
-            echo '<td>' . ((isset($trace['file'])) ? $trace['file'] : $exception->getFile()) . '</td>';
-            echo '<td style="text-align: right;">' . ((isset($trace['line']))
-                    ? $trace['line']
-                    : $exception->getLine()) . '</td>';
-            echo '<td>' . ((isset($trace['class'])) ? $trace['class'] : '');
-            echo (isset($trace['type'])) ? $trace['type'] : '';
-            echo (isset($trace['function'])) ? $trace['function'] : '';
-
-            $arguments = array();
-            if (!empty($trace['args'])) {
-                foreach ($trace['args'] as $arg) {
-                    if (is_array($arg)) {
-                        $arguments[] = 'Array';
-                    } elseif (is_object($arg)) {
-                        $arguments[] = 'Object';
-                    } elseif (is_resource($arg)) {
-                        $arguments[] = 'Resource';
-                    } else {
-                        $arg = '"' . $arg . '"';
-                        $coupure = (strlen($arg) > 50) ? '...' : '';
-                        $arguments[] = substr($arg, 0, 50) . $coupure;
-                    }
-                }
-            }
-            echo '(' . implode(',', $arguments) . ')</td>';
-
-            echo '</tr>';
-        }
-        return $this;
+        return __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, array('Mail', 'render.phtml'));
     }
 }
