@@ -1,4 +1,19 @@
 /*********/
+/* 6.6.7 */
+/*********/
+
+All mess counters to zero
+
+#Compatible
+ - Db\FetchIterator is not seekable anymore
+ - removes Session constants SESSION_STARTED && SESSION_NOT_STARTED. use true and false instead
+ - Import\Config\ConfigObjet now returns an empty array instead of null when no mandatory id
+ - Optimize Import\Config field calls
+ - Removed system from analysis - This folder is deprecated and MUST be deleted in FMUP 7.0.0
+ - ErrorHandler\Plugin\Mail now uses external view to render errors
+ - Db\Driver\Pdo now uses its configuration from new configuration component Db\Driver\PdoConfiguration
+
+/*********/
 /* 6.6.6 */
 /*********/
 

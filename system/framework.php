@@ -47,6 +47,7 @@ class Framework
         $this->registerErrorHandler();
         $this->registerShutdownFunction();
         $this->dispatch();
+
     }
 
     /**
