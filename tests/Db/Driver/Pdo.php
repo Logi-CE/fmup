@@ -16,27 +16,6 @@ class PdoMockDbDriverPdo extends \PDO
 
 class PdoTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLoggerName()
-    {
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
-        $logger->method('log')->with($this->equalTo(\FMUP\Logger\Channel\System::NAME));
-        /** @var \FMUP\Logger $logger */
-        $pdo = new \FMUP\Db\Driver\Pdo();
-        $pdo->setLogger($logger)->log(\FMUP\Logger::ALERT, 'test');
-    }
-
-    public function testGetDriverWhenFail()
-    {
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
-        $logger->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger\Channel\System::NAME));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDsn', 'getLogin', 'getPassword'));
-        $pdo->method('getDsn')->willReturn('mysql:host=127.0.0.1');
-        /** @var \FMUP\Logger $logger */
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to connect database');
-        $pdo->setLogger($logger)->getDriver();
-    }
 
     public function testGetDriver()
     {
@@ -44,30 +23,7 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getPdo'));
         $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->assertSame($pdoMock, $pdo->getDriver());
-        $this->assertSame($pdoMock, $pdo->getDriver());
-    }
-
-    public function testForceReconnect()
-    {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getPdo'));
-        $pdo->expects($this->exactly(2))->method('getPdo')->willReturn($pdoMock);
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->assertSame($pdoMock, $pdo->getDriver());
-        $this->assertSame($pdoMock, $pdo->getDriver());
-        $this->assertSame($pdo, $pdo->forceReconnect());
-        $this->assertSame($pdoMock, $pdo->getDriver());
-        $this->assertSame($pdoMock, $pdo->getDriver());
-    }
-
-    public function testGetDriverWithDatabase()
-    {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getPdo'), array(array('database' => 'unitTest')));
-        $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock)
-            ->with($this->equalTo('mysql:host=localhost;dbname=unitTest'));
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
+        $this->assertInstanceOf(\FMUP\Db\Driver\PdoConfiguration::class, $pdo);
         $this->assertSame($pdoMock, $pdo->getDriver());
     }
 
@@ -199,30 +155,6 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($pdo->commit());
     }
 
-    public function testRawExecuteFailRandom()
-    {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('prepare'));
-        $pdoMock->expects($this->once())->method('prepare')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
-        $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('random message');
-        $pdo->rawExecute('sql');
-    }
-
-    public function testRawExecute()
-    {
-        $statement = $this->getMock(\PDOStatement::class, array('execute'));
-        $statement->expects($this->once())->method('execute')->willReturn(true);
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('prepare'));
-        $pdoMock->expects($this->once())->method('prepare')->willReturn($statement);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
-        $pdo->method('getDriver')->willReturn($pdoMock);
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->assertTrue($pdo->rawExecute('sql'));
-    }
 
     public function testExecuteFailNotStatement()
     {
@@ -308,44 +240,6 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(10, $pdo->lastInsertId());
     }
 
-    public function testFetchRowFailNotStatement()
-    {
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('Statement not in right format'));
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Statement not in right format');
-        $pdo->fetchRow('sql');
-    }
-
-    public function testFetchRowFailRandom()
-    {
-        $statement = $this->getMock(\PDOStatement::class, array('fetch'));
-        $statement->expects($this->once())->method('fetch')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('random message');
-        $pdo->fetchRow($statement, array('test' => 'test'));
-    }
-
-    public function testFetchRow()
-    {
-        $statement = $this->getMock(\PDOStatement::class, array('fetch'));
-        $statement->expects($this->once())->method('fetch')
-            ->willReturn(array())
-            ->with(
-                $this->equalTo(1),
-                $this->equalTo(\FMUP\Db\Driver\Pdo::CURSOR_NEXT),
-                $this->equalTo(3)
-            );
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getFetchMode'));
-        $pdo->expects($this->once())->method('getFetchMode')->willReturn(1);
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->assertTrue(is_array($pdo->fetchRow($statement, \FMUP\Db\Driver\Pdo::CURSOR_NEXT, 3)));
-    }
-
     public function testFetchAllFailNotStatement()
     {
         $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
@@ -376,15 +270,5 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdo->expects($this->once())->method('getFetchMode')->willReturn(1);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(array(array()), $pdo->fetchAll($statement));
-    }
-
-    public function testSetGetFetchMode()
-    {
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Fetch Mode changed'));
-        /** @var \FMUP\Db\Driver\Pdo $pdo */
-        $this->assertSame(\PDO::FETCH_ASSOC, $pdo->getFetchMode());
-        $this->assertSame($pdo, $pdo->setFetchMode(\PDO::FETCH_BOTH));
-        $this->assertSame(\PDO::FETCH_BOTH, $pdo->getFetchMode());
     }
 }

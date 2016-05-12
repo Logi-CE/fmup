@@ -1,79 +1,21 @@
 <?php
 namespace FMUP\Db\Driver;
 
-use FMUP\Db\DbInterface;
 use FMUP\Db\Exception;
 use FMUP\Logger;
 
-class Pdo implements DbInterface, Logger\LoggerInterface
+class Pdo extends PdoConfiguration
 {
-    use Logger\LoggerTrait;
-
-    /**
-     * @return string
-     */
-    protected function getLoggerName()
-    {
-        return Logger\Channel\System::NAME;
-    }
-
-    private $instance = null;
-    private $settings = array();
-    private $fetchMode = \PDO::FETCH_ASSOC;
-
     const CHARSET_UTF8 = 'utf8';
 
     /**
-     * @param array $params
+     * Charset to use
+     * @return string
      */
-    public function __construct($params = array())
+    protected function getCharset()
     {
-        $this->settings = $params;
-    }
-
-    /**
-     * @return null|\PDO
-     * @throws Exception
-     */
-    public function getDriver()
-    {
-        if (is_null($this->instance)) {
-            try {
-                $this->instance = $this->getPdo(
-                    $this->getDsn(),
-                    $this->getLogin(),
-                    $this->getPassword(),
-                    $this->getOptions()
-                );
-            } catch (\Exception $e) {
-                $this->log(Logger::CRITICAL, 'Unable to connect database', (array)$this->getSettings());
-                throw new Exception('Unable to connect database', $e->getCode(), $e);
-            }
-            $this->defaultConfiguration($this->instance);
-        }
-        return $this->instance;
-    }
-
-    /**
-     * @param $dsn
-     * @param $login
-     * @param $password
-     * @param $options
-     * @return \PDO
-     */
-    protected function getPdo($dsn, $login, $password, $options)
-    {
-        return new \PDO($dsn, $login, $password, $options);
-    }
-
-    /**
-     * Force reconnection
-     * @return $this
-     */
-    public function forceReconnect()
-    {
-        $this->instance = null;
-        return $this;
+        $charset = $this->getSettings('charset');
+        return $charset ? $charset : self::CHARSET_UTF8;
     }
 
     /**
@@ -91,99 +33,25 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     }
 
     /**
-     * Get string for dsn construction
-     * @return string
-     */
-    protected function getDsn()
-    {
-        $driver = $this->getDsnDriver();
-        $host = $this->getHost();
-        $database = $this->getDatabase();
-        $dsn = $driver . ":host=" . $host;
-        if (!is_null($database)) {
-            $dsn .= ";dbname=" . $database;
-        }
-        return $dsn;
-    }
-
-    /**
-     * Database to connect to
-     * @return string|null
-     */
-    protected function getDatabase()
-    {
-        return isset($this->settings['database']) ? $this->settings['database'] : null;
-    }
-
-    /**
-     * Host to connect to
-     * @return string
-     */
-    protected function getHost()
-    {
-        return isset($this->settings['host']) ? $this->settings['host'] : 'localhost';
-    }
-
-    /**
-     * Dsn Driver to use
-     * @return string
-     */
-    protected function getDsnDriver()
-    {
-        return isset($this->settings['driver']) ? $this->settings['driver'] : 'mysql';
-    }
-
-    /**
-     * Retrieve settings
-     * @param null $param
-     * @return array|null
-     */
-    protected function getSettings($param = null)
-    {
-        return is_null($param) ? $this->settings : (isset($this->settings[$param]) ? $this->settings[$param] : null);
-    }
-
-    /**
-     * Options for PDO Settings
+     * Fetch all rows for a given statement
+     * @param object $statement
      * @return array
+     * @throws Exception
      */
-    protected function getOptions()
+    public function fetchAll($statement)
     {
-        return array(
-            \PDO::ATTR_PERSISTENT => (bool)(
-            isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
-            ),
-            \PDO::ATTR_EMULATE_PREPARES => true,
-        );
-    }
+        if (!$statement instanceof \PDOStatement) {
+            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
+            throw new Exception('Statement not in right format');
+        }
 
-    /**
-     * Charset to use
-     * @return string
-     */
-    protected function getCharset()
-    {
-        return isset($this->settings['charset']) ? $this->settings['charset'] : self::CHARSET_UTF8;
+        try {
+            return $statement->fetchAll($this->getFetchMode());
+        } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
+        }
     }
-
-    /**
-     * Login to use
-     * @return string
-     */
-    protected function getLogin()
-    {
-        return isset($this->settings['login']) ? $this->settings['login'] : '';
-    }
-
-    /**
-     * Password to use
-     * @return string
-     */
-    protected function getPassword()
-    {
-        return isset($this->settings['password']) ? $this->settings['password'] : '';
-    }
-
 
     /**
      * Begin a transaction
@@ -261,21 +129,6 @@ class Pdo implements DbInterface, Logger\LoggerInterface
     }
 
     /**
-     * @param $sql
-     * @return bool
-     * @throws Exception
-     */
-    public function rawExecute($sql)
-    {
-        try {
-            return $this->getDriver()->prepare($sql)->execute();
-        } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
-            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
-    /**
      * Execute a statement for given values
      * @param object $statement
      * @param array $values
@@ -328,70 +181,5 @@ class Pdo implements DbInterface, Logger\LoggerInterface
             $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
-    }
-
-    /**
-     * Fetch a row for a given statement
-     * @param object $statement
-     * @param int $cursorOrientation Cursor orientation (next by default)
-     * @param int $cursorOffset Cursor offset (0 by default)
-     * @return array
-     * @throws Exception
-     */
-    public function fetchRow($statement, $cursorOrientation = self::CURSOR_NEXT, $cursorOffset = 0)
-    {
-        if (!$statement instanceof \PDOStatement) {
-            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
-            throw new Exception('Statement not in right format');
-        }
-
-        try {
-            return $statement->fetch($this->getFetchMode(), (int)$cursorOrientation, (int)$cursorOffset);
-        } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
-            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Fetch all rows for a given statement
-     * @param object $statement
-     * @return array
-     * @throws Exception
-     */
-    public function fetchAll($statement)
-    {
-        if (!$statement instanceof \PDOStatement) {
-            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
-            throw new Exception('Statement not in right format');
-        }
-
-        try {
-            return $statement->fetchAll($this->getFetchMode());
-        } catch (\PDOException $e) {
-            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
-            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getFetchMode()
-    {
-        return $this->fetchMode;
-    }
-
-    /**
-     * @param int $fetchMode
-     * @return $this
-     */
-    public function setFetchMode($fetchMode = \PDO::FETCH_ASSOC)
-    {
-        if ($fetchMode) {
-            $this->fetchMode = (int)$fetchMode;
-            $this->log(Logger::DEBUG, 'Fetch Mode changed', array('fetchMode' => $fetchMode));
-        }
-        return $this;
     }
 }
