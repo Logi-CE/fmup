@@ -22,7 +22,7 @@ class IdFromObject implements Formatter
     
     public function getErrorMessage($value = null)
     {
-        return "La valeur $value n'est pas convertible";
+        return "La classe n'est pas convertible";
     }
 
     public function hasError()

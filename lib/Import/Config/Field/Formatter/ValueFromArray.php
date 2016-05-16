@@ -12,6 +12,7 @@ class ValueFromArray implements Formatter
     /**
      * @param string $value
      * @return mixed|null
+     * @throws \FMUP\Exception\UnexpectedValue
      */
     public function format($value)
     {
