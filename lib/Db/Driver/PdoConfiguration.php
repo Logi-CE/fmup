@@ -208,13 +208,13 @@ abstract class PdoConfiguration implements DbInterface, Logger\LoggerInterface
     abstract protected function defaultConfiguration(\Pdo $instance);
 
     /**
-     * @param $dsn
-     * @param $login
-     * @param $password
-     * @param $options
+     * @param string $dsn
+     * @param string $login
+     * @param string $password
+     * @param array $options
      * @return \PDO
      */
-    protected function getPdo($dsn, $login, $password, $options)
+    protected function getPdo($dsn, $login = null, $password = null, array $options = null)
     {
         return new \PDO($dsn, $login, $password, $options);
     }
