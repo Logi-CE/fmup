@@ -30,7 +30,7 @@ abstract class FtpAbstract implements FtpInterface, Logger\LoggerInterface
     /**
      * @return resource
      * @throws Exception
-     */ 
+     */
     public function getSession()
     {
         if (!is_resource($this->session)) {

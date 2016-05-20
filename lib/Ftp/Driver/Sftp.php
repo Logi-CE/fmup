@@ -192,8 +192,7 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
         $context = null,
         $offset = 0,
         $maxLen = null
-    )
-    {
+    ) {
         return file_get_contents($fileName, $use_include_path, $context, $offset, $maxLen);
     }
 
