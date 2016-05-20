@@ -10,7 +10,7 @@ interface Formatter
 {
     /**
      * Modifie la valeur afin qu'elle corresponde au système
-     * @param string $value
+     * @param mixed $value
      * @return mixed formatted value
      */
     public function format($value);
