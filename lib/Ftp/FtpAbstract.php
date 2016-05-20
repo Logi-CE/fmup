@@ -30,10 +30,10 @@ abstract class FtpAbstract implements FtpInterface, Logger\LoggerInterface
     /**
      * @return resource
      * @throws Exception
-     */
+     */ 
     public function getSession()
     {
-        if (!$this->session) {
+        if (!is_resource($this->session)) {
             $this->log(Logger::ERROR, "Unable to connect to FTP server", (array)$this->getSettings());
             throw new Exception('Unable to connect to the FTP server');
         }

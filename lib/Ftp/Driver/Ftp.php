@@ -44,7 +44,8 @@ class Ftp extends FtpAbstract
      * @return $this
      * @throws FtpException
      */
-    public function connect($host, $port = 21) {
+    public function connect($host, $port = 21)
+    {
 
         $this->setSession($this->ftpConnect($host, $port, $this->getTimeout()));
         return $this;

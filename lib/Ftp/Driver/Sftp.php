@@ -11,10 +11,20 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
 
     const METHODS = 'methods';
     const CALLBACKS = 'callbacks';
+    const USE_INCLUDE_PATH = 'use_include_path';
+    const GET_CONTENT_CONTEXT = 'get_content_context';
+    const PUT_CONTENT_CONTEXT = 'put_content_context';
+    const PUT_CONTENT_FLAGS = 'put_content_flags';
+    const OFFSET = 'offset';
+    const MAXLEN = 'maxlen';
 
     private $sftpSession;
 
-    public function getSftpSession()
+    /**
+     * @return resource
+     * @throws FtpException
+     */
+    protected function getSftpSession()
     {
         if (!$this->sftpSession) {
             $this->sftpSession = $this->ssh2Sftp($this->getSession());
@@ -25,7 +35,7 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
     /**
      * @return array|null
      */
-    public function getMethods()
+    protected function getMethods()
     {
         return isset($this->settings[self::METHODS]) ? $this->settings[self::METHODS] : null;
     }
@@ -33,9 +43,63 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
     /**
      * @return array|null
      */
-    public function getCallbacks()
+    protected function getCallbacks()
     {
         return isset($this->settings[self::CALLBACKS]) ? $this->settings[self::CALLBACKS] : null;
+    }
+
+    /**
+     * Optional param for file_get_content
+     * @return bool
+     */
+    protected function getUseIncludePath()
+    {
+        return isset($this->settings[self::USE_INCLUDE_PATH]) ? $this->settings[self::USE_INCLUDE_PATH] : false;
+    }
+
+    /**
+     * Optional param for file_get_content
+     * @return resource|null
+     */
+    protected function getGetContentContext()
+    {
+        return isset($this->settings[self::GET_CONTENT_CONTEXT]) ? $this->settings[self::GET_CONTENT_CONTEXT] : null;
+    }
+
+    /**
+     * Optional param for file_get_content
+     * @return int
+     */
+    protected function getOffset()
+    {
+        return isset($this->settings[self::OFFSET]) ? $this->settings[self::OFFSET] : 0;
+    }
+
+    /**
+     * Optional param for file_get_content
+     * @return int|null
+     */
+    protected function getMaxLen()
+    {
+        return isset($this->settings[self::MAXLEN]) ? $this->settings[self::MAXLEN] : null;
+    }
+
+    /**
+     * Optional param for file_put_content
+     * @return int
+     */
+    protected function getPutContentFlags()
+    {
+        return isset($this->settings[self::PUT_CONTENT_FLAGS]) ? $this->settings[self::PUT_CONTENT_FLAGS] : 0;
+    }
+
+    /**
+     * Optional param for file_put_content
+     * @return resource|null
+     */
+    protected function getPutContentContext()
+    {
+        return isset($this->settings[self::PUT_CONTENT_CONTEXT]) ? $this->settings[self::PUT_CONTENT_CONTEXT] : null;
     }
 
     /**
@@ -44,7 +108,8 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
      * @return $this
      * @throws FtpException
      */
-    public function connect($host, $port = 22) {
+    public function connect($host, $port = 22)
+    {
 
         $this->setSession($this->ssh2Connect($host, $port, $this->getMethods(), $this->getCallbacks()));
         return $this;
@@ -58,7 +123,7 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
      * @return resource
      * @codeCoverageIgnore
      */
-    protected function ssh2Connect($host, $port = 22, $methods, $callbacks)
+    protected function ssh2Connect($host, $port = 22, array $methods = null, array $callbacks = null)
     {
         return ssh2_connect($host, $port, $methods, $callbacks);
     }
@@ -102,30 +167,47 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
             $localFile,
             $this->fileGetContents(
                 'ssh2.sftp://' . $this->getSftpSession() . '/' . $remoteFile,
-                'r'
-            )
+                $this->getUseIncludePath(),
+                $this->getGetContentContext(),
+                $this->getOffset(),
+                $this->getMaxLen()
+            ),
+            $this->getPutContentFlags(),
+            $this->getPutContentContext()
         );
     }
 
     /**
      * @param string $fileName
+     * @param bool $use_include_path
+     * @param resource $context
+     * @param int $offset
+     * @param int|null $maxLen
      * @return string
      * @codeCoverageIgnore
      */
-    protected function fileGetContents($fileName)
+    protected function fileGetContents(
+        $fileName,
+        $use_include_path = false,
+        $context = null,
+        $offset = 0,
+        $maxLen = null
+    )
     {
-        return file_get_contents($fileName);
+        return file_get_contents($fileName, $use_include_path, $context, $offset, $maxLen);
     }
 
     /**
      * @param string $fileName
      * @param mixed $data
+     * @param int $flags
+     * @param resource $context
      * @return int
      * @codeCoverageIgnore
      */
-    protected function filePutContents($fileName, $data)
+    protected function filePutContents($fileName, $data, $flags = 0, $context = null)
     {
-        return file_put_contents($fileName, $data);
+        return file_put_contents($fileName, $data, $flags, $context);
     }
 
     /**

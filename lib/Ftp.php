@@ -17,7 +17,7 @@ class Ftp
 
     public function __construct($params = array())
     {
-        $this->driver = isset($params[self::DRIVER]) ? $params[self::DRIVER] : Factory::DRIVER_FTP; 
+        $this->driver = isset($params[self::DRIVER]) ? $params[self::DRIVER] : Factory::DRIVER_FTP;
         $this->params = $params;
     }
 
