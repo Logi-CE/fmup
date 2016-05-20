@@ -52,6 +52,9 @@
             <fileset dir="${project.basedir}/">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
         </phpcodesniffer>
@@ -62,6 +65,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
         </phpdoc2>
     </target>
@@ -71,6 +77,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
         </phpmd>
@@ -81,6 +90,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
         </phpcpd>
@@ -95,6 +107,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
             <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />

@@ -28,11 +28,14 @@ class Sqlite extends Pdo
     }
 
     /**
-     * @param $dsn
+     * @param string $dsn
+     * @param string $username
+     * @param string $password
+     * @param array $options
      * @return \PDO
      * @codeCoverageIgnore
      */
-    protected function getPdo($dsn)
+    protected function getPdo($dsn, $username = null, $password = null, array $options = null)
     {
         return new \PDO($dsn);
     }
