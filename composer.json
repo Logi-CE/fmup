@@ -1,6 +1,6 @@
 {
     "name":"castelis/fmup",
-    "version":"dev-master",
+    "version":"6.7.0",
     "require": {
         "php": "^5.4",
         "ext-json": "^1.2",
@@ -27,6 +27,7 @@
       "ext-pdo_sqlite": "To use Sqlite connections",
       "ext-sqlite3": "To use Sqlite connections",
       "ext-sysvmsg": "To use Queue system",
+      "ext-ssh2": "To use Ftp system",
       "ext-memcached" : "Memcached >= 2.0.0 to use the Memcached Cache adapter"
     },
     "autoload": {

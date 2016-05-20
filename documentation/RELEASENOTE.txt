@@ -1,4 +1,25 @@
 /*********/
+/* 6.7.0 */
+/*********/
+
+FTP support
+
+#New
+ - Component Import\Config\Field\Formatter\IdFromObject
+ - Component Import\Config\Field\Formatter\Interfaces\ObjectWithId
+ - Component Import\Config\Field\Formatter\ValueFromArray
+ - Component Ftp
+    -  Driver FTP
+    -  Driver SFTP
+
+#Fix
+ - warning on Db\Driver\Pdo\Sqlite
+
+#Compatible
+ - add technical documentation
+ - continuous integration do not build phpdoc by default
+
+/*********/
 /* 6.6.7 */
 /*********/
 

@@ -13,22 +13,24 @@
     <target name="clean" description="Vide les répertoires d'artefacts">
         <delete dir="${project.basedir}/build/api" />
         <delete dir="${project.basedir}/build/coverage" />
-        <delete dir="${project.basedir}/build/doc" />
         <delete dir="${project.basedir}/build/logs" />
         <delete dir="${project.basedir}/build/pdepend" />
 
         <mkdir dir="${project.basedir}/build/api" />
         <mkdir dir="${project.basedir}/build/coverage" />
         <mkdir dir="${project.basedir}/build/coverage/report" />
-        <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
+    </target>
+
+    <target name="clean_doc" description="Supprime la documentation technique actuelle">
+        <delete dir="${project.basedir}/documentation/doc" />
+        <mkdir dir="${project.basedir}/documentation/doc" />
     </target>
 
     <target name="quality_assurance" description="Lance les outils d'analyse" depends="clean">
         <phingcall target="phpunit" />
         <phingcall target="phpcs" />
-        <phingcall target="phpdoc" />
         <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
@@ -60,8 +62,8 @@
         </phpcodesniffer>
     </target>
 
-    <target name="phpdoc">
-        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
+    <target name="phpdoc" depends="clean_doc">
+        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/documentation/doc" template="clean">
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
