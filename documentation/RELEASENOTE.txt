@@ -1,4 +1,11 @@
 /*********/
+/* 6.7.1 */
+/*********/
+
+#Fix
+ - optional maxLength in ftp module (SFTP driver)
+
+/*********/
 /* 6.7.0 */
 /*********/
 

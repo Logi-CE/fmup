@@ -1,6 +1,6 @@
 {
     "name":"castelis/fmup",
-    "version":"dev-master",
+    "version":"6.7.1",
     "require": {
         "php": "^5.4",
         "ext-json": "^1.2",

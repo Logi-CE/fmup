@@ -163,37 +163,37 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
      */
     public function get($localFile, $remoteFile)
     {
-        return $this->filePutContents(
-            $localFile,
-            $this->fileGetContents(
+        if ($this->getMaxLen() === null) {
+            $fileContent = $this->fileGetContents(
+                'ssh2.sftp://' . $this->getSftpSession() . '/' . $remoteFile,
+                $this->getUseIncludePath(),
+                $this->getGetContentContext(),
+                $this->getOffset()
+            );
+        } else {
+            $fileContent = $this->fileGetContents(
                 'ssh2.sftp://' . $this->getSftpSession() . '/' . $remoteFile,
                 $this->getUseIncludePath(),
                 $this->getGetContentContext(),
                 $this->getOffset(),
                 $this->getMaxLen()
-            ),
+            );
+        }
+        return $this->filePutContents(
+            $localFile,
+            $fileContent,
             $this->getPutContentFlags(),
             $this->getPutContentContext()
         );
     }
 
     /**
-     * @param string $fileName
-     * @param bool $use_include_path
-     * @param resource $context
-     * @param int $offset
-     * @param int|null $maxLen
      * @return string
      * @codeCoverageIgnore
      */
-    protected function fileGetContents(
-        $fileName,
-        $use_include_path = false,
-        $context = null,
-        $offset = 0,
-        $maxLen = null
-    ) {
-        return file_get_contents($fileName, $use_include_path, $context, $offset, $maxLen);
+    protected function fileGetContents()
+    {
+        return call_user_func_array('file_get_contents', func_get_args());
     }
 
     /**
