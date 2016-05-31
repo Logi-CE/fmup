@@ -13,22 +13,24 @@
     <target name="clean" description="Vide les répertoires d'artefacts">
         <delete dir="${project.basedir}/build/api" />
         <delete dir="${project.basedir}/build/coverage" />
-        <delete dir="${project.basedir}/build/doc" />
         <delete dir="${project.basedir}/build/logs" />
         <delete dir="${project.basedir}/build/pdepend" />
 
         <mkdir dir="${project.basedir}/build/api" />
         <mkdir dir="${project.basedir}/build/coverage" />
         <mkdir dir="${project.basedir}/build/coverage/report" />
-        <mkdir dir="${project.basedir}/build/doc" />
         <mkdir dir="${project.basedir}/build/logs" />
         <mkdir dir="${project.basedir}/build/pdepend" />
+    </target>
+
+    <target name="clean_doc" description="Supprime la documentation technique actuelle">
+        <delete dir="${project.basedir}/documentation/doc" />
+        <mkdir dir="${project.basedir}/documentation/doc" />
     </target>
 
     <target name="quality_assurance" description="Lance les outils d'analyse" depends="clean">
         <phingcall target="phpunit" />
         <phingcall target="phpcs" />
-        <phingcall target="phpdoc" />
         <phingcall target="phpmd" />
         <phingcall target="phpcpd" />
         <phingcall target="phploc" />
@@ -52,20 +54,22 @@
             <fileset dir="${project.basedir}/">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="checkstyle" outfile="${project.basedir}/build/logs/checkstyle.xml"/>
         </phpcodesniffer>
     </target>
 
-    <target name="phpdoc">
-        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/build/doc" template="clean">
+    <target name="phpdoc" depends="clean_doc">
+        <phpdoc2 title="FMUP Documentation" destdir="${project.basedir}/documentation/doc" template="clean">
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
         </phpdoc2>
     </target>
@@ -75,8 +79,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="xml" outfile="${project.basedir}/build/logs/phpmd.xml" />
         </phpmd>
@@ -87,15 +92,16 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <formatter type="pmd" outfile="${project.basedir}/build/logs/cpd.xml"/>
         </phpcpd>
     </target>
 
     <target name="phploc">
-        <exec logoutput="true" dir="${project.basedir}" command='"${project.basedir}/vendor/bin/phploc" --log-csv "${project.basedir}/build/logs/phploc.csv" system lib' escape="false" />
+        <exec logoutput="true" dir="${project.basedir}" command='"${project.basedir}/vendor/bin/phploc" --log-csv "${project.basedir}/build/logs/phploc.csv" lib' escape="false" />
     </target>
 
     <target name="pdepend">
@@ -103,8 +109,9 @@
             <fileset dir="${project.basedir}">
                 <include name="lib/**/*.php"/>
                 <include name="lib/*.php"/>
-                <include name="system/**/*.php"/>
-                <include name="system/*.php"/>
+                <!-- this directory should be deleted since code is not correctly designed -->
+                <!--include name="system/**/*.php"/>
+                <include name="system/*.php"/-->
             </fileset>
             <logger type="jdepend-xml" outfile="${project.basedir}/build/logs/jdepend.xml" />
             <logger type="jdepend-chart" outfile="${project.basedir}/build/pdepend/dependencies.svg" />

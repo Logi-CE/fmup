@@ -9,7 +9,7 @@ namespace FMUP\Dispatcher\Plugin;
 /**
  * Class Staticify
  * this component is a POST dispatcher
- * it will replace all statics url to attack statics ones
+ * it will replace all asset url to attack statics ones
  * This will allow cookie free domain + improve parallels asset download
  *
  * @package FMUP\Dispatcher\Plugin
@@ -28,7 +28,7 @@ class Staticify extends \FMUP\Dispatcher\Plugin
      * @var string
      */
     protected $staticPrefix = 'static';
-    
+
     /**
      * Suffix of static instances
      * @var string
@@ -52,40 +52,39 @@ class Staticify extends \FMUP\Dispatcher\Plugin
     private $currentAsset = 1;
 
     /**
+     * Path between domain and requested asset for relative urls
+     * @var string
+     */
+    private $trailingPath;
+
+    /**
      * Will catch all resources URL
      *
      * @see self::computeAsset
      */
     public function handle()
     {
-        $isJson = false;
         $response = $this->getResponse()->getBody();
         $newResponse = $response;
-        foreach ($this->getResponse()->getHeaders() as $type => $items) {
-            if ($type == \FMUP\Response\Header\ContentType::TYPE) {
-                foreach ($items as $item) {
-                    /** @var \FMUP\Response\Header $item */
-                    if ($item->getValue() == \FMUP\Response\Header\ContentType::MIME_APPLICATION_JSON) {
-                        $isJson = true;
-                        break;
-                    }
-                }
-            }
-        }
+        $isJson = $this->isRequestJson();
         if ($isJson) {
             $response = stripslashes($response);
         }
         $regexps = array(
             '~src="?\'?([^"\']+)"?\'?~',
-            '~<link .*href="?\'?([^"\']+)"?\'?~'
+            '~<link [^>]*href="?\'?([^"\']+)"?\'?~',
         );
+        $values = array();
         foreach ($regexps as $exp) {
             preg_match_all($exp, $response, $glob);
-            $values = array();
-            foreach ($glob[1] as $key => $string) {
+            foreach ($glob[1] as $string) {
                 $crc = crc32($string);
                 if (!isset($values[$crc])) {
-                    $newResponse = str_replace($string, $this->computeAsset($string, $isJson), $newResponse);
+                    $newResponse = str_replace(
+                        $this->jsonTransform($string, $isJson),
+                        $this->computeAsset($string, $isJson),
+                        $newResponse
+                    );
                     $values[$crc] = 1;
                 }
             }
@@ -94,7 +93,41 @@ class Staticify extends \FMUP\Dispatcher\Plugin
     }
 
     /**
-     * Compute wich asset for a path and return the full path
+     * Check whether response is json or not
+     * @return bool
+     * @throws \FMUP\Exception
+     */
+    private function isRequestJson()
+    {
+        $isJson = false;
+        foreach ($this->getResponse()->getHeaders() as $type => $items) {
+            if ($type == \FMUP\Response\Header\ContentType::TYPE) {
+                foreach ($items as $item) {
+                    if ($item instanceof \FMUP\Response\Header\ContentType &&
+                        $item->getMime() == \FMUP\Response\Header\ContentType::MIME_APPLICATION_JSON
+                    ) {
+                        $isJson = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return $isJson;
+    }
+
+    /**
+     * add slashes to / character in json mode
+     * @param string $string
+     * @param bool $isJson
+     * @return mixed
+     */
+    private function jsonTransform($string, $isJson)
+    {
+        return $isJson ? str_replace('/', '\/', $string) : $string;
+    }
+
+    /**
+     * Compute which asset for a path and return the full path
      *
      * @param string $path
      * @param bool $isJson Check if url should be encoded
@@ -103,11 +136,11 @@ class Staticify extends \FMUP\Dispatcher\Plugin
      */
     protected function computeAsset($path, $isJson = false)
     {
-        if (strpos(strtolower($path), self::PROTOCOL) === false) {
-            $path = $this->getDomain() . $path;
-        } else {
-            return $path;
+        if (strpos($path, self::PROTOCOL) !== false) {
+            return $this->jsonTransform($path, $isJson);
         }
+        $trailingPath = ($path{0} !== '/') ? $this->getAssetPath() : '';
+        $path = $this->getDomain() . $trailingPath . $path;
         $path = str_replace(
             self::PROTOCOL . $this->getSubDomain(),
             self::PROTOCOL . $this->getStaticPrefix() . $this->currentAsset++ . $this->getStaticSuffix(),
@@ -116,10 +149,23 @@ class Staticify extends \FMUP\Dispatcher\Plugin
         if ($this->currentAsset > $this->getStaticNumber()) {
             $this->currentAsset = 1;
         }
-        if ($isJson) {
-            $path = str_replace('/', '\/', $path);
+        return $this->jsonTransform($path, $isJson);
+    }
+
+    /**
+     * Compute relative path between requested asset and current path on request URI
+     * @return string
+     * @throws \FMUP\Exception
+     */
+    private function getAssetPath()
+    {
+        if (!$this->trailingPath) {
+            $request = $this->getRequest();
+            /** @var $request \FMUP\Request\Http */
+            $uri = $request->getServer(\FMUP\Request\Http::REQUEST_URI);
+            $this->trailingPath = ($uri{strlen($uri) - 1} == '/' ? dirname($uri . 'random') : dirname($uri)) . '/';
         }
-        return $path;
+        return $this->trailingPath;
     }
 
     /**
@@ -128,7 +174,7 @@ class Staticify extends \FMUP\Dispatcher\Plugin
      */
     public function setStaticNumber($number = 3)
     {
-        $this->staticNumber = (int) $number;
+        $this->staticNumber = (int)$number;
         return $this;
     }
 
@@ -144,7 +190,7 @@ class Staticify extends \FMUP\Dispatcher\Plugin
      * @param string $prefix
      * @return $this
      */
-    public function setStaticPrefix($prefix = '')
+    public function setStaticPrefix($prefix = 'static')
     {
         $this->staticPrefix = (string)$prefix;
         return $this;
@@ -198,15 +244,25 @@ class Staticify extends \FMUP\Dispatcher\Plugin
      * @return string
      * @throws \FMUP\Exception
      */
-    protected function getDomain()
+    public function getDomain()
     {
-        /** @var \FMUP\Request\Http $request */
-        $request = $this->getRequest();
         if ($this->domain === null) {
+            /** @var \FMUP\Request\Http $request */
+            $request = $this->getRequest();
             $this->domain = $request->getServer(\FMUP\Request\Http::REQUEST_SCHEME)
-                . '://' . $request->getServer(\FMUP\Request\Http::HTTP_HOST)
-            ;
+                . self::PROTOCOL . $request->getServer(\FMUP\Request\Http::HTTP_HOST);
         }
         return $this->domain;
+    }
+
+    /**
+     * Define domain to use for static assets
+     * @param string|null $domain
+     * @return $this
+     */
+    public function setDomain($domain = null)
+    {
+        $this->domain = $domain === null ? null : (string)$domain;
+        return $this;
     }
 }

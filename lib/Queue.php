@@ -5,7 +5,7 @@ use FMUP\Queue\Channel;
 use FMUP\Queue\Exception as QueueException;
 use FMUP\Queue\Message;
 
-class Queue
+class Queue implements Environment\OptionalInterface
 {
     use Environment\OptionalTrait;
 
@@ -57,7 +57,7 @@ class Queue
         if (!$this->driver) {
             $this->driver = new Queue\Driver\Native();
         }
-        if ($this->driver instanceof Environment\OptionalTrait &&
+        if ($this->driver instanceof Environment\OptionalInterface &&
             !$this->driver->hasEnvironment() &&
             $this->hasEnvironment()
         ) {
@@ -109,7 +109,7 @@ class Queue
     /**
      * Acknowledge a message
      * @param Message $message
-     * @return $this
+     * @return Queue\DriverInterface
      * @throws QueueException
      */
     public function ackMessage(Message $message)

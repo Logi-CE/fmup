@@ -7,7 +7,7 @@ class Location extends \FMUP\Exception
     {
         $path = $this->getMessage();
         if (strpos($path, '://') === false) {
-            if ($path{0} != '/') {
+            if (is_null($path) || !isset($path[0]) || $path{0} != '/') {
                 $path = '/' . $path;
             }
         }

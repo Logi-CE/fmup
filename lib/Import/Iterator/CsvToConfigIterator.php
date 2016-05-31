@@ -17,26 +17,29 @@ class CsvToConfigIterator extends \IteratorIterator
         $this->config = $config;
     }
 
+    /**
+     * @return \FMUP\Import\Config
+     */
     public function current()
     {
         $listFields = $this->getInnerIterator()->current();
-        if (count($listFields) > 1) {
-            foreach ($listFields as $key => $champ) {
-                if ($key >= count($this->config->getListeField())) {
+        $countConfigListField = count($this->config->getListeField());
+        $countOriginalListFields = count($listFields);
+        if ($countOriginalListFields > 1) {
+            $i = 0;
+            foreach ($listFields as $fieldValue) {
+                if ($i >= $countConfigListField) {
                     break;
                 }
-                $field = $this->config->getField($key);
-                $field->setValue($champ);
+                $this->config->getField($i++)->setValue($fieldValue);
             }
-            for ($i = count($listFields); $i < count($this->config->getListeField()); $i++) {
-                $field = $this->config->getField($i);
-                $field->setValue(null);
+            for (; $i < $countConfigListField; $i++) {
+                $this->config->getField($i)->setValue(null);
             }
             return $this->config;
         } else {
-            for ($i = 0; $i < count($this->config->getListeField()); $i++) {
-                $field = $this->config->getField($i);
-                $field->setValue(null);
+            for ($i = 0; $i < $countConfigListField; $i++) {
+                $this->config->getField($i)->setValue(null);
             }
             return $this->config;
         }

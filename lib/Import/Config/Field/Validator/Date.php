@@ -27,14 +27,43 @@ class Date implements Validator
     {
         $valid = false;
         if (($this->canEmpty() && $value == '')
-            || \Is::date($value)
-            || \Is::dateUk($value)
-            || \Is::dateUk($value)
-            || \Is::dateWithoutSeparator($value)
+            || $this->isDate($value)
+            || $this->isDateUk($value)
+            || $this->isDateWithoutSeparator($value)
         ) {
             $valid = true;
         }
         return $valid;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function isDate($value)
+    {
+        return \Is::date($value);
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function isDateUk($value)
+    {
+        return \Is::dateUk($value);
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function isDateWithoutSeparator($value)
+    {
+        return \Is::dateWithoutSeparator($value);
     }
 
     public function getErrorMessage()

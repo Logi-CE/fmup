@@ -25,11 +25,18 @@ class Integer implements Validator
 
     public function validate($value)
     {
-        return (bool) ($this->getCanEmpty() && $value == '') || \Is::integer($value);
+        if ($this->getCanEmpty() && $value == '') {
+            return true;
+        }
+        if (is_float($value) && ((int)$value === 0)) {
+            return false;
+        }
+        $valueTest = (int) $value;
+        return ($valueTest === 0) ? is_numeric($value) : ($valueTest == $value);
     }
 
     public function getErrorMessage()
     {
-        return "Le champ reçu n'est un nombre entier";
+        return "Le champ reçu n'est pas un nombre entier";
     }
 }

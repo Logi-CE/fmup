@@ -65,13 +65,7 @@ class Shm implements CacheInterface
      */
     private function secureName($name = null)
     {
-        if (is_numeric($name)) {
-            return (int)$name;
-        }
-        if (is_null($name)) {
-            return 1;
-        }
-        return $this->stringToUniqueId($name);
+        return is_null($name) ? 1 : $this->stringToUniqueId($name);
     }
 
     /**
@@ -154,10 +148,20 @@ class Shm implements CacheInterface
             throw new Exception('SHM is not available');
         }
         $key = $this->secureName($key);
-        if ($this->has($key) && !shm_remove_var($this->getShm(), $key)) {
+        if ($this->has($key) && !$this->shmRemoveVar($this->getShm(), $key)) {
             throw new Exception('Unable to delete key from cache Shm');
         }
         return $this;
+    }
+
+    /**
+     * @param resource $shmResource
+     * @param string $key
+     * @return bool
+     */
+    protected function shmRemoveVar($shmResource, $key)
+    {
+        return shm_remove_var($shmResource, $key);
     }
 
     /**
@@ -173,10 +177,21 @@ class Shm implements CacheInterface
             throw new Exception('SHM is not available');
         }
         $key = $this->secureName($key);
-        if (!shm_put_var($this->getShm(), $key, $value)) {
+        if (!$this->shmPutVar($this->getShm(), $key, $value)) {
             throw new Exception('Unable to define key into cache Shm');
         }
         return $this;
+    }
+
+    /**
+     * @param resource $shmResource
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
+    protected function shmPutVar($shmResource, $key, $value)
+    {
+        return shm_put_var($shmResource, $key, $value);
     }
 
     /**

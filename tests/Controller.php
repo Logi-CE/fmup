@@ -26,11 +26,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $controller = $this->getMockBuilder('\FMUP\Controller')
+        $controller = $this->getMockBuilder(\FMUP\Controller::class)
             ->setMethods(null)
             ->getMockForAbstractClass();
 
-        $this->assertInstanceOf('\FMUP\Controller', $controller, 'Not an instance of FMUP\Controller');
+        $this->assertInstanceOf(\FMUP\Controller::class, $controller, 'Not an instance of ' . \FMUP\Controller::class);
 
         return $controller;
     }
@@ -93,22 +93,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a request doesn't affect the controller.");
 
         try {
-            $controller3 = clone $controller;
-            $controller3->setRequest('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Request)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setRequest($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Request)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
             $controller5 = clone $controller;
             $controller5->setRequest(null);
             $this->assertFalse(true, 'Exception expected : type error (null instead of Request)');
@@ -151,22 +135,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setResponse(new \FMUP\Response());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Response doesn't affect the controller.");
-
-        try {
-            $controller3 = clone $controller;
-            $controller3->setResponse('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Response)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setResponse($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Response)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         try {
             $controller5 = clone $controller;
@@ -213,22 +181,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a View doesn't affect the controller.");
 
         try {
-            $controller3 = clone $controller;
-            $controller3->setView('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of View)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setView($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of View)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
             $controller5 = clone $controller;
             $controller5->setView(null);
             $this->assertFalse(true, 'Exception expected : type error (null instead of View)');
@@ -252,7 +204,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($controller2->getView(), "View should be not null");
 
         $controller3 = clone $controller;
-        $this->assertInstanceOf('\FMUP\View', $controller3->getView(), "Issue with Lazy Loading initialization.");
+        $this->assertInstanceOf(\FMUP\View::class, $controller3->getView(), "Issue with Lazy Loading initialization.");
 
         return $controller;
     }
@@ -266,22 +218,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setBootstrap(new Bootstrap());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Bootstrap doesn't affect the controller.");
-
-        try {
-            $controller3 = clone $controller;
-            $controller3->setBootstrap('test');
-            $this->assertFalse(true, 'Exception expected : type error (string instead of Bootstrap)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
-        try {
-            $controller4 = clone $controller;
-            $controller4->setBootstrap($this->getMockObjectGenerator());
-            $this->assertFalse(true, 'Exception expected : type error (object instead of Bootstrap)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         try {
             $controller5 = clone $controller;
@@ -361,11 +297,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * @param FMUPController $controller
      * @return FMUPController
      */
-    public function getHasResponse(FMUPController $controller)
+    public function testHasResponse(FMUPController $controller)
     {
         $this->assertFalse($controller->hasResponse(), 'Controller must not have reponse at creation');
         $controller2 = clone $controller;
-        $controller2->setResponse($this->getMock('\FMUP\Response'));
+        /** @var $mock \FMUP\Response */
+        $mock = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $controller2->setResponse($mock);
         $this->assertTrue($controller2->hasResponse(), 'Controller must not have reponse at creation');
         return $controller;
     }

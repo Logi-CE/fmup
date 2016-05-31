@@ -13,7 +13,7 @@ class Location extends Header
      */
     public function __construct($path)
     {
-        $this->setValue($path);
+        $this->setValue((string)$path);
     }
 
     /**

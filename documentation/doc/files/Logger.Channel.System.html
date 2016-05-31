@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>FMUP Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">FMUP Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/FMUP.html">\FMUP</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">1001</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-140162433"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-140162433" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-286131297"></a>
+                                <a href="../namespaces/FMUP.html" style="margin-left: 30px; padding-left: 0">FMUP</a>
+            </div>
+            <div id="namespace-286131297" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-343168005"></a>
+                                <a href="../namespaces/FMUP.Authentication.html" style="margin-left: 30px; padding-left: 0">Authentication</a>
+            </div>
+            <div id="namespace-343168005" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1890132407"></a>
+                                <a href="../namespaces/FMUP.Authentication.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-1890132407" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Authentication.Driver.Session.html">Session</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Authentication.DriverInterface.html">DriverInterface</a></li>
+                                                    <li class="interface"><a href="../classes/FMUP.Authentication.UserInterface.html">UserInterface</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1955151825"></a>
+                                <a href="../namespaces/FMUP.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-1955151825" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1733931728"></a>
+                                <a href="../namespaces/FMUP.Cache.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-1733931728" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Apc.html">Apc</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.File.html">File</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Memcached.html">Memcached</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Ram.html">Ram</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Shm.html">Shm</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Cache.CacheInterface.html">CacheInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Cache.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1696603722"></a>
+                                <a href="../namespaces/FMUP.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-1696603722" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1324108789"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.html" style="margin-left: 30px; padding-left: 0">Ini</a>
+            </div>
+            <div id="namespace-1324108789" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2073709756"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.Extended.html" style="margin-left: 30px; padding-left: 0">Extended</a>
+            </div>
+            <div id="namespace-2073709756" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1045087030"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.Extended.ZendConfig.html" style="margin-left: 30px; padding-left: 0">ZendConfig</a>
+            </div>
+            <div id="namespace-1045087030" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.ZendConfig.Ini.html">Ini</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.ZendConfig.html">ZendConfig</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.html">Extended</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Config.ConfigInterface.html">ConfigInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Config.OptionalTrait.html">OptionalTrait</a></li>
+                                                    <li class="trait"><a href="../classes/FMUP.Config.RequiredTrait.html">RequiredTrait</a></li>
+                                                                            <li class="class"><a href="../classes/FMUP.Config.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.html">Ini</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-272015407"></a>
+                                <a href="../namespaces/FMUP.Controller.html" style="margin-left: 30px; padding-left: 0">Controller</a>
+            </div>
+            <div id="namespace-272015407" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1704660218"></a>
+                                <a href="../namespaces/FMUP.Controller.Helper.html" style="margin-left: 30px; padding-left: 0">Helper</a>
+            </div>
+            <div id="namespace-1704660218" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                            <li class="trait"><a href="../classes/FMUP.Controller.Helper.Download.html">Download</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Controller.Error.html">Error</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-122252625"></a>
+                                <a href="../namespaces/FMUP.Crypt.html" style="margin-left: 30px; padding-left: 0">Crypt</a>
+            </div>
+            <div id="namespace-122252625" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-832711443"></a>
+                                <a href="../namespaces/FMUP.Crypt.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-832711443" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Crypt.Driver.MCrypt.html">MCrypt</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.Driver.Md5.html">Md5</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Crypt.CryptInterface.html">CryptInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Crypt.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1842172856"></a>
+                                <a href="../namespaces/FMUP.Db.html" style="margin-left: 30px; padding-left: 0">Db</a>
+            </div>
+            <div id="namespace-1842172856" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-665514549"></a>
+                                <a href="../namespaces/FMUP.Db.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-665514549" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1465577793"></a>
+                                <a href="../namespaces/FMUP.Db.Driver.Pdo.html" style="margin-left: 30px; padding-left: 0">Pdo</a>
+            </div>
+            <div id="namespace-1465577793" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Mysql.html">Mysql</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Odbc.html">Odbc</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Sqlite.html">Sqlite</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.SqlSrv.html">SqlSrv</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.html">Pdo</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.PdoConfiguration.html">PdoConfiguration</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Db.DbInterface.html">DbInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.FetchIterator.html">FetchIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Manager.html">Manager</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-626377808"></a>
+                                <a href="../namespaces/FMUP.Dispatcher.html" style="margin-left: 30px; padding-left: 0">Dispatcher</a>
+            </div>
+            <div id="namespace-626377808" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-697485751"></a>
+                                <a href="../namespaces/FMUP.Dispatcher.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-697485751" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.Render.html">Render</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.Version.html">Version</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.html">Plugin</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Post.html">Post</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-453169442"></a>
+                                <a href="../namespaces/FMUP.Environment.html" style="margin-left: 30px; padding-left: 0">Environment</a>
+            </div>
+            <div id="namespace-453169442" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Environment.OptionalInterface.html">OptionalInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Environment.OptionalTrait.html">OptionalTrait</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-129744624"></a>
+                                <a href="../namespaces/FMUP.ErrorHandler.html" style="margin-left: 30px; padding-left: 0">ErrorHandler</a>
+            </div>
+            <div id="namespace-129744624" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1953986559"></a>
+                                <a href="../namespaces/FMUP.ErrorHandler.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-1953986559" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Abstraction.html">Abstraction</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.ErrorController.html">ErrorController</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.HttpHeader.html">HttpHeader</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Log.html">Log</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Mail.html">Mail</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Base.html">Base</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1524116013"></a>
+                                <a href="../namespaces/FMUP.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-1524116013" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-706890984"></a>
+                                <a href="../namespaces/FMUP.Exception.Status.html" style="margin-left: 30px; padding-left: 0">Status</a>
+            </div>
+            <div id="namespace-706890984" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.Forbidden.html">Forbidden</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.NotFound.html">NotFound</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.Unauthorized.html">Unauthorized</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Exception.Location.html">Location</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.html">Status</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.UnexpectedValue.html">UnexpectedValue</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1346921427"></a>
+                                <a href="../namespaces/FMUP.FlashMessenger.html" style="margin-left: 30px; padding-left: 0">FlashMessenger</a>
+            </div>
+            <div id="namespace-1346921427" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-931560075"></a>
+                                <a href="../namespaces/FMUP.FlashMessenger.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-931560075" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.Driver.Session.html">Session</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.FlashMessenger.DriverInterface.html">DriverInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.Message.html">Message</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.View.html">View</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-911714248"></a>
+                                <a href="../namespaces/FMUP.Ftp.html" style="margin-left: 30px; padding-left: 0">Ftp</a>
+            </div>
+            <div id="namespace-911714248" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2072924297"></a>
+                                <a href="../namespaces/FMUP.Ftp.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-2072924297" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Ftp.Driver.Ftp.html">Ftp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.Driver.Sftp.html">Sftp</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Ftp.FtpInterface.html">FtpInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Ftp.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.FtpAbstract.html">FtpAbstract</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-672043641"></a>
+                                <a href="../namespaces/FMUP.Import.html" style="margin-left: 30px; padding-left: 0">Import</a>
+            </div>
+            <div id="namespace-672043641" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-896336537"></a>
+                                <a href="../namespaces/FMUP.Import.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-896336537" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1461490375"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.html" style="margin-left: 30px; padding-left: 0">Field</a>
+            </div>
+            <div id="namespace-1461490375" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1230982253"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Formatter.html" style="margin-left: 30px; padding-left: 0">Formatter</a>
+            </div>
+            <div id="namespace-1230982253" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-905871945"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Formatter.Interfaces.html" style="margin-left: 30px; padding-left: 0">Interfaces</a>
+            </div>
+            <div id="namespace-905871945" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Formatter.Interfaces.ObjectWithId.html">ObjectWithId</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.DateSQL.html">DateSQL</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.IdFromField.html">IdFromField</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.IdFromObject.html">IdFromObject</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.TextToBool.html">TextToBool</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.ValueFromArray.html">ValueFromArray</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-895406906"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Validator.html" style="margin-left: 30px; padding-left: 0">Validator</a>
+            </div>
+            <div id="namespace-895406906" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Alphanum.html">Alphanum</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Boolean.html">Boolean</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Date.html">Date</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Email.html">Email</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Enum.html">Enum</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Id.html">Id</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Integer.html">Integer</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.MaxLength.html">MaxLength</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.RegExp.html">RegExp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Required.html">Required</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Telephone.html">Telephone</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Formatter.html">Formatter</a></li>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Validator.html">Validator</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.ConfigObjet.html">ConfigObjet</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.html">Field</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1940134624"></a>
+                                <a href="../namespaces/FMUP.Import.Iterator.html" style="margin-left: 30px; padding-left: 0">Iterator</a>
+            </div>
+            <div id="namespace-1940134624" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.CsvIterator.html">CsvIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.CsvToConfigIterator.html">CsvToConfigIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.DuplicateIterator.html">DuplicateIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.FileIterator.html">FileIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.LineFilterIterator.html">LineFilterIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.LineToConfigIterator.html">LineToConfigIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.ValidatorIterator.html">ValidatorIterator</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Display.html">Display</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Launch.html">Launch</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-526128350"></a>
+                                <a href="../namespaces/FMUP.Logger.html" style="margin-left: 30px; padding-left: 0">Logger</a>
+            </div>
+            <div id="namespace-526128350" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-603075924"></a>
+                                <a href="../namespaces/FMUP.Logger.Channel.html" style="margin-left: 30px; padding-left: 0">Channel</a>
+            </div>
+            <div id="namespace-603075924" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Error.html">Error</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Standard.html">Standard</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Syslog.html">Syslog</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.System.html">System</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Logger.LoggerInterface.html">LoggerInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Logger.LoggerTrait.html">LoggerTrait</a></li>
+                                                                            <li class="class"><a href="../classes/FMUP.Logger.Channel.html">Channel</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1274177100"></a>
+                                <a href="../namespaces/FMUP.Queue.html" style="margin-left: 30px; padding-left: 0">Queue</a>
+            </div>
+            <div id="namespace-1274177100" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1022040434"></a>
+                                <a href="../namespaces/FMUP.Queue.Channel.html" style="margin-left: 30px; padding-left: 0">Channel</a>
+            </div>
+            <div id="namespace-1022040434" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-491416474"></a>
+                                <a href="../namespaces/FMUP.Queue.Channel.Settings.html" style="margin-left: 30px; padding-left: 0">Settings</a>
+            </div>
+            <div id="namespace-491416474" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.Settings.Native.html">Native</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.Settings.html">Settings</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2006695274"></a>
+                                <a href="../namespaces/FMUP.Queue.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-2006695274" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Driver.Amqp.html">Amqp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Driver.Native.html">Native</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Queue.DriverInterface.html">DriverInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.html">Channel</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Message.html">Message</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1545757089"></a>
+                                <a href="../namespaces/FMUP.Request.html" style="margin-left: 30px; padding-left: 0">Request</a>
+            </div>
+            <div id="namespace-1545757089" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Request.Cli.html">Cli</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.Http.html">Http</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.Url.html">Url</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-228569251"></a>
+                                <a href="../namespaces/FMUP.Response.html" style="margin-left: 30px; padding-left: 0">Response</a>
+            </div>
+            <div id="namespace-228569251" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-161486040"></a>
+                                <a href="../namespaces/FMUP.Response.Header.html" style="margin-left: 30px; padding-left: 0">Header</a>
+            </div>
+            <div id="namespace-161486040" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Response.Header.CacheControl.html">CacheControl</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentDisposition.html">ContentDisposition</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentLength.html">ContentLength</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentTransferEncoding.html">ContentTransferEncoding</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentType.html">ContentType</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Expires.html">Expires</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.LastModified.html">LastModified</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Location.html">Location</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Pragma.html">Pragma</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Status.html">Status</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Response.Header.html">Header</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-42604373"></a>
+                                <a href="../namespaces/FMUP.Routing.html" style="margin-left: 30px; padding-left: 0">Routing</a>
+            </div>
+            <div id="namespace-42604373" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-234021806"></a>
+                                <a href="../namespaces/FMUP.Routing.Route.html" style="margin-left: 30px; padding-left: 0">Route</a>
+            </div>
+            <div id="namespace-234021806" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Routing.Route.Cli.html">Cli</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Routing.ByMask.html">ByMask</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Routing.Route.html">Route</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2110175044"></a>
+                                <a href="../namespaces/FMUP.Sapi.html" style="margin-left: 30px; padding-left: 0">Sapi</a>
+            </div>
+            <div id="namespace-2110175044" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Sapi.OptionalInterface.html">OptionalInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Sapi.OptionalTrait.html">OptionalTrait</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Authentication.html">Authentication</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Bootstrap.html">Bootstrap</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Controller.html">Controller</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cookie.html">Cookie</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.html">Crypt</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.html">Db</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.html">Dispatcher</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Environment.html">Environment</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.html">ErrorHandler</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.html">FlashMessenger</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Framework.html">Framework</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.html">Ftp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.html">Import</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.html">Logger</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Mail.html">Mail</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ProjectVersion.html">ProjectVersion</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.html">Queue</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.html">Request</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.html">Response</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Routing.html">Routing</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Sapi.html">Sapi</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Session.html">Session</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.String.html">String</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Version.html">Version</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.View.html">View</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content file">
+                    <nav>
+                                                                    </nav>
+
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    <h1><small>Logger/Channel</small>System.php</h1>
+                    <p><em></em></p>
+                    
+
+                    
+                    
+                                        <h2>Classes</h2>
+                    <table class="table table-hover">
+                                            <tr>
+                            <td><a href="../classes/FMUP.Logger.Channel.System.html">System</a></td>
+                            <td><em></em></td>
+                        </tr>
+                                        </table>
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                                                    <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                        
+                        
+                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                            </table>
+
+                </aside>
+            </div>
+
+            
+            
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label"></h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Logger/Channel/System.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/FMUP.html">\FMUP</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on May 20th, 2016 at 15:05.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

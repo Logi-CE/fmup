@@ -73,7 +73,7 @@ class File implements CacheInterface
      */
     public function has($key)
     {
-        return file_exists($this->getPathByKey($key));
+        return $this->fileExists($this->getPathByKey($key));
     }
 
     /**
@@ -97,13 +97,33 @@ class File implements CacheInterface
     public function set($key, $value)
     {
         $dirName = dirname($this->getPathByKey($key));
-        if (!file_exists($dirName)) {
-            if (!mkdir($dirName, 0755, true)) {
+        if (!$this->fileExists($dirName)) {
+            if (!$this->mkDir($dirName)) {
                 throw new Exception('Error while trying to create cache folder ' . $dirName);
             }
         }
         file_put_contents($this->getPathByKey($key), $this->serialize($value));
         return $this;
+    }
+
+    /**
+     * @param $dirName
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function fileExists($dirName)
+    {
+        return file_exists($dirName);
+    }
+
+    /**
+     * @param $dirName
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function mkDir($dirName)
+    {
+        return mkdir($dirName, 0755, true);
     }
 
     /**

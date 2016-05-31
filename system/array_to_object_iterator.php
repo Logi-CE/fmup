@@ -93,7 +93,7 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
      */
     public function offsetSet($offset, $value)
     {
-        throw new Exception('Unable to set index on iterator');
+        throw new Exception("Unable to set index on iterator : offset $offset / value $value");
     }
 
     /**
@@ -102,7 +102,7 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
      */
     public function offsetUnset($offset)
     {
-        throw new Exception('Unable to unset index on iterator');
+        throw new Exception("Unable to unset index on iterator : offset $offset");
     }
 
     /**

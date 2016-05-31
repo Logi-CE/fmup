@@ -51,9 +51,18 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
     public function getAmqpConnection()
     {
         if (!$this->amqpConnection) {
-            $this->setAmqpConnection(new AMQPStreamConnection('localhost', 5672, 'guest', 'guest'));
+            $this->setAmqpConnection($this->getDefaultConnection());
         }
         return $this->amqpConnection;
+    }
+
+    /**
+     * @return AMQPStreamConnection
+     * @codeCoverageIgnore
+     */
+    protected function getDefaultConnection()
+    {
+        return new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
     }
 
     /**

@@ -64,7 +64,7 @@ class Response
     public function clearHeader($name = null)
     {
         if (!is_null($name)) {
-            $this->headers[$name] = array();
+            unset($this->headers[$name]);
         } else {
             $this->headers = array();
         }
@@ -78,16 +78,17 @@ class Response
      */
     public function setBody($body)
     {
-        $this->body = $body;
+        $this->body = (string)$body;
         return $this;
     }
 
     /**
+     * Retrieve defined body
      * @return string
      */
     public function getBody()
     {
-        return $this->body;
+        return (string)$this->body;
     }
 
     /**
@@ -103,8 +104,17 @@ class Response
         }
         echo $this->getBody();
         if ($this->getReturnCode()) {
-            exit($this->getReturnCode());
+            $this->exitPhp($this->getReturnCode());
         }
+    }
+
+    /**
+     * @param int $returnCode
+     * @codeCoverageIgnore
+     */
+    protected function exitPhp($returnCode = 0)
+    {
+        exit((int)$returnCode);
     }
 
     /**

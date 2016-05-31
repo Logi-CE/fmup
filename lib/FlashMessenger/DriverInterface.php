@@ -16,7 +16,7 @@ interface DriverInterface
 
     /**
      * Get all the messages in the driver
-     * @return array|null $flashes
+     * @return Message[]|null $flashes
      */
     public function get();
 

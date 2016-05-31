@@ -33,10 +33,20 @@ class Native implements DriverInterface, Environment\OptionalInterface
         if (!$channel->hasResource()) {
             $name = $this->secureQueueName($channel->getName());
             $channel->setName($name);
-            $resource = msg_get_queue($name);
+            $resource = $this->msgGetQueue($name);
             $channel->setResource($resource);
         }
         return $channel;
+    }
+
+    /**
+     * @param string $name
+     * @return resource
+     * @codeCoverageIgnore
+     */
+    protected function msgGetQueue($name)
+    {
+        return msg_get_queue($name);
     }
 
     /**
@@ -48,6 +58,16 @@ class Native implements DriverInterface, Environment\OptionalInterface
     public function exists(Channel $channel)
     {
         $name = (!$channel->hasResource()) ? $this->secureQueueName($channel->getName()) : $channel->getName();
+        return $this->msgQueueExists($name);
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function msgQueueExists($name)
+    {
         return msg_queue_exists($name);
     }
 
@@ -69,7 +89,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
         $message = null;
         $error = 0;
         $messageSize = $this->getMessageSize($channel);
-        $success = msg_receive(
+        $success = $this->msgReceive(
             $channel->getResource(),
             $messageType,
             $receivedMessageType,
@@ -85,6 +105,31 @@ class Native implements DriverInterface, Environment\OptionalInterface
             throw new Exception("Error while receiving message", $error);
         }
         return $message ? (new Message())->setOriginal($message)->setTranslated($message) : null;
+    }
+
+    /**
+     * @param $queue
+     * @param $desiredMsgType
+     * @param $msgType
+     * @param $maxsize
+     * @param $message
+     * @param bool|true $unSerialize
+     * @param int $flags
+     * @param null $errorCode
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function msgReceive(
+        $queue,
+        $desiredMsgType,
+        &$msgType,
+        $maxsize,
+        &$message,
+        $unSerialize = true,
+        $flags = 0,
+        &$errorCode = null
+    ) {
+        return msg_receive($queue, $desiredMsgType, $msgType, $maxsize, $message, $unSerialize, $flags, $errorCode);
     }
 
     /**
@@ -108,7 +153,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
      * @param Channel $channel
      * @param mixed $message
      * @param string|int $messageType
-     * @return $this
+     * @return bool
      * @throws Exception
      */
     public function push(Channel $channel, $message, $messageType = null)
@@ -124,17 +169,28 @@ class Native implements DriverInterface, Environment\OptionalInterface
         $retry = 0;
         $success = false;
         while ($retry < $maxSendRetry) {
-            $success = msg_send($channel->getResource(), $messageType, $message, $serialize, $blockSend, $error);
-            if ($success || (!$success && $error != MSG_EAGAIN)) {
-                $retry = Channel\Settings::DEFAULT_RETRY_TIMES;
-            } else {
-                $retry++;
-            }
+            $success = $this->msgSend($channel->getResource(), $messageType, $message, $serialize, $blockSend, $error);
+            $retry = ($success || (!$success && $error != MSG_EAGAIN)) ? $maxSendRetry : $retry + 1;
         }
         if (!$success) {
             throw new Exception("Error while sending message", $error);
         }
-        return $this;
+        return $success;
+    }
+
+    /**
+     * @param $queue
+     * @param $msgType
+     * @param $message
+     * @param bool|true $serialize
+     * @param bool|true $blocking
+     * @param null $errorCode
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function msgSend($queue, $msgType, $message, $serialize = true, $blocking = true, &$errorCode = null)
+    {
+        return msg_send($queue, $msgType, $message, $serialize, $blocking, $errorCode);
     }
 
     /**
@@ -147,7 +203,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
     {
         $name = (int)$this->stringToUniqueId($name);
         if ($name === 0) {
-            throw new Exception('Queue name muse be in INT > 0 to use semaphores');
+            throw new Exception('Queue name must be in INT > 0 to use semaphores');
         }
         return $name;
     }
@@ -165,7 +221,7 @@ class Native implements DriverInterface, Environment\OptionalInterface
         }
         $messageType = (int)$this->stringToUniqueId($messageType);
         if ($messageType === 0) {
-            throw new Exception('Queue name muse be in INT > 0 to use semaphores');
+            throw new Exception('Message Type must be in INT > 0 to use semaphores');
         }
         return $messageType;
     }
@@ -188,15 +244,16 @@ class Native implements DriverInterface, Environment\OptionalInterface
         for ($i = 0; $i < $length; $i++) {
             $return += ord($string{$i});
         }
-        return (int)$length . '0' . $return;
+        return (int)($length . '0' . $return);
     }
 
     /**
      * Get queue configuration
      * @param resource $queueResource
      * @return array
+     * @codeCoverageIgnore
      */
-    private function getConfiguration($queueResource)
+    protected function getConfiguration($queueResource)
     {
         return msg_stat_queue($queueResource);
     }
@@ -212,7 +269,18 @@ class Native implements DriverInterface, Environment\OptionalInterface
         if (isset($params[self::CONFIGURATION_MESSAGE_SIZE])) {
             $channel->getSettings()->setMaxMessageSize((int)$params[self::CONFIGURATION_MESSAGE_SIZE]);
         }
-        return msg_set_queue($channel->getResource(), (array)$params);
+        return $this->msgSetQueue($channel->getResource(), (array)$params);
+    }
+
+    /**
+     * @param $queue
+     * @param array $data
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function msgSetQueue($queue, array $data)
+    {
+        return msg_set_queue($queue, $data);
     }
 
     /**
@@ -223,13 +291,23 @@ class Native implements DriverInterface, Environment\OptionalInterface
     public function destroy(Channel $channel)
     {
         if ($channel->hasResource()) {
-            if (msg_remove_queue($channel->getResource())) {
+            if ($this->msgRemoveQueue($channel->getResource())) {
                 $channel->setResource(null);
                 return true;
             }
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $queue
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function msgRemoveQueue($queue)
+    {
+        return msg_remove_queue($queue);
     }
 
     /**

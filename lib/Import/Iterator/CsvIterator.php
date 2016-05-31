@@ -36,8 +36,13 @@ class CsvIterator implements \Iterator
      */
     public function setPath($path)
     {
-        $this->path = $path;
+        $this->path = (string)$path;
         return $this;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -97,7 +102,7 @@ class CsvIterator implements \Iterator
      */
     public function setSeparator($separator)
     {
-        $this->separator = $separator;
+        $this->separator = (string)$separator;
         return $this;
     }
 

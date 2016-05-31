@@ -1,28 +1,16 @@
 <?php
 namespace FMUP\Controller\Helper;
 
-use FMUP\Logger\LoggerTrait;
+use FMUP\Logger;
 use FMUP\Response\Header;
 
 /**
  * Helper Download - helps you to download a file on a browser
  * @package FMUP\Controller\Helper
- * @method \FMUP\Response getResponse
- * @author jmoulin
+ * @author abizac
  */
 trait Download
 {
-    /**
-     * @throws \FMUP\Exception
-     */
-    private function checkResponse()
-    {
-        $allowUse = method_exists($this, 'hasResponse') && $this->hasResponse() && method_exists($this, 'getResponse');
-        if (!$allowUse) {
-            throw new \FMUP\Exception('Unable to use Download trait');
-        }
-    }
-
     /**
      * Download a file
      * @param string $filePath Server path to file to download
@@ -32,24 +20,42 @@ trait Download
      */
     public function download($filePath, $fileName = null, $forceDownload = true)
     {
+        if (!$this instanceof \FMUP\Controller) {
+            throw new \FMUP\Exception('Unable to use Download trait');
+        }
         if (!file_exists($filePath)) {
-            if ($this instanceof LoggerTrait) {
-                $this->log(\FMUP\Logger::ERROR, 'Unable to find requested file', array('filePath' => $filePath));
+            if ($this instanceof Logger\LoggerInterface && $this->hasLogger()) {
+                $this->getLogger()->log(
+                    Logger\Channel\System::NAME,
+                    Logger::ERROR,
+                    'Unable to find requested file',
+                    array('filePath' => $filePath)
+                );
             }
             throw new \FMUP\Exception\Status\NotFound('Unable to find requested file');
         }
         $fileName = $fileName ? $fileName : basename($filePath);
         $fInfo = new \finfo();
         $mimeType = $fInfo->file($filePath, FILEINFO_MIME_TYPE);
+        /** @var $this $this */
         $this->downloadHeaders($mimeType, $fileName, $forceDownload)->send();
         $file = fopen($filePath, 'r');
-        ini_set('max_execution_time', 0); //I don't like it @todo find a better way
+        ini_set('max_execution_time', 0); //@todo find a better way
         while (!feof($file)) {
             echo fread($file, 4096);
-            ob_flush();
+            $this->obFlush();
         }
         fclose($file);
+        /** @var $this \FMUP\Controller */
         $this->getResponse()->clearHeader();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function obFlush()
+    {
+        ob_flush();
     }
 
     /**
@@ -62,11 +68,13 @@ trait Download
      */
     public function downloadHeaders($mimeType, $fileName = null, $forceDownload = true)
     {
-        $this->checkResponse();
+        if (!$this instanceof \FMUP\Controller) {
+            throw new \FMUP\Exception('Unable to use Download trait');
+        }
         return $this->getResponse()
             ->addHeader(new Header\Pragma(Header\Pragma::MODE_PUBLIC))
             ->addHeader(new Header\Expires())
-            ->addHeader((new Header\CacheControl())->setCacheType(Header\CacheControl::CACHE_TYPE_PRIVATE))
+            ->addHeader(new Header\CacheControl(null, Header\CacheControl::CACHE_TYPE_PRIVATE))
             ->addHeader(new Header\ContentType($mimeType, null))
             ->addHeader(new Header\ContentTransferEncoding())
             ->addHeader(

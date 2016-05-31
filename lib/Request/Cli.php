@@ -26,6 +26,15 @@ class Cli extends Request
     }
 
     /**
+     * Retrieve defined opt
+     * @return array
+     */
+    public function getDefinedOpt()
+    {
+        return $this->opt;
+    }
+
+    /**
      * @param string $name
      * @param mixed $defaultValue
      * @return string|mixed
@@ -41,7 +50,18 @@ class Cli extends Request
      */
     public function getOpt()
     {
-        return getopt($this->opt[self::SHORT], $this->opt[self::LONG]);
+        return $this->phpGetOpt($this->opt[self::SHORT], $this->opt[self::LONG]);
+    }
+
+    /**
+     * @param string $short
+     * @param array $long
+     * @return array
+     * @codeCoverageIgnore
+     */
+    protected function phpGetOpt($short, array $long = array())
+    {
+        return getopt((string)$short, $long);
     }
 
     /**

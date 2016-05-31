@@ -12,25 +12,31 @@ class Field
     const TYPE_IGNORED = 'ignored';
     private $name;
     private $value;
-    private $table_cible;
-    private $champ_cible;
+    private $destinationTable;
+    private $destinationField;
     private $required;
     private $type;
     private $validators = array();
     private $formatters = array();
     private $errors = array();
 
-    public function __construct($name, $value, $table_cible, $champ_cible, $required, $type)
-    {
+    public function __construct(
+        $name,
+        $value,
+        $destinationTable,
+        $destinationField,
+        $isRequired = false,
+        $type = self::TYPE_IGNORED
+    ) {
         $this->name = $name;
         $this->value = $value;
-        $this->table_cible = $table_cible;
-        $this->champ_cible = $champ_cible;
-        $this->required = $required;
+        $this->destinationTable = $destinationTable;
+        $this->destinationField = $destinationField;
+        $this->required = (bool)$isRequired;
         $this->type = $type;
         if ($type != self::TYPE_IGNORED && $type != "") {
-            $classe = __NAMESPACE__ . '\Validator\\' . ucfirst($type);
-            $validator = new $classe();
+            $class = __NAMESPACE__ . '\Field\Validator\\' . ucfirst($type);
+            $validator = new $class();
             $this->addValidator($validator);
         }
     }
@@ -52,12 +58,12 @@ class Field
 
     public function getTableCible()
     {
-        return $this->table_cible;
+        return $this->destinationTable;
     }
 
     public function getChampCible()
     {
-        return $this->champ_cible;
+        return $this->destinationField;
     }
 
     public function getType()

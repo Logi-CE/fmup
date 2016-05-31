@@ -34,13 +34,14 @@ class Routing
         $routeSelected = null;
         $this->defaultRoutes();
         do {
-            foreach ($this->routes as $route) {
-                /* @var $route Route */
+            foreach ($this->getRoutes() as $route) {
                 if ($route->setRequest($request)->canHandle()) {
                     //this will handle the request - not fluent interface because we don't know how developer will write
                     $route->handle();
                     $redispatch = $route->hasToBeReDispatched();
-                    $routeSelected = $route;
+                    if (!$redispatch) {
+                        $routeSelected = $route;
+                    }
                     break;
                 }
             }
@@ -66,6 +67,15 @@ class Routing
     public function getOriginalRequest()
     {
         return $this->originalRequest;
+    }
+
+    /**
+     * Retrieve defined routes
+     * @return Route[]
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
     }
 
 

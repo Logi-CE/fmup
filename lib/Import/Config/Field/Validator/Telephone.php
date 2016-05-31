@@ -25,7 +25,7 @@ class Telephone implements Validator
 
     public function validate($value)
     {
-        return ($this->getCanEmpty() && $value == '') || \Is::telephone($value) || \Is::telephonePortable($value);
+        return ($this->getCanEmpty() && $value == '') || \Is::telephone($value);
     }
 
     public function getErrorMessage()

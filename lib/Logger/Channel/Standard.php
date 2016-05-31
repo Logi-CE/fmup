@@ -13,7 +13,7 @@ class Standard extends System
     public function configure()
     {
         parent::configure();
-        $canSendHeaders = !headers_sent() && $this->getSapi()->get() != Sapi::CLI;
+        $canSendHeaders = !$this->headerSent() && $this->getSapi()->get() != Sapi::CLI;
         $isDev = $this->getEnvironment()->get() == Environment::DEV;
         $allowBrowser = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Castelis') !== false;
         if ($canSendHeaders && ($allowBrowser || $isDev)) {
@@ -22,5 +22,14 @@ class Standard extends System
                 ->pushHandler(new ChromePHPHandler());
         }
         return $this;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return bool
+     */
+    protected function headerSent()
+    {
+        return headers_sent();
     }
 }

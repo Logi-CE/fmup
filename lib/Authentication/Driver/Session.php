@@ -28,7 +28,7 @@ class Session implements DriverInterface
      * @param \FMUP\Session $session
      * @return $this
      */
-    protected function setSession(\FMUP\Session $session)
+    public function setSession(\FMUP\Session $session)
     {
         $this->session = $session;
         return $this;

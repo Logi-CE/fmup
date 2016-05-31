@@ -132,9 +132,11 @@ class Http extends Request
     public function getRequestUri($withQuerySting = false)
     {
         $requestUri = $this->getServer(self::REQUEST_URI);
-        return $withQuerySting
+        return (string)(
+            $withQuerySting
             ? $requestUri
-            : str_replace('?' . $this->getServer(self::QUERY_STRING), '', $requestUri);
+            : str_replace('?' . $this->getServer(self::QUERY_STRING), '', $requestUri)
+        );
     }
 
     /**

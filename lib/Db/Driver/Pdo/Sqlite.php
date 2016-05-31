@@ -3,6 +3,7 @@ namespace FMUP\Db\Driver\Pdo;
 
 use FMUP\Db\Driver\Pdo;
 use FMUP\Db\Exception;
+use FMUP\Logger;
 
 class Sqlite extends Pdo
 {
@@ -15,13 +16,28 @@ class Sqlite extends Pdo
     public function getDriver()
     {
         if (is_null($this->instance)) {
-            $this->instance = new \PDO($this->getDsn());
-            if (!$this->instance) {
-                throw new Exception('Unable to connect database');
+            try {
+                $this->instance = $this->getPdo($this->getDsn());
+            } catch (\Exception $e) {
+                $this->log(Logger::CRITICAL, 'Unable to connect database', (array)$this->getSettings());
+                throw new Exception('Unable to connect database', $e->getCode(), $e);
             }
             $this->defaultConfiguration($this->instance);
         }
         return $this->instance;
+    }
+
+    /**
+     * @param string $dsn
+     * @param string $username
+     * @param string $password
+     * @param array $options
+     * @return \PDO
+     * @codeCoverageIgnore
+     */
+    protected function getPdo($dsn, $username = null, $password = null, array $options = null)
+    {
+        return new \PDO($dsn);
     }
 
     protected function defaultConfiguration(\Pdo $instance)

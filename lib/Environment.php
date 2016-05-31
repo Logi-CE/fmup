@@ -11,11 +11,17 @@ class Environment
     const DEV = 'dev';
     const INTEGRATION = 'integ';
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
 
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
 

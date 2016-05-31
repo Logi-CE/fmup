@@ -10,7 +10,7 @@ class Message
 {
 
     private $message;
-    private $type;
+    private $type = self::TYPE_DEFAULT;
 
     const TYPE_DEFAULT = 'default';
     const TYPE_SUCCESS = 'success';
@@ -25,8 +25,7 @@ class Message
      */
     public function __construct($message, $type = self::TYPE_DEFAULT)
     {
-        $this->type = $this->checkType($type);
-        $this->message = $message;
+        $this->setType($type)->setMessage($message);
     }
 
     /**
@@ -36,7 +35,7 @@ class Message
      */
     public function setMessage($message)
     {
-        $this->message = $message;
+        $this->message = (string)$message;
         return $this;
     }
 
@@ -57,12 +56,12 @@ class Message
      */
     public function getMessage()
     {
-        return $this->message;
+        return (string)$this->message;
     }
 
     /**
      * Get message property
-     * @return string $type
+     * @return string|null $type
      */
     public function getType()
     {

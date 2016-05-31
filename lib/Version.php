@@ -32,6 +32,7 @@ class Version
 
     /**
      * private clone - singleton
+     * @codeCoverageIgnore
      */
     private function __clone()
     {

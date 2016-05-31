@@ -14,8 +14,8 @@ class ContentType extends Header
     const CHARSET_UTF_8 = 'utf-8';
     const MIME_APPLICATION_JSON = 'application/json';
 
-    private $mime;
-    private $charset;
+    private $mime = self::MIME_TEXT_HTML;
+    private $charset = self::CHARSET_UTF_8;
 
     /**
      * @param string $contentType
@@ -27,7 +27,7 @@ class ContentType extends Header
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getCharset()
     {
@@ -35,12 +35,13 @@ class ContentType extends Header
     }
 
     /**
-     * @param $charset
+     * Define charset
+     * @param string|null $charset
      * @return $this
      */
-    public function setCharset($charset)
+    public function setCharset($charset = null)
     {
-        $this->charset = $charset;
+        $this->charset = is_null($charset) ? null : (string)$charset;
         return $this;
     }
 
@@ -51,7 +52,7 @@ class ContentType extends Header
      */
     public function setMime($mime)
     {
-        $this->mime = $mime;
+        $this->mime = (string)$mime;
         return $this;
     }
 
@@ -61,7 +62,7 @@ class ContentType extends Header
      */
     public function getMime()
     {
-        return $this->mime;
+        return (string)$this->mime;
     }
 
     /**

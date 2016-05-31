@@ -42,13 +42,13 @@ class Mail extends \PHPMailer
      * @param string $message Text to parse
      * @param array $tokens Associative array for tokens to replace
      * @return string treated message
-     * @uses $this->tokenReplaceMap
+     * @uses self::tokenReplaceMap
      */
     public static function replaceTokens($message = '', array $tokens = array())
     {
         $search = array_keys($tokens);
         $replace = array_values($tokens);
-        $search = array_map(array(\FMUP\Mail::class, 'tokenReplaceMap'), $search);
+        $search = array_map(array(__CLASS__, 'tokenReplaceMap'), $search);
         return str_replace($search, $replace, $message);
     }
 
@@ -56,6 +56,8 @@ class Mail extends \PHPMailer
      * Replace map
      * @param string $o
      * @return string
+     * @usedby self::replaceTokens
+     * @SuppressWarnings(PMD.UnusedPrivateMethod)
      */
     private static function tokenReplaceMap($o)
     {

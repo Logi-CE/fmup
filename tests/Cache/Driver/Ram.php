@@ -12,7 +12,7 @@ class RamTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\Ram();
-        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of \FMUP\Cache\CacheInterface');
+        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
         $cache2 = new \FMUP\Cache\Driver\Ram(array(''));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
@@ -36,7 +36,7 @@ class RamTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
             array('1', new \stdClass()),
-            array('1', $this->getMockBuilder('\stdClass')->getMock()),
+            array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
         );
         foreach ($test as $case) {
             $return = $cache->set($case[0], $case[1]);

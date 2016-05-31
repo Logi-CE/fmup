@@ -32,6 +32,9 @@ class Sapi
 
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __clone()
     {
 

@@ -10,7 +10,8 @@ interface Formatter
 {
     /**
      * Modifie la valeur afin qu'elle corresponde au système
-     * @param string $value
+     * @param mixed $value
+     * @return mixed formatted value
      */
     public function format($value);
 
@@ -23,7 +24,7 @@ interface Formatter
 
     /**
      * Retourne true si une erreur est survenue lors du formattage; false sinon
-     * @return boolean
+     * @return bool
      */
     public function hasError();
 }

@@ -12,10 +12,6 @@ class Framework extends \Framework
     use Config\OptionalTrait;
 
     /**
-     * @var Request
-     */
-    private $request;
-    /**
      * @var Response
      */
     private $response;
@@ -64,27 +60,6 @@ class Framework extends \Framework
     }
 
     /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        if (!$this->request) {
-            $this->request = ($this->getSapi()->get() == Sapi::CLI ? new Request\Cli() : new Request\Http());
-        }
-        return $this->request;
-    }
-
-    /**
-     * @param Request $request
-     * @return $this
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-        return $this;
-    }
-
-    /**
      * @return Response
      */
     public function getResponse()
@@ -127,7 +102,7 @@ class Framework extends \Framework
      */
     public function getRouteError($directory, $controller)
     {
-        throw new NotFound('Controller not found' . $directory . '/' . $controller);
+        throw new NotFound('Controller not found ' . $directory . '/' . $controller);
     }
 
     /**
@@ -192,6 +167,22 @@ class Framework extends \Framework
         return $this;
     }
 
+    /**
+     * @return ErrorHandler\Plugin\Mail
+     * @codeCoverageIgnore
+     */
+    protected function createPluginMail()
+    {
+        return new ErrorHandler\Plugin\Mail();
+    }
+
+    /**
+     * @param int $code
+     * @param string $msg
+     * @param null $errFile
+     * @param int $errLine
+     * @param array $errContext
+     */
     public function errorHandler($code, $msg, $errFile = null, $errLine = 0, array $errContext = array())
     {
         $block = E_PARSE | E_ERROR | E_USER_ERROR;
@@ -201,8 +192,8 @@ class Framework extends \Framework
             if ($errContext) {
                 $message .= ' {' . serialize($errContext) . '}';
             }
-            $fmupMail = new ErrorHandler\Plugin\Mail();
-            $fmupMail->setBootstrap($this->getBootstrap())
+            $this->createPluginMail()
+                ->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
                 ->setException(new Exception($message, $code))
                 ->handle();
@@ -253,8 +244,7 @@ class Framework extends \Framework
      */
     protected function preDispatch()
     {
-        $this->getPreDispatcherSystem()
-            ->dispatch($this->getRequest(), $this->getResponse());
+        $this->getPreDispatcherSystem()->dispatch($this->getRequest(), $this->getResponse());
         return $this;
     }
 
@@ -263,10 +253,8 @@ class Framework extends \Framework
      */
     protected function postDispatch()
     {
-        $this->getPostDispatcherSystem()
-            ->dispatch($this->getRequest(), $this->getResponse());
+        $this->getPostDispatcherSystem()->dispatch($this->getRequest(), $this->getResponse());
         return $this;
-
     }
 
     /**
@@ -274,14 +262,13 @@ class Framework extends \Framework
      */
     public function shutDown()
     {
-        $error = error_get_last();
-        $isDebug = ini_get('display_errors');
+        $error = $this->errorGetLast();
+        $isDebug = $this->isDebug();
         $code = E_PARSE | E_ERROR | E_USER_ERROR;
         $canHeader = $this->getSapi()->get() != Sapi::CLI;
         if ($error !== null && ($error['type'] & $code) && $canHeader) {
             $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
-            $errorHeader = new Response\Header\Status(Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
-            $errorHeader->render();
+            $this->getErrorHeader()->render();
             if (!$isDebug) {
                 echo "<br/>Une erreur est survenue !<br/>"
                     . "Le support informatique a été prévenu "
@@ -290,6 +277,33 @@ class Framework extends \Framework
                     . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
             }
         }
+    }
+
+    /**
+     * @return Response\Header\Status
+     * @codeCoverageIgnore
+     */
+    protected function getErrorHeader()
+    {
+        return new Response\Header\Status(Response\Header\Status::VALUE_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @return array
+     * @codeCoverageIgnore
+     */
+    protected function errorGetLast()
+    {
+        return error_get_last();
+    }
+
+    /**
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function isDebug()
+    {
+        return (bool)ini_get('display_errors');
     }
 
     /**
