@@ -9,6 +9,7 @@ class Http extends Request
     const HTTP_X_REQUESTED_WITH_AJAX = 'XMLHttpRequest';
 
     const REQUEST_URI = 'REQUEST_URI';
+    const REQUEST_SCHEME = 'REQUEST_SCHEME';
     const QUERY_STRING = 'QUERY_STRING';
 
     const REQUEST_METHOD = 'REQUEST_METHOD';
@@ -17,6 +18,7 @@ class Http extends Request
 
     const SERVER_NAME = 'SERVER_NAME';
     const HTTP_REFERER = 'HTTP_REFERER';
+    const HTTP_HOST = 'HTTP_HOST';
 
     protected $get = array();
     protected $post = array();
