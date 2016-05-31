@@ -1,4 +1,15 @@
 /*********/
+/* 6.8.0 */
+/*********/
+
+Staticify + HtmlCompress post processor
+
+#New
+ - Component Dispatcher\Plugin\HtmlCompress - compress html to one line
+ - Component Dispatcher\Plugin\Staticify - use static domains names for cookie-free domain + parallel asset download
+ - Component Request\Http can now return Request Scheme + Http host
+
+/*********/
 /* 6.7.1 */
 /*********/
 

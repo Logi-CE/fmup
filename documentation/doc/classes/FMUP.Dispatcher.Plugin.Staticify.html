@@ -1,0 +1,2536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>FMUP Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">FMUP Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/FMUP.html">\FMUP</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">1013</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-737848967"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-737848967" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1423947731"></a>
+                                <a href="../namespaces/FMUP.html" style="margin-left: 30px; padding-left: 0">FMUP</a>
+            </div>
+            <div id="namespace-1423947731" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1165537900"></a>
+                                <a href="../namespaces/FMUP.Authentication.html" style="margin-left: 30px; padding-left: 0">Authentication</a>
+            </div>
+            <div id="namespace-1165537900" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-450670140"></a>
+                                <a href="../namespaces/FMUP.Authentication.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-450670140" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Authentication.Driver.Session.html">Session</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Authentication.DriverInterface.html">DriverInterface</a></li>
+                                                    <li class="interface"><a href="../classes/FMUP.Authentication.UserInterface.html">UserInterface</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1749798109"></a>
+                                <a href="../namespaces/FMUP.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-1749798109" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1227579374"></a>
+                                <a href="../namespaces/FMUP.Cache.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-1227579374" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Apc.html">Apc</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.File.html">File</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Memcached.html">Memcached</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Ram.html">Ram</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Driver.Shm.html">Shm</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Cache.CacheInterface.html">CacheInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Cache.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-792136170"></a>
+                                <a href="../namespaces/FMUP.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-792136170" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1913790774"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.html" style="margin-left: 30px; padding-left: 0">Ini</a>
+            </div>
+            <div id="namespace-1913790774" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-707454193"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.Extended.html" style="margin-left: 30px; padding-left: 0">Extended</a>
+            </div>
+            <div id="namespace-707454193" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1574341574"></a>
+                                <a href="../namespaces/FMUP.Config.Ini.Extended.ZendConfig.html" style="margin-left: 30px; padding-left: 0">ZendConfig</a>
+            </div>
+            <div id="namespace-1574341574" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.ZendConfig.Ini.html">Ini</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.ZendConfig.html">ZendConfig</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.Extended.html">Extended</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Config.ConfigInterface.html">ConfigInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Config.OptionalTrait.html">OptionalTrait</a></li>
+                                                    <li class="trait"><a href="../classes/FMUP.Config.RequiredTrait.html">RequiredTrait</a></li>
+                                                                            <li class="class"><a href="../classes/FMUP.Config.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Config.Ini.html">Ini</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1019800159"></a>
+                                <a href="../namespaces/FMUP.Controller.html" style="margin-left: 30px; padding-left: 0">Controller</a>
+            </div>
+            <div id="namespace-1019800159" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-421967894"></a>
+                                <a href="../namespaces/FMUP.Controller.Helper.html" style="margin-left: 30px; padding-left: 0">Helper</a>
+            </div>
+            <div id="namespace-421967894" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                            <li class="trait"><a href="../classes/FMUP.Controller.Helper.Download.html">Download</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Controller.Error.html">Error</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1899173358"></a>
+                                <a href="../namespaces/FMUP.Crypt.html" style="margin-left: 30px; padding-left: 0">Crypt</a>
+            </div>
+            <div id="namespace-1899173358" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-401512026"></a>
+                                <a href="../namespaces/FMUP.Crypt.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-401512026" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Crypt.Driver.MCrypt.html">MCrypt</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.Driver.Md5.html">Md5</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Crypt.CryptInterface.html">CryptInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Crypt.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1145696563"></a>
+                                <a href="../namespaces/FMUP.Db.html" style="margin-left: 30px; padding-left: 0">Db</a>
+            </div>
+            <div id="namespace-1145696563" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-943466746"></a>
+                                <a href="../namespaces/FMUP.Db.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-943466746" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-535564515"></a>
+                                <a href="../namespaces/FMUP.Db.Driver.Pdo.html" style="margin-left: 30px; padding-left: 0">Pdo</a>
+            </div>
+            <div id="namespace-535564515" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Mysql.html">Mysql</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Odbc.html">Odbc</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.Sqlite.html">Sqlite</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.SqlSrv.html">SqlSrv</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.Pdo.html">Pdo</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Driver.PdoConfiguration.html">PdoConfiguration</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Db.DbInterface.html">DbInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Db.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.FetchIterator.html">FetchIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.Manager.html">Manager</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1625778930"></a>
+                                <a href="../namespaces/FMUP.Dispatcher.html" style="margin-left: 30px; padding-left: 0">Dispatcher</a>
+            </div>
+            <div id="namespace-1625778930" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1195311970"></a>
+                                <a href="../namespaces/FMUP.Dispatcher.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-1195311970" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.HtmlCompress.html">HtmlCompress</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.Render.html">Render</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html">Staticify</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.Version.html">Version</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Plugin.html">Plugin</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.Post.html">Post</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1646195008"></a>
+                                <a href="../namespaces/FMUP.Environment.html" style="margin-left: 30px; padding-left: 0">Environment</a>
+            </div>
+            <div id="namespace-1646195008" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Environment.OptionalInterface.html">OptionalInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Environment.OptionalTrait.html">OptionalTrait</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-891794531"></a>
+                                <a href="../namespaces/FMUP.ErrorHandler.html" style="margin-left: 30px; padding-left: 0">ErrorHandler</a>
+            </div>
+            <div id="namespace-891794531" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1094573151"></a>
+                                <a href="../namespaces/FMUP.ErrorHandler.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-1094573151" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Abstraction.html">Abstraction</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.ErrorController.html">ErrorController</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.HttpHeader.html">HttpHeader</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Log.html">Log</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Plugin.Mail.html">Mail</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.Base.html">Base</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-995547441"></a>
+                                <a href="../namespaces/FMUP.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-995547441" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-274053197"></a>
+                                <a href="../namespaces/FMUP.Exception.Status.html" style="margin-left: 30px; padding-left: 0">Status</a>
+            </div>
+            <div id="namespace-274053197" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.Forbidden.html">Forbidden</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.NotFound.html">NotFound</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.Unauthorized.html">Unauthorized</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Exception.Location.html">Location</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.Status.html">Status</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.UnexpectedValue.html">UnexpectedValue</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-593087563"></a>
+                                <a href="../namespaces/FMUP.FlashMessenger.html" style="margin-left: 30px; padding-left: 0">FlashMessenger</a>
+            </div>
+            <div id="namespace-593087563" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1388960037"></a>
+                                <a href="../namespaces/FMUP.FlashMessenger.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-1388960037" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.Driver.Session.html">Session</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.FlashMessenger.DriverInterface.html">DriverInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.Message.html">Message</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.View.html">View</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1064217367"></a>
+                                <a href="../namespaces/FMUP.Ftp.html" style="margin-left: 30px; padding-left: 0">Ftp</a>
+            </div>
+            <div id="namespace-1064217367" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1883766830"></a>
+                                <a href="../namespaces/FMUP.Ftp.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-1883766830" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Ftp.Driver.Ftp.html">Ftp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.Driver.Sftp.html">Sftp</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Ftp.FtpInterface.html">FtpInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Ftp.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.FtpAbstract.html">FtpAbstract</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-986961887"></a>
+                                <a href="../namespaces/FMUP.Import.html" style="margin-left: 30px; padding-left: 0">Import</a>
+            </div>
+            <div id="namespace-986961887" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-308497403"></a>
+                                <a href="../namespaces/FMUP.Import.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-308497403" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-573044881"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.html" style="margin-left: 30px; padding-left: 0">Field</a>
+            </div>
+            <div id="namespace-573044881" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-380506596"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Formatter.html" style="margin-left: 30px; padding-left: 0">Formatter</a>
+            </div>
+            <div id="namespace-380506596" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1664362226"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Formatter.Interfaces.html" style="margin-left: 30px; padding-left: 0">Interfaces</a>
+            </div>
+            <div id="namespace-1664362226" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Formatter.Interfaces.ObjectWithId.html">ObjectWithId</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.DateSQL.html">DateSQL</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.IdFromField.html">IdFromField</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.IdFromObject.html">IdFromObject</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.TextToBool.html">TextToBool</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Formatter.ValueFromArray.html">ValueFromArray</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-185825165"></a>
+                                <a href="../namespaces/FMUP.Import.Config.Field.Validator.html" style="margin-left: 30px; padding-left: 0">Validator</a>
+            </div>
+            <div id="namespace-185825165" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Alphanum.html">Alphanum</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Boolean.html">Boolean</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Date.html">Date</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Email.html">Email</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Enum.html">Enum</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Id.html">Id</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Integer.html">Integer</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.MaxLength.html">MaxLength</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.RegExp.html">RegExp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Required.html">Required</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.Validator.Telephone.html">Telephone</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Formatter.html">Formatter</a></li>
+                                                    <li class="interface"><a href="../classes/FMUP.Import.Config.Field.Validator.html">Validator</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.ConfigObjet.html">ConfigObjet</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Config.Field.html">Field</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-358982316"></a>
+                                <a href="../namespaces/FMUP.Import.Iterator.html" style="margin-left: 30px; padding-left: 0">Iterator</a>
+            </div>
+            <div id="namespace-358982316" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.CsvIterator.html">CsvIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.CsvToConfigIterator.html">CsvToConfigIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.DuplicateIterator.html">DuplicateIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.FileIterator.html">FileIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.LineFilterIterator.html">LineFilterIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.LineToConfigIterator.html">LineToConfigIterator</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Iterator.ValidatorIterator.html">ValidatorIterator</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Import.Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Display.html">Display</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.Launch.html">Launch</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1409416791"></a>
+                                <a href="../namespaces/FMUP.Logger.html" style="margin-left: 30px; padding-left: 0">Logger</a>
+            </div>
+            <div id="namespace-1409416791" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-103413359"></a>
+                                <a href="../namespaces/FMUP.Logger.Channel.html" style="margin-left: 30px; padding-left: 0">Channel</a>
+            </div>
+            <div id="namespace-103413359" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Error.html">Error</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Standard.html">Standard</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.Syslog.html">Syslog</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Channel.System.html">System</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Logger.LoggerInterface.html">LoggerInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Logger.LoggerTrait.html">LoggerTrait</a></li>
+                                                                            <li class="class"><a href="../classes/FMUP.Logger.Channel.html">Channel</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.Factory.html">Factory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1354994261"></a>
+                                <a href="../namespaces/FMUP.Queue.html" style="margin-left: 30px; padding-left: 0">Queue</a>
+            </div>
+            <div id="namespace-1354994261" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-949598618"></a>
+                                <a href="../namespaces/FMUP.Queue.Channel.html" style="margin-left: 30px; padding-left: 0">Channel</a>
+            </div>
+            <div id="namespace-949598618" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1222324228"></a>
+                                <a href="../namespaces/FMUP.Queue.Channel.Settings.html" style="margin-left: 30px; padding-left: 0">Settings</a>
+            </div>
+            <div id="namespace-1222324228" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.Settings.Native.html">Native</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.Settings.html">Settings</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-902910112"></a>
+                                <a href="../namespaces/FMUP.Queue.Driver.html" style="margin-left: 30px; padding-left: 0">Driver</a>
+            </div>
+            <div id="namespace-902910112" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Driver.Amqp.html">Amqp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Driver.Native.html">Native</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Queue.DriverInterface.html">DriverInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Queue.Channel.html">Channel</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.Message.html">Message</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-593324933"></a>
+                                <a href="../namespaces/FMUP.Request.html" style="margin-left: 30px; padding-left: 0">Request</a>
+            </div>
+            <div id="namespace-593324933" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Request.Cli.html">Cli</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.Http.html">Http</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.Url.html">Url</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-436687218"></a>
+                                <a href="../namespaces/FMUP.Response.html" style="margin-left: 30px; padding-left: 0">Response</a>
+            </div>
+            <div id="namespace-436687218" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1828312760"></a>
+                                <a href="../namespaces/FMUP.Response.Header.html" style="margin-left: 30px; padding-left: 0">Header</a>
+            </div>
+            <div id="namespace-1828312760" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Response.Header.CacheControl.html">CacheControl</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentDisposition.html">ContentDisposition</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentLength.html">ContentLength</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentTransferEncoding.html">ContentTransferEncoding</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.ContentType.html">ContentType</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Expires.html">Expires</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.LastModified.html">LastModified</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Location.html">Location</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Pragma.html">Pragma</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.Header.Status.html">Status</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Response.Header.html">Header</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1692859208"></a>
+                                <a href="../namespaces/FMUP.Routing.html" style="margin-left: 30px; padding-left: 0">Routing</a>
+            </div>
+            <div id="namespace-1692859208" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1398328370"></a>
+                                <a href="../namespaces/FMUP.Routing.Route.html" style="margin-left: 30px; padding-left: 0">Route</a>
+            </div>
+            <div id="namespace-1398328370" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Routing.Route.Cli.html">Cli</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Routing.ByMask.html">ByMask</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Routing.Route.html">Route</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-949502263"></a>
+                                <a href="../namespaces/FMUP.Sapi.html" style="margin-left: 30px; padding-left: 0">Sapi</a>
+            </div>
+            <div id="namespace-949502263" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/FMUP.Sapi.OptionalInterface.html">OptionalInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/FMUP.Sapi.OptionalTrait.html">OptionalTrait</a></li>
+                                                                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/FMUP.Authentication.html">Authentication</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Bootstrap.html">Bootstrap</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Controller.html">Controller</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Cookie.html">Cookie</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Crypt.html">Crypt</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Db.html">Db</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Dispatcher.html">Dispatcher</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Environment.html">Environment</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ErrorHandler.html">ErrorHandler</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.FlashMessenger.html">FlashMessenger</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Framework.html">Framework</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Ftp.html">Ftp</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Import.html">Import</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Logger.html">Logger</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Mail.html">Mail</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.ProjectVersion.html">ProjectVersion</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Queue.html">Queue</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Request.html">Request</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Response.html">Response</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Routing.html">Routing</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Sapi.html">Sapi</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Session.html">Session</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.String.html">String</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.Version.html">Version</a></li>
+                                                    <li class="class"><a href="../classes/FMUP.View.html">View</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/FMUP.Dispatcher.Plugin.html">\FMUP\Dispatcher\Plugin</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\FMUP\Dispatcher\Plugin</small>Staticify</h1>
+                    <p><em>Class Staticify
+this component is a POST dispatcher
+it will replace all asset url to attack statics ones
+This will allow cookie free domain + improve parallels asset download</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_setRequest" class="">setRequest()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_getRequest" class="">getRequest()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_setResponse" class="">setResponse()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_getResponse" class="">getResponse()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_canHandle" class="">canHandle()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_handle" class="">handle()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#method_getName" class="">getName()</a><br />
+                                                                    <a href="../classes/FMUP.Environment.OptionalTrait.html#method_setEnvironment" class="">setEnvironment()</a><br />
+                                                                    <a href="../classes/FMUP.Environment.OptionalTrait.html#method_getEnvironment" class="">getEnvironment()</a><br />
+                                                                    <a href="../classes/FMUP.Environment.OptionalTrait.html#method_hasEnvironment" class="">hasEnvironment()</a><br />
+                                                                    <a href="../classes/FMUP.Sapi.OptionalTrait.html#method_setSapi" class="">setSapi()</a><br />
+                                                                    <a href="../classes/FMUP.Sapi.OptionalTrait.html#method_getSapi" class="">getSapi()</a><br />
+                                                                    <a href="../classes/FMUP.Sapi.OptionalTrait.html#method_hasSapi" class="">hasSapi()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_setStaticNumber" class="">setStaticNumber()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getStaticNumber" class="">getStaticNumber()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_setStaticPrefix" class="">setStaticPrefix()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getStaticPrefix" class="">getStaticPrefix()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_setStaticSuffix" class="">setStaticSuffix()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getStaticSuffix" class="">getStaticSuffix()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_setSubDomain" class="">setSubDomain()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getSubDomain" class="">getSubDomain()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getDomain" class="">getDomain()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_setDomain" class="">setDomain()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#constant_PROTOCOL" class="">PROTOCOL</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_computeAsset" class="">computeAsset()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_name" class="">$name</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_staticNumber" class="">$staticNumber</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_staticPrefix" class="">$staticPrefix</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_staticSuffix" class="">$staticSuffix</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_subDomain" class="">$subDomain</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_domain" class="">$domain</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_isRequestJson" class="">isRequestJson()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_jsonTransform" class="">jsonTransform()</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#method_getAssetPath" class="">getAssetPath()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#property_request" class="">$request</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.html#property_response" class="">$response</a><br />
+                                                                    <a href="../classes/FMUP.Environment.OptionalTrait.html#property_environment" class="">$environment</a><br />
+                                                                    <a href="../classes/FMUP.Sapi.OptionalTrait.html#property_sapi" class="">$sapi</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_currentAsset" class="">$currentAsset</a><br />
+                                                                    <a href="../classes/FMUP.Dispatcher.Plugin.Staticify.html#property_trailingPath" class="">$trailingPath</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Dispatcher.Plugin.Staticify.html"><div class="path-wrapper">Dispatcher/Plugin/Staticify.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Dispatcher\Plugin</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                
+                                        <div class="namespace-wrapper"><a href="../classes/FMUP.Dispatcher.Plugin.html">\FMUP\Dispatcher\Plugin</a></div>
+                                                                                                    <div class="namespace-wrapper">\FMUP\Dispatcher\Plugin\Staticify</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_PROTOCOL" name="constant_PROTOCOL" class="anchor"></a>
+            <article id="constant_PROTOCOL" class="constant">
+                <h3 class="">PROTOCOL</h3>
+                <pre class="signature">PROTOCOL</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_name" name="property_name" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$name</h3>
+                <pre class="signature">$name : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_staticNumber" name="property_staticNumber" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$staticNumber</h3>
+                <pre class="signature">$staticNumber : integer</pre>
+                <p><em>Number of static instances</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_staticPrefix" name="property_staticPrefix" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$staticPrefix</h3>
+                <pre class="signature">$staticPrefix : string</pre>
+                <p><em>Prefix of static instances</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_staticSuffix" name="property_staticSuffix" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$staticSuffix</h3>
+                <pre class="signature">$staticSuffix : string</pre>
+                <p><em>Suffix of static instances</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_subDomain" name="property_subDomain" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$subDomain</h3>
+                <pre class="signature">$subDomain : string</pre>
+                <p><em>SubDomain to replace</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_domain" name="property_domain" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$domain</h3>
+                <pre class="signature">$domain : string</pre>
+                <p><em>Domain to replace</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_request" name="property_request" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$request</h3>
+                <pre class="signature">$request : \FMUP\Request</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../classes/FMUP.Request.html">\FMUP\Request</a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_response" name="property_response" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$response</h3>
+                <pre class="signature">$response : \FMUP\Response</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../classes/FMUP.Response.html">\FMUP\Response</a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_environment" name="property_environment" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$environment</h3>
+                <pre class="signature">$environment : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Environment.OptionalTrait.html"><div class="path-wrapper">\FMUP\Environment\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_sapi" name="property_sapi" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$sapi</h3>
+                <pre class="signature">$sapi : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Sapi.OptionalTrait.html"><div class="path-wrapper">\FMUP\Sapi\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_currentAsset" name="property_currentAsset" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$currentAsset</h3>
+                <pre class="signature">$currentAsset : integer</pre>
+                <p><em>Current asset</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_trailingPath" name="property_trailingPath" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$trailingPath</h3>
+                <pre class="signature">$trailingPath : string</pre>
+                <p><em>Path between domain and requested asset for relative urls</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setRequest" name="method_setRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setRequest(\FMUP\Request  <span class="argument">$request</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/FMUP.Request.html">\FMUP\Request</a></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getRequest" name="method_getRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getRequest() : \FMUP\Request</pre>
+                <p><em></em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\FMUP\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/FMUP.Request.html">\FMUP\Request</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setResponse" name="method_setResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setResponse(\FMUP\Response  <span class="argument">$response</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/FMUP.Response.html">\FMUP\Response</a></td>
+                                <td>$response </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getResponse" name="method_getResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getResponse() : \FMUP\Response</pre>
+                <p><em></em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\FMUP\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/FMUP.Response.html">\FMUP\Response</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_canHandle" name="method_canHandle" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">canHandle()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">canHandle() : boolean</pre>
+                <p><em>Check if plugin can handle request/response</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_handle" name="method_handle" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">handle()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">handle() </pre>
+                <p><em>Will catch all resources URL</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper">self::computeAsset</span></a></dd>
+                                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getName" name="method_getName" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getName()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getName() : string</pre>
+                <p><em>Get the name of the plugin</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Dispatcher.Plugin.html"><div class="path-wrapper">\FMUP\Dispatcher\Plugin</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setEnvironment" name="method_setEnvironment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setEnvironment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setEnvironment(\FMUP\Environment|null  <span class="argument">$environment = null</span>) : $this</pre>
+                <p><em>Define environment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/FMUP.Environment.html">\FMUP\Environment</a>|null</td>
+                                <td>$environment </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Environment.OptionalTrait.html"><div class="path-wrapper">\FMUP\Environment\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getEnvironment" name="method_getEnvironment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getEnvironment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getEnvironment() : \FMUP\Environment</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/FMUP.Environment.html">\FMUP\Environment</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Environment.OptionalTrait.html"><div class="path-wrapper">\FMUP\Environment\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasEnvironment" name="method_hasEnvironment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasEnvironment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasEnvironment() : boolean</pre>
+                <p><em>Checks whether environment is defined</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Environment.OptionalTrait.html"><div class="path-wrapper">\FMUP\Environment\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSapi" name="method_setSapi" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSapi()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSapi(\FMUP\Sapi|null  <span class="argument">$sapi = null</span>) : $this</pre>
+                <p><em>Define SAPI</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/FMUP.Sapi.html">\FMUP\Sapi</a>|null</td>
+                                <td>$sapi </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Sapi.OptionalTrait.html"><div class="path-wrapper">\FMUP\Sapi\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSapi" name="method_getSapi" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSapi()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSapi() : \FMUP\Sapi|null</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/FMUP.Sapi.html">\FMUP\Sapi</a>|null
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Sapi.OptionalTrait.html"><div class="path-wrapper">\FMUP\Sapi\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasSapi" name="method_hasSapi" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasSapi()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasSapi() : boolean</pre>
+                <p><em>Checks whether SAPI is defined</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/FMUP.Sapi.OptionalTrait.html"><div class="path-wrapper">\FMUP\Sapi\OptionalTrait</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setStaticNumber" name="method_setStaticNumber" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setStaticNumber()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setStaticNumber(integer  <span class="argument">$number = 3</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$number </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getStaticNumber" name="method_getStaticNumber" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getStaticNumber()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getStaticNumber() : integer</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setStaticPrefix" name="method_setStaticPrefix" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setStaticPrefix()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setStaticPrefix(string  <span class="argument">$prefix = &#039;static&#039;</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$prefix </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getStaticPrefix" name="method_getStaticPrefix" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getStaticPrefix()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getStaticPrefix() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setStaticSuffix" name="method_setStaticSuffix" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setStaticSuffix()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setStaticSuffix(string  <span class="argument">$suffix = &#039;&#039;</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$suffix </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getStaticSuffix" name="method_getStaticSuffix" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getStaticSuffix()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getStaticSuffix() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSubDomain" name="method_setSubDomain" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSubDomain()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSubDomain(string  <span class="argument">$subDomain = &#039;www&#039;</span>) : $this</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$subDomain </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSubDomain" name="method_getSubDomain" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSubDomain()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSubDomain() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDomain" name="method_getDomain" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDomain()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDomain() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\FMUP\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDomain" name="method_setDomain" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDomain()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDomain(string|null  <span class="argument">$domain = null</span>) : $this</pre>
+                <p><em>Define domain to use for static assets</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$domain </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_computeAsset" name="method_computeAsset" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">computeAsset()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">computeAsset(string  <span class="argument">$path</span>, boolean  <span class="argument">$isJson = false</span>) : string</pre>
+                <p><em>Compute which asset for a path and return the full path</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$path </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$isJson </td>
+                                <td><p>Check if url should be encoded</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isRequestJson" name="method_isRequestJson" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">isRequestJson()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isRequestJson() : boolean</pre>
+                <p><em>Check whether response is json or not</em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\FMUP\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_jsonTransform" name="method_jsonTransform" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">jsonTransform()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">jsonTransform(string  <span class="argument">$string</span>, boolean  <span class="argument">$isJson</span>) : mixed</pre>
+                <p><em>add slashes to / character in json mode</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$string </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$isJson </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAssetPath" name="method_getAssetPath" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getAssetPath()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAssetPath() : string</pre>
+                <p><em>Compute relative path between requested asset and current path on request URI</em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\FMUP\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Staticify.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Dispatcher/Plugin/Staticify.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/FMUP.html">\FMUP</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on May 31st, 2016 at 11:02.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
