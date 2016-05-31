@@ -17,6 +17,8 @@ namespace FMUP\Dispatcher\Plugin;
 class Staticify extends \FMUP\Dispatcher\Plugin
 {
     const PROTOCOL = '://';
+
+    protected $name = 'Staticify';
     /**
      * Number of static instances
      * @var int

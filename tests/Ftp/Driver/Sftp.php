@@ -231,7 +231,7 @@ class SftpTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ret);
     }
 
-    public function testGetFile()
+    public function testGetFileWithoutMaxLen()
     {
         $sftp = $this->getMock(Ftp\Driver\Sftp::class, array(
             'filePutContents',
@@ -259,8 +259,7 @@ class SftpTest extends \PHPUnit_Framework_TestCase
             'ssh2.sftp://' . $resourceSftpSession . '/path/to/remote/file.txt',
             $this->equalTo(false),
             $this->equalTo($resourceGetContext),
-            $this->equalTo(0),
-            $this->equalTo(null)
+            $this->equalTo(0)
         );
         $sftp->expects($this->once())->method('filePutContents')->willReturn(18)->with(
             $this->equalTo('path/to/local/file.txt'),
@@ -273,6 +272,50 @@ class SftpTest extends \PHPUnit_Framework_TestCase
          */
         $ret = $sftp->get('path/to/local/file.txt', 'path/to/remote/file.txt');
         $this->assertSame(18, $ret);
+    }
+
+    public function testGetFileWithMaxLen()
+    {
+        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array(
+            'filePutContents',
+            'fileGetContents',
+            'getSftpSession',
+            'getUseIncludePath',
+            'getGetContentContext',
+            'getOffset',
+            'getMaxLen',
+            'getPutContentFlags',
+            'getPutContentContext',
+        ));
+        $resourceGetContext = fopen('php://stdin', 'r');
+        $resourcePutContext = fopen('php://stdin', 'r');
+        $resourceSftpSession = fopen('php://stdin', 'r');
+        $sftp->method('getUseIncludePath')->willReturn(false);
+        $sftp->method('getGetContentContext')->willReturn($resourceGetContext);
+        $sftp->method('getOffset')->willReturn(0);
+        $sftp->method('getMaxLen')->willReturn(10);
+        $sftp->method('getPutContentFlags')->willReturn(0);
+        $sftp->method('getPutContentContext')->willReturn($resourcePutContext);
+        $sftp->method('getSftpSession')->willReturn($resourceSftpSession);
+
+        $sftp->expects($this->once())->method('fileGetContents')->willReturn('content of my file')->with(
+            'ssh2.sftp://' . $resourceSftpSession . '/path/to/remote/file.txt',
+            $this->equalTo(false),
+            $this->equalTo($resourceGetContext),
+            $this->equalTo(0),
+            $this->equalTo(10)
+        );
+        $sftp->expects($this->once())->method('filePutContents')->willReturn(10)->with(
+            $this->equalTo('path/to/local/file.txt'),
+            $this->equalTo('content of my file'),
+            $this->equalTo(0),
+            $this->equalTo($resourcePutContext)
+        );
+        /**
+         * @var $sftp Ftp\Driver\Sftp
+         */
+        $ret = $sftp->get('path/to/local/file.txt', 'path/to/remote/file.txt');
+        $this->assertSame(10, $ret);
     }
 
     public function testDeleteFile()
