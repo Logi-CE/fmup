@@ -142,6 +142,10 @@ BODY_RESPONSE;
         <script src="/scripts/lib/jquery-1.9.1-min.js?10.4.3" type="text/javascript"></script>
         <script src="/scripts/lib/jquery-1.9.1-min.js?10.4.3" type="text/javascript"></script>
         <script src="/modules/order/cart/styles/cart.js?10.4.3" type="text/javascript"></script>
+
+        <script type='text/javascript'>
+            var src='/url.jpg';
+        </script>
 BODY
         ));
         $bodyResponse = <<<BODY_RESPONSE
@@ -153,6 +157,10 @@ BODY
         <script src="http://cdn3-testdomain.tld/scripts/lib/jquery-1.9.1-min.js?10.4.3" type="text/javascript"></script>
         <script src="http://cdn3-testdomain.tld/scripts/lib/jquery-1.9.1-min.js?10.4.3" type="text/javascript"></script>
         <script src="http://cdn1-testdomain.tld/modules/order/cart/styles/cart.js?10.4.3" type="text/javascript"></script>
+
+        <script type='text/javascript'>
+            var src='/url.jpg';
+        </script>
 BODY_RESPONSE;
         //link are processed after src
         //defined url with protocol will not be altered
