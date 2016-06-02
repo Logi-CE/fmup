@@ -73,8 +73,8 @@ class Staticify extends \FMUP\Dispatcher\Plugin
             $response = stripslashes($response);
         }
         $regexps = array(
-            '~src="?\'?([^"\']+)"?\'?~',
-            '~<link [^>]*href="?\'?([^"\']+)"?\'?~',
+            '~<[^>]+\ssrc=["\']([^"\']+)["\']~',
+            '~<link\s[^>]*href=["\']([^"\']+)["\']~',
         );
         $values = array();
         foreach ($regexps as $exp) {
