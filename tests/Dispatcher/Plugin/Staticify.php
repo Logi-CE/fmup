@@ -50,7 +50,7 @@ class StaticifyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetDomain()
     {
-        $request = $this->getMock(\FMUP\Request\Http::class, array('getServer'));
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getServer'))->getMock();
         $request->expects($this->exactly(4))
             ->method('getServer')
             ->withConsecutive(
@@ -59,7 +59,9 @@ class StaticifyTest extends \PHPUnit_Framework_TestCase
                 array($this->equalTo(\FMUP\Request\Http::REQUEST_SCHEME)),
                 array($this->equalTo(\FMUP\Request\Http::HTTP_HOST))
             )->willReturnOnConsecutiveCalls('https', 'www.localhost.com', 'https', 'www.localhost.com');
-        $staticify = $this->getMock(\FMUP\Dispatcher\Plugin\Staticify::class, array('getRequest'));
+        $staticify = $this->getMockBuilder(\FMUP\Dispatcher\Plugin\Staticify::class)
+            ->setMethods(array('getRequest')
+            )->getMock();
         $staticify->method('getRequest')->willReturn($request);
         /** @var $staticify \FMUP\Dispatcher\Plugin\Staticify */
         $this->assertSame('https://www.localhost.com', $staticify->getDomain());
@@ -71,7 +73,7 @@ class StaticifyTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleNoJson()
     {
-        $request = $this->getMock(\FMUP\Request\Http::class, array('getServer'));
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getServer'))->getMock();
         $request->method('getServer')
             ->withConsecutive(
                 array($this->equalTo(\FMUP\Request\Http::REQUEST_URI))
@@ -79,7 +81,7 @@ class StaticifyTest extends \PHPUnit_Framework_TestCase
             ->willReturnOnConsecutiveCalls(
                 '/test/sub/folder'
             );
-        $response = $this->getMock(\FMUP\Response::class, array('getBody', 'setBody'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(array('getBody', 'setBody'))->getMock();
         $response->expects($this->once())->method('getBody')->willReturn(<<<BODY
         <link href="/modules/order/cart/styles/cart.css?10.4.3" type="text/css" rel="stylesheet" />
         <a href="http://this.will.not.be.touched">a</a>
@@ -107,7 +109,9 @@ BODY_RESPONSE;
         //same path are on the same static
         $response->expects($this->once())->method('setBody')->with($this->equalTo($bodyResponse));
 
-        $staticify = $this->getMock(\FMUP\Dispatcher\Plugin\Staticify::class, array('getResponse', 'getRequest', 'getDomain'));
+        $staticify = $this->getMockBuilder(\FMUP\Dispatcher\Plugin\Staticify::class)
+            ->setMethods(array('getResponse', 'getRequest', 'getDomain'))
+            ->getMock();
         $staticify->method('getResponse')->willReturn($response);
         $staticify->method('getRequest')->willReturn($request);
         $staticify->method('getDomain')->willReturn('https://www.testdomain.tld');
@@ -117,7 +121,7 @@ BODY_RESPONSE;
 
     public function testHandleJson()
     {
-        $request = $this->getMock(\FMUP\Request\Http::class, array('getServer'));
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getServer'))->getMock();
         $request->method('getServer')
             ->withConsecutive(
                 array($this->equalTo(\FMUP\Request\Http::REQUEST_URI))
@@ -125,7 +129,9 @@ BODY_RESPONSE;
             ->willReturnOnConsecutiveCalls(
                 '/test/sub/folder/'
             );
-        $response = $this->getMock(\FMUP\Response::class, array('getBody', 'setBody', 'getHeaders'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)
+            ->setMethods(array('getBody', 'setBody', 'getHeaders'))
+            ->getMock();
         $response->expects($this->once())->method('getHeaders')->willReturn(
             array(
                 \FMUP\Response\Header\ContentType::TYPE => array(
@@ -169,10 +175,11 @@ BODY_RESPONSE;
         //trailing slash on request uri will cause a new folder on requested asset
         $response->expects($this->once())->method('setBody')->with($this->equalTo(json_encode($bodyResponse)));
 
-        $staticify = $this->getMock(
-            \FMUP\Dispatcher\Plugin\Staticify::class,
-            array('getResponse', 'getRequest', 'getDomain', 'getSubDomain', 'getStaticPrefix', 'getStaticSuffix')
-        );
+        $staticify = $this->getMockBuilder(\FMUP\Dispatcher\Plugin\Staticify::class)
+            ->setMethods(
+                array('getResponse', 'getRequest', 'getDomain', 'getSubDomain', 'getStaticPrefix', 'getStaticSuffix')
+            )
+        ->getMock();
         $staticify->method('getSubDomain')->willReturn('');
         $staticify->method('getStaticPrefix')->willReturn('cdn');
         $staticify->method('getStaticSuffix')->willReturn('-');

@@ -11,7 +11,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetVersion()
     {
-        $version = $this->getMock(\FMUP\Dispatcher\Plugin\Version::class, array('getFromProjectVersion'));
+        $version = $this->getMockBuilder(\FMUP\Dispatcher\Plugin\Version::class)
+            ->setMethods(array('getFromProjectVersion'))
+            ->getMock();
         $version->expects($this->once())->method('getFromProjectVersion')->willReturn('unitTesting');
         /** @var $version \FMUP\Dispatcher\Plugin\Version */
         $this->assertSame('unitTesting', $version->getVersion());
@@ -31,10 +33,14 @@ BODY;
 <script src='test.js?unitTest' />
 <link href="test.css?unitTest"></link>
 BODY;
-        $response = $this->getMock(\FMUP\Response::class, array('setBody', 'getBody'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)
+            ->setMethods(array('setBody', 'getBody'))
+            ->getMock();
         $response->expects($this->exactly(1))->method('getBody')->willReturn($body);
         $response->expects($this->exactly(1))->method('setBody')->with($this->equalTo($bodyExpected));
-        $version = $this->getMock(\FMUP\Dispatcher\Plugin\Version::class, array('getResponse'));
+        $version = $this->getMockBuilder(\FMUP\Dispatcher\Plugin\Version::class)
+            ->setMethods(array('getResponse'))
+            ->getMock();
         $version->method('getResponse')->willReturn($response);
         /** @var $version \FMUP\Dispatcher\Plugin\Version */
         $this->assertInstanceOf(\FMUP\Dispatcher\Plugin::class, $version);

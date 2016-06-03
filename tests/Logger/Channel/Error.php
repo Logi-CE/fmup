@@ -34,19 +34,23 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $projectVersion = $this->getMock(ProjectVersionMockChannelError::class, array('name'));
-        $config = $this->getMock(\FMUP\Config::class, array('get'));
-        $environment = $this->getMock(EnvironmentMockChannelError::class, array('get'));
+        $projectVersion = $this->getMockBuilder(ProjectVersionMockChannelError::class)->setMethods(array('name'))->getMock();
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
+        $environment = $this->getMockBuilder(EnvironmentMockChannelError::class)->setMethods(array('get'))->getMock();
         $environment->method('get')->willReturnOnConsecutiveCalls(EnvironmentMockChannelError::DEV, EnvironmentMockChannelError::PROD);
-        $sapi = $this->getMock(SapiMockChannelError::class, array('get'));
+        $sapi = $this->getMockBuilder(SapiMockChannelError::class)->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturnOnConsecutiveCalls(SapiMockChannelError::CLI, SapiMockChannelError::CGI);
-        $monologChannel = $this->getMock(\Monolog\Logger::class, array('pushHandler', 'pushProcessor'), array('Mock'));
+        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+            ->setMethods(array('pushHandler', 'pushProcessor'))
+            ->setConstructorArgs(array('Mock'))
+            ->getMock();
         $monologChannel->method('pushHandler')->willReturn($monologChannel);
         $monologChannel->method('pushProcessor')->willReturn($monologChannel);
-        $channel = $this->getMock(
-            \FMUP\Logger\Channel\Error::class,
-            array('getLogger', 'headerSent', 'getSapi', 'getEnvironment', 'getConfig', 'getProjectVersion')
-        );
+        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Error::class)
+            ->setMethods(
+                array('getLogger', 'headerSent', 'getSapi', 'getEnvironment', 'getConfig', 'getProjectVersion')
+            )
+            ->getMock();
         $channel->method('getProjectVersion')->willReturn($projectVersion);
         $channel->method('getLogger')->willReturn($monologChannel);
         $channel->method('headerSent')->willReturn(false);
@@ -63,8 +67,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProjectVersion()
     {
-        $projectVersionMock = $this->getMock(ProjectVersionMockChannelError::class, array('name'));
-        $channel = $this->getMock(\FMUP\Logger\Channel\Error::class, null);
+        $projectVersionMock = $this->getMockBuilder(ProjectVersionMockChannelError::class)->setMethods(array('name'))->getMock();
+        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Error::class)->setMethods(null)->getMock();
         /** @var $channel \FMUP\Logger\Channel\Error */
         /** @var $projectVersionMock ProjectVersionMockChannelError */
         $projectVersion = $channel->getProjectVersion();

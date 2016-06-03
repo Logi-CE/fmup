@@ -19,8 +19,8 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDriver()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getPdo'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->getMock();
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getPdo'))->getMock();
         $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertInstanceOf(\FMUP\Db\Driver\PdoConfiguration::class, $pdo);
@@ -29,9 +29,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testBeginTransactionFailWhenAlreadyInTransaction()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('inTransaction'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('inTransaction'))->getMock();
         $pdoMock->expects($this->once())->method('inTransaction')->willReturn(true);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
@@ -41,9 +41,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testBeginTransactionFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('inTransaction'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('inTransaction'))->getMock();
         $pdoMock->expects($this->once())->method('inTransaction')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -54,10 +54,14 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testBeginTransaction()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('inTransaction', 'beginTransaction'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)
+            ->setMethods(array('inTransaction', 'beginTransaction'))
+            ->getMock();
         $pdoMock->expects($this->once())->method('inTransaction')->willReturn(false);
         $pdoMock->expects($this->once())->method('beginTransaction')->willReturn(true);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)
+            ->setMethods(array('getDriver', 'log'))
+            ->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertTrue($pdo->beginTransaction());
@@ -65,9 +69,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testRollbackFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('rollBack'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('rollBack'))->getMock();
         $pdoMock->expects($this->once())->method('rollBack')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -78,9 +82,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testRollback()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('rollBack'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('rollBack'))->getMock();
         $pdoMock->expects($this->once())->method('rollBack')->willReturn(true);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertTrue($pdo->rollback());
@@ -88,9 +92,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorCodeFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('errorCode'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('errorCode'))->getMock();
         $pdoMock->expects($this->once())->method('errorCode')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -101,9 +105,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorCode()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('errorCode'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('errorCode'))->getMock();
         $pdoMock->expects($this->once())->method('errorCode')->willReturn(10);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(10, $pdo->errorCode());
@@ -111,9 +115,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorInfoFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('errorInfo'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('errorInfo'))->getMock();
         $pdoMock->expects($this->once())->method('errorInfo')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -124,9 +128,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorInfo()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('errorInfo'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('errorInfo'))->getMock();
         $pdoMock->expects($this->once())->method('errorInfo')->willReturn(array());
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(array(), $pdo->errorInfo());
@@ -134,9 +138,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testCommitFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('commit'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('commit'))->getMock();
         $pdoMock->expects($this->once())->method('commit')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -147,9 +151,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testCommit()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('commit'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('commit'))->getMock();
         $pdoMock->expects($this->once())->method('commit')->willReturn(true);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertTrue($pdo->commit());
@@ -158,7 +162,7 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteFailNotStatement()
     {
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('Statement not in right format'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
@@ -168,9 +172,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteFailRandom()
     {
-        $statement = $this->getMock(\PDOStatement::class, array('execute'));
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
@@ -180,7 +184,7 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $statement = $this->getMock(\PDOStatement::class, array('execute'));
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute')->with($this->equalTo(array('test' => 'test')))->willReturn(true);
         $pdo = new \FMUP\Db\Driver\Pdo;
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -189,9 +193,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testPrepareFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('prepare'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('prepare'))->getMock();
         $pdoMock->expects($this->once())->method('prepare')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -202,13 +206,13 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testPrepare()
     {
-        $statement = $this->getMock(\PDOStatement::class);
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('prepare'));
+        $statement = $this->getMockBuilder(\PDOStatement::class)->getMock();
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('prepare'))->getMock();
         $pdoMock->expects($this->once())
             ->method('prepare')
             ->willReturn($statement)
             ->with($this->equalTo('sql'), $this->equalTo(array('test' => 'test')));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame($statement, $pdo->prepare('sql', array('test' => 'test')));
@@ -216,9 +220,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testLastInsertIdFailRandom()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('lastInsertId'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('lastInsertId'))->getMock();
         $pdoMock->expects($this->once())->method('lastInsertId')->willThrowException(new \PDOException('random message'))->with($this->equalTo('sql'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
@@ -229,12 +233,12 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testLastInsertId()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdo::class, array('lastInsertId'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdo::class)->setMethods(array('lastInsertId'))->getMock();
         $pdoMock->expects($this->once())
             ->method('lastInsertId')
             ->willReturn(10)
             ->with($this->equalTo(null));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getDriver', 'log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(10, $pdo->lastInsertId());
@@ -242,7 +246,7 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchAllFailNotStatement()
     {
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('Statement not in right format'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
@@ -252,9 +256,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchAllFailRandom()
     {
-        $statement = $this->getMock(\PDOStatement::class, array('fetchAll'));
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('fetchAll'))->getMock();
         $statement->expects($this->once())->method('fetchAll')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('log'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
@@ -264,9 +268,9 @@ class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchAll()
     {
-        $statement = $this->getMock(\PDOStatement::class, array('fetchAll'));
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('fetchAll'))->getMock();
         $statement->expects($this->once())->method('fetchAll')->willReturn(array(array()))->with($this->equalTo(1));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo::class, array('getFetchMode'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getFetchMode'))->getMock();
         $pdo->expects($this->once())->method('getFetchMode')->willReturn(1);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(array(array()), $pdo->fetchAll($statement));

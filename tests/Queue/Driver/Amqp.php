@@ -36,16 +36,27 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 {
     public function testConnect()
     {
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('queue_declare'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('queue_declare'))
+            ->getMock();
         $channelResource->expects($this->once())->method('queue_declare');
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('setResource', 'hasResource'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('setResource', 'hasResource'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->expects($this->once())->method('setResource')->with($this->equalTo($channelResource));
         $channel->method('hasResource')->willReturnOnConsecutiveCalls(false, true);
-        $amqpConnection = $this->getMock(AMQPStreamConnectionMockQueueDriverAmqp::class, array('channel'));
+        $amqpConnection = $this->getMockBuilder(AMQPStreamConnectionMockQueueDriverAmqp::class)
+            ->setMethods(array('channel'))
+            ->getMock();
         $amqpConnection->expects($this->once())->method('channel')->willReturn($channelResource);
-        $environment = $this->getMock(EnvironmentMockQueueDriverAmqp::class, array('get'));
+        $environment = $this->getMockBuilder(EnvironmentMockQueueDriverAmqp::class)
+            ->setMethods(array('get'))
+            ->getMock();
         $environment->method('get')->willReturn('test');
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getAmqpConnection', 'hasEnvironment', 'getEnvironment'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)
+            ->setMethods(array('getAmqpConnection', 'hasEnvironment', 'getEnvironment'))
+            ->getMock();
         $amqp->expects($this->once())->method('getAmqpConnection')->willReturn($amqpConnection);
         $amqp->method('hasEnvironment')->willReturn(true);
         $amqp->method('getEnvironment')->willReturn($environment);
@@ -57,7 +68,7 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetAmqpConnection()
     {
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getDefaultConnection'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getDefaultConnection'))->getMock();
         $amqp->method('getDefaultConnection')->willReturn(new AMQPStreamConnectionMockQueueDriverAmqp);
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
         $connection = $amqp->getAmqpConnection();
@@ -71,7 +82,10 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
     public function testGetStatsFails()
     {
         $amqp = new \FMUP\Queue\Driver\Amqp;
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         /** @var $channel \FMUP\Queue\Channel */
         $this->expectException(\FMUP\Queue\Exception::class);
         $this->expectExceptionMessage('Stats not available on AMQP Driver');
@@ -85,26 +99,34 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\FMUP\Queue\Exception::class);
         $this->expectExceptionMessage('Unable to ACK this mixed message. Need AMQPMessage');
         $amqp = new \FMUP\Queue\Driver\Amqp;
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         /** @var $channel \FMUP\Queue\Channel */
         $amqp->ackMessage($channel, $message);
     }
 
     public function testAckMessageFailWhenCantConnect()
     {
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('basic_ack'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_ack'))
+            ->getMock();
         $channelResource->method('basic_ack')->with($this->equalTo(1));
-        $amqpMessage = $this->getMock(\PhpAmqpLib\Message\AMQPMessage::class);
+        $amqpMessage = $this->getMockBuilder(\PhpAmqpLib\Message\AMQPMessage::class)->getMock();
         /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
         $amqpMessage->delivery_info = array(
             'delivery_tag' => 1,
         );
         $message = new \FMUP\Queue\Message();
         $message->setOriginal($amqpMessage);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(false);
         $channel->method('getResource')->willReturn(false);
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getQueue', 'connect'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getQueue', 'connect'))->getMock();
         $amqp->method('getQueue')->willReturn($channelResource);
         $amqp->expects($this->once())->method('connect')->with($this->equalTo($channel));
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
@@ -116,19 +138,24 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testAckMessage()
     {
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('basic_ack'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_ack'))
+            ->getMock();
         $channelResource->expects($this->once())->method('basic_ack')->with($this->equalTo(1));
-        $amqpMessage = $this->getMock(\PhpAmqpLib\Message\AMQPMessage::class);
+        $amqpMessage = $this->getMockBuilder(\PhpAmqpLib\Message\AMQPMessage::class)->getMock();
         /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
         $amqpMessage->delivery_info = array(
             'delivery_tag' => 1,
         );
         $message = new \FMUP\Queue\Message();
         $message->setOriginal($amqpMessage);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(true);
         $channel->method('getResource')->willReturn($channelResource);
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getQueue'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getQueue'))->getMock();
         $amqp->method('getQueue')->willReturn($channelResource);
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
         /** @var $channel \FMUP\Queue\Channel */
@@ -137,26 +164,62 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testPush()
     {
-        $amqpMessage = $this->getMock(\PhpAmqpLib\Message\AMQPMessage::class);
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('basic_publish'));
+        $amqpMessage = $this->getMockBuilder(\PhpAmqpLib\Message\AMQPMessage::class)->getMock();
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_publish'))
+            ->getMock();
         $channelResource->method('basic_publish')->with($this->equalTo($amqpMessage), $this->equalTo(''), $this->equalTo('test'));
-        $settings = $this->getMock(\FMUP\Queue\Channel\Settings::class, array('getSerialize'));
+        $settings = $this->getMockBuilder(\FMUP\Queue\Channel\Settings::class)
+            ->setMethods(array('getSerialize'))
+            ->getMock();
         $settings->expects($this->once())->method('getSerialize')->willReturn(false);
         /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'getSettings'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'getSettings'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(true);
         $channel->method('getResource')->willReturn($channelResource);
         $channel->method('getSettings')->willReturn($settings);
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getQueue'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getQueue'))->getMock();
         $amqp->method('getQueue')->willReturn($channelResource);
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
         /** @var $channel \FMUP\Queue\Channel */
         $this->assertTrue($amqp->push($channel, $amqpMessage));
     }
 
+    public function testPushNotMessageAndSerialize()
+    {
+        $amqpMessage = new \PhpAmqpLib\Message\AMQPMessage(serialize('test'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_publish'))
+            ->getMock();
+        $channelResource->method('basic_publish')
+            ->with($this->equalTo($amqpMessage), $this->equalTo(''), $this->equalTo('test'));
+        $settings = $this->getMockBuilder(\FMUP\Queue\Channel\Settings::class)
+            ->setMethods(array('getSerialize'))
+            ->getMock();
+        $settings->expects($this->once())->method('getSerialize')->willReturn(true);
+        /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'getSettings'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
+        $channel->method('hasResource')->willReturn(true);
+        $channel->method('getResource')->willReturn($channelResource);
+        $channel->method('getSettings')->willReturn($settings);
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getQueue'))->getMock();
+        $amqp->method('getQueue')->willReturn($channelResource);
+        /** @var $amqp \FMUP\Queue\Driver\Amqp */
+        /** @var $channel \FMUP\Queue\Channel */
+        $this->assertTrue($amqp->push($channel, 'test'));
+    }
+
     public function testPullWhenBlockReceiveIsOn()
     {
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('basic_consume', 'wait'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_consume', 'wait'))
+            ->getMock();
         $channelResource->method('basic_consume')->with(
             $this->equalTo('test'),
             $this->equalTo(''),
@@ -170,16 +233,23 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
             $message->body = 'hello';
             call_user_func_array($callback, array($message));
         }));
-        $settings = $this->getMock(\FMUP\Queue\Channel\Settings::class, array('getBlockReceive', 'getAutoAck', 'getSerialize'));
+        $settings = $this->getMockBuilder(\FMUP\Queue\Channel\Settings::class)
+            ->setMethods(array('getBlockReceive', 'getAutoAck', 'getSerialize'))
+            ->getMock();
         $settings->expects($this->once())->method('getBlockReceive')->willReturn(true);
         $settings->expects($this->once())->method('getAutoAck')->willReturn(true);
         $settings->expects($this->once())->method('getSerialize')->willReturn(false);
         /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'getSettings'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'getSettings'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(true);
         $channel->method('getResource')->willReturn($channelResource);
         $channel->method('getSettings')->willReturn($settings);
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getQueue'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)
+            ->setMethods(array('getQueue'))
+            ->getMock();
         $amqp->method('getQueue')->willReturn($channelResource);
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
         /** @var $channel \FMUP\Queue\Channel */
@@ -192,16 +262,23 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testPullWhenBlockReceiveIsOff()
     {
-        $channelResource = $this->getMock(AMQPChannelMockQueueDriverAmqp::class, array('basic_get'));
+        $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
+            ->setMethods(array('basic_get'))
+            ->getMock();
         $channelResource->method('basic_get')->with($this->equalTo('test'), $this->equalTo(true))->willReturn(new AMQPMessage());
-        $settings = $this->getMock(\FMUP\Queue\Channel\Settings::class, array('getBlockReceive', 'getSerialize'));
+        $settings = $this->getMockBuilder(\FMUP\Queue\Channel\Settings::class)
+            ->setMethods(array('getBlockReceive', 'getSerialize'))
+            ->getMock();
         $settings->expects($this->once())->method('getBlockReceive')->willReturn(false);
         /** @var \PhpAmqpLib\Message\AMQPMessage $amqpMessage */
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'getSettings'), array('test'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'getSettings'))
+            ->setConstructorArgs(array('test'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(true);
         $channel->method('getResource')->willReturn($channelResource);
         $channel->method('getSettings')->willReturn($settings);
-        $amqp = $this->getMock(\FMUP\Queue\Driver\Amqp::class, array('getQueue'));
+        $amqp = $this->getMockBuilder(\FMUP\Queue\Driver\Amqp::class)->setMethods(array('getQueue'))->getMock();
         $amqp->method('getQueue')->willReturn($channelResource);
         /** @var $amqp \FMUP\Queue\Driver\Amqp */
         /** @var $channel \FMUP\Queue\Channel */

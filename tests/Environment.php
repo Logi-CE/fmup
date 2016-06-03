@@ -48,7 +48,7 @@ class Environment extends \PHPUnit_Framework_TestCase
             $this->assertEquals('No environment detected', $e->getMessage(), 'Exception message is not correct');
         }
 
-        $configMock = $this->getMock(\FMUP\Config::class);
+        $configMock = $this->getMockBuilder(\FMUP\Config::class)->getMock();
         try {
             $environment->setConfig($configMock)->get();
             $this->assertTrue(false, 'Config is empty and does not contain version. It should not work');

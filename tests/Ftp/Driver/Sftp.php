@@ -10,7 +10,9 @@ class SftpTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod(Ftp\Driver\Sftp::class, 'getSftpSession');
         $method->setAccessible(true);
 
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array('ssh2Sftp', 'getSession'));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2Sftp', 'getSession'))
+            ->getMock();
         $sftp->method('ssh2Sftp')->willReturn(fopen('php://stdin', 'r'));
         /**
          * @var $sftp Ftp\Driver\Sftp
@@ -127,25 +129,24 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testConnect()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array('ssh2Connect'));
-        $sftp2 = $this->getMock(
-            Ftp\Driver\Sftp::class,
-            array('ssh2Connect'),
-            array(array(Ftp\Driver\Sftp::METHODS => array('key' => 'val')))
-        );
-        $sftp3 = $this->getMock(
-            Ftp\Driver\Sftp::class,
-            array('ssh2Connect'),
-            array(array(Ftp\Driver\Sftp::CALLBACKS => array('key2' => 'val2')))
-        );
-        $sftp4 = $this->getMock(
-            Ftp\Driver\Sftp::class,
-            array('ssh2Connect'),
-            array(array(
-                Ftp\Driver\Sftp::METHODS => array('key' => 'val'),
-                Ftp\Driver\Sftp::CALLBACKS => array('key2' => 'val2')
-            ))
-        );
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)->setMethods(array('ssh2Connect'))->getMock();
+        $sftp2 = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2Connect'))
+            ->setConstructorArgs(array(array(Ftp\Driver\Sftp::METHODS => array('key' => 'val'))))
+            ->getMock();
+        $sftp3 = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2Connect'))
+            ->setConstructorArgs(array(array(Ftp\Driver\Sftp::CALLBACKS => array('key2' => 'val2'))))
+            ->getMock();
+        $sftp4 = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2Connect'))
+            ->setConstructorArgs(
+                array(array(
+                    Ftp\Driver\Sftp::METHODS => array('key' => 'val'),
+                    Ftp\Driver\Sftp::CALLBACKS => array('key2' => 'val2')
+                ))
+            )
+            ->getMock();
         $sftp->expects($this->once())
             ->method('ssh2Connect')
             ->willReturn(fopen('php://stdin', 'r'))
@@ -195,7 +196,9 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginFail()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array('ssh2AuthPassword', 'getSession'));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2AuthPassword', 'getSession'))
+            ->getMock();
         $resource = fopen('php://stdin', 'r');
         $sftp->method('getSession')->willReturn($resource);
         $sftp->expects($this->once())->method('ssh2AuthPassword')->willReturn(false)->with(
@@ -215,7 +218,9 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginSuccess()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array('ssh2AuthPassword', 'getSession'));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2AuthPassword', 'getSession'))
+            ->getMock();
         $resource = fopen('php://stdin', 'r');
         $sftp->method('getSession')->willReturn($resource);
         $sftp->expects($this->once())->method('ssh2AuthPassword')->willReturn(true)->with(
@@ -233,17 +238,21 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileWithoutMaxLen()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array(
-            'filePutContents',
-            'fileGetContents',
-            'getSftpSession',
-            'getUseIncludePath',
-            'getGetContentContext',
-            'getOffset',
-            'getMaxLen',
-            'getPutContentFlags',
-            'getPutContentContext',
-        ));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(
+                array(
+                    'filePutContents',
+                    'fileGetContents',
+                    'getSftpSession',
+                    'getUseIncludePath',
+                    'getGetContentContext',
+                    'getOffset',
+                    'getMaxLen',
+                    'getPutContentFlags',
+                    'getPutContentContext',
+                )
+            )
+            ->getMock();
         $resourceGetContext = fopen('php://stdin', 'r');
         $resourcePutContext = fopen('php://stdin', 'r');
         $resourceSftpSession = fopen('php://stdin', 'r');
@@ -276,17 +285,21 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileWithMaxLen()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array(
-            'filePutContents',
-            'fileGetContents',
-            'getSftpSession',
-            'getUseIncludePath',
-            'getGetContentContext',
-            'getOffset',
-            'getMaxLen',
-            'getPutContentFlags',
-            'getPutContentContext',
-        ));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(
+                array(
+                    'filePutContents',
+                    'fileGetContents',
+                    'getSftpSession',
+                    'getUseIncludePath',
+                    'getGetContentContext',
+                    'getOffset',
+                    'getMaxLen',
+                    'getPutContentFlags',
+                    'getPutContentContext',
+                )
+            )
+            ->getMock();
         $resourceGetContext = fopen('php://stdin', 'r');
         $resourcePutContext = fopen('php://stdin', 'r');
         $resourceSftpSession = fopen('php://stdin', 'r');
@@ -320,7 +333,9 @@ class SftpTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteFile()
     {
-        $sftp = $this->getMock(Ftp\Driver\Sftp::class, array('ssh2SftpUnlink', 'getSftpSession'));
+        $sftp = $this->getMockBuilder(Ftp\Driver\Sftp::class)
+            ->setMethods(array('ssh2SftpUnlink', 'getSftpSession'))
+            ->getMock();
         $resource = fopen('php://stdin', 'r');
         $sftp->method('getSftpSession')->willReturn($resource);
         $sftp->expects($this->exactly(2))

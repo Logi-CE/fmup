@@ -20,7 +20,10 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $configObject = $this->getMock(\FMUP\Import\Config\ConfigObjet::class, array('getStatut'), array(), '', false);
+        $configObject = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+            ->setMethods(array('getStatut'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $configObject->method('getStatut')
             ->willReturnOnConsecutiveCalls(
                 ConfigObjet::INSERT, ConfigObjet::UPDATE, '', //result update
@@ -31,7 +34,9 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
                 '', ConfigObjet::INSERT, ConfigObjet::UPDATE, //result update
                 '', '', '' //result ''
             );
-        $config = $this->getMock(\FMUP\Import\Config::class, array('validateLine', 'getListeConfigObjet', 'getDoublonLigne'));
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+            ->setMethods(array('validateLine', 'getListeConfigObjet', 'getDoublonLigne'))
+            ->getMock();
         $config->method('getListeConfigObjet')->willReturn(array($configObject, $configObject, $configObject));
         $config->method('validateLine')
             ->willReturnOnConsecutiveCalls(

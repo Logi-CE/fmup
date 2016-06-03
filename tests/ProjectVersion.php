@@ -40,20 +40,22 @@ class ProjectVersionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWhenFileDontExists()
     {
-        $this->setExpectedException(\LogicException::class, "composer.json does not exist");
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("composer.json does not exist");
         \FMUP\ProjectVersion::getInstance()->get();
     }
 
     public function testGetWhenStructureIsBad()
     {
-        $projectVersion = $this->getMock(ProjectVersionMock::class, array('getComposerPath'));
+        $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)->setMethods(array('getComposerPath'))->getMock();
         $projectVersion->method('getComposerPath')->willReturn(__FILE__);
 
         $reflection = new \ReflectionProperty(\FMUP\ProjectVersion::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($projectVersion);
 
-        $this->setExpectedException(\LogicException::class, 'composer.json invalid structure');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('composer.json invalid structure');
         /** @var $projectVersion \FMUP\ProjectVersion */
         $projectVersion->get();
     }
@@ -72,7 +74,7 @@ class ProjectVersionTest extends \PHPUnit_Framework_TestCase
 }
 COMPOSER;
         file_put_contents($filePath, $data);
-        $projectVersion = $this->getMock(ProjectVersionMock::class, array('getComposerPath'));
+        $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)->setMethods(array('getComposerPath'))->getMock();
         $projectVersion->method('getComposerPath')->willReturn($filePath);
 
         $reflection = new \ReflectionProperty(\FMUP\ProjectVersion::class, 'instance');

@@ -20,8 +20,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetRequest()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class);
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         /** @var \FMUP\Request $request */
         $this->assertSame($plugin, $plugin->setRequest($request));
@@ -30,8 +30,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetResponse()
     {
-        $response = $this->getMock(\FMUP\Response::class);
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         /** @var \FMUP\Response $response */
         $this->assertSame($plugin, $plugin->setResponse($response));
@@ -40,7 +40,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResponseWhenNotSet()
     {
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Response not set');
@@ -49,7 +49,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestWhenNotSet()
     {
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Request not set');
@@ -58,14 +58,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHandle()
     {
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         $this->assertTrue($plugin->canHandle());
     }
 
     public function testGetName()
     {
-        $plugin = $this->getMock(\FMUP\Dispatcher\Plugin::class, array('handle'));
+        $plugin = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)->setMethods(array('handle'))->getMock();
         /** @var \FMUP\Dispatcher\Plugin $plugin */
         $this->assertNull($plugin->getName());
         $plugin = new PluginMockPlugin();

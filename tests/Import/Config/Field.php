@@ -106,7 +106,9 @@ class FieldTest extends \PHPUnit_Framework_TestCase
     {
         $field = new \FMUP\Import\Config\Field('name', 'value', 'destinationTable', 'destinationField', true, '');
         /** @var \FMUP\Import\Config\Field\Formatter $formatter */
-        $formatter = $this->getMock(\FMUP\Import\Config\Field\Formatter::class, array('format', 'getErrorMessage', 'hasError'));
+        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter::class)
+            ->setMethods(array('format', 'getErrorMessage', 'hasError'))
+            ->getMock();
         $this->assertSame(array(), $field->getFormatters());
         $this->assertSame($field, $field->addFormatter($formatter));
         $this->assertSame(array($formatter), $field->getFormatters());
@@ -119,7 +121,10 @@ class FieldTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatField()
     {
-        $formatter = $this->getMock(\FMUP\Import\Config\Field\Formatter::class, array('format', 'getErrorMessage', 'hasError'), array(), 'Formatter');
+        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter::class)
+            ->setMethods(array('format', 'getErrorMessage', 'hasError'))
+            ->setMockClassName('Formatter')
+            ->getMock();
         $formatter->expects($this->at(0))->method('format')->with($this->equalTo('value'))->willReturn('VALUE');
         $formatter->expects($this->at(1))->method('hasError')->willReturn(false);
         $formatter->expects($this->at(2))->method('format')->with($this->equalTo('VALUE'))->willReturn(false);
@@ -127,7 +132,10 @@ class FieldTest extends \PHPUnit_Framework_TestCase
         $formatter->expects($this->at(4))->method('getErrorMessage')->willReturn('Error');
         $formatter->expects($this->at(5))->method('format')->with($this->equalTo(''))->willReturn('VALUE');
         $formatter->expects($this->at(6))->method('hasError')->willReturn(false);
-        $field = $this->getMock(\FMUP\Import\Config\Field::class, array('getFormatters'), array(), '', false);
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getFormatters'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getFormatters')->willReturn(array($formatter, $formatter, $formatter));
         /** @var \FMUP\Import\Config\Field $field */
         $field->setValue('value');
@@ -139,12 +147,18 @@ class FieldTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateField()
     {
-        $validator = $this->getMock(\FMUP\Import\Config\Field\Validator::class, array('validate', 'getErrorMessage'), array(), 'Validator');
+        $validator = $this->getMockBuilder(\FMUP\Import\Config\Field\Validator::class)
+            ->setMethods(array('validate', 'getErrorMessage'))
+            ->setMockClassName('Validator')
+            ->getMock();
         $validator->expects($this->at(0))->method('validate')->with($this->equalTo('value'))->willReturn(false);
         $validator->expects($this->at(1))->method('getErrorMessage')->willReturn('Error');
         $validator->expects($this->at(2))->method('validate')->with($this->equalTo('value'))->willReturn(true);
         $validator->expects($this->at(3))->method('validate')->with($this->equalTo('value'))->willReturn(true);
-        $field = $this->getMock(\FMUP\Import\Config\Field::class, array('getValidators'), array(), '', false);
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getValidators'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getValidators')->willReturn(array($validator, $validator, $validator));
         /** @var \FMUP\Import\Config\Field $field */
         $field->setValue('value');
@@ -153,11 +167,17 @@ class FieldTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('Validator' => 'Error'), $field->getErreurs());
         $this->assertSame('value', $field->getValue());
 
-        $validator = $this->getMock(\FMUP\Import\Config\Field\Validator::class, array('validate', 'getErrorMessage'), array(), 'Validator');
+        $validator = $this->getMockBuilder(\FMUP\Import\Config\Field\Validator::class)
+            ->setMethods(array('validate', 'getErrorMessage'))
+            ->setMockClassName('Validator')
+            ->getMock();
         $validator->expects($this->at(0))->method('validate')->with($this->equalTo('value'))->willReturn(true);
         $validator->expects($this->at(1))->method('validate')->with($this->equalTo('value'))->willReturn(true);
         $validator->expects($this->at(2))->method('validate')->with($this->equalTo('value'))->willReturn(true);
-        $field2 = $this->getMock(\FMUP\Import\Config\Field::class, array('getValidators'), array(), '', false);
+        $field2 = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getValidators'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field2->method('getValidators')->willReturn(array($validator, $validator, $validator));
         /** @var \FMUP\Import\Config\Field $field2 */
         $field2->setValue('value');

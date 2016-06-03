@@ -57,7 +57,7 @@ class DownloadTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(\FMUP\Exception\Status\NotFound::class);
         $this->expectExceptionMessage('Unable to find requested file');
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
         $logger->expects($this->exactly(1))
             ->method('log')
             ->with(
@@ -74,10 +74,10 @@ class DownloadTest extends \PHPUnit_Framework_TestCase
     {
         $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', 'composer.json'));
         $expectedContent = file_get_contents($file);
-        $response = $this->getMock(\FMUP\Response::class, array('send', 'clearHeader'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(array('send', 'clearHeader'))->getMock();
         $response->expects($this->exactly(1))->method('send');
         $response->expects($this->exactly(1))->method('clearHeader');
-        $mock = $this->getMock(Mock::class, array('downloadHeaders', 'getResponse', 'obFlush'));
+        $mock = $this->getMockBuilder(Mock::class)->setMethods(array('downloadHeaders', 'getResponse', 'obFlush'))->getMock();
         $mock->expects($this->exactly(1))->method('downloadHeaders')->willReturn($response);
         $mock->method('getResponse')->willReturn($response);
         /** @var $mock Mock */

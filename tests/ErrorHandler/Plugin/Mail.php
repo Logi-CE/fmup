@@ -18,11 +18,11 @@ class MailTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanHandle()
     {
-        $config = $this->getMock(\FMUP\Config::class, array('get'));
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
         $config->method('get')->will($this->onConsecutiveCalls(true, false, true, false, true, false));
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getConfig'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getConfig'))->getMock();
         $bootstrap->method('getConfig')->willReturn($config);
-        $mail = $this->getMock(\FMUP\ErrorHandler\Plugin\Mail::class, array('iniGet'));
+        $mail = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Mail::class)->setMethods(array('iniGet'))->getMock();
         $mail->method('iniGet')->will($this->onConsecutiveCalls(true, false, true, false, true, false));
         /**
          * @var $mail \FMUP\ErrorHandler\Plugin\Mail
@@ -50,9 +50,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $sapi = $this->getMock(SapiMockMail::class, array('get'));
+        $sapi = $this->getMockBuilder(SapiMockMail::class)->setMethods(array('get'))->getMock();
         $sapi->method('get')->will($this->onConsecutiveCalls(\FMUP\Sapi::CLI, \FMUP\Sapi::CGI));
-        $config = $this->getMock(\FMUP\Config::class, array('get'));
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
         $config->method('get')
             ->will(
                 $this->onConsecutiveCalls(
@@ -65,14 +65,23 @@ class MailTest extends \PHPUnit_Framework_TestCase
                     'support@support.com,support2@support.com'
                 )
             );
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getConfig', 'getSapi'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getConfig', 'getSapi'))->getMock();
         $bootstrap->method('getConfig')->willReturn($config);
         $bootstrap->method('getSapi')->willReturn($sapi);
-        $mail = $this->getMock(\FMUP\Mail::class, array('Send'), array($this->getMock(\FMUP\Config::class, array('get'))));
+        $mail = $this->getMockBuilder(\FMUP\Mail::class)
+            ->setMethods(array('Send'))
+            ->setConstructorArgs(
+                array(
+                    $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock()
+                )
+            )
+            ->getMock();
         $mail->expects($this->exactly(2))->method('Send')->will($this->onConsecutiveCalls(true, false, true, true));
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('getServer'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getServer'))->getMock();
         $request->method('getServer')->willReturn('TestUnitServer');
-        $exceptionMock = $this->getMock(\stdClass::class, array('getTrace', 'getMessage', 'getLine', 'getFile'));
+        $exceptionMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(array('getTrace', 'getMessage', 'getLine', 'getFile'))
+            ->getMock();
         $exceptionMock->method('getTrace')->willReturn(
             array(
                 array(),
@@ -83,7 +92,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
                 ),
             )
         );
-        $mailPlugin = $this->getMock(\FMUP\ErrorHandler\Plugin\Mail::class, array('createMail', 'getRequest', 'getException'));
+        $mailPlugin = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Mail::class)
+            ->setMethods(array('createMail', 'getRequest', 'getException'))
+            ->getMock();
         $mailPlugin->method('getException')
             ->will(
                 $this->onConsecutiveCalls(

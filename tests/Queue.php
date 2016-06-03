@@ -61,7 +61,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testGetDriver(\FMUP\Queue $queue)
     {
         $queue2 = clone $queue;
-        $config = $this->getMock(\FMUP\Config::class);
+        $config = $this->getMockBuilder(\FMUP\Config::class)->getMock();
         $config->method('has')->willReturn(true);
         $config->method('get')->willReturn('Unit');
         $environment = \FMUP\Environment::getInstance()->setConfig($config);
@@ -162,7 +162,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $queue->setDriver($mockDriver);
         $stats = $queue->getStats();
         $this->assertEquals(1, $stats['stats'], 'Stats not returned');
-        $this->setExpectedException(\FMUP\Queue\Exception::class);
+        $this->expectException(\FMUP\Queue\Exception::class);
         $queue->getStats();
     }
 
@@ -178,7 +178,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $mockDriver->expects($this->atLeast(1))->method('ackMessage')->willReturn($mockDriver);
         /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
-        $message = $this->getMock(\FMUP\Queue\Message::class);
+        $message = $this->getMockBuilder(\FMUP\Queue\Message::class)->getMock();
         /** @var $message \FMUP\Queue\Message */
         $return = $queue->ackMessage($message);
         $this->assertSame($mockDriver, $return);
@@ -190,7 +190,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     private function getDriverMock()
     {
-        return $this->getMock(\FMUP\Queue\DriverInterface::class);
+        return $this->getMockBuilder(\FMUP\Queue\DriverInterface::class)->getMock();
     }
 
 }

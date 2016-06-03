@@ -60,7 +60,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWhenDriverDoNotExists(Factory $factory)
     {
-        $this->setExpectedException(\FMUP\Crypt\Exception::class, 'Unable to create FMUP\Crypt\Driver\Random');
+        $this->expectException(\FMUP\Crypt\Exception::class);
+        $this->expectExceptionMessage('Unable to create FMUP\Crypt\Driver\Random');
         $factory->create('Random');
     }
 
@@ -70,7 +71,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWhenDriverNotCorrect(Factory $factory)
     {
-        $this->setExpectedException(\FMUP\Crypt\Exception::class, 'Unable to create FMUP\Crypt\Driver\DriverMock');
+        $this->expectException(\FMUP\Crypt\Exception::class);
+        $this->expectExceptionMessage('Unable to create FMUP\Crypt\Driver\DriverMock');
         $factory->create('DriverMock');
     }
 }

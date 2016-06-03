@@ -11,7 +11,9 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBootstrapWhenNotSet()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         /** @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Unable to access bootstrap. Not set');
@@ -20,8 +22,10 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetBootstrap()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class);
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
         /**
          * @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction
          * @var $bootstrap \FMUP\Bootstrap
@@ -32,7 +36,9 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResponseWhenNotSet()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         /** @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Unable to access response. Not set');
@@ -41,8 +47,10 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetResponse()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
-        $response = $this->getMock(\FMUP\Response::class);
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
         /**
          * @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction
          * @var $response \FMUP\Response
@@ -53,7 +61,9 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestWhenNotSet()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         /** @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Unable to access request. Not set');
@@ -62,8 +72,10 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetRequest()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
-        $request = $this->getMock(\FMUP\Request::class);
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         /**
          * @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction
          * @var $request \FMUP\Request
@@ -74,7 +86,9 @@ class AbstrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetException()
     {
-        $abstraction = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $abstraction = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         /**
          * @var $abstraction \FMUP\ErrorHandler\Plugin\Abstraction
          */
