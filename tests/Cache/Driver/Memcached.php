@@ -9,9 +9,6 @@ use FMUP\Cache\Driver;
  */
 class MemcachedTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return \FMUP\Cache\Driver\Memcached
-     */
     public function testConstruct()
     {
         $cache = new Driver\Memcached();
@@ -23,166 +20,20 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
 
         /** @var $memcachedMock \Memcached */
-        $memcachedMock = $this->getMock(\Memcached::class);
+        $memcachedMock = $this->getMockBuilder(\Memcached::class)
+            ->setMethods(array('set', 'get', 'getResultMessage', 'getResultCode'))
+            ->getMock();
         $cache3 = new Driver\Memcached(array(Driver\Memcached::SETTINGS_MEMCACHED => $memcachedMock));
         $this->assertSame($memcachedMock, $cache3->getMemcachedInstance());
         $cache3->setMemcachedInstance($memcachedMock);
         $this->assertSame($memcachedMock, $cache3->getMemcachedInstance());
-        return $cache2;
     }
 
-    /**
-     * @depends testConstruct
-     * @param Driver\Memcached $cache
-     * @return \FMUP\Cache
-     */
-    public function testSetGet(Driver\Memcached $cache)
+    public function testSetGetSettings()
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('Memcached is not available for testing');
-        }
-
-        try {
-            $cache->set('testError', 'testError');
-            $this->assertTrue(false, 'You might not be able to define value in memcached without setting server');
-        } catch (\FMUP\Cache\Exception $e) {
-            $this->assertEquals(20, $e->getCode(), 'Unable to store testError because no server is defined // code');
-            $this->assertTrue(true, 'Unable to store testError because no server is defined');
-        }
-        $cache->getMemcachedInstance()->addServer('127.0.0.1', 11211);
-
-        $test = array(
-            array('test', 'test'),
-            array('test', 'bob'),
-            array('bob', 'bob'),
-            array('bob', 'test'),
-            array('bob', 1),
-            array('bob', '1'),
-            array('1', '1'),
-            array('1', '2'),
-            array('1', new \stdClass()),
-            array('1', $this->getMockBuilder('\stdClass')->getMock()),
-        );
-        foreach ($test as $case) {
-            try {
-                $return = $cache->set($case[0], $case[1]);
-            } catch (\FMUP\Cache\Exception $e) {
-                $this->assertTrue(false, 'Unable to store ' . $case[1] . ' in ' . $case[0] . ' : ' . $e->getMessage());
-                $return = false;
-            }
-            $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
-            $this->assertSame($cache, $return, 'Set settings must return its instance');
-        }
-        return $cache;
-    }
-
-    /**
-     * @depends testSetGet
-     * @param Driver\Memcached $cache
-     */
-    public function testHas(Driver\Memcached $cache)
-    {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('Memcached is not available for testing');
-        }
-
-        $test = array(
-            array('test', true),
-            array('bob', true),
-            array('1', true),
-            array(1, true),
-            array('notexists', false),
-        );
-        foreach ($test as $case) {
-            $this->assertSame($case[1], $cache->has($case[0]), 'Test existence seems wrong');
-            $this->assertTrue(is_bool($cache->has($case[0])), 'Return should be boolean');
-        }
-    }
-
-    /**
-     * @depends testSetGet
-     * @param Driver\Memcached $cacheOriginal
-     */
-    public function testRemove(Driver\Memcached $cacheOriginal)
-    {
-        $cache = clone $cacheOriginal;
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped('Memcached is not available for testing');
-        }
-
-        $this->assertTrue($cache->has('test'), 'Test should exist');
-        $return = $cache->remove('test');
-        $this->assertSame($cache, $return, 'Set settings must return its instance');
-        $this->assertFalse($cache->has('test'), 'Test should\'nt exist');
-    }
-
-    /**
-     * @depends testConstruct
-     * @param Driver\Memcached $memcachedOriginal
-     */
-    public function testRemoveWhenMemcachedFails(Driver\Memcached $memcachedOriginal)
-    {
-        $cache = clone $memcachedOriginal;
-
-        $memcached = $this->getMock(\Memcached::class);
-        $memcached->method('delete')->willReturn(false);
-        /** @var $memcached \Memcached */
-        $cache->setMemcachedInstance($memcached);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Error while deleting key in memcached');
-        $cache->remove('test');
-    }
-
-    public function testGetMemcachedInstance()
-    {
-        $cache = $this->getMock(Driver\Memcached::class, array('isAvailable'));
-        $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Memcached is not available');
-        /** @var $cache Driver\Memcached */
-        $cache->getMemcachedInstance();
-    }
-
-    public function testHasWhenMemcachedNotAvailable()
-    {
-        $cache = $this->getMock(Driver\Memcached::class, array('isAvailable'));
-        $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Memcached is not available');
-        /** @var $cache Driver\Memcached */
-        $cache->has('bob');
-    }
-
-    public function testGetWhenMemcachedNotAvailable()
-    {
-        $cache = $this->getMock(Driver\Memcached::class, array('isAvailable'));
-        $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Memcached is not available');
-        /** @var $cache Driver\Memcached */
-        $cache->get('bob');
-    }
-
-    public function testSetWhenMemcachedNotAvailable()
-    {
-        $cache = $this->getMock(Driver\Memcached::class, array('isAvailable'));
-        $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Memcached is not available');
-        /** @var $cache Driver\Memcached */
-        $cache->set('bob', 'bob');
-    }
-
-    public function testRemoveWhenMemcachedNotAvailable()
-    {
-        $cache = $this->getMock(Driver\Memcached::class, array('isAvailable'));
-        $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Memcached is not available');
-        /** @var $cache Driver\Memcached */
-        $cache->remove('bob');
-    }
-
-    /**
-     * @depends testConstruct
-     * @param Driver\Memcached $memcached
-     */
-    public function testSetGetSettings(Driver\Memcached $memcached)
-    {
+        $memcached = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $memcached->method('isAvailable')->willReturn(true);
+        /** @var $memcached Driver\Memcached */
         $testValue = 'testValue';
         $testKey = 'testKey';
         $this->assertSame($memcached, $memcached->setSetting($testKey, $testValue));
@@ -190,4 +41,176 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($memcached->getSetting('nonExistingKey'));
     }
 
+    public function testRemove()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+
+        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('delete'))->getMock();
+        $memcached->method('delete')->willReturn(true);
+        /**
+         * @var $memcached \Memcached
+         * @var $cache Driver\Memcached
+         */
+        $cache->setMemcachedInstance($memcached);
+        $this->assertSame($cache, $cache->remove('test'));
+    }
+
+    public function testRemoveWhenMemcachedFails()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+
+        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('delete'))->getMock();
+        $memcached->method('delete')->willReturn(false);
+        /**
+         * @var $memcached \Memcached
+         * @var $cache Driver\Memcached
+         */
+        $cache->setMemcachedInstance($memcached);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Error while deleting key in memcached');
+        $cache->remove('test');
+    }
+
+    public function testGetMemcachedInstanceFailsWhenNotAvailable()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(false);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Memcached is not available');
+        /** @var $cache Driver\Memcached */
+        $cache->getMemcachedInstance();
+    }
+
+    public function testGetMemcachedInstance()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)
+            ->setMethods(array('isAvailable', 'createMemcached'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('createMemcached')->willReturn($this->getMockBuilder(\Memcached::class)->getMock());
+        /** @var $cache Driver\Memcached */
+        $this->assertInstanceOf(\Memcached::class, $cache->getMemcachedInstance());
+    }
+
+    public function testHasWhenMemcachedNotAvailable()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(false);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Memcached is not available');
+        /** @var $cache Driver\Memcached */
+        $cache->has('bob');
+    }
+
+    public function testGetWhenMemcachedNotAvailable()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(false);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Memcached is not available');
+        /** @var $cache Driver\Memcached */
+        $cache->get('bob');
+    }
+
+    public function testSetWhenMemcachedNotAvailable()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(false);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Memcached is not available');
+        /** @var $cache Driver\Memcached */
+        $cache->set('bob', 'bob');
+    }
+
+    public function testRemoveWhenMemcachedNotAvailable()
+    {
+        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache->method('isAvailable')->willReturn(false);
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Memcached is not available');
+        /** @var $cache Driver\Memcached */
+        $cache->remove('bob');
+    }
+
+    public function testIsAvailable()
+    {
+        $cache = new Driver\Memcached();
+        $this->assertTrue(is_bool($cache->isAvailable()));
+    }
+
+    public function testHas()
+    {
+        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('getAllKeys'))->getMock();
+        $memcached->method('getAllKeys')->willReturn(array('test', 'two'));
+
+        $cache = $this->getMockBuilder(Driver\Memcached::class)
+            ->setMethods(array('isAvailable', 'getMemcachedInstance'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('getMemcachedInstance')->willReturn($memcached);
+        /** @var $cache Driver\Memcached */
+        $this->assertTrue($cache->has('test'));
+        $this->assertTrue($cache->has('two'));
+        $this->assertFalse($cache->has('notexist'));
+    }
+
+    public function testGet()
+    {
+        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('get'))->getMock();
+        $memcached->method('get')->with($this->equalTo('test'))->willReturn('ok');
+
+        $cache = $this->getMockBuilder(Driver\Memcached::class)
+            ->setMethods(array('isAvailable', 'getMemcachedInstance'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('getMemcachedInstance')->willReturn($memcached);
+        /** @var $cache Driver\Memcached */
+        $this->assertSame('ok', $cache->get('test'));
+    }
+
+    public function testSet()
+    {
+        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('set'))->getMock();
+        $memcached->method('set')
+            ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
+            ->willReturn(true);
+
+        $cache = $this->getMockBuilder(Driver\Memcached::class)
+            ->setMethods(array('isAvailable', 'getMemcachedInstance', 'getCacheKey', 'getSetting'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('getSetting')->with($this->equalTo(Driver\Memcached::SETTINGS_TTL_IN_SECOND))->willReturn(20);
+        $cache->method('getMemcachedInstance')->willReturn($memcached);
+        $cache->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
+        /** @var $cache Driver\Memcached */
+        $this->assertSame($cache, $cache->set('testKey', 'testValue'));
+    }
+
+    public function testSetFailsWhenCannotSet()
+    {
+        $memcached = $this->getMockBuilder(\Memcached::class)
+            ->setMethods(array('set', 'getResultMessage', 'getResultCode'))
+            ->getMock();
+        $memcached->method('set')
+            ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
+            ->willReturn(false);
+        $memcached->method('getResultCode')->willReturn(50);
+        $memcached->method('getResultMessage')->willReturn('Failed');
+
+        $cache = $this->getMockBuilder(Driver\Memcached::class)
+            ->setMethods(array('isAvailable', 'getMemcachedInstance', 'getCacheKey', 'getSetting'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('getSetting')->with($this->equalTo(Driver\Memcached::SETTINGS_TTL_IN_SECOND))->willReturn(20);
+        $cache->method('getMemcachedInstance')->willReturn($memcached);
+        $cache->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
+
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionCode(50);
+        $this->expectExceptionMessage('Error while inserting value in memcached : Failed');
+        /** @var $cache Driver\Memcached */
+        $cache->set('testKey', 'testValue');
+    }
 }

@@ -17,7 +17,9 @@ class IdFromObject extends \PHPUnit_Framework_TestCase
     public function testFormatSuccess()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\IdFromObject();
-        $obj = $this->getMock(\FMUP\Import\Config\Field\Formatter\Interfaces\ObjectWithId::class, array('getId'));
+        $obj = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\Interfaces\ObjectWithId::class)
+            ->setMethods(array('getId'))
+            ->getMock();
         $obj->method('getId')->willReturn(1);
         $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
         $this->assertFalse($formatter->hasError());

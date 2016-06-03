@@ -18,9 +18,9 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetDriverWhenFail()
     {
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
         $logger->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger\Channel\System::NAME));
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo\Sqlite::class, array('getDsn', 'getPdo'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo\Sqlite::class)->setMethods(array('getDsn', 'getPdo'))->getMock();
         $pdo->method('getDsn')->willReturn('mysql:host=127.0.0.1');
         $pdo->method('getPdo')->willThrowException(new \PDOException());
         /** @var \FMUP\Logger $logger */
@@ -32,8 +32,11 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDriver()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdoSqlite::class);
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo\Sqlite::class, array('getPdo'), array(array('host' => 'localhost')));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoSqlite::class)->getMock();
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo\Sqlite::class)
+            ->setMethods(array('getPdo'))
+            ->setConstructorArgs(array(array('host' => 'localhost')))
+            ->getMock();
         $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock)
             ->with($this->equalTo('sqlite:localhost' . DIRECTORY_SEPARATOR . 'pdo_sqlite.sqlite'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */

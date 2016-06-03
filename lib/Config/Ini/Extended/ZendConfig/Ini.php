@@ -19,14 +19,14 @@ use FMUP\Config\Ini\Extended\ZendConfig;
 class Ini extends ZendConfig
 {
     /**
-     * String that separates nesting levels of configuration data identifiers
+     * StringHandle that separates nesting levels of configuration data identifiers
      *
      * @var string
      */
     protected $nestSeparator = '.';
 
     /**
-     * String that separates the parent section name
+     * StringHandle that separates the parent section name
      *
      * @var string
      */

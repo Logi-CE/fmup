@@ -11,7 +11,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
 {
     public function testHas()
     {
-        $requestCli = $this->getMock(\FMUP\Request\Cli::class, array('getOpt'));
+        $requestCli = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getOpt'))->getMock();
         $requestCli->method('getOpt')
             ->will(
                 $this->onConsecutiveCalls(
@@ -28,7 +28,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $requestCli = $this->getMock(\FMUP\Request\Cli::class, array('getOpt'));
+        $requestCli = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getOpt'))->getMock();
         $requestCli->method('getOpt')
             ->will(
                 $this->onConsecutiveCalls(
@@ -45,7 +45,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
 
     public function testDefineOptAndGet()
     {
-        $requestCli = $this->getMock(\FMUP\Request\Cli::class, array('phpGetOpt'));
+        $requestCli = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('phpGetOpt'))->getMock();
         $requestCli->expects($this->exactly(1))
             ->method('phpGetOpt')
             ->with($this->equalTo('helo'), $this->equalTo(array('test:', 'route:')));
@@ -69,7 +69,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestUri()
     {
-        $requestCli = $this->getMock(\FMUP\Request\Cli::class, array('get'));
+        $requestCli = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('get'))->getMock();
         $requestCli->method('get')->will($this->onConsecutiveCalls('my/route', 'another/route'));
         /** @var $requestCli \FMUP\Request\Cli */
         $this->assertSame('my/route', $requestCli->getRequestUri());

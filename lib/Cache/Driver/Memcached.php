@@ -57,9 +57,18 @@ class Memcached implements CacheInterface
             if (!$this->isAvailable()) {
                 throw new Exception('Memcached is not available');
             }
-            $this->memcachedInstance = new \Memcached();
+            $this->memcachedInstance = $this->createMemcached();
         }
         return $this->memcachedInstance;
+    }
+
+    /**
+     * @return \Memcached
+     * @codeCoverageIgnore
+     */
+    protected function createMemcached()
+    {
+        return new \Memcached();
     }
 
     /**
@@ -77,7 +86,7 @@ class Memcached implements CacheInterface
      * @param string $key
      * @return string
      */
-    private function getCacheKey($key)
+    protected function getCacheKey($key)
     {
         $prefix = (string)$this->getSetting(self::SETTINGS_CACHE_PREFIX);
         return $prefix . $key;

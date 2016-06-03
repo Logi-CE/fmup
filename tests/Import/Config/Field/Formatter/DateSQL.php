@@ -11,7 +11,9 @@ class DateSQLTest extends \PHPUnit_Framework_TestCase
 {
     public function testFormat()
     {
-        $formatter = $this->getMock(\FMUP\Import\Config\Field\Formatter\DateSQL::class, array('toDate'));
+        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\DateSQL::class)
+            ->setMethods(array('toDate'))
+            ->getMock();
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\DateSQL */
         $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
         $this->assertFalse($formatter->hasError());
@@ -19,7 +21,9 @@ class DateSQLTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($formatter->hasError());
         $this->assertSame("La valeur  n'est pas convertible", $formatter->getErrorMessage());
 
-        $formatter2 = $this->getMock(\FMUP\Import\Config\Field\Formatter\DateSQL::class, array('toDate'));
+        $formatter2 = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\DateSQL::class)
+            ->setMethods(array('toDate'))
+            ->getMock();
         $formatter2->method('toDate')->willReturnOnConsecutiveCalls('2010-10-10 10:10:10', false)->with($this->equalTo('test'));
         /** @var $formatter2 \FMUP\Import\Config\Field\Formatter\DateSQL */
         $this->assertFalse($formatter2->hasError());

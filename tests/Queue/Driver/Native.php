@@ -18,8 +18,11 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 {
     public function testConnect()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('17'));
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('17'))
+            ->getMock();
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)->setMethods(array('msgGetQueue'))->getMock();
         $native->expects($this->once())->method('msgGetQueue')->with($this->equalTo(17))->willReturn('resource');
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
@@ -29,10 +32,15 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectNonNumericName()
     {
-        $environment = $this->getMock(EnvironmentMockQueueDriverNative::class, array('get'));
+        $environment = $this->getMockBuilder(EnvironmentMockQueueDriverNative::class)->setMethods(array('get'))->getMock();
         $environment->method('get')->willReturn('unitTest');
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('hello'));
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue', 'hasEnvironment', 'getEnvironment'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('hello'))
+            ->getMock();
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgGetQueue', 'hasEnvironment', 'getEnvironment'))
+            ->getMock();
         $native->expects($this->once())->method('msgGetQueue')->with($this->equalTo(1301396))->willReturn('resource');
         $native->method('getEnvironment')->willReturn($environment);
         $native->method('hasEnvironment')->willReturn(true);
@@ -44,8 +52,13 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectFailsDueToChannelNameZero()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('0'));
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('0'))
+            ->getMock();
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgGetQueue'))
+            ->getMock();
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
         $this->expectException(\FMUP\Queue\Exception::class);
@@ -55,8 +68,13 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testExists()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('17'));
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgQueueExists'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('17'))
+            ->getMock();
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgQueueExists'))
+            ->getMock();
         $native->expects($this->once())->method('msgQueueExists')->with($this->equalTo(17))->willReturn(true);
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
@@ -65,8 +83,13 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testPullFailWhenMessageTypeNotValid()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, null, array('17'));
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array('17'))
+            ->getMock();
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgGetQueue'))
+            ->getMock();
         $native->expects($this->once())->method('msgGetQueue')->with($this->equalTo(17))->willReturn('resource');
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
@@ -80,9 +103,14 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $settings = new \FMUP\Queue\Channel\Settings\Native();
         $settings->setMaxMessageSize(0);
         $settings->setBlockReceive(true);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('getSettings'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('getSettings'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('getSettings')->willReturn($settings);
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue', 'getConfiguration', 'msgReceive'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgGetQueue', 'getConfiguration', 'msgReceive'))
+            ->getMock();
         $native->expects($this->once())->method('msgGetQueue')->with($this->equalTo(17))->willReturn('resource');
         $native->expects($this->once())->method('msgReceive')->willReturn(false);
         $native->method('getConfiguration')->willReturn(array(
@@ -100,9 +128,14 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $settings = new \FMUP\Queue\Channel\Settings\Native();
         $settings->setMaxMessageSize(0);
         $settings->setBlockReceive(false);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('getSettings'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('getSettings'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('getSettings')->willReturn($settings);
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgGetQueue', 'getConfiguration', 'msgReceive'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('msgGetQueue', 'getConfiguration', 'msgReceive'))
+            ->getMock();
         $native->expects($this->once())->method('msgGetQueue')->with($this->equalTo(17))->willReturn('resource');
         $native->expects($this->once())->method('msgReceive')->will(
             $this->returnCallback(function ($resource, $messageType, $receivedMessageType, $messageSize, &$message) {
@@ -124,10 +157,13 @@ class NativeTest extends \PHPUnit_Framework_TestCase
     public function testSetConfiguration()
     {
         $settings = new \FMUP\Queue\Channel\Settings\Native();
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('getSettings', 'getResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('getSettings', 'getResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('getSettings')->willReturn($settings);
         $channel->method('getResource')->willReturn('resource');
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('msgSetQueue'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)->setMethods(array('msgSetQueue'))->getMock();
         $native->expects($this->once())->method('msgSetQueue')->willReturn(true)
             ->with(
                 $this->equalTo('resource'),
@@ -140,10 +176,15 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetStats()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(false);
         $channel->method('getResource')->willReturn('resource');
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('connect', 'getConfiguration'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('connect', 'getConfiguration'))
+            ->getMock();
         $native->expects($this->once())->method('getConfiguration')->willReturn(array('stats' => 1));
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
@@ -152,9 +193,14 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testAckMessage()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $message = new \FMUP\Queue\Message();
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('connect', 'getConfiguration'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('connect', 'getConfiguration'))
+            ->getMock();
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
         $this->assertSame($native, $native->ackMessage($channel, $message));
@@ -162,12 +208,17 @@ class NativeTest extends \PHPUnit_Framework_TestCase
 
     public function testDestroy()
     {
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'setResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'setResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('hasResource')->willReturnOnConsecutiveCalls(false, true, true);
         $channel->method('getResource')->willReturn('resource');
         $channel->expects($this->once())->method('setResource');
 
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('connect', 'getConfiguration', 'msgRemoveQueue'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)
+            ->setMethods(array('connect', 'getConfiguration', 'msgRemoveQueue'))
+            ->getMock();
         $native->expects($this->exactly(2))->method('msgRemoveQueue')->willReturnOnConsecutiveCalls(false, true);
         /** @var $native \FMUP\Queue\Driver\Native */
         /** @var $channel \FMUP\Queue\Channel */
@@ -182,12 +233,15 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $settings->setMaxSendRetryTime(5);
         $settings->setSerialize(true);
         $settings->setBlockSend(false);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'setResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'setResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(false);
         $channel->method('getResource')->willReturn('resource');
 
         $index = 0;
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('connect', 'msgSend'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)->setMethods(array('connect', 'msgSend'))->getMock();
         $native->expects($this->exactly(3))->method('msgSend')->with(
             $this->equalTo('resource'),
             $this->equalTo(1),
@@ -211,12 +265,15 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $settings->setMaxSendRetryTime(5);
         $settings->setSerialize(true);
         $settings->setBlockSend(false);
-        $channel = $this->getMock(\FMUP\Queue\Channel::class, array('hasResource', 'getResource', 'setResource'), array('17'));
+        $channel = $this->getMockBuilder(\FMUP\Queue\Channel::class)
+            ->setMethods(array('hasResource', 'getResource', 'setResource'))
+            ->setConstructorArgs(array('17'))
+            ->getMock();
         $channel->method('hasResource')->willReturn(false);
         $channel->method('getResource')->willReturn('resource');
 
         $index = 0;
-        $native = $this->getMock(\FMUP\Queue\Driver\Native::class, array('connect', 'msgSend'));
+        $native = $this->getMockBuilder(\FMUP\Queue\Driver\Native::class)->setMethods(array('connect', 'msgSend'))->getMock();
         $native->expects($this->exactly(5))->method('msgSend')->with(
             $this->equalTo('resource'),
             $this->equalTo(1),

@@ -11,9 +11,15 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testAddClearGet()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $plugin1 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
-        $plugin2 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
-        $plugin3 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $plugin1 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
+        $plugin2 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
+        $plugin3 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         /**
          * @var $plugin1 \FMUP\ErrorHandler\Plugin\Abstraction
          * @var $plugin2 \FMUP\ErrorHandler\Plugin\Abstraction
@@ -42,7 +48,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetResponse()
     {
-        $response = $this->getMock(\FMUP\Response::class);
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $response \FMUP\Response */
         $this->assertSame($errorHandler, $errorHandler->setResponse($response));
@@ -59,7 +65,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetRequest()
     {
-        $request = $this->getMock(\FMUP\Request::class);
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $request \FMUP\Request */
         $this->assertSame($errorHandler, $errorHandler->setRequest($request));
@@ -76,7 +82,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetBootstrap()
     {
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class);
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $bootstrap \FMUP\Bootstrap */
         $this->assertSame($errorHandler, $errorHandler->setBootstrap($bootstrap));
@@ -92,22 +98,28 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class);
-        $request = $this->getMock(\FMUP\Request::class);
-        $response = $this->getMock(\FMUP\Response::class);
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
         /**
          * @var $response \FMUP\Response
          * @var $request \FMUP\Request
          * @var $bootstrap \FMUP\Bootstrap
          */
         $errorHandler = new \FMUP\ErrorHandler;
-        $plugin1 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $plugin1 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         $plugin1->method('canHandle')->willReturn(true);
         $plugin1->expects($this->exactly(1))->method('handle');
-        $plugin2 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $plugin2 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         $plugin2->method('canHandle')->willReturn(false);
         $plugin2->expects($this->exactly(0))->method('handle');
-        $plugin3 = $this->getMock(\FMUP\ErrorHandler\Plugin\Abstraction::class, array('handle', 'canHandle'));
+        $plugin3 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+            ->setMethods(array('handle', 'canHandle'))
+            ->getMock();
         $plugin3->method('canHandle')->willReturn(true);
         $plugin3->expects($this->exactly(1))->method('handle');
 

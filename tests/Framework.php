@@ -37,7 +37,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetBootstrap()
     {
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class);
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
         /** @var $bootstrap \FMUP\Bootstrap */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\Bootstrap::class, $framework->getBootstrap());
@@ -48,7 +48,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetPostDispatcherSystem()
     {
-        $postDispatcher = $this->getMock(\FMUP\Dispatcher::class);
+        $postDispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)->getMock();
         /** @var $postDispatcher \FMUP\Dispatcher */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\Dispatcher::class, $framework->getPostDispatcherSystem());
@@ -61,7 +61,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetPreDispatcherSystem()
     {
-        $postDispatcher = $this->getMock(\FMUP\Dispatcher::class);
+        $postDispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)->getMock();
         /** @var $postDispatcher \FMUP\Dispatcher */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\Dispatcher::class, $framework->getPreDispatcherSystem());
@@ -72,7 +72,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetErrorHandler()
     {
-        $errorHandler = $this->getMock(\FMUP\ErrorHandler::class);
+        $errorHandler = $this->getMockBuilder(\FMUP\ErrorHandler::class)->getMock();
         /** @var $errorHandler \FMUP\ErrorHandler */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\ErrorHandler::class, $framework->getErrorHandler());
@@ -84,7 +84,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetResponse()
     {
-        $response = $this->getMock(\FMUP\Response::class);
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
         /** @var $response \FMUP\Response */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\Response::class, $framework->getResponse());
@@ -95,7 +95,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetRoutingSystem()
     {
-        $routing = $this->getMock(\FMUP\Routing::class);
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->getMock();
         /** @var $routing \FMUP\Routing */
         $framework = new \FMUP\Framework();
         $this->assertInstanceOf(\FMUP\Routing::class, $framework->getRoutingSystem());
@@ -106,7 +106,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestCli()
     {
-        $sapi = $this->getMock(SapiMockFramework::class, array('getRaw'));
+        $sapi = $this->getMockBuilder(SapiMockFramework::class)->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMockFramework::CLI);
 
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
@@ -124,8 +124,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestHttp()
     {
-        $sapi = $this->getMock(SapiMockFramework::class, array('getRaw'));
-        $requestCli = $this->getMock(\FMUP\Request\Cli::class);
+        $sapi = $this->getMockBuilder(SapiMockFramework::class)->setMethods(array('getRaw'))->getMock();
+        $requestCli = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
         $sapi->method('getRaw')->willReturn(SapiMockFramework::CGI);
 
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
@@ -155,9 +155,13 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInitializeWithoutConfiguration()
     {
-        $framework = $this->getMock(\FMUP\Framework::class, array('dispatch', 'registerErrorHandler'));
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(array('dispatch', 'registerErrorHandler'))
+            ->getMock();
         /** @var $framework \FMUP\Framework */
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig'))
+            ->getMock();
         $bootstrap->method('hasSapi')->willReturn(true);
         $bootstrap->expects($this->never())->method('setSapi');
         $bootstrap->method('hasRequest')->willReturn(true);
@@ -171,9 +175,11 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInitializeWithinConfiguration()
     {
-        $framework = $this->getMock(\FMUP\Framework::class, array('dispatch'));
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)->setMethods(array('dispatch'))->getMock();
         /** @var $framework \FMUP\Framework */
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig'))
+            ->getMock();
         $bootstrap->method('hasSapi')->willReturn(false);
         $bootstrap->expects($this->exactly(1))->method('setSapi')->with($framework->getSapi());
         $bootstrap->method('hasRequest')->willReturn(false);
@@ -187,24 +193,23 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testShutDownWhenNoError()
     {
-        $sapi = $this->getMock(SapiMockFramework::class, array('getRaw'));
+        $sapi = $this->getMockBuilder(SapiMockFramework::class)->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMockFramework::CGI);
 
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
 
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getLogger', 'hasLogger'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getLogger', 'hasLogger'))->getMock();
         $bootstrap->method('getLogger')->willReturn($logger);
         $bootstrap->method('hasLogger')->willReturn(true);
-        $fakeHeader = $this->getMock(\FMUP\Response\Header::class, array('getType', 'render'));
+        $fakeHeader = $this->getMockBuilder(\FMUP\Response\Header::class)->setMethods(array('getType', 'render'))->getMock();
         $fakeHeader->expects($this->exactly(0))->method('render');
         /** @var \FMUP\Response\Header $fakeHeader */
-        $framework = $this->getMock(
-            \FMUP\Framework::class,
-            array('isDebug', 'errorGetLast', 'errorHandler', 'getErrorHeader', 'getLogger')
-        );
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(array('isDebug', 'errorGetLast', 'errorHandler', 'getErrorHeader', 'getLogger'))
+            ->getMock();
         $framework->method('errorGetLast');
         $framework->expects($this->exactly(0))->method('errorHandler');
         $framework->expects($this->exactly(0))->method('getErrorHeader')->willReturn($fakeHeader);
@@ -217,24 +222,27 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testShutDownWhenErrorOccurs()
     {
-        $sapi = $this->getMock(SapiMockFramework::class, array('getRaw'));
+        $sapi = $this->getMockBuilder(SapiMockFramework::class)->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMockFramework::CGI);
 
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
 
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getLogger', 'hasLogger'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getLogger', 'hasLogger'))->getMock();
         $bootstrap->method('getLogger')->willReturn($logger);
         $bootstrap->method('hasLogger')->willReturn(true);
-        $fakeHeader = $this->getMock(\FMUP\Response\Header::class, array('getType', 'render'));
+        $fakeHeader = $this->getMockBuilder(\FMUP\Response\Header::class)->setMethods(array('getType', 'render'))->getMock();
         $fakeHeader->expects($this->exactly(1))->method('render');
         /** @var \FMUP\Response\Header $fakeHeader */
-        $framework = $this->getMock(
-            \FMUP\Framework::class,
-            array('errorHandler', 'isDebug', 'errorGetLast', 'getErrorHeader', 'getLogger', 'getSapi', 'getBootstrap', 'registerErrorHandler')
-        );
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(
+                array('errorHandler', 'isDebug', 'errorGetLast', 'getErrorHeader', 'getLogger', 'getSapi',
+                    'getBootstrap', 'registerErrorHandler'
+                )
+            )
+            ->getMock();
         $framework->method('isDebug')->willReturn(false);
         $framework->expects($this->exactly(1))->method('errorHandler');
         $framework->expects($this->exactly(1))->method('getErrorHeader')->willReturn($fakeHeader);
@@ -256,18 +264,19 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWhenNoRouteExists()
     {
-        $framework = $this->getMock(\FMUP\Framework::class, array('registerErrorHandler', 'registerShutdownFunction'));
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(array('registerErrorHandler', 'registerShutdownFunction'))
+            ->getMock();
         /** @var $framework \FMUP\Framework */
-        $errorHandler = $this->getMock(\FMUP\ErrorHandler::class, null);
+        $errorHandler = $this->getMockBuilder(\FMUP\ErrorHandler::class)->setMethods(null)->getMock();
         /** @var $errorHandler \FMUP\ErrorHandler */
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('get'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('get'))->getMock();
         $request->method('get')->willReturn('route/index');
         /** @var $request \FMUP\Request\Cli */
         $framework->setRequest($request);
-        $bootstrap = $this->getMock(
-            \FMUP\Bootstrap::class,
-            array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig')
-        );
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig'))
+            ->getMock();
         $bootstrap->method('hasSapi')->willReturn(false);
         $bootstrap->expects($this->exactly(1))->method('setSapi')->with($framework->getSapi());
         $bootstrap->method('hasRequest')->willReturn(false);
@@ -282,14 +291,13 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWhenRelocate()
     {
-        $framework = $this->getMock(
-            \FMUP\Framework::class,
-            array('registerErrorHandler', 'registerShutdownFunction', 'preDispatch')
-        );
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(array('registerErrorHandler', 'registerShutdownFunction', 'preDispatch'))
+            ->getMock();
         $framework->method('preDispatch')->willThrowException(new Location('/route/route'));
-        $errorHandler = $this->getMock(\FMUP\ErrorHandler::class, null);
-        $postDispatch = $this->getMock(\FMUP\Dispatcher::class, null);
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('get'));
+        $errorHandler = $this->getMockBuilder(\FMUP\ErrorHandler::class)->setMethods(null)->getMock();
+        $postDispatch = $this->getMockBuilder(\FMUP\Dispatcher::class)->setMethods(null)->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('get'))->getMock();
         $request->method('get')->willReturn('/route/index');
 
         /**
@@ -298,10 +306,10 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
          * @var $request \FMUP\Request\Cli
          */
         $framework->setRequest($request);
-        $bootstrap = $this->getMock(
-            \FMUP\Bootstrap::class,
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(
             array('setSapi', 'setRequest', 'setConfig', 'warmUp', 'hasSapi', 'hasRequest', 'hasConfig')
-        );
+        )
+        ->getMock();
         $bootstrap->method('hasSapi')->willReturn(false);
         $bootstrap->expects($this->exactly(1))->method('setSapi')->with($framework->getSapi());
         $bootstrap->method('hasRequest')->willReturn(false);
@@ -311,6 +319,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $bootstrap->expects($this->exactly(1))->method('warmUp');
 
         /** @var $bootstrap \FMUP\Bootstrap */
+        /** @var $postDispatch \FMUP\Dispatcher */
         $framework->setErrorHandler($errorHandler)
             ->setPostDispatcherSystem($postDispatch)
             ->setBootstrap($bootstrap)
@@ -327,10 +336,12 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRouteWhenRouteExists()
     {
-        $routeMock = $this->getMock(\FMUP\Routing\Route::class, array('getControllerName', 'getAction', 'canHandle'));
+        $routeMock = $this->getMockBuilder(\FMUP\Routing\Route::class)
+            ->setMethods(array('getControllerName', 'getAction', 'canHandle'))
+            ->getMock();
         $routeMock->method('getControllerName')->willReturn('RouteController');
         $routeMock->method('getAction')->willReturn('RouteAction');
-        $routingSystem = $this->getMock(\FMUP\Routing::class, array('dispatch'));
+        $routingSystem = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(array('dispatch'))->getMock();
         $routingSystem->method('dispatch')->willReturn($routeMock);
         /** @var $routingSystem \FMUP\Routing */
         $this->assertEquals(
@@ -341,7 +352,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorHandler()
     {
-        $logger = $this->getMock(\FMUP\Logger::class, array('log'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
         $logger->expects($this->at(0))
             ->method('log')
             ->with(
@@ -358,12 +369,14 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo('test 2 in file on line 12'),
                 $this->equalTo(array('test' => 'test'))
             );
-        $pluginMailMock = $this->getMock(\FMUP\ErrorHandler\Plugin\Mail::class, array('handle'));
+        $pluginMailMock = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Mail::class)->setMethods(array('handle'))->getMock();
         $pluginMailMock->expects($this->exactly(1))->method('handle');
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getLogger'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getLogger'))->getMock();
         $bootstrap->method('getLogger')->willReturn($logger);
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $framework = $this->getMock(\FMUP\Framework::class, array('getBootstrap', 'getRequest', 'createPluginMail'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)
+            ->setMethods(array('getBootstrap', 'getRequest', 'createPluginMail'))
+            ->getMock();
         $framework->method('getBootstrap')->willReturn($bootstrap);
         $framework->method('getRequest')->willReturn($request);
         $framework->method('createPluginMail')->willReturn($pluginMailMock);
@@ -374,8 +387,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateWhenClassDontExist()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $framework = $this->getMock(\FMUP\Framework::class, array('getRequest'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)->setMethods(array('getRequest'))->getMock();
         $framework->method('getRequest')->willReturn($request);
         $this->expectException(\FMUP\Exception\Status\NotFound::class);
         $this->expectExceptionMessage('Controller does not exist');
@@ -386,8 +399,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateWhenClassExistButAction()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $framework = $this->getMock(\FMUP\Framework::class, array('getRequest'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)->setMethods(array('getRequest'))->getMock();
         $framework->method('getRequest')->willReturn($request);
         $this->expectException(\FMUP\Exception\Status\NotFound::class);
         $this->expectExceptionMessage('Undefined function actionNameAction');
@@ -398,8 +411,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateWithoutActionReturn()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $framework = $this->getMock(\FMUP\Framework::class, array('getRequest'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)->setMethods(array('getRequest'))->getMock();
         $framework->method('getRequest')->willReturn($request);
         $this->expectOutputString('expected output!!');
         $reflection = new \ReflectionMethod(\FMUP\Framework::class, 'instantiate');
@@ -409,8 +422,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateWithinActionReturn()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $framework = $this->getMock(\FMUP\Framework::class, array('getRequest'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $framework = $this->getMockBuilder(\FMUP\Framework::class)->setMethods(array('getRequest'))->getMock();
         $framework->method('getRequest')->willReturn($request);
         /** @var $framework \FMUP\Framework */
         $reflection = new \ReflectionMethod(\FMUP\Framework::class, 'instantiate');

@@ -24,7 +24,10 @@ class RequiredTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetHasConfig()
     {
-        $config = $this->getMock(\FMUP\Config\ConfigInterface::class, array('get', 'set', 'mergeConfig', 'has'));
+        $config = $this->getMockBuilder(\FMUP\Config\ConfigInterface::class)
+            ->setMethods(array('get', 'set', 'mergeConfig', 'has'))
+            ->getMock();
+        /** @var $config \FMUP\Config\ConfigInterface */
         $mock = new RequiredTraitMock;
         $this->assertFalse($mock->hasConfig());
         $this->assertSame($mock, $mock->setConfig($config));

@@ -11,8 +11,11 @@ class ImportTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructAndParse()
     {
-        $config = $this->getMock(\FMUP\Import\Config::class);
-        $import = $this->getMock(\FMUP\Import::class, array('parse'), array(__FILE__, $config));
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->getMock();
+        $import = $this->getMockBuilder(\FMUP\Import::class)
+            ->setMethods(array('parse'))
+            ->setConstructorArgs(array(__FILE__, $config))
+            ->getMock();
         /**
          * @var $config \FMUP\Import\Config
          * @var $import \FMUP\Import

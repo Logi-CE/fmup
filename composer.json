@@ -2,11 +2,11 @@
     "name":"castelis/fmup",
     "version":"6.8.1",
     "require": {
-        "php": "^5.4",
+        "php": "^5.4 || ^7.0",
         "ext-json": "^1.2",
-        "ext-pcre": "0.0.0.*",
-        "ext-mbstring": "0.0.0.*",
-        "ext-spl": "0.2.*",
+        "ext-pcre": "0.0.0.* || ^7.0",
+        "ext-mbstring": "0.0.0.* || ^7.0",
+        "ext-spl": "0.2.* || ^7.0",
         "monolog/monolog": "^1.13",
         "phpmailer/phpmailer":"^5.2",
         "php-amqplib/php-amqplib": "^2.5"

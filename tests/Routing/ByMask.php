@@ -28,9 +28,9 @@ class ByMaskTest extends \PHPUnit_Framework_TestCase
 {
     public function testDispatchWithoutMask()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/');
-        $byMask = $this->getMock(\FMUP\Routing\ByMask::class, array('getMasks', 'addRoute'));
+        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->method('getMasks')->willReturn(array());
         $byMask->expects($this->never())->method('addRoute');
         /**
@@ -43,9 +43,9 @@ class ByMaskTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithoutMatchingMask()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/not/matching');
-        $byMask = $this->getMock(\FMUP\Routing\ByMask::class, array('getMasks', 'addRoute'));
+        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->never())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(
@@ -63,9 +63,9 @@ class ByMaskTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithNonValidMatchingMask()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/not/matching');
-        $byMask = $this->getMock(\FMUP\Routing\ByMask::class, array('getMasks', 'addRoute'));
+        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->never())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(
@@ -83,9 +83,9 @@ class ByMaskTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithValidMatchingMask()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class, array('getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/will/match');
-        $byMask = $this->getMock(\FMUP\Routing\ByMask::class, array('getMasks', 'addRoute'));
+        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->once())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(

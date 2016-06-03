@@ -12,7 +12,9 @@ class HttpHeaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanHandle()
     {
-        $httpHeader = $this->getMock(\FMUP\ErrorHandler\Plugin\HttpHeader::class, array('getException'));
+        $httpHeader = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\HttpHeader::class)
+            ->setMethods(array('getException'))
+            ->getMock();
         $httpHeader->expects($this->exactly(2))
             ->method('getException')
             ->will($this->onConsecutiveCalls(new \Exception, new \FMUP\Exception\Status\Unauthorized()));
@@ -23,11 +25,13 @@ class HttpHeaderTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $response = $this->getMock(\FMUP\Response::class, array('setHeader'));
+        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(array('setHeader'))->getMock();
         $response->expects($this->exactly(1))
             ->method('setHeader')
             ->with($this->equalTo(new Status(Status::VALUE_INTERNAL_SERVER_ERROR)));
-        $httpHeader = $this->getMock(\FMUP\ErrorHandler\Plugin\HttpHeader::class, null);
+        $httpHeader = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\HttpHeader::class)
+            ->setMethods(null)
+            ->getMock();
         /**
          * @var $httpHeader \FMUP\ErrorHandler\Plugin\HttpHeader
          * @var $response \FMUP\Response

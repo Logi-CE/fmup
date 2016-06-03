@@ -25,7 +25,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\FMUP\Logger\Factory::class, $factory);
 
         $logger2 = new \FMUP\Logger();
-        $factoryMock = $this->getMock(\Tests\Logger\FactoryMockLogger::class);
+        $factoryMock = $this->getMockBuilder(\Tests\Logger\FactoryMockLogger::class)->getMock();
 
         $reflection = new \ReflectionProperty(\FMUP\Logger\Factory::class, 'instance');
         $reflection->setAccessible(true);
@@ -38,14 +38,15 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestWhenNotSet()
     {
-        $this->setExpectedException(\LogicException::class, 'Request is not defined');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Request is not defined');
         (new \FMUP\Logger)->getRequest();
     }
 
     public function testSetGetRequest()
     {
         $logger = new \FMUP\Logger;
-        $request = $this->getMock(\FMUP\Request::class, array('get', 'set', 'has', 'getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request::class)->setMethods(array('get', 'set', 'has', 'getRequestUri'))->getMock();
         /** @var $request \FMUP\Request */
         $logger->setRequest($request);
         $this->assertSame($request, $logger->getRequest());
@@ -65,7 +66,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $loggerChannel2 = $logger->get('standard');
         $this->assertSame($loggerChannel, $loggerChannel2);
 
-        $fakeChannel = $this->getMock(\FMUP\Logger\Channel::class, array('getName', 'configure'));
+        $fakeChannel = $this->getMockBuilder(\FMUP\Logger\Channel::class)->setMethods(array('getName', 'configure'))->getMock();
         /** @var $fakeChannel \FMUP\Logger\Channel */
         $logger->set($fakeChannel, 'fakeChannel');
         $this->assertSame($fakeChannel, $logger->get('fakeChannel'));
@@ -73,8 +74,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testLog()
     {
-        $fakeChannel = $this->getMock(\FMUP\Logger\Channel::class, array('addRecord', 'getName', 'configure'));
-        $fakeChannel2 = $this->getMock(\FMUP\Logger\Channel::class, array('addRecord', 'getName', 'configure'));
+        $fakeChannel = $this->getMockBuilder(\FMUP\Logger\Channel::class)->setMethods(array('addRecord', 'getName', 'configure'))->getMock();
+        $fakeChannel2 = $this->getMockBuilder(\FMUP\Logger\Channel::class)->setMethods(array('addRecord', 'getName', 'configure'))->getMock();
         $fakeChannel2->method('getName')->willReturn(\FMUP\Logger\Channel\Standard::NAME);
         $fakeChannel->expects($this->at(1))
             ->method('addRecord')

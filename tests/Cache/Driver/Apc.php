@@ -3,10 +3,6 @@ namespace Tests\Cache\Driver;
 
 use FMUP\Cache\Driver;
 
-/**
- * @todo check if this work
- * @todo must test settings (TTL)
- */
 class ApcTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
@@ -21,100 +17,109 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testSet()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('apcStore', 'apcAdd', 'apcFetch', 'isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)
+            ->setMethods(array('apcStore', 'apcAdd', 'apcFetch', 'isAvailable', 'getSetting', 'getCacheKey'))
+            ->getMock();
+        $cache->method('getSetting')
+            ->with($this->equalTo(Driver\Apc::SETTING_CACHE_TTL))
+            ->willReturnOnConsecutiveCalls(20, 20, 20, 20, 0);
         $cache->method('isAvailable')->willReturn(true);
-        $cache->method('apcStore')->willReturn(true);
-        $cache->method('apcFetch')->willReturn(true);
-        $cache->method('apcAdd')->willReturn(true);
+        $cache->method('apcStore')
+            ->withConsecutive(
+                array($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20)),
+                array($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20)),
+                array($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(0))
+            )
+            ->willReturnOnConsecutiveCalls(true, false, true);
+        $cache->expects($this->exactly(3))->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
+        $cache->expects($this->once())
+            ->method('apcAdd')
+            ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
+            ->willReturn(true);
         /** @var \FMUP\Cache\Driver\Apc $cache */
-        $test = array(
-            array('test', 'test'),
-            array('test', 'bob'),
-            array('bob', 'bob'),
-            array('bob', 'test'),
-            array('bob', 1),
-            array('bob', '1'),
-            array('1', '1'),
-            array('1', '2'),
-            array('1', new \stdClass()),
-            array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
-        );
-        foreach ($test as $case) {
-            $return = $cache->set($case[0], $case[1]);
-            $this->assertSame($cache, $return, 'Set settings must return its instance');
-        }
-        return $cache;
+        $this->assertSame($cache, $cache->set('testKey', 'testValue'));
+        $this->assertSame($cache, $cache->set('testKey', 'testValue'));
+        $this->assertSame($cache, $cache->set('testKey', 'testValue'));
     }
 
     public function testSetWhenApcStoreFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('apcStore', 'apcAdd', 'apcFetch', 'isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)
+            ->setMethods(array('apcStore', 'apcAdd', 'apcFetch', 'isAvailable'))
+            ->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcStore')->willReturn(false);
         $cache->method('apcFetch')->willReturn(true);
         $cache->method('apcAdd')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to set key into cache APC');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Unable to set key into cache APC');
         /** @var $cache Driver\Apc */
         $cache->set('bob', 'bob');
     }
 
     public function testHasWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->has('bob');
     }
 
     public function testGetWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->get('bob');
     }
 
     public function testSetWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->set('bob', 'bob');
     }
 
     public function testRemoveWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->remove('bob');
     }
 
     public function testClearWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->clear();
     }
 
     public function testInfoWhenApcNotAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'APC is not available');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('APC is not available');
         /** @var $cache Driver\Apc */
         $cache->info();
     }
 
     public function testHas()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcExists'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcExists'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcExists')
             ->will($this->onConsecutiveCalls(false, false, false, false, false, true, true, true, true, true));
@@ -140,29 +145,31 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveWhenCacheOpCodeFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcDeleteFile'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcDeleteFile'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcDeleteFile')->willReturn(false);
         /** @var Driver\Apc $cache */
         $cache->setSetting(Driver\Apc::SETTING_CACHE_TYPE, Driver\Apc::CACHE_TYPE_OP_CODE);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to delete key from cache APC');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Unable to delete key from cache APC');
         $cache->remove('unitTest');
     }
 
     public function testRemoveWhenCacheFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcDelete'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcDelete'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcDelete')->willReturn(false);
         /** @var Driver\Apc $cache */
         $cache->setSetting(Driver\Apc::SETTING_CACHE_TYPE, Driver\Apc::CACHE_TYPE_USER);
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to delete key from cache APC');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Unable to delete key from cache APC');
         $cache->remove('unitTest');
     }
 
     public function testRemoveWhenCacheOpCodeSucceedAndOpCacheByDefault()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcDeleteFile'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcDeleteFile'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->expects($this->atLeastOnce())->method('apcDeleteFile')->willReturn(true);
         /** @var Driver\Apc $cache */
@@ -171,7 +178,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveWhenCacheSucceed()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcDelete'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcDelete'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcDelete')->willReturn(true);
         /** @var Driver\Apc $cache */
@@ -181,14 +188,14 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAvailable()
     {
-        $cache = $this->getMock(Driver\Apc::class, null);
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(null)->getMock();
         /** @var $cache Driver\Apc */
         $this->assertTrue(is_bool($cache->isAvailable()));
     }
 
     public function testClearFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcClearCache'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcClearCache'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcClearCache')->willReturn(false);
         /** @var Driver\Apc $cache */
@@ -197,7 +204,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testClearSucceed()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcClearCache'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcClearCache'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcClearCache')->willReturn(true);
         /** @var Driver\Apc $cache */
@@ -206,7 +213,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testInfoSucceed()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcCacheInfo'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcCacheInfo'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcCacheInfo')->willReturn(array());
         /** @var Driver\Apc $cache */
@@ -215,7 +222,7 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testInfoFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcCacheInfo'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcCacheInfo'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcCacheInfo')->willReturn(false);
         /** @var Driver\Apc $cache */
@@ -224,19 +231,20 @@ class ApcTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFails()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcFetch'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcFetch'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcFetch')
             ->will($this->returnCallback(function ($key, &$success) { $success = $key && false; return false;}));
         $key = 'unitTest';
-        $this->setExpectedException(\FMUP\Cache\Exception::class, 'Unable to get ' . $key . ' from APC');
+        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->expectExceptionMessage('Unable to get ' . $key . ' from APC');
         /** @var Driver\Apc $cache */
         $cache->get($key);
     }
 
     public function testGetSucceed()
     {
-        $cache = $this->getMock(Driver\Apc::class, array('isAvailable', 'apcFetch'));
+        $cache = $this->getMockBuilder(Driver\Apc::class)->setMethods(array('isAvailable', 'apcFetch'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('apcFetch')->will($this->returnCallback(function ($key, &$success) { $success = true; return $key;}));
         $key = 'unitTest';

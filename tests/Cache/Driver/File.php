@@ -124,10 +124,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenUnableToCreateDirectory()
     {
-        $cache = $this->getMock(Driver\File::class, array('mkDir', 'fileExists'));
+        $cache = $this->getMockBuilder(Driver\File::class)->setMethods(array('mkDir', 'fileExists'))->getMock();
         $cache->method('mkDir')->willReturn(false);
         $cache->method('fileExists')->willReturn(false);
-        $this->setExpectedException(\FMUP\Cache\Exception::class);
+        $this->expectException(\FMUP\Cache\Exception::class);
         /** @var $cache Driver\File */
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, null)->set('test', 1);
     }

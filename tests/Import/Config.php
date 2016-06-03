@@ -14,7 +14,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddGetField()
     {
-        $field = $this->getMock(\FMUP\Import\Config\Field::class, array('getRequired', 'addValidator'), array(), '', false);
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getRequired', 'addValidator'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getRequired')->willReturnOnConsecutiveCalls(false, true);
         $field->expects($this->once())->method('addValidator')->with($this->equalTo(new \FMUP\Import\Config\Field\Validator\Required()));
         /** @var $field \FMUP\Import\Config\Field */
@@ -28,7 +31,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testAddGetConfigObjet()
     {
-        $configObject = $this->getMock(\FMUP\Import\Config\ConfigObjet::class, array(), array(), '', false);
+        $configObject = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         /** @var $configObject \FMUP\Import\Config\ConfigObjet */
         $config = new \FMUP\Import\Config();
         $this->assertSame($config, $config->addConfigObjet($configObject));
@@ -53,13 +58,21 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateLine()
     {
-        $yes = $this->getMock(\FMUP\Import\Config\Field::class, array('validateField'), array(), '', false);
+        $yes = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('validateField'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $yes->expects($this->once())->method('validateField')->willReturn(true);
-        $no = $this->getMock(\FMUP\Import\Config\Field::class, array('validateField', 'getName'), array(), '', false);
+        $no = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('validateField', 'getName'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $no->expects($this->once())->method('validateField')->willReturn(false);
         $no->expects($this->once())->method('getName')->willReturn('no');
         $fieldList = array($yes, $no);
-        $config = $this->getMock(\FMUP\Import\Config::class, array('getListeField', 'validateObjects'));
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+            ->setMethods(array('getListeField', 'validateObjects'))
+            ->getMock();
         $config->expects($this->exactly(2))->method('getListeField')->willReturnOnConsecutiveCalls(array(), $fieldList);
         $config->expects($this->once())->method('validateObjects');
         /** @var $config \FMUP\Import\Config */
@@ -73,34 +86,32 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $where = array(
             'champCible' => "champCible LIKE '%value%'",
         );
-        $mockModel = $this->getMock(\stdClass::class, array('setAttribute', 'findFirst'));
+        $mockModel = $this->getMockBuilder(\stdClass::class)->setMethods(array('setAttribute', 'findFirst'))->getMock();
         $mockModel->expects($this->exactly(6))->method('setAttribute')
             ->willReturn($mockModel)
             ->with($this->equalTo('champCible'), $this->equalTo('value'));
         $mockModel->method('findFirst')->with($this->equalTo($where))->willReturnOnConsecutiveCalls(false, true, false);
-        $field = $this->getMock(
-            \FMUP\Import\Config\Field::class,
-            array('getChampCible', 'getValue'),
-            array(),
-            '',
-            false
-        );
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getChampCible', 'getValue'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getChampCible')->willReturn('champCible');
         $field->method('getValue')->willReturn('value');
-        $configObj = $this->getMock(
-            \FMUP\Import\Config\ConfigObjet::class,
-            array(
-                'getNomObjet', 'getListeIndexChamp', 'setStatutInsertion', 'setStatutMaj', 'getPriorite'
-            ),
-            array(),
-            '',
-            false
-        );
+        $configObj = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+            ->setMethods(
+                array(
+                    'getNomObjet', 'getListeIndexChamp', 'setStatutInsertion', 'setStatutMaj', 'getPriorite'
+                )
+            )
+            ->disableOriginalConstructor()
+            ->getMock();
         $configObj->expects($this->exactly(2))->method('setStatutInsertion');
         $configObj->expects($this->once())->method('setStatutMaj');
         $configObj->method('getListeIndexChamp')->willReturn(array($field, $field));
         $configObj->method('getNomObjet')->willReturn(ModelMockImportConfig::class);
-        $config = $this->getMock(\FMUP\Import\Config::class, array('getListeConfigObjet', 'createNomObject', 'usort', 'getField'));
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+            ->setMethods(array('getListeConfigObjet', 'createNomObject', 'usort', 'getField'))
+            ->getMock();
         $config->method('getListeConfigObjet')->willReturn(array($configObj, $configObj, $configObj));
         $config->expects($this->exactly(3))
             ->method('createNomObject')
@@ -113,54 +124,50 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testInsertLine()
     {
-        $instanceFound = $this->getMock(\stdClass::class, array('getId'));
+        $instanceFound = $this->getMockBuilder(\stdClass::class)->setMethods(array('getId'))->getMock();
         $instanceFound->method('getId')->willReturn(2);
-        $mockModel = $this->getMock(\stdClass::class, array('setAttribute', 'findFirst', 'save'));
+        $mockModel = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(array('setAttribute', 'findFirst', 'save'))
+            ->getMock();
         $mockModel->method('setAttribute')->willReturn($mockModel);
         $mockModel->method('findFirst')->willReturnOnConsecutiveCalls(false, $instanceFound, false);
         $mockModel->method('save')->willReturn(true);
-        $field = $this->getMock(
-            \FMUP\Import\Config\Field::class,
-            array('getChampCible', 'getValue'),
-            array(),
-            '',
-            false
-        );
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getChampCible', 'getValue'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getChampCible')->willReturn('champCible');
         $field->method('getValue')->willReturn('value');
 
-        $field2 = $this->getMock(
-            \FMUP\Import\Config\Field::class,
-            array('getTableCible', 'getValue'),
-            array(),
-            '',
-            false
-        );
+        $field2 = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getTableCible', 'getValue'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field2->method('getTableCible')->willReturn(ModelMockImportConfig::class);
         $field2->method('getValue')->willReturn('value');
-        $configObj = $this->getMock(
-            \FMUP\Import\Config\ConfigObjet::class,
-            array(
-                'getNomObjet',
-                'getListeIndexChamp',
-                'setStatutInsertion',
-                'setStatutMaj',
-                'getPriorite',
-                'getIdNecessaire',
-                'getNomAttribut'
-            ),
-            array(),
-            '',
-            false
-        );
+        $configObj = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+            ->setMethods(
+                array(
+                    'getNomObjet',
+                    'getListeIndexChamp',
+                    'setStatutInsertion',
+                    'setStatutMaj',
+                    'getPriorite',
+                    'getIdNecessaire',
+                    'getNomAttribut'
+                )
+            )
+            ->disableOriginalConstructor()
+            ->getMock();
         $configObj->method('getListeIndexChamp')->willReturn(array($field, $field));
         $configObj->method('getNomObjet')->willReturn(ModelMockImportConfig::class);
         $configObj->method('getIdNecessaire')->willReturn(array(ModelMockImportConfig::class));
         $configObj->method('getNomAttribut')->willReturn(array(ModelMockImportConfig::class => 'nom'));
-        $config = $this->getMock(
-            \FMUP\Import\Config::class,
-            array('getListeConfigObjet', 'createNomObject', 'usort', 'getField', 'getListeField')
-        );
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+            ->setMethods(
+                array('getListeConfigObjet', 'createNomObject', 'usort', 'getField', 'getListeField')
+            )
+            ->getMock();
         $config->method('getListeConfigObjet')->willReturn(array($configObj, $configObj, $configObj));
         $config->method('getListeField')->willReturn(array($field2, $field2));
         $config->expects($this->exactly(3))
@@ -174,26 +181,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testInsertLineFailsOnSave()
     {
-        $instanceFound = $this->getMock(\stdClass::class, array('getId'));
+        $instanceFound = $this->getMockBuilder(\stdClass::class)->setMethods(array('getId'))->getMock();
         $instanceFound->method('getId')->willReturn(2);
-        $mockModel = $this->getMock(\stdClass::class, array('findFirst', 'save', 'getErrors'));
+        $mockModel = $this->getMockBuilder(\stdClass::class)->setMethods(array('findFirst', 'save', 'getErrors'))->getMock();
         $mockModel->method('findFirst')->willReturn(false);
         $mockModel->method('save')->willReturn(false);
         $mockModel->method('getErrors')->willReturn(array('error 1', 'error 2'));
-        $configObj = $this->getMock(
-            \FMUP\Import\Config\ConfigObjet::class,
-            array(
-                'getNomObjet',
-            ),
-            array(),
-            '',
-            false
-        );
+        $configObj = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+            ->setMethods(array('getNomObjet'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $configObj->method('getNomObjet')->willReturn(ModelMockImportConfig::class);
-        $config = $this->getMock(
-            \FMUP\Import\Config::class,
-            array('getListeConfigObjet', 'createNomObject', 'usort')
-        );
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+            ->setMethods(array('getListeConfigObjet', 'createNomObject', 'usort'))
+            ->getMock();
         $config->method('getListeConfigObjet')->willReturn(array($configObj));
         $config->expects($this->once())
             ->method('createNomObject')
@@ -207,16 +208,13 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $field = $this->getMock(
-            \FMUP\Import\Config\Field::class,
-            array('getName', 'getValue'),
-            array(),
-            '',
-            false
-        );
+        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+            ->setMethods(array('getName', 'getValue'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $field->method('getName')->willReturn('name');
         $field->method('getValue')->willReturn('value');
-        $config = $this->getMock(\FMUP\Import\Config::class, array('getListeField'));
+        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->setMethods(array('getListeField'))->getMock();
         $config->method('getListeField')->willReturn(array($field, $field));
         /** @var $config \FMUP\Import\Config */
         $this->assertSame("0 \tname \tvalue \t\n1 \tname \tvalue \t\n", (string)$config);
@@ -227,9 +225,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod(\FMUP\Import\Config::class, 'sortByPriority');
         $method->setAccessible(true);
         $config = new \FMUP\Import\Config;
-        $comparingA = $this->getMock(\stdClass::class, array('getPriorite'));
+        $comparingA = $this->getMockBuilder(\stdClass::class)->setMethods(array('getPriorite'))->getMock();
         $comparingA->method('getPriorite')->willReturnOnConsecutiveCalls(1, 2, 2, 3, 3);
-        $comparingB = $this->getMock(\stdClass::class, array('getPriorite'));
+        $comparingB = $this->getMockBuilder(\stdClass::class)->setMethods(array('getPriorite'))->getMock();
         $comparingB->method('getPriorite')->willReturnOnConsecutiveCalls(1, 3, 3, 2, 2);
         $this->assertSame(0, $method->invoke($config, $comparingA, $comparingB));
         $this->assertSame(-1, $method->invoke($config, $comparingA, $comparingB));

@@ -18,9 +18,11 @@ class OdbcTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultConfigurationAndGetDsn()
     {
-        $pdoMock = $this->getMock(PdoMockDbDriverPdoOdbc::class, array('setAttribute'));
+        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoOdbc::class)->setMethods(array('setAttribute'))->getMock();
         $pdoMock->method('setAttribute');
-        $pdo = $this->getMock(\FMUP\Db\Driver\Pdo\Odbc::class, array('getPdo', 'log', 'getDatabase'));
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo\Odbc::class)
+            ->setMethods(array('getPdo', 'log', 'getDatabase'))
+            ->getMock();
         $pdo->expects($this->once())->method('getDatabase')->willReturn('unitTest');
         $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock)->with($this->equalTo('odbc:Driver={mysql};Server={localhost};Database={unitTest}'));
         /** @var \FMUP\Db\Driver\Pdo $pdo */

@@ -46,7 +46,9 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\FMUP\Authentication\Driver\Session::class, $defaultDriver);
         $this->assertSame($defaultDriver, $auth->getDriver());
 
-        $driver = $this->getMock(\FMUP\Authentication\DriverInterface::class, array('set', 'get', 'clear'));
+        $driver = $this->getMockBuilder(\FMUP\Authentication\DriverInterface::class)
+            ->setMethods(array('set', 'get', 'clear'))
+            ->getMock();
         /** @var \FMUP\Authentication\DriverInterface $driver */
         $this->assertSame($auth, $auth->setDriver($driver));
         $this->assertSame($driver, $auth->getDriver());
@@ -56,14 +58,18 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
     {
         $login = 'login';
         $password = 'password';
-        $user = $this->getMock(\FMUP\Authentication\UserInterface::class, array('auth'));
+        $user = $this->getMockBuilder(\FMUP\Authentication\UserInterface::class)
+            ->setMethods(array('auth'))
+            ->getMock();
         $user->expects($this->exactly(2))
             ->method('auth')
             ->will($this->onConsecutiveCalls(false, true))
             ->with($this->equalTo($login), $this->equalTo($password));
-        $auth = $this->getMock(AuthenticationMock::class, array('set'));
+        $auth = $this->getMockBuilder(AuthenticationMock::class)->setMethods(array('set'))->getMock();
         $auth->expects($this->exactly(1))->method('set')->with($user);
-        $driver = $this->getMock(\FMUP\Authentication\DriverInterface::class, array('set', 'get', 'clear'));
+        $driver = $this->getMockBuilder(\FMUP\Authentication\DriverInterface::class)
+            ->setMethods(array('set', 'get', 'clear'))
+            ->getMock();
         /**
          * @var \FMUP\Authentication\DriverInterface $driver
          * @var \FMUP\Authentication\UserInterface $user
@@ -76,9 +82,11 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetClear()
     {
-        $user = $this->getMock(\FMUP\Authentication\UserInterface::class, array('auth'));
+        $user = $this->getMockBuilder(\FMUP\Authentication\UserInterface::class)->setMethods(array('auth'))->getMock();
         $auth = new AuthenticationMock;
-        $driver = $this->getMock(\FMUP\Authentication\DriverInterface::class, array('set', 'get', 'clear'));
+        $driver = $this->getMockBuilder(\FMUP\Authentication\DriverInterface::class)
+            ->setMethods(array('set', 'get', 'clear'))
+            ->getMock();
         $driver->expects($this->exactly(1))->method('set')->with($user);
         $driver->expects($this->exactly(1))->method('get')->willReturn($user);
         $driver->expects($this->exactly(1))->method('clear');

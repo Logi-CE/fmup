@@ -26,13 +26,18 @@ class StandardTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $environment = $this->getMock(EnvironmentMockChannelStandard::class, array('get'));
+        $environment = $this->getMockBuilder(EnvironmentMockChannelStandard::class)->setMethods(array('get'))->getMock();
         $environment->method('get')->willReturnOnConsecutiveCalls(EnvironmentMockChannelStandard::DEV, EnvironmentMockChannelStandard::PROD);
-        $sapi = $this->getMock(SapiMockChannelStandard::class, array('get'));
+        $sapi = $this->getMockBuilder(SapiMockChannelStandard::class)->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturnOnConsecutiveCalls(SapiMockChannelStandard::CLI, SapiMockChannelStandard::CGI);
-        $monologChannel = $this->getMock(\Monolog\Logger::class, array('pushHandler'), array('Mock'));
+        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+            ->setMethods(array('pushHandler'))
+            ->setConstructorArgs(array('Mock'))
+            ->getMock();
         $monologChannel->method('pushHandler')->willReturn($monologChannel);
-        $channel = $this->getMock(\FMUP\Logger\Channel\Standard::class, array('getLogger', 'headerSent', 'getSapi', 'getEnvironment'));
+        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Standard::class)
+            ->setMethods(array('getLogger', 'headerSent', 'getSapi', 'getEnvironment'))
+            ->getMock();
         $channel->method('getLogger')->willReturn($monologChannel);
         $channel->method('headerSent')->willReturn(false);
         $channel->method('getSapi')->willReturn($sapi);

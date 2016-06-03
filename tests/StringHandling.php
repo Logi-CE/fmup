@@ -7,15 +7,15 @@
 namespace Tests;
 
 
-class StringTest extends \PHPUnit_Framework_TestCase
+class StringHandlingTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $reflection = new \ReflectionMethod(\FMUP\String::class, '__construct');
+        $reflection = new \ReflectionMethod(\FMUP\StringHandling::class, '__construct');
         $this->assertTrue($reflection->isPrivate());
         $this->assertTrue($reflection->isFinal());
 
-        $reflection = new \ReflectionMethod(\FMUP\String::class, '__clone');
+        $reflection = new \ReflectionMethod(\FMUP\StringHandling::class, '__clone');
         $this->assertTrue($reflection->isPrivate());
         $this->assertTrue($reflection->isFinal());
     }
@@ -30,7 +30,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             'SNAKECASE' => 's_n_a_k_e_c_a_s_e',
         );
         foreach ($tests as $toConvert => $converted) {
-            $this->assertSame($converted, \FMUP\String::toSnakeCase($toConvert));
+            $this->assertSame($converted, \FMUP\StringHandling::toSnakeCase($toConvert));
         }
     }
 
@@ -44,7 +44,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             'to_camel_case' => 'ToCamelCase',
         );
         foreach ($tests as $toConvert => $converted) {
-            $this->assertSame($converted, \FMUP\String::toCamelCase($toConvert));
+            $this->assertSame($converted, \FMUP\StringHandling::toCamelCase($toConvert));
         }
     }
 
@@ -52,6 +52,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $a = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ@!?.:/,;-(){}"= \'\\';
         $b = 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY__________________';
-        $this->assertSame($b, \FMUP\String::sanitize($a));
+        $this->assertSame($b, \FMUP\StringHandling::sanitize($a));
     }
 }

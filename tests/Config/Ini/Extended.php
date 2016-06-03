@@ -25,7 +25,10 @@ class ExtendedTest extends \PHPUnit_Framework_TestCase
         $oldConfig = $config->getConfig();
         $this->assertInstanceOf(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class, $oldConfig);
 
-        $zendConfig = $this->getMock(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class, null, array($file));
+        $zendConfig = $this->getMockBuilder(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class)
+            ->setMethods(null)
+            ->setConstructorArgs(array($file))
+            ->getMock();
         /** @var $zendConfig \FMUP\Config\Ini\Extended\ZendConfig\Ini */
         $this->assertSame($config, $config->setConfig($zendConfig));
         $this->assertSame($zendConfig, $config->getConfig());

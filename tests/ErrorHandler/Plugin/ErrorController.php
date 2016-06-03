@@ -17,8 +17,10 @@ class ErrorControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $errorController = $this->getMock(\FMUP\Controller\Error::class, array('render'));
-        $errorController2 = $this->getMock(\FMUP\Controller\Error::class, array('render'));
+        $errorController = $this->getMockBuilder(\FMUP\Controller\Error::class)->setMethods(array('render'))->getMock();
+        $errorController2 = $this->getMockBuilder(\FMUP\Controller\Error::class)
+            ->setMethods(array('render'))
+            ->getMock();
         /**
          * @var $errorController \FMUP\Controller\Error
          * @var $errorController2 \FMUP\Controller\Error
@@ -42,7 +44,7 @@ class ErrorControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHandle()
     {
-        $errorController = $this->getMock(\FMUP\Controller\Error::class, array('render'));
+        $errorController = $this->getMockBuilder(\FMUP\Controller\Error::class)->setMethods(array('render'))->getMock();
         /** @var $errorController \FMUP\Controller\Error */
         $errorPlugin = new \FMUP\ErrorHandler\Plugin\ErrorController($errorController);
         $this->assertInstanceOf(\FMUP\ErrorHandler\Plugin\Abstraction::class, $errorPlugin);
@@ -51,14 +53,23 @@ class ErrorControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class);
-        $request = $this->getMock(\FMUP\Request\Cli::class);
-        $response = $this->getMock(\FMUP\Response::class);
-        $exception = $this->getMock(\FMUP\Exception::class);
-        $errorController = $this->getMock(
-            \FMUP\Controller\Error::class,
-            array('render', 'preFilter', 'postFilter', 'indexAction', 'setBootstrap', 'setRequest', 'setResponse', 'setException')
-        );
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
+        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $exception = $this->getMockBuilder(\FMUP\Exception::class)->getMock();
+        $errorController = $this->getMockBuilder(\FMUP\Controller\Error::class)
+            ->setMethods(
+                array('render',
+                    'preFilter',
+                    'postFilter',
+                    'indexAction',
+                    'setBootstrap',
+                    'setRequest',
+                    'setResponse',
+                    'setException',
+                )
+            )
+            ->getMock();
         $errorController->expects($this->exactly(1))->method('preFilter')->with($this->equalTo('index'));
         $errorController->expects($this->exactly(1))->method('postFilter')->with($this->equalTo('index'));
         $errorController->expects($this->exactly(1))->method('indexAction');
@@ -68,11 +79,10 @@ class ErrorControllerTest extends \PHPUnit_Framework_TestCase
         $errorController->expects($this->exactly(1))->method('setException')->with($this->equalTo($exception))->willReturn($errorController);
         /** @var $errorController \FMUP\Controller\Error */
 
-        $plugin = $this->getMock(
-            \FMUP\ErrorHandler\Plugin\ErrorController::class,
-            array('getBootstrap', 'getRequest', 'getResponse', 'getException'),
-            array($errorController)
-        );
+        $plugin = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\ErrorController::class)
+            ->setMethods(array('getBootstrap', 'getRequest', 'getResponse', 'getException'))
+            ->setConstructorArgs(array($errorController))
+            ->getMock();
         $plugin->expects($this->exactly(1))->method('getBootstrap')->willReturn($bootstrap);
         $plugin->expects($this->exactly(1))->method('getRequest')->willReturn($request);
         $plugin->expects($this->exactly(1))->method('getResponse')->willReturn($response);

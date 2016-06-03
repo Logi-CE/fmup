@@ -28,8 +28,10 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetClear()
     {
-        $user = $this->getMock(\FMUP\Authentication\UserInterface::class);
-        $session = $this->getMock(SessionMockAuthenticationDriver::class, array('set', 'get', 'remove'));
+        $user = $this->getMockBuilder(\FMUP\Authentication\UserInterface::class)->getMock();
+        $session = $this->getMockBuilder(SessionMockAuthenticationDriver::class)
+            ->setMethods(array('set', 'get', 'remove'))
+            ->getMock();
         $session->expects($this->exactly(1))->method('get')->willReturn($user);
         $session->expects($this->exactly(1))->method('set');
         $session->expects($this->exactly(1))->method('remove');
