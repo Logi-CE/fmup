@@ -1606,11 +1606,11 @@
 <polygon fill="none" stroke="black" points="1515.26,-458 1451.26,-458 1451.26,-422 1515.26,-422 1515.26,-458"/>
 <text text-anchor="middle" x="1483.26" y="-437.2" font-family="Courier,monospace" font-size="11.00">Session</text>
 </g>
-<!-- \\FMUP\\String -->
-<g id="node161" class="node"><title>\\FMUP\\String</title>
-<polygon fill="none" stroke="black" points="1525.26,-404 1441.26,-404 1441.26,-368 1525.26,-368 1525.26,-404"/>
+<!-- \\FMUP\\StringHandling -->
+<g id="node161" class="node"><title>\\FMUP\\StringHandling</title>
+<polygon fill="none" stroke="black" points="1538.76,-404 1427.76,-404 1427.76,-368 1538.76,-368 1538.76,-404"/>
 <text text-anchor="start" x="1449.26" y="-389.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
-<text text-anchor="start" x="1462.76" y="-377.2" font-family="Courier,monospace" font-size="11.00">String</text>
+<text text-anchor="start" x="1435.76" y="-377.2" font-family="Courier,monospace" font-size="11.00">StringHandling</text>
 </g>
 <!-- \\FMUP\\Version -->
 <g id="node162" class="node"><title>\\FMUP\\Version</title>

@@ -1,4 +1,22 @@
 /*********/
+/* 7.0.0 */
+/*********/
+
+Compatibility with PHP 7 + rework unit test
+
+#Fix
+ - Unit test are now compatible with phpunit 5.4
+ - Cache\Driver\Memcached unit test is now testable without memcached
+ - Cache\Driver\Apc unit test is now testable without apc
+ - Cache\Driver\Apc TTL settings can now apply
+
+#New
+ - Compatible with PHP7
+
+#BC Break
+ - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
+
+/*********/
 /* 6.8.1 */
 /*********/
 
