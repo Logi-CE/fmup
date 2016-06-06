@@ -11,8 +11,15 @@ class CookieMock extends Cookie
 
     }
 
-    protected function setCookie()
-    {
+    protected function setCookie(
+        $name,
+        $value,
+        $expire = 0,
+        $path = '/',
+        $domain = '',
+        $secure = false,
+        $httpOnly = false
+    ) {
 
     }
 }
@@ -24,7 +31,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 
     private function getCookieMock()
     {
-        $cookie = $this->getMock(CookieMock::class, array('setCookie'));
+        $cookie = $this->getMockBuilder(CookieMock::class)->setMethods(array('setCookie'))->getMock();
         $reflection = new \ReflectionProperty(\FMUP\Cookie::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($cookie);

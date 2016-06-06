@@ -51,7 +51,7 @@ class SapiTest extends \PHPUnit_Framework_TestCase
 
     public function testIsCli()
     {
-        $sapi = $this->getMock(SapiMock::class, array('getRaw'));
+        $sapi = $this->getMockBuilder(SapiMock::class)->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMock::CLI);
 
         $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');

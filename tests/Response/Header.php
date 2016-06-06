@@ -10,7 +10,7 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $header = $this->getMock(\FMUP\Response\Header::class, array('getType', 'header'));
+        $header = $this->getMockBuilder(\FMUP\Response\Header::class)->setMethods(array('getType', 'header'))->getMock();
         $header->expects($this->exactly(1))->method('getType')->willReturn('getTypeReturn');
         $header->expects($this->exactly(1))->method('header')->with($this->equalTo('getTypeReturn: testUnit'));
         /** @var $header \FMUP\Response\Header */

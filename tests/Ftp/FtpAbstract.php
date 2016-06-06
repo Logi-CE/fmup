@@ -23,7 +23,9 @@ class FtpAbstractTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod(Ftp\FtpAbstract::class, 'getSettings');
         $method->setAccessible(true);
 
-        $ftpAbstract = $this->getMock(Ftp\FtpAbstract::class, array(), array(array('key1' => 'val1', 'key2' => 'val2')));
+        $ftpAbstract = $this->getMockBuilder(Ftp\FtpAbstract::class)
+            ->setConstructorArgs(array(array('key1' => 'val1', 'key2' => 'val2')))
+            ->getMock();
 
         $this->assertSame('val1', $method->invoke($ftpAbstract, 'key1'));
         $this->assertSame(array('key1' => 'val1', 'key2' => 'val2'), $method->invoke($ftpAbstract));

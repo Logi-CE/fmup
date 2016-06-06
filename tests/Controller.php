@@ -91,15 +91,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2->setRequest(new Request\Http());
 
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a request doesn't affect the controller.");
-
-        try {
-            $controller5 = clone $controller;
-            $controller5->setRequest(null);
-            $this->assertFalse(true, 'Exception expected : type error (null instead of Request)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
         return $controller;
     }
 
@@ -135,14 +126,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setResponse(new \FMUP\Response());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Response doesn't affect the controller.");
-
-        try {
-            $controller5 = clone $controller;
-            $controller5->setResponse(null);
-            $this->assertFalse(true, 'Exception expected : type error (null instead of Response)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         return $controller;
     }
@@ -180,14 +163,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2->setView(new View());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a View doesn't affect the controller.");
 
-        try {
-            $controller5 = clone $controller;
-            $controller5->setView(null);
-            $this->assertFalse(true, 'Exception expected : type error (null instead of View)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
-
         return $controller;
     }
 
@@ -218,14 +193,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller2 = clone $controller;
         $controller2->setBootstrap(new Bootstrap());
         $this->assertNotEquals($controller, $controller2, "Controllers should be different : set a Bootstrap doesn't affect the controller.");
-
-        try {
-            $controller5 = clone $controller;
-            $controller5->setBootstrap(null);
-            $this->assertFalse(true, 'Exception expected : type error (null instead of Bootstrap)');
-        } catch (\Exception $e) {
-            $this->assertEquals($e->getCode(), '4096', 'Wrong exception code.');
-        }
 
         return $controller;
     }

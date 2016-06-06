@@ -47,10 +47,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFailWhenDatabaseDontExists()
     {
-        $config = $this->getMock(\FMUP\Config::class);
+        $config = $this->getMockBuilder(\FMUP\Config::class)->getMock();
         $this->expectException(\OutOfRangeException::class);
         $this->expectExceptionMessage('Trying to access a database name test that not exists');
-        $manager = $this->getMock(ManagerMockDb::class, array('getConfig'));
+        $manager = $this->getMockBuilder(ManagerMockDb::class)->setMethods(array('getConfig'))->getMock();
         $manager->method('getConfig')->willReturn($config);
         /** @var $manager ManagerMockDb */
         $manager->get('test');
@@ -58,9 +58,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultDb()
     {
-        $config = $this->getMock(\FMUP\Config::class, array('get'));
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
         $config->expects($this->once())->method('get')->with($this->equalTo('parametres_connexion_db'))->willReturn(array());
-        $manager = $this->getMock(ManagerMockDb::class, array('getConfig'));
+        $manager = $this->getMockBuilder(ManagerMockDb::class)->setMethods(array('getConfig'))->getMock();
         $manager->method('getConfig')->willReturn($config);
         /** @var $manager ManagerMockDb */
         $instance = $manager->get();
@@ -70,12 +70,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetOtherDb()
     {
-        $config = $this->getMock(\FMUP\Config::class, array('get'));
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
         $config->expects($this->once())->method('get')->with($this->equalTo('db'))->willReturn(array('other' => array()));
-        $manager = $this->getMock(ManagerMockDb::class, array('getConfig', 'hasLogger', 'getLogger'));
+        $manager = $this->getMockBuilder(ManagerMockDb::class)
+            ->setMethods(array('getConfig', 'hasLogger', 'getLogger'))
+            ->getMock();
         $manager->method('getConfig')->willReturn($config);
         $manager->method('hasLogger')->willReturn(true);
-        $manager->method('getLogger')->willReturn($this->getMock(\FMUP\Logger::class));
+        $manager->method('getLogger')->willReturn($this->getMockBuilder(\FMUP\Logger::class)->getMock());
         /** @var $manager ManagerMockDb */
         $instance = $manager->get('other');
         $this->assertInstanceOf(\FMUP\Db::class, $instance);

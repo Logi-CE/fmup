@@ -11,8 +11,11 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $monologChannel = $this->getMock(\Monolog\Logger::class, array('pushHandler'), array('Mock'));
-        $channel = $this->getMock(\FMUP\Logger\Channel\System::class, array('getLogger'));
+        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+            ->setMethods(array('pushHandler'))
+            ->setConstructorArgs(array('Mock'))
+            ->getMock();
+        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\System::class)->setMethods(array('getLogger'))->getMock();
         $channel->method('getLogger')->willReturn($monologChannel);
         /** @var $channel \FMUP\Logger\Channel\System */
         $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);

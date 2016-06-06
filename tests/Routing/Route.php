@@ -10,8 +10,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetRequest()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class);
-        $route = $this->getMock(\FMUP\Routing\Route::class, array('canHandle', 'getControllerName', 'getAction'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+            ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
+            ->getMock();
         /**
          * @var \FMUP\Routing\Route $route
          * @var \FMUP\Request $request
@@ -22,8 +24,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testFailGetRequest()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class);
-        $route = $this->getMock(\FMUP\Routing\Route::class, array('canHandle', 'getControllerName', 'getAction'));
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+            ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
+            ->getMock();
         /**
          * @var \FMUP\Routing\Route $route
          * @var \FMUP\Request $request
@@ -35,7 +39,9 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $route = $this->getMock(\FMUP\Routing\Route::class, array('canHandle', 'getControllerName', 'getAction'));
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+            ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
+            ->getMock();
         /** @var \FMUP\Routing\Route $route */
         $route->handle();
         $this->assertTrue(true);
@@ -43,7 +49,9 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testHasToBeRedispatched()
     {
-        $route = $this->getMock(\FMUP\Routing\Route::class, array('canHandle', 'getControllerName', 'getAction'));
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+            ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
+            ->getMock();
         /** @var \FMUP\Routing\Route $route */
         $this->assertFalse($route->hasToBeReDispatched());
     }

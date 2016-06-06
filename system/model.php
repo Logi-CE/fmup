@@ -69,7 +69,7 @@ abstract class Model
         if (substr($classe_appelante, 0, 4) == 'Base') {
             $classe_appelante = substr($classe_appelante, 4);
         }
-        return \FMUP\String::toCamelCase($classe_appelante);
+        return \FMUP\StringHandling::toCamelCase($classe_appelante);
     }
 
     /**
@@ -366,7 +366,7 @@ abstract class Model
      * Retourne un tableau avec l'ID de la DMD et un attribut
      *      --> utilsié pour alléger les menus déroulant de l'application
      * @param {Array} un tableau de tous les filtres éventuels
-     * @param {String} le champ sur lequel ordonner
+     * @param {string} le champ sur lequel ordonner
      **/
     public static function findAllAttributeFromTable($table, $attribute, $where = array(), $options = array())
     {
@@ -418,7 +418,7 @@ abstract class Model
 
     /**
      * Retourne le nombre d'éléments d'une requéte pour une table donnée
-     * @param {String} Le nom de la table
+     * @param {string} Le nom de la table
      * @param {Array} un tableau de condititions
      **/
     protected static function countFromTable($table, $where = array(), $options = array())
@@ -436,8 +436,8 @@ abstract class Model
 
     /**
      * Retourne la somme des valeurs d'une colonne pour une table et une colonne donnée
-     * @param {String} Le nom de la table
-     * @param {String} le nom de la colonne à sommer
+     * @param {string} Le nom de la table
+     * @param {string} le nom de la colonne à sommer
      * @param {Array} un tableau de condition
      * @param {Array} un tableau d'options
      * @return mixed La somme si pas de group by en option, un tableau de couple somme / valeur de la colonne sinon
@@ -743,17 +743,17 @@ abstract class Model
      **/
     public function getAttribute($attribute)
     {
-        return call_user_func(array($this, 'get' . \FMUP\String::toCamelCase($attribute)));
+        return call_user_func(array($this, 'get' . \FMUP\StringHandling::toCamelCase($attribute)));
     }
 
     /**
      * Modifie la valeur d'un attribut si il existe
      * @param {String} l'attribut auquel accéder
-     * @param {String} la valeur à enregistrer
+     * @param {string} la valeur à enregistrer
      **/
     public function setAttribute($attribute, $value)
     {
-        call_user_func(array($this, 'set' . \FMUP\String::toCamelCase($attribute)), $value);
+        call_user_func(array($this, 'set' . \FMUP\StringHandling::toCamelCase($attribute)), $value);
         return true;
     }
 
@@ -777,7 +777,7 @@ abstract class Model
      */
     public function __call($function, $argument = array())
     {
-        $attribut = \FMUP\String::toCamelCase(substr($function, 3));
+        $attribut = \FMUP\StringHandling::toCamelCase(substr($function, 3));
         if (property_exists($this, $attribut)) {
             if (preg_match('#^get#i', $function)) {
                 return $this->$attribut;

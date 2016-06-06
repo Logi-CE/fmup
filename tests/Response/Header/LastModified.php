@@ -27,7 +27,9 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetModifiedDateWhenNotSet()
     {
-        $lastModified = $this->getMock(\FMUP\Response\Header\LastModified::class, array('__construct', 'setModifiedDate'));
+        $lastModified = $this->getMockBuilder(\FMUP\Response\Header\LastModified::class)
+            ->setMethods(array('__construct', 'setModifiedDate'))
+            ->getMock();
         /** @var $lastModified \FMUP\Response\Header\LastModified */
         $this->assertInstanceOf(\DateTime::class, $lastModified->getModifiedDate());
         $this->assertNotNull($lastModified->getModifiedDate());
@@ -35,7 +37,9 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
 
     public function testSetModifiedDateFailsConversion()
     {
-        $lastModified = $this->getMock(\FMUP\Response\Header\LastModified::class, array('__construct'));
+        $lastModified = $this->getMockBuilder(\FMUP\Response\Header\LastModified::class)
+            ->setMethods(array('__construct'))
+            ->getMock();
         /** @var $lastModified \FMUP\Response\Header\LastModified */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Error on date format');
@@ -44,7 +48,9 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
 
     public function testSetModifiedDateFailsFormat()
     {
-        $lastModified = $this->getMock(\FMUP\Response\Header\LastModified::class, array('__construct'));
+        $lastModified = $this->getMockBuilder(\FMUP\Response\Header\LastModified::class)
+            ->setMethods(array('__construct'))
+            ->getMock();
         /** @var $lastModified \FMUP\Response\Header\LastModified */
         $this->expectException(\FMUP\Exception::class);
         $this->expectExceptionMessage('Error on date format');

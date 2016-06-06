@@ -37,7 +37,8 @@ class Md5Test extends \PHPUnit_Framework_TestCase
      */
     public function testUnHash(Md5 $cryptOriginal)
     {
-        $this->setExpectedException(\FMUP\Crypt\Exception::class, 'Invalid method for this driver');
+        $this->expectException(\FMUP\Crypt\Exception::class);
+        $this->expectExceptionMessage('Invalid method for this driver');
         $cryptOriginal->unHash('test');
     }
 }

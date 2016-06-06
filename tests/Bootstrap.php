@@ -42,13 +42,14 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 {
     public function testWarmUp()
     {
-        $logger = $this->getMock(\FMUP\Logger::class, null);
-        $config = $this->getMock(\FMUP\Config::class, null);
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $bootstrap = $this->getMock(
-            \FMUP\Bootstrap::class,
-            array('defineTimezone', 'getLogger', 'initHelperDb', 'getSection', 'getConfig', 'getRequest', 'hasRequest')
-        );
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(null)->getMock();
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(
+                array('defineTimezone', 'getLogger', 'initHelperDb', 'getSection', 'getConfig', 'getRequest', 'hasRequest')
+            )
+            ->getMock();
         $bootstrap->expects($this->exactly(1))->method('defineTimezone');
         $bootstrap->method('getLogger')->willReturn($logger);
         $bootstrap->method('hasRequest')->willReturn(true);
@@ -59,10 +60,11 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($bootstrap, $bootstrap->warmUp());
         $this->assertTrue($bootstrap->isWarmed());
         $this->assertSame($bootstrap, $bootstrap->warmUp());
-        $bootstrap2 = $this->getMock(
-            \FMUP\Bootstrap::class,
-            array('hasRequest', 'getRequest', 'getConfig')
-        );
+        $bootstrap2 = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(
+                array('hasRequest', 'getRequest', 'getConfig')
+            )
+            ->getMock();
         $bootstrap2->method('hasRequest')->willReturn(true);
         $bootstrap2->method('getRequest')->willReturn($request);
         $bootstrap2->method('getConfig')->willReturn($config);
@@ -82,18 +84,19 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetLogger()
     {
-        $config = $this->getMock(\FMUP\Config::class, null);
-        $request = $this->getMock(\FMUP\Request\Cli::class, null);
-        $bootstrap = $this->getMock(
-            \FMUP\Bootstrap::class,
-            array('hasRequest', 'getRequest', 'getConfig')
-        );
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+            ->setMethods(array('hasRequest', 'getRequest', 'getConfig'))
+            ->getMock();
         $bootstrap->method('hasRequest')->willReturn(true);
         $bootstrap->method('getRequest')->willReturn($request);
         $bootstrap->method('getConfig')->willReturn($config);
         /** @var $bootstrap \FMUP\Bootstrap */
         $this->assertInstanceOf(\FMUP\Logger::class, $bootstrap->getLogger());
-        $logger = $this->getMock(\FMUP\Logger::class, array('setEnvironment'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)
+            ->setMethods(array('setEnvironment'))
+            ->getMock();
         $logger->expects($this->exactly(1))->method('setEnvironment')->with($this->equalTo($bootstrap->getEnvironment()));
         /** @var $logger \FMUP\Logger */
         $this->assertSame($bootstrap, $bootstrap->setLogger($logger));
@@ -101,12 +104,14 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterErrorHandler()
     {
-        $monolog = $this->getMock(\Monolog\Logger::class, null, array('name'));
-        $loggerChannel = $this->getMock(\FMUP\Logger\Channel::class, array('getLogger', 'getName', 'configure'));
+        $monolog = $this->getMockBuilder(\Monolog\Logger::class)->setMethods(null)->setConstructorArgs(array('name'))->getMock();
+        $loggerChannel = $this->getMockBuilder(\FMUP\Logger\Channel::class)
+            ->setMethods(array('getLogger', 'getName', 'configure'))
+            ->getMock();
         $loggerChannel->expects($this->exactly(1))->method('getLogger')->willReturn($monolog);
-        $logger = $this->getMock(\FMUP\Logger::class, array('get'));
+        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('get'))->getMock();
         $logger->expects($this->exactly(1))->method('get')->willReturn($loggerChannel);
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getLogger'));
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getLogger'))->getMock();
         $bootstrap->method('getLogger')->willReturn($logger);
         /** @var $bootstrap \FMUP\Bootstrap */
         $this->assertSame($bootstrap, $bootstrap->registerErrorHandler());
@@ -123,7 +128,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetHasRequest()
     {
-        $request = $this->getMock(\FMUP\Request\Cli::class);
+        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
         /** @var $request \FMUP\Request\Cli */
         $bootstrap = new \FMUP\Bootstrap();
         $this->assertFalse($bootstrap->hasRequest());
@@ -156,10 +161,10 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEnvironment()
     {
-        $config = $this->getMock(\FMUP\Config::class, null);
-        $bootstrap = $this->getMock(\FMUP\Bootstrap::class, array('getConfig'));
+        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getConfig'))->getMock();
         $bootstrap->method('getConfig')->willReturn($config);
-        $environment = $this->getMock(EnvironmentMockBootstrap::class, array('hasConfig', 'setConfig'));
+        $environment = $this->getMockBuilder(EnvironmentMockBootstrap::class)->setMethods(array('hasConfig', 'setConfig'))->getMock();
         $environment->expects($this->exactly(1))->method('hasConfig')->willReturn(false);
         $environment->expects($this->exactly(1))->method('setConfig')->with($this->equalTo($config));
         /** @var $bootstrap \FMUP\Bootstrap */

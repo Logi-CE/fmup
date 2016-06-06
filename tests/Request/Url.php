@@ -23,7 +23,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetRequest()
     {
-        $request = $this->getMock(\FMUP\Request\Http::class);
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->getMock();
         /** @var $request \FMUP\Request\Http */
         $url = new \FMUP\Request\Url();
         $requestDefault = $url->getRequest();
@@ -35,7 +35,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testBuild()
     {
-        $request = $this->getMock(\FMUP\Request\Http::class, array('getRequestUri'));
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')
             ->will(
                 $this->onConsecutiveCalls(
@@ -47,7 +47,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
                     '/path/to/file?v=1'
                 )
             );
-        $url = $this->getMock(\FMUP\Request\Url::class, array('getParams'));
+        $url = $this->getMockBuilder(\FMUP\Request\Url::class)->setMethods(array('getParams'))->getMock();
         $url->method('getParams')
             ->will(
                 $this->onConsecutiveCalls(

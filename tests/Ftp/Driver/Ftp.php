@@ -46,13 +46,12 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testConnect()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpConnect'));
-        $ftp2 = $this->getMock(Ftp\Driver\Ftp::class, array('ftpConnect'));
-        $ftp3 = $this->getMock(
-            Ftp\Driver\Ftp::class,
-            array('ftpConnect'),
-            array(array(Ftp\Driver\Ftp::TIMEOUT => 100))
-        );
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)->setMethods(array('ftpConnect'))->getMock();
+        $ftp2 = $this->getMockBuilder(Ftp\Driver\Ftp::class)->setMethods(array('ftpConnect'))->getMock();
+        $ftp3 = $this->getMockBuilder(Ftp\Driver\Ftp::class)
+            ->setMethods(array('ftpConnect'))
+            ->setConstructorArgs(array(array(Ftp\Driver\Ftp::TIMEOUT => 100)))
+            ->getMock();
         $ftp->expects($this->once())
             ->method('ftpConnect')
             ->willReturn(fopen('php://stdin', 'r'))
@@ -81,7 +80,7 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginFail()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpLogin', 'getSession'));
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)->setMethods(array('ftpLogin', 'getSession'))->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->expects($this->once())->method('ftpLogin')->willReturn(false)->with(
@@ -101,7 +100,7 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginSuccess()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpLogin', 'getSession'));
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)->setMethods(array('ftpLogin', 'getSession'))->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->expects($this->once())->method('ftpLogin')->willReturn(true)->with(
@@ -119,7 +118,9 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFile()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpGet', 'getSession', 'getMode', 'getResumePos'));
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)
+            ->setMethods(array('ftpGet', 'getSession', 'getMode', 'getResumePos'))
+            ->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->method('getMode')->willReturn(FTP_ASCII);
@@ -141,7 +142,9 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteFile()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpDelete', 'getSession'));
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)
+            ->setMethods(array('ftpDelete', 'getSession'))
+            ->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->expects($this->exactly(2))
@@ -163,7 +166,7 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testClose()
     {
-        $ftp = $this->getMock(Ftp\Driver\Ftp::class, array('ftpClose', 'getSession'));
+        $ftp = $this->getMockBuilder(Ftp\Driver\Ftp::class)->setMethods(array('ftpClose', 'getSession'))->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->expects($this->exactly(2))

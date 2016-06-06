@@ -35,7 +35,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetSession()
     {
-        $sessionMock = $this->getMock(SessionMock::class, null);
+        $sessionMock = $this->getMockBuilder(SessionMock::class)->setMethods(null)->getMock();
         /** @var $sessionMock SessionMock */
         $session = new \FMUP\FlashMessenger\Driver\Session();
         $reflection = new \ReflectionMethod(\FMUP\FlashMessenger\Driver\Session::class, 'getSession');
@@ -47,7 +47,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testAddGetClear()
     {
-        $sessionMock = $this->getMock(SessionMock::class, null);
+        $sessionMock = $this->getMockBuilder(SessionMock::class)->setMethods(null)->getMock();
         $message = new \FMUP\FlashMessenger\Message('test');
         $message2 = new \FMUP\FlashMessenger\Message('test2');
         /** @var $sessionMock SessionMock */

@@ -9,7 +9,7 @@ class Sql
 {
     /**
      * Protège des injections SQL
-     * @param {String} la chaîne à sécuriser
+     * @param {string} la chaîne à sécuriser
      *
      */
     public static function sanitize($value)
@@ -20,7 +20,7 @@ class Sql
 
     /**
      * Protège des injections SQL (pour les requètes)
-     * @param {String} la chaîne à sécuriser
+     * @param {string} la chaîne à sécuriser
      **/
     public static function secure($value)
     {
@@ -29,7 +29,7 @@ class Sql
 
     /**
      * Protège des injections SQL pour les integers
-     * @param {String} la chaîne à sécuriser
+     * @param {string} la chaîne à sécuriser
      **/
     public static function secureId($value)
     {
@@ -53,7 +53,7 @@ class Sql
 
     /**
      * Protège des injections SQL pour les integers
-     * @param {String} la chaîne à sécuriser
+     * @param {string} la chaîne à sécuriser
      **/
     public static function secureInteger($value)
     {
@@ -67,7 +67,7 @@ class Sql
 
     /**
      * Protège des injections SQL pour les integers
-     * @param {String} la chaîne à sécuriser
+     * @param {string} la chaîne à sécuriser
      **/
     public static function secureBoolean($value)
     {

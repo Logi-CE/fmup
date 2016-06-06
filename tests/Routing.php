@@ -18,10 +18,10 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchNoRoute()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, array('defaultRoutes'));
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(array('defaultRoutes'))->getMock();
         $routing->expects($this->exactly(1))->method('defaultRoutes')->willReturn($routing);
 
-        $request = $this->getMock(\FMUP\Request::class);
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         /** @var $request \FMUP\Request */
         /** @var $routing \FMUP\Routing */
         $this->assertNull($routing->dispatch($request));
@@ -29,10 +29,10 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testGetOriginalRequest()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, array('defaultRoutes'));
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(array('defaultRoutes'))->getMock();
         $routing->expects($this->exactly(1))->method('defaultRoutes')->willReturn($routing);
 
-        $request = $this->getMock(\FMUP\Request::class);
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         /** @var $request \FMUP\Request */
         /** @var $routing \FMUP\Routing */
         $routing->dispatch($request);
@@ -43,11 +43,11 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testAddRoute()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, null);
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(null)->getMock();
 
-        $route = $this->getMock(\FMUP\Routing\Route::class);
-        $route2 = $this->getMock(\FMUP\Routing\Route::class);
-        $route3 = $this->getMock(\FMUP\Routing\Route::class);
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
+        $route2 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
+        $route3 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         /**
          * @var $routing \FMUP\Routing
          * @var $route \FMUP\Routing\Route
@@ -64,11 +64,11 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testClearRoute()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, null);
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(null)->getMock();
 
-        $route = $this->getMock(\FMUP\Routing\Route::class);
-        $route2 = $this->getMock(\FMUP\Routing\Route::class);
-        $route3 = $this->getMock(\FMUP\Routing\Route::class);
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
+        $route2 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
+        $route3 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         /**
          * @var $routing \FMUP\Routing
          * @var $route \FMUP\Routing\Route
@@ -92,22 +92,22 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithoutRedispatchFirstRoute()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, null);
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(null)->getMock();
 
-        $route = $this->getMock(\FMUP\Routing\Route::class);
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route->method('setRequest')->willReturn($route);
         $route->method('canHandle')->willReturn(false);
-        $route2 = $this->getMock(\FMUP\Routing\Route::class);
+        $route2 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route2->method('setRequest')->willReturn($route2);
         $route2->method('canHandle')->willReturn(true);
         $route2->method('handle')->willReturn(true);
         $route2->method('hasToBeRedispatched')->willReturn(false);
-        $route3 = $this->getMock(\FMUP\Routing\Route::class);
+        $route3 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route3->method('setRequest')->willReturn($route3);
         $route3->method('canHandle')->willReturn(true);
         $route3->method('handle')->willReturn(true);
         $route3->method('hasToBeRedispatched')->willReturn(false);
-        $request = $this->getMock(\FMUP\Request::class);
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         /**
          * @var $routing \FMUP\Routing
          * @var $route \FMUP\Routing\Route
@@ -126,22 +126,22 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithRedispatchLastRoute()
     {
-        $routing = $this->getMock(\FMUP\Routing::class, null);
+        $routing = $this->getMockBuilder(\FMUP\Routing::class)->setMethods(null)->getMock();
 
-        $route = $this->getMock(\FMUP\Routing\Route::class);
+        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route->method('setRequest')->willReturn($route);
         $route->method('canHandle')->willReturn(false);
-        $route2 = $this->getMock(\FMUP\Routing\Route::class);
+        $route2 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route2->method('setRequest')->willReturn($route2);
         $route2->method('canHandle')->will($this->onConsecutiveCalls(false, true));
         $route2->method('handle')->willReturn(true);
         $route2->method('hasToBeRedispatched')->willReturn(false);
-        $route3 = $this->getMock(\FMUP\Routing\Route::class);
+        $route3 = $this->getMockBuilder(\FMUP\Routing\Route::class)->getMock();
         $route3->method('setRequest')->willReturn($route3);
         $route3->method('canHandle')->willReturn(true);
         $route3->method('handle')->willReturn(true);
         $route3->method('hasToBeRedispatched')->willReturn(true);
-        $request = $this->getMock(\FMUP\Request::class);
+        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
         /**
          * @var $routing \FMUP\Routing
          * @var $route \FMUP\Routing\Route
