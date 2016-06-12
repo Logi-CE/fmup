@@ -15,14 +15,14 @@ class OptionalTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetHasConfig()
     {
-        $config = $this->getMockBuilder(\FMUP\Config\ConfigInterface::class)
+        $config = $this->getMockBuilder('\FMUP\Config\ConfigInterface')
             ->setMethods(array('get', 'set', 'mergeConfig', 'has'))
             ->getMock();
         $mock = new OptionalTraitMock;
         $this->assertFalse($mock->hasConfig());
         $configDefault = $mock->getConfig();
-        $this->assertInstanceOf(\FMUP\Config\ConfigInterface::class, $configDefault);
-        $this->assertInstanceOf(\FMUP\Config::class, $configDefault);
+        $this->assertInstanceOf('\FMUP\Config\ConfigInterface', $configDefault);
+        $this->assertInstanceOf('\FMUP\Config', $configDefault);
         $this->assertTrue($mock->hasConfig());
         $this->assertSame($configDefault, $mock->getConfig());
 

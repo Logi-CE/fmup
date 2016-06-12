@@ -12,26 +12,25 @@ class DuplicateIteratorTest extends \PHPUnit_Framework_TestCase
     public function testIteratorFail()
     {
         $iterator = new \FMUP\Import\Iterator\DuplicateIterator(new \ArrayIterator(array('here')));
-        $this->expectException(\FMUP\Import\Exception::class);
-        $this->expectExceptionMessage('Current object is not config');
+        $this->setExpectedException('\FMUP\Import\Exception', 'Current object is not config');
         foreach ($iterator as $current);
     }
 
     public function testIterator()
     {
-        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+        $field = $this->getMockBuilder('\FMUP\Import\Config\Field')
             ->setMethods(array('getValue'))
             ->disableOriginalConstructor()
             ->getMock();
         $field->expects($this->at(1))->method('getValue')->willReturn(0);
         $field->expects($this->at(2))->method('getValue')->willReturn(1);
         $field->expects($this->at(3))->method('getValue')->willReturn(0);
-        $configObject = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+        $configObject = $this->getMockBuilder('\FMUP\Import\Config\ConfigObjet')
             ->setMethods(array('getListeIndexChamp'))
             ->disableOriginalConstructor()
             ->getMock();
         $configObject->method('getListeIndexChamp')->willReturn(array(0));
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getListeConfigObjet', 'getField', 'setDoublonLigne'))
             ->getMock();
         $config->method('getField')->willReturn($field);

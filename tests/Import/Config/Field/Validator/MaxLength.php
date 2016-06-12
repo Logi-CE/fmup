@@ -12,7 +12,7 @@ class MaxLengthTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\MaxLength(10);
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
 
         $this->assertTrue($validator->validate('1'));
         $this->assertTrue($validator->validate('0123456789'));
@@ -31,7 +31,7 @@ class MaxLengthTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\MaxLength(1);
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu est trop grand', $validator->getErrorMessage());
     }
 }

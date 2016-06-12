@@ -77,7 +77,7 @@ class Framework
     protected function instantiate($sys_controller, $sys_function)
     {
         // Création d'une instance du controlleur
-        $controllerName = \FMUP\StringHandling::toCamelCase($sys_controller);
+        $controllerName = \FMUP\String::toCamelCase($sys_controller);
 
         /** @var $controllerInstance \FMUP\Controller */
         $controllerInstance = new $controllerName();
@@ -127,14 +127,14 @@ class Framework
 
         $sys_directory = $matches[1];
         $sys_controller = "ctrl_" . $matches[2];
-        $sys_function = \FMUP\StringHandling::toCamelCase($matches[3]);
+        $sys_function = \FMUP\String::toCamelCase($matches[3]);
 
-        if (!class_exists(\FMUP\StringHandling::toCamelCase($sys_controller)) ||
-            !is_callable(array(\FMUP\StringHandling::toCamelCase($sys_controller), $sys_function))
+        if (!class_exists(\FMUP\String::toCamelCase($sys_controller)) ||
+            !is_callable(array(\FMUP\String::toCamelCase($sys_controller), $sys_function))
         ) {
             $this->getRouteError($sys_directory, $sys_controller);
         }
-        return array(\FMUP\StringHandling::toCamelCase($sys_controller), $sys_function);
+        return array(\FMUP\String::toCamelCase($sys_controller), $sys_function);
     }
 
     /**

@@ -12,7 +12,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Boolean();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->validate('true'));
         $this->assertFalse($validator->validate('false'));
         $this->assertFalse($validator->validate('0'));
@@ -24,7 +24,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Boolean();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu n\'est pas un boolean', $validator->getErrorMessage());
     }
 }

@@ -41,23 +41,20 @@ class DownloadTest extends \PHPUnit_Framework_TestCase
 {
     public function testDownloadHeadersFailsWhenNotController()
     {
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Unable to use Download trait');
+        $this->setExpectedException('\FMUP\Exception', 'Unable to use Download trait');
         (new MockFail())->downloadHeaders('text/html');
     }
 
     public function testDownloadFailsWhenNotController()
     {
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Unable to use Download trait');
+        $this->setExpectedException('\FMUP\Exception', 'Unable to use Download trait');
         (new MockFail())->download('/not/existing/path');
     }
 
     public function testDownloadFailsWhenFileNotExists()
     {
-        $this->expectException(\FMUP\Exception\Status\NotFound::class);
-        $this->expectExceptionMessage('Unable to find requested file');
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $this->setExpectedException('\FMUP\Exception\Status\NotFound', 'Unable to find requested file');
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('log'))->getMock();
         $logger->expects($this->exactly(1))
             ->method('log')
             ->with(
@@ -74,10 +71,10 @@ class DownloadTest extends \PHPUnit_Framework_TestCase
     {
         $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', 'composer.json'));
         $expectedContent = file_get_contents($file);
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(array('send', 'clearHeader'))->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(array('send', 'clearHeader'))->getMock();
         $response->expects($this->exactly(1))->method('send');
         $response->expects($this->exactly(1))->method('clearHeader');
-        $mock = $this->getMockBuilder(Mock::class)->setMethods(array('downloadHeaders', 'getResponse', 'obFlush'))->getMock();
+        $mock = $this->getMockBuilder('\Tests\Controller\Helper\Mock')->setMethods(array('downloadHeaders', 'getResponse', 'obFlush'))->getMock();
         $mock->expects($this->exactly(1))->method('downloadHeaders')->willReturn($response);
         $mock->method('getResponse')->willReturn($response);
         /** @var $mock Mock */
@@ -87,6 +84,6 @@ class DownloadTest extends \PHPUnit_Framework_TestCase
 
     public function testDownloadHeaders()
     {
-        $this->assertInstanceOf(\FMUP\Response::class, (new Mock)->downloadHeaders('text/html'));
+        $this->assertInstanceOf('\FMUP\Response', (new Mock)->downloadHeaders('text/html'));
     }
 }

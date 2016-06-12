@@ -159,8 +159,8 @@ class Apc implements CacheInterface
             throw new Exception('APC is not available');
         }
         $key = $this->getCacheKey($key);
-        $ttl = $this->getSetting(self::CACHE_TTL_DEFAULT)
-            ? (int)$this->getSetting(self::CACHE_TTL_DEFAULT)
+        $ttl = $this->getSetting(self::SETTING_CACHE_TTL)
+            ? (int)$this->getSetting(self::SETTING_CACHE_TTL)
             : self::CACHE_TTL_DEFAULT;
         if (!$this->apcStore($key, $value, $ttl) && !$this->apcAdd($key, $value, $ttl)) {
             throw new Exception('Unable to set key into cache APC');

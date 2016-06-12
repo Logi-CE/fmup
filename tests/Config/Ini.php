@@ -12,8 +12,7 @@ class IniTest extends \PHPUnit_Framework_TestCase
     public function testGetConfigFailWhenFileDontExist()
     {
         $notExistingPath = '/not/existing/path';
-        $this->expectException(\FMUP\Config\Exception::class);
-        $this->expectExceptionMessage('File does not exist');
+        $this->setExpectedException('\FMUP\Config\Exception', 'File does not exist');
         $config = new \FMUP\Config\Ini($notExistingPath);
         $config->get('test');
     }

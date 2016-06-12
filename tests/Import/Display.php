@@ -12,10 +12,10 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
 {
     public function testParse()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getDoublonLigne', 'insertLine'))
             ->getMock();
-        $validIterator = $this->getMockBuilder(\FMUP\Import\Iterator\ValidatorIterator::class)
+        $validIterator = $this->getMockBuilder('\FMUP\Import\Iterator\ValidatorIterator')
             ->setMethods(
                 array('getTotalErrors', 'getTotalInsert', 'getTotalUpdate', 'current', 'next', 'valid', 'key')
             )
@@ -27,7 +27,7 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
         $validIterator->method('getTotalErrors')->willReturn(1);
         $validIterator->method('getTotalInsert')->willReturn(2);
         $validIterator->method('getTotalUpdate')->willReturn(3);
-        $display = $this->getMockBuilder(\FMUP\Import\Display::class)
+        $display = $this->getMockBuilder('\FMUP\Import\Display')
             ->setMethods(array('displayImport', 'getLineToConfigIterator', 'getDoublonIterator', 'getValidatorIterator'))
             ->setConstructorArgs(array(__FILE__, $config))
             ->getMock();
@@ -38,14 +38,14 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($config)
             )
             ->willReturn(
-                $this->getMockBuilder(\FMUP\Import\Iterator\LineToConfigIterator::class)
+                $this->getMockBuilder('\FMUP\Import\Iterator\LineToConfigIterator')
                     ->disableOriginalConstructor()
                     ->getMock()
             );
         $display->expects($this->once())
             ->method('getDoublonIterator')
             ->willReturn(
-                $this->getMockBuilder(\FMUP\Import\Iterator\DuplicateIterator::class)
+                $this->getMockBuilder('\FMUP\Import\Iterator\DuplicateIterator')
                     ->disableOriginalConstructor()
                     ->getMock()
             );
@@ -59,10 +59,10 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
 
     public function testParseOnFail()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getDoublonLigne', 'insertLine'))
             ->getMock();
-        $validIterator = $this->getMockBuilder(\FMUP\Import\Iterator\ValidatorIterator::class)
+        $validIterator = $this->getMockBuilder('\FMUP\Import\Iterator\ValidatorIterator')
             ->setMethods(
                 array('rewind', 'getTotalErrors', 'getTotalInsert', 'getTotalUpdate', 'current', 'next', 'valid', 'key')
             )
@@ -75,7 +75,7 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
         $validIterator->method('getTotalErrors')->willReturn(1);
         $validIterator->method('getTotalInsert')->willReturn(2);
         $validIterator->method('getTotalUpdate')->willReturn(3);
-        $display = $this->getMockBuilder(\FMUP\Import\Display::class)
+        $display = $this->getMockBuilder('\FMUP\Import\Display')
             ->setMethods(
                 array('displayImport', 'getLineToConfigIterator', 'getDoublonIterator', 'getValidatorIterator')
             )
@@ -88,14 +88,14 @@ class DisplayTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($config)
             )
             ->willReturn(
-                $this->getMockBuilder(\FMUP\Import\Iterator\LineToConfigIterator::class)
+                $this->getMockBuilder('\FMUP\Import\Iterator\LineToConfigIterator')
                     ->disableOriginalConstructor()
                     ->getMock()
             );
         $display->expects($this->once())
             ->method('getDoublonIterator')
             ->willReturn(
-                $this->getMockBuilder(\FMUP\Import\Iterator\DuplicateIterator::class)
+                $this->getMockBuilder('\FMUP\Import\Iterator\DuplicateIterator')
                     ->disableOriginalConstructor()
                     ->getMock()
             );

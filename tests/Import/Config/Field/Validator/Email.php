@@ -12,7 +12,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function testSetGetCanEmpty()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Email();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->getCanEmpty());
         $validator = new \FMUP\Import\Config\Field\Validator\Email(true);
         $this->assertTrue($validator->getCanEmpty());
@@ -27,7 +27,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Email;
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $validator->setCanEmpty(false);
         $this->assertFalse($validator->validate(''));
         $validator->setCanEmpty(true);
@@ -55,7 +55,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Email();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu n\'est pas un email valide', $validator->getErrorMessage());
     }
 }

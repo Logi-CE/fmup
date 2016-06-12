@@ -27,7 +27,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Db\Factory::class);
+        $reflector = new \ReflectionClass('\FMUP\Db\Factory');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -41,7 +41,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         }
 
         $factory = \FMUP\Db\Factory::getInstance();
-        $this->assertInstanceOf(\FMUP\Db\Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Db\Factory', $factory);
         $factory2 = \FMUP\Db\Factory::getInstance();
         $this->assertSame($factory, $factory2);
     }
@@ -49,16 +49,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFailWhenClassDontExists()
     {
         $factory = new FactoryMockDbFactory();
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessageRegExp('~^Unable to create ~');
+        $this->setExpectedException('\FMUP\Db\Exception');
         $factory->create('NotExistingDriver');
     }
 
     public function testCreateFailWhenClassNotCorrect()
     {
         $factory = new FactoryMockDbFactory();
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessageRegExp('~^Unable to create ~');
+        $this->setExpectedException('\FMUP\Db\Exception');
         $factory->create('DriverFailMock');
     }
 
@@ -66,8 +64,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = \FMUP\Db\Factory::getInstance();
         $driverDefault = $factory->create();
-        $this->assertInstanceOf(\FMUP\Db\DbInterface::class, $driverDefault);
-        $this->assertInstanceOf(\FMUP\Db\Driver\Pdo::class, $driverDefault);
+        $this->assertInstanceOf('\FMUP\Db\DbInterface', $driverDefault);
+        $this->assertInstanceOf('\FMUP\Db\Driver\Pdo', $driverDefault);
         $driverDefault2 = $factory->create();
         $this->assertEquals($driverDefault, $driverDefault2);
         $this->assertNotSame($driverDefault, $driverDefault2);

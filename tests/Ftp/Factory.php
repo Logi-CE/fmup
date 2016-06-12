@@ -24,7 +24,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(Ftp\Factory::class);
+        $reflector = new \ReflectionClass('\FMUP\Ftp\Factory');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -38,7 +38,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         }
 
         $factory = Ftp\Factory::getInstance();
-        $this->assertInstanceOf(Ftp\Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Ftp\Factory', $factory);
         $factory2 = Ftp\Factory::getInstance();
         $this->assertSame($factory, $factory2);
     }
@@ -46,16 +46,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFailWhenClassDoesntExists()
     {
         $factory = new FactoryMockFtpFactory();
-        $this->expectException(Ftp\Exception::class);
-        $this->expectExceptionMessageRegExp('~^Unable to create ~');
+        $this->setExpectedException('\FMUP\Ftp\Exception');
         $factory->create('NotExistingDriver');
     }
 
     public function testCreateFailWhenClassNotCorrect()
     {
         $factory = new FactoryMockFtpFactory();
-        $this->expectException(Ftp\Exception::class);
-        $this->expectExceptionMessageRegExp('~^Unable to create ~');
+        $this->setExpectedException('\FMUP\Ftp\Exception');
         $factory->create('DriverFailMock');
     }
 
@@ -63,13 +61,13 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = Ftp\Factory::getInstance();
         $driverDefault = $factory->create();
-        $this->assertInstanceOf(Ftp\FtpInterface::class, $driverDefault);
-        $this->assertInstanceOf(Ftp\Driver\Ftp::class, $driverDefault);
+        $this->assertInstanceOf('\FMUP\Ftp\FtpInterface', $driverDefault);
+        $this->assertInstanceOf('\FMUP\Ftp\Driver\Ftp', $driverDefault);
         $driverDefault2 = $factory->create();
         $this->assertEquals($driverDefault, $driverDefault2);
         $this->assertNotSame($driverDefault, $driverDefault2);
         $driverDefault3 = $factory->create(FactoryMockFtpFactory::DRIVER_SFTP, array('test' => 1));
         $this->assertNotEquals($driverDefault, $driverDefault3);
-        $this->assertInstanceOf(Ftp\Driver\Sftp::class, $driverDefault3);
+        $this->assertInstanceOf('\FMUP\Ftp\Driver\Sftp', $driverDefault3);
     }
 }

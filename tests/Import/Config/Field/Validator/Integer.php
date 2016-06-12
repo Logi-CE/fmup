@@ -13,7 +13,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     public function testSetGetCanEmpty()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Integer();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->getCanEmpty());
         $validator = new \FMUP\Import\Config\Field\Validator\Integer(true);
         $this->assertTrue($validator->getCanEmpty());
@@ -28,7 +28,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Integer;
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $validator->setCanEmpty(false);
         $this->assertFalse($validator->validate(''));
         $validator->setCanEmpty(true);
@@ -45,7 +45,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Integer();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu n\'est pas un nombre entier', $validator->getErrorMessage());
     }
 }

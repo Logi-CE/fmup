@@ -74,7 +74,7 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     public function testLoggerName()
     {
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('log'))->getMock();
         $logger->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger\Channel\System::NAME));
         /** @var \FMUP\Logger $logger */
         $pdo = new PdoConfigurationMockDbDriverPdoConfiguration;
@@ -84,23 +84,22 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDriverWhenFail()
     {
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('log'))->getMock();
         $logger->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger\Channel\System::NAME));
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getDsn', 'getLogin', 'getPassword'))
             ->getMock();
         $pdo->method('getDsn')->willReturn('mysql:host=127.0.0.1');
         /** @var \FMUP\Logger $logger */
         /** @var PdoConfigurationMockDbDriverPdoConfiguration $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to connect database');
+        $this->setExpectedException('\FMUP\Db\Exception', 'Unable to connect database');
         $pdo->setLogger($logger)->getDriver();
     }
 
     public function testGetDriver()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoConfiguration::class)->getMock();
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\PdoMockDbDriverPdoConfiguration')->getMock();
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getPdo'))
             ->getMock();
         $pdo->expects($this->once())->method('getPdo')->willReturn($pdoMock);
@@ -111,8 +110,8 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testForceReconnect()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoConfiguration::class)->getMock();
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\PdoMockDbDriverPdoConfiguration')->getMock();
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getPdo'))
             ->getMock();
         $pdo->expects($this->exactly(2))->method('getPdo')->willReturn($pdoMock);
@@ -126,8 +125,8 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDriverWithDatabase()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoConfiguration::class)->getMock();
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\PdoMockDbDriverPdoConfiguration')->getMock();
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getPdo'))
             ->setConstructorArgs(array(array('database' => 'unitTest')))
             ->getMock();
@@ -139,28 +138,27 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testRawExecuteFailRandom()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoConfiguration::class)
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\PdoMockDbDriverPdoConfiguration')
             ->setMethods(array('prepare'))
             ->getMock();
         $pdoMock->expects($this->once())->method('prepare')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getDriver', 'log'))
             ->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var PdoConfigurationMockDbDriverPdoConfiguration $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('random message');
+        $this->setExpectedException('\FMUP\Db\Exception', 'random message');
         $pdo->rawExecute('sql');
     }
 
     public function testRawExecute()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute')->willReturn(true);
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoConfiguration::class)->setMethods(array('prepare'))->getMock();
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\PdoMockDbDriverPdoConfiguration')->setMethods(array('prepare'))->getMock();
         $pdoMock->expects($this->once())->method('prepare')->willReturn($statement);
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getDriver', 'log'))
             ->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
@@ -171,35 +169,33 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchRowFailNotStatement()
     {
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('log'))
             ->getMock();
         $pdo->expects($this->once())
             ->method('log')
             ->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('Statement not in right format'));
         /** @var PdoConfigurationMockDbDriverPdoConfiguration $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Statement not in right format');
+        $this->setExpectedException('\FMUP\Db\Exception', 'Statement not in right format');
         $pdo->fetchRow('sql');
     }
 
     public function testFetchRowFailRandom()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('fetch'))->getMock();
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('fetch'))->getMock();
         $statement->expects($this->once())->method('fetch')->willThrowException(new \PDOException('random message'));
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('log'))
             ->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
         /** @var PdoConfigurationMockDbDriverPdoConfiguration $pdo */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('random message');
+        $this->setExpectedException('\FMUP\Db\Exception', 'random message');
         $pdo->fetchRow($statement, array('test' => 'test'));
     }
 
     public function testFetchRow()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)
+        $statement = $this->getMockBuilder('\PDOStatement')
             ->setMethods(array('fetch'))
             ->getMock();
         $statement->expects($this->once())->method('fetch')
@@ -209,7 +205,7 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(PdoConfigurationMockDbDriverPdoConfiguration::CURSOR_NEXT),
                 $this->equalTo(3)
             );
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('getFetchMode'))
             ->getMock();
         $pdo->expects($this->once())->method('getFetchMode')->willReturn(1);
@@ -223,7 +219,7 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetFetchMode()
     {
-        $pdo = $this->getMockBuilder(PdoConfigurationMockDbDriverPdoConfiguration::class)
+        $pdo = $this->getMockBuilder('\Tests\Db\Driver\PdoConfigurationMockDbDriverPdoConfiguration')
             ->setMethods(array('log'))
             ->getMock();
         $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Fetch Mode changed'));

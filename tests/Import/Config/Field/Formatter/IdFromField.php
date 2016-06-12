@@ -11,7 +11,7 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
 {
     public function testFormatterErrorWhenNotExists()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(array('fetchRow'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -19,13 +19,13 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
             ->method('fetchRow')
             ->with($this->equalTo("SELECT id FROM originTable WHERE originField LIKE '%test%'"))
             ->willReturn(null);
-        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\IdFromField::class)
+        $formatter = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\IdFromField')
             ->setMethods(array('getDb'))
             ->setConstructorArgs(array('originField', 'originTable'))
             ->getMock();
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertSame('test', $formatter->format('test'));
         $this->assertTrue($formatter->hasError());
         $this->assertSame(
@@ -37,18 +37,18 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatterErrorWhenEmpty()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(array('fetchRow'))
             ->disableOriginalConstructor()
             ->getMock();
         $db->expects($this->never())->method('fetchRow');
-        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\IdFromField::class)
+        $formatter = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\IdFromField')
             ->setMethods(array('getDb'))
             ->setConstructorArgs(array('originField', 'originTable'))
             ->getMock();
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertSame('', $formatter->format(''));
         $this->assertTrue($formatter->hasError());
         $this->assertSame(
@@ -60,29 +60,29 @@ class IdFromFieldTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatterSuccess()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(array('fetchRow'))
             ->disableOriginalConstructor()
             ->getMock();
         $db->method('fetchRow')
             ->with($this->equalTo("SELECT id FROM originTable WHERE originField LIKE '%test%'"))
             ->willReturn(array('id' => 10));
-        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\IdFromField::class)
+        $formatter = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\IdFromField')
             ->setMethods(array('getDb'))
             ->setConstructorArgs(array('originField', 'originTable'))
             ->getMock();
         $formatter->method('getDb')->willReturn($db);
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\IdFromField */
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertSame(10, $formatter->format('test'));
         $this->assertFalse($formatter->hasError());
     }
 
     public function testSetGetDb()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)->disableOriginalConstructor()->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->disableOriginalConstructor()->getMock();
         $db2 = clone $db;
-        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\IdFromField::class)
+        $formatter = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\IdFromField')
             ->setMethods(array('getModelDb'))
             ->setConstructorArgs(array('originField', 'originTable'))
             ->getMock();

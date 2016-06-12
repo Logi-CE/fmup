@@ -6,13 +6,13 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $queue = new \FMUP\Queue('bob');
-        $this->assertInstanceOf(\FMUP\Queue::class, $queue, 'Queue is not instance of ' . \FMUP\Queue::class);
+        $this->assertInstanceOf('\FMUP\Queue', $queue, 'Queue is not instance of ' . '\FMUP\Queue');
         $queue2 = new \FMUP\Queue('bob2');
-        $this->assertInstanceOf(\FMUP\Queue::class, $queue2, 'Queue2 is not instance of ' . \FMUP\Queue::class);
+        $this->assertInstanceOf('\FMUP\Queue', $queue2, 'Queue2 is not instance of ' . '\FMUP\Queue');
         $this->assertNotSame($queue2, $queue, 'Queue2 is same than queue1');
         $this->assertNotEquals($queue2, $queue, 'Queue2 is same than queue1');
         $queue3 = new \FMUP\Queue('bob3');
-        $this->assertInstanceOf(\FMUP\Queue::class, $queue3, 'Queue3 is not instance of ' . \FMUP\Queue::class);
+        $this->assertInstanceOf('\FMUP\Queue', $queue3, 'Queue3 is not instance of ' . '\FMUP\Queue');
         $this->assertNotSame($queue3, $queue, 'Queue3 is same than queue1');
         $this->assertNotEquals($queue3, $queue, 'Queue3 is same than queue1');
         $this->assertNotSame($queue3, $queue2, 'Queue3 is same than queue2');
@@ -27,7 +27,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testGetOrDefineChannel(\FMUP\Queue $queue)
     {
         $channel = $queue->getOrDefineChannel();
-        $this->assertInstanceOf(\FMUP\Queue\Channel::class, $channel, 'Unable to create channel');
+        $this->assertInstanceOf('\FMUP\Queue\Channel', $channel, 'Unable to create channel');
         $channel2 = $queue->getOrDefineChannel();
         $this->assertSame($channel2, $channel, 'Channel seems created twice, must optimize');
         $queue = new \FMUP\Queue('');
@@ -61,14 +61,14 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testGetDriver(\FMUP\Queue $queue)
     {
         $queue2 = clone $queue;
-        $config = $this->getMockBuilder(\FMUP\Config::class)->getMock();
+        $config = $this->getMockBuilder('\FMUP\Config')->getMock();
         $config->method('has')->willReturn(true);
         $config->method('get')->willReturn('Unit');
         $environment = \FMUP\Environment::getInstance()->setConfig($config);
         $queue->setEnvironment($environment);
         $driver = $queue->getDriver();
-        $this->assertInstanceOf(\FMUP\Queue\DriverInterface::class, $driver, 'Get Driver instance must return an instance of DriverInterface');
-        $this->assertInstanceOf(\FMUP\Queue\Driver\Native::class, $driver, 'Default behaviour is to define a driver Native');
+        $this->assertInstanceOf('\FMUP\Queue\DriverInterface', $driver, 'Get Driver instance must return an instance of DriverInterface');
+        $this->assertInstanceOf('\FMUP\Queue\Driver\Native', $driver, 'Default behaviour is to define a driver Native');
         if ($driver instanceof \FMUP\Environment\OptionalInterface) {
             $this->assertTrue($driver->hasEnvironment());
             $this->assertSame($environment, $driver->getEnvironment(), 'Driver must have same environment than queue if defined');
@@ -162,7 +162,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $queue->setDriver($mockDriver);
         $stats = $queue->getStats();
         $this->assertEquals(1, $stats['stats'], 'Stats not returned');
-        $this->expectException(\FMUP\Queue\Exception::class);
+        $this->setExpectedException('\FMUP\Queue\Exception');
         $queue->getStats();
     }
 
@@ -178,7 +178,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $mockDriver->expects($this->atLeast(1))->method('ackMessage')->willReturn($mockDriver);
         /** @var $mockDriver \FMUP\Queue\DriverInterface */
         $queue->setDriver($mockDriver);
-        $message = $this->getMockBuilder(\FMUP\Queue\Message::class)->getMock();
+        $message = $this->getMockBuilder('\FMUP\Queue\Message')->getMock();
         /** @var $message \FMUP\Queue\Message */
         $return = $queue->ackMessage($message);
         $this->assertSame($mockDriver, $return);
@@ -190,7 +190,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     private function getDriverMock()
     {
-        return $this->getMockBuilder(\FMUP\Queue\DriverInterface::class)->getMock();
+        return $this->getMockBuilder('\FMUP\Queue\DriverInterface')->getMock();
     }
 
 }

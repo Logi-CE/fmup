@@ -12,7 +12,7 @@ class HttpHeaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanHandle()
     {
-        $httpHeader = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\HttpHeader::class)
+        $httpHeader = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\HttpHeader')
             ->setMethods(array('getException'))
             ->getMock();
         $httpHeader->expects($this->exactly(2))
@@ -25,11 +25,11 @@ class HttpHeaderTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(array('setHeader'))->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(array('setHeader'))->getMock();
         $response->expects($this->exactly(1))
             ->method('setHeader')
             ->with($this->equalTo(new Status(Status::VALUE_INTERNAL_SERVER_ERROR)));
-        $httpHeader = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\HttpHeader::class)
+        $httpHeader = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\HttpHeader')
             ->setMethods(null)
             ->getMock();
         /**

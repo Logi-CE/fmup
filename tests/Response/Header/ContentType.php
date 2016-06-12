@@ -12,7 +12,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $contentType = new \FMUP\Response\Header\ContentType();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $contentType);
+        $this->assertInstanceOf('\FMUP\Response\Header', $contentType);
         $this->assertSame(\FMUP\Response\Header\ContentType::MIME_TEXT_HTML, $contentType->getMime());
         $this->assertSame(\FMUP\Response\Header\ContentType::CHARSET_UTF_8, $contentType->getCharset());
         $this->assertSame('text/html;charset=utf-8', $contentType->getValue());

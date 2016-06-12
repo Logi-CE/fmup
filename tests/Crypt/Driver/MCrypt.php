@@ -17,7 +17,7 @@ class MCryptTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $crypt = new MCrypt();
-        $this->assertInstanceOf(Crypt\CryptInterface::class, $crypt);
+        $this->assertInstanceOf('\FMUP\Crypt\CryptInterface', $crypt);
         return $crypt;
     }
 
@@ -29,7 +29,7 @@ class MCryptTest extends \PHPUnit_Framework_TestCase
     public function testSetKey(MCrypt $cryptOriginal)
     {
         $crypt = clone $cryptOriginal;
-        $mcrypt = new \ReflectionMethod(\FMUP\Crypt\Driver\MCrypt::class, 'getKey');
+        $mcrypt = new \ReflectionMethod('\FMUP\Crypt\Driver\MCrypt', 'getKey');
         $mcrypt->setAccessible(true);
         $this->assertEquals(\FMUP\Crypt\Driver\MCrypt::KEY, $mcrypt->invoke($crypt));
         $this->assertSame($crypt, $crypt->setKey('unitTest'));

@@ -12,9 +12,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testSetGetOriginalRequest()
     {
         $dispatcher = new \FMUP\Dispatcher();
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(null)->getMock();
         $this->assertNull($dispatcher->getOriginalRequest());
-        $reflection = new \ReflectionMethod(\FMUP\Dispatcher::class, 'setOriginalRequest');
+        $reflection = new \ReflectionMethod('\FMUP\Dispatcher', 'setOriginalRequest');
         $reflection->setAccessible(true);
         $this->assertSame($dispatcher, $reflection->invoke($dispatcher, $request));
         $this->assertNotSame($request, $dispatcher->getOriginalRequest());
@@ -29,9 +29,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithoutPlugins()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);
@@ -47,27 +47,27 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchWithPlugins()
     {
-        $plugin1 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin1->expects($this->exactly(2))->method('canHandle')->will($this->onConsecutiveCalls(false, true));
         $plugin1->expects($this->exactly(1))->method('handle');
         $plugin1->method('getName')->willReturn(uniqid());
-        $plugin2 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin2->expects($this->exactly(2))->method('canHandle')->will($this->onConsecutiveCalls(false, false));
         $plugin2->expects($this->exactly(0))->method('handle');
         $plugin2->method('getName')->willReturn(uniqid());
-        $plugin3 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin3->expects($this->exactly(2))->method('canHandle')->will($this->onConsecutiveCalls(true, false));
         $plugin3->expects($this->exactly(1))->method('handle');
         $plugin3->method('getName')->willReturn(uniqid());
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);
@@ -91,7 +91,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchPluginOrder()
     {
-        $plugin1 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin1->method('getName')->willReturn(uniqid());
@@ -101,7 +101,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin1->getResponse()->setBody(str_replace('U', '_U', $plugin1->getResponse()->getBody()));
             return $plugin1;
         }));
-        $plugin2 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin2->method('getName')->willReturn(uniqid());
@@ -111,7 +111,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin2->getResponse()->setBody(strtolower($plugin2->getResponse()->getBody()));
             return $plugin2;
         }));
-        $plugin3 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin3->method('getName')->willReturn(uniqid());
@@ -121,9 +121,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin3->getResponse()->setBody($plugin3->getResponse()->getBody() . '_2');
             return $plugin3;
         }));
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);
@@ -146,7 +146,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchPluginWithReplacement()
     {
-        $plugin1 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin1->method('getName')->willReturn('SAME_NAME_AS_ONE');
@@ -156,7 +156,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin1->getResponse()->setBody(str_replace('U', '_U', $plugin1->getResponse()->getBody()));
             return $plugin1;
         }));
-        $plugin2 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin2->method('getName')->willReturn('SAME_NAME_AS_ONE');
@@ -166,7 +166,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin2->getResponse()->setBody(strtolower($plugin2->getResponse()->getBody()));
             return $plugin2;
         }));
-        $plugin3 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin3->method('getName')->willReturn(uniqid());
@@ -176,9 +176,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin3->getResponse()->setBody($plugin3->getResponse()->getBody() . '_2');
             return $plugin3;
         }));
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);
@@ -201,7 +201,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatchPluginWithReplacementOnPrepend()
     {
-        $plugin1 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin1->method('getName')->willReturn('SAME_NAME_AS_THREE');
@@ -211,7 +211,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin1->getResponse()->setBody(str_replace('U', '_U', $plugin1->getResponse()->getBody()));
             return $plugin1;
         }));
-        $plugin2 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin2->method('getName')->willReturn('SAME_NAME_AS_ONE');
@@ -221,7 +221,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin2->getResponse()->setBody(strtolower($plugin2->getResponse()->getBody()));
             return $plugin2;
         }));
-        $plugin3 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin3->method('getName')->willReturn('SAME_NAME_AS_THREE');
@@ -231,9 +231,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin3->getResponse()->setBody($plugin3->getResponse()->getBody() . '_2');
             return $plugin3;
         }));
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);
@@ -256,7 +256,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testRemovePlugin()
     {
-        $plugin1 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin1->method('getName')->willReturn('PLUGIN_ONE');
@@ -266,7 +266,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin1->getResponse()->setBody(str_replace('U', '_U', $plugin1->getResponse()->getBody()));
             return $plugin1;
         }));
-        $plugin2 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin2->method('getName')->willReturn('PLUGIN_TWO');
@@ -276,7 +276,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin2->getResponse()->setBody(strtolower($plugin2->getResponse()->getBody()));
             return $plugin2;
         }));
-        $plugin3 = $this->getMockBuilder(\FMUP\Dispatcher\Plugin::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\Dispatcher\Plugin')
             ->setMethods(array('handle', 'canHandle', 'getName'))
             ->getMock();
         $plugin3->method('getName')->willReturn('PLUGIN_THREE');
@@ -286,9 +286,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $plugin3->getResponse()->setBody($plugin3->getResponse()->getBody() . '_2');
             return $plugin3;
         }));
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $dispatcher = $this->getMockBuilder(\FMUP\Dispatcher::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $dispatcher = $this->getMockBuilder('\FMUP\Dispatcher')
             ->setMethods(array('setOriginalRequest', 'defaultPlugins'))
             ->getMock();
         $dispatcher->expects($this->exactly(1))->method('defaultPlugins')->willReturn($dispatcher);

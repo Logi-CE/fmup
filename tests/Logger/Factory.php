@@ -24,7 +24,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Logger\Factory::class);
+        $reflector = new \ReflectionClass('\FMUP\Logger\Factory');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -38,7 +38,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         }
 
         $factory = \FMUP\Logger\Factory::getInstance();
-        $this->assertInstanceOf(\FMUP\Logger\Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Logger\Factory', $factory);
         $factory2 = \FMUP\Logger\Factory::getInstance();
         $this->assertSame($factory, $factory2);
     }
@@ -47,18 +47,17 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new FactoryMockLoggerFactory();
         $instance = $factory->getChannel(uniqid());
-        $this->assertInstanceOf(\FMUP\Logger\Channel::class, $instance);
+        $this->assertInstanceOf('\FMUP\Logger\Channel', $instance);
         $instance2 = $factory->getChannel(uniqid());
-        $this->assertInstanceOf(\FMUP\Logger\Channel\Standard::class, $instance2);
+        $this->assertInstanceOf('\FMUP\Logger\Channel\Standard', $instance2);
         $this->assertNotSame($instance, $instance2);
-        $this->assertInstanceOf(\FMUP\Logger\Channel\Error::class, $factory->getChannel('Error'));
+        $this->assertInstanceOf('\FMUP\Logger\Channel\Error', $factory->getChannel('Error'));
     }
 
     public function testGetChannelFailsDueToInccorectChannel()
     {
         $factory = new FactoryMockLoggerFactory();
-        $this->expectException(\FMUP\Logger\Exception::class);
-        $this->expectExceptionMessage('Channel Mock is not correctly formatted');
+        $this->setExpectedException('\FMUP\Logger\Exception', 'Channel Mock is not correctly formatted');
         $factory->getChannel('Mock');
     }
 }

@@ -12,11 +12,11 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $pragma = new \FMUP\Response\Header\Pragma(\FMUP\Response\Header\Pragma::MODE_CACHE);
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $pragma);
+        $this->assertInstanceOf('\FMUP\Response\Header', $pragma);
         $this->assertSame(\FMUP\Response\Header\Pragma::MODE_CACHE, $pragma->getMode());
 
         $pragma = new \FMUP\Response\Header\Pragma(\FMUP\Response\Header\Pragma::MODE_NOCACHE);
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $pragma);
+        $this->assertInstanceOf('\FMUP\Response\Header', $pragma);
         $this->assertSame(\FMUP\Response\Header\Pragma::MODE_NOCACHE, $pragma->getMode());
         $this->assertSame(\FMUP\Response\Header\Pragma::MODE_NOCACHE, $pragma->getValue());
     }

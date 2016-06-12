@@ -11,7 +11,7 @@ class LineToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetConfig()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->getMock();
+        $config = $this->getMockBuilder('\FMUP\Import\Config')->getMock();
         /** @var \FMUP\Import\Config $config */
         $iterator = new \FMUP\Import\Iterator\LineToConfigIterator(new \ArrayIterator(), $config);
         $this->assertSame($config, $iterator->getConfig());
@@ -19,7 +19,7 @@ class LineToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIterations()
     {
-        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+        $field = $this->getMockBuilder('\FMUP\Import\Config\Field')
             ->setMethods(array('setValue'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -30,7 +30,7 @@ class LineToConfigIteratorTest extends \PHPUnit_Framework_TestCase
         $field->expects($this->at(4))->method('setValue')->with($this->equalTo('value2'));
         $field->expects($this->at(5))->method('setValue')->with($this->equalTo(''));
         $field->expects($this->at(6))->method('setValue')->with($this->equalTo('test3'));
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->setMethods(array('getField'))->getMock();
+        $config = $this->getMockBuilder('\FMUP\Import\Config')->setMethods(array('getField'))->getMock();
         $config->method('getField')->willReturn($field);
         /** @var \FMUP\Import\Config $config */
         $iterator = new \FMUP\Import\Iterator\LineToConfigIterator(
@@ -38,7 +38,7 @@ class LineToConfigIteratorTest extends \PHPUnit_Framework_TestCase
             $config
         );
         foreach ($iterator as $current) {
-            $this->assertInstanceOf(\FMUP\Import\Config::class, $current);
+            $this->assertInstanceOf('\FMUP\Import\Config', $current);
         }
     }
 }

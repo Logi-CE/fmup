@@ -11,17 +11,17 @@ class DateSQLTest extends \PHPUnit_Framework_TestCase
 {
     public function testFormat()
     {
-        $formatter = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\DateSQL::class)
+        $formatter = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\DateSQL')
             ->setMethods(array('toDate'))
             ->getMock();
         /** @var $formatter \FMUP\Import\Config\Field\Formatter\DateSQL */
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $this->assertSame('Champ vide', $formatter->format(''));
         $this->assertTrue($formatter->hasError());
         $this->assertSame("La valeur  n'est pas convertible", $formatter->getErrorMessage());
 
-        $formatter2 = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\DateSQL::class)
+        $formatter2 = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\DateSQL')
             ->setMethods(array('toDate'))
             ->getMock();
         $formatter2->method('toDate')->willReturnOnConsecutiveCalls('2010-10-10 10:10:10', false)->with($this->equalTo('test'));
@@ -37,8 +37,8 @@ class DateSQLTest extends \PHPUnit_Framework_TestCase
     public function testToDate()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\DateSQL;
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
-        $function = new \ReflectionMethod(\FMUP\Import\Config\Field\Formatter\DateSQL::class, 'toDate');
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
+        $function = new \ReflectionMethod('\FMUP\Import\Config\Field\Formatter\DateSQL', 'toDate');
         $function->setAccessible(true);
         $this->assertRegExp('~^2012-11-10 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$~', $function->invoke($formatter, '10/11/2012'));
         $this->assertRegExp('~^2010-11-12 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$~', $function->invoke($formatter, '2010-11-12'));

@@ -18,7 +18,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Version::class);
+        $reflector = new \ReflectionClass('\FMUP\Version');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -32,7 +32,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         }
 
         $version = \FMUP\Version::getInstance();
-        $this->assertInstanceOf(\FMUP\Version::class, $version);
+        $this->assertInstanceOf('\FMUP\Version', $version);
         $version2 = \FMUP\Version::getInstance();
         $this->assertSame($version, $version2);
     }
@@ -55,30 +55,28 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWhenFilePathFails()
     {
-        $version = $this->getMockBuilder(VersionMock::class)->setMethods(array('getComposerPath'))->getMock();
+        $version = $this->getMockBuilder('\Tests\VersionMock')->setMethods(array('getComposerPath'))->getMock();
         $version->method('getComposerPath')->willReturn('/unexistingFile');
 
-        $reflection = new \ReflectionProperty(\FMUP\Version::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Version', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('composer.json does not exist');
+        $this->setExpectedException('\FMUP\Exception', 'composer.json does not exist');
         /** @var $version \FMUP\Version */
         $version->get();
     }
 
     public function testGetWhenFileIsNotValid()
     {
-        $version = $this->getMockBuilder(VersionMock::class)->setMethods(array('getComposerPath'))->getMock();
+        $version = $this->getMockBuilder('\Tests\VersionMock')->setMethods(array('getComposerPath'))->getMock();
         $version->method('getComposerPath')->willReturn(__FILE__);
 
-        $reflection = new \ReflectionProperty(\FMUP\Version::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Version', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('composer.json invalid structure');
+        $this->setExpectedException('\FMUP\Exception', 'composer.json invalid structure');
         /** @var $version \FMUP\Version */
         $version->get();
     }

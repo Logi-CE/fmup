@@ -11,16 +11,16 @@ class SyslogTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+        $monologChannel = $this->getMockBuilder('\Monolog\Logger')
             ->setMethods(array('pushHandler'))
             ->setConstructorArgs(array('Mock'))
             ->getMock();
-        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Syslog::class)
+        $channel = $this->getMockBuilder('\FMUP\Logger\Channel\Syslog')
             ->setMethods(array('getLogger'))
             ->getMock();
         $channel->method('getLogger')->willReturn($monologChannel);
         /** @var $channel \FMUP\Logger\Channel\Syslog */
-        $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);
+        $this->assertInstanceOf('\FMUP\Logger\Channel', $channel);
         $this->assertSame($channel, $channel->configure());
     }
 }

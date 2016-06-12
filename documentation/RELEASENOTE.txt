@@ -1,4 +1,13 @@
 /*********/
+/* 6.8.2 */
+/*********/
+
+Regaining PHP 5.4 compatibility
+
+#Fix
+ - Downgrade PHP dependencies
+
+/*********/
 /* 6.8.1 */
 /*********/
 

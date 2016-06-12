@@ -12,18 +12,18 @@ class CacheControlTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cacheControl = new \FMUP\Response\Header\CacheControl();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $cacheControl);
-        $this->assertInstanceOf(\DateTime::class, $cacheControl->getExpireDate());
+        $this->assertInstanceOf('\FMUP\Response\Header', $cacheControl);
+        $this->assertInstanceOf('\DateTime', $cacheControl->getExpireDate());
         $this->assertEquals(time(), $cacheControl->getExpireDate()->getTimestamp());
         $this->assertSame(\FMUP\Response\Header\CacheControl::CACHE_TYPE_PUBLIC, $cacheControl->getCacheType());
 
         $cacheControl = new \FMUP\Response\Header\CacheControl(new \DateTime('-1 year'));
-        $this->assertInstanceOf(\DateTime::class, $cacheControl->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $cacheControl->getExpireDate());
         $this->assertTrue((time() > $cacheControl->getExpireDate()->getTimestamp()));
         $this->assertSame(\FMUP\Response\Header\CacheControl::CACHE_TYPE_PUBLIC, $cacheControl->getCacheType());
 
         $cacheControl = new \FMUP\Response\Header\CacheControl(new \DateTime('-1 year'), \FMUP\Response\Header\CacheControl::CACHE_TYPE_PRIVATE);
-        $this->assertInstanceOf(\DateTime::class, $cacheControl->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $cacheControl->getExpireDate());
         $this->assertTrue((time() > $cacheControl->getExpireDate()->getTimestamp()));
         $this->assertSame(\FMUP\Response\Header\CacheControl::CACHE_TYPE_PRIVATE, $cacheControl->getCacheType());
     }
@@ -41,7 +41,7 @@ class CacheControlTest extends \PHPUnit_Framework_TestCase
     public function testSetGetExpireDate()
     {
         $cacheControl = new \FMUP\Response\Header\CacheControl();
-        $this->assertInstanceOf(\DateTime::class, $cacheControl->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $cacheControl->getExpireDate());
         $this->assertEquals(time(), $cacheControl->getExpireDate()->getTimestamp());
         $date = new \DateTime('-2 months');
         $this->assertSame($cacheControl, $cacheControl->setExpireDate($date));

@@ -20,11 +20,11 @@ class SapiTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Sapi', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Sapi::getInstance(), null);
 
-        $reflector = new \ReflectionClass(\FMUP\Sapi::class);
+        $reflector = new \ReflectionClass('\FMUP\Sapi');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -38,7 +38,7 @@ class SapiTest extends \PHPUnit_Framework_TestCase
         }
 
         $sapi = \FMUP\Sapi::getInstance();
-        $this->assertInstanceOf(\FMUP\Sapi::class, $sapi);
+        $this->assertInstanceOf('\FMUP\Sapi', $sapi);
         $sapi2 = \FMUP\Sapi::getInstance();
         $this->assertSame($sapi, $sapi2);
     }
@@ -51,10 +51,10 @@ class SapiTest extends \PHPUnit_Framework_TestCase
 
     public function testIsCli()
     {
-        $sapi = $this->getMockBuilder(SapiMock::class)->setMethods(array('getRaw'))->getMock();
+        $sapi = $this->getMockBuilder('\Tests\SapiMock')->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMock::CLI);
 
-        $reflection = new \ReflectionProperty(\FMUP\Sapi::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Sapi', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($sapi);
         /** @var $sapi \FMUP\Sapi */

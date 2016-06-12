@@ -12,7 +12,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
     public function testSetGetCanEmpty()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Date();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->canEmpty());
         $validator = new \FMUP\Import\Config\Field\Validator\Date(true);
         $this->assertTrue($validator->canEmpty());
@@ -27,7 +27,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Date;
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $validator->setCanEmpty(false);
         $this->assertFalse($validator->validate(''));
         $validator->setCanEmpty(true);
@@ -48,7 +48,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Date();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu n\'est pas une date valide', $validator->getErrorMessage());
     }
 }

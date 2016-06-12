@@ -23,11 +23,11 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetRequest()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Http')->getMock();
         /** @var $request \FMUP\Request\Http */
         $url = new \FMUP\Request\Url();
         $requestDefault = $url->getRequest();
-        $this->assertInstanceOf(\FMUP\Request\Http::class, $requestDefault);
+        $this->assertInstanceOf('\FMUP\Request\Http', $requestDefault);
         $this->assertSame($requestDefault, $url->getRequest());
         $this->assertSame($url, $url->setRequest($request));
         $this->assertSame($request, $url->getRequest());
@@ -35,7 +35,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testBuild()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getRequestUri'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Http')->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')
             ->will(
                 $this->onConsecutiveCalls(
@@ -47,7 +47,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
                     '/path/to/file?v=1'
                 )
             );
-        $url = $this->getMockBuilder(\FMUP\Request\Url::class)->setMethods(array('getParams'))->getMock();
+        $url = $this->getMockBuilder('\FMUP\Request\Url')->setMethods(array('getParams'))->getMock();
         $url->method('getParams')
             ->will(
                 $this->onConsecutiveCalls(

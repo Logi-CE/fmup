@@ -42,36 +42,36 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(null)->getMock();
-        $reflection = new \ReflectionProperty(Ftp::class, Ftp::DRIVER);
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(null)->getMock();
+        $reflection = new \ReflectionProperty('\FMUP\Ftp', Ftp::DRIVER);
         $reflection->setAccessible(true);
         $this->assertSame(Ftp\Factory::DRIVER_FTP, $reflection->getValue($ftp));
 
-        $ftp = $this->getMockBuilder(Ftp::class)
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')
             ->setMethods(null)
             ->setConstructorArgs(array(array('driver' => 'unexisting driver')))
             ->getMock();
-        $reflection = new \ReflectionProperty(Ftp::class, 'driver');
+        $reflection = new \ReflectionProperty('\FMUP\Ftp', 'driver');
         $reflection->setAccessible(true);
         $this->assertSame('unexisting driver', $reflection->getValue($ftp));
     }
 
     public function testGetDriver()
     {
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(null)->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(null)->getMock();
         /**
          * @var $ftp Ftp
          * @var $factory Ftp\Factory
          */
         $retrievedDriver = $ftp->getDriver();
-        $this->assertInstanceOf(Ftp\FtpInterface::class, $retrievedDriver);
+        $this->assertInstanceOf('\FMUP\Ftp\FtpInterface', $retrievedDriver);
         $this->assertSame($retrievedDriver, $ftp->getDriver());
     }
     
     public function testClose()
     {
-        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('close'))->getMock();
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+        $ftpInterface = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('close'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(array('getDriver'))->getMock();
 
         $ftpInterface->expects($this->exactly(2))->method('close')->will($this->onConsecutiveCalls(true, false));
         $ftp->expects($this->exactly(2))->method('getDriver')->will(
@@ -86,8 +86,8 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('delete'))->getMock();
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+        $ftpInterface = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('delete'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(array('getDriver'))->getMock();
 
         $ftpInterface->expects($this->exactly(2))
             ->method('delete')
@@ -105,8 +105,8 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('get'))->getMock();
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+        $ftpInterface = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('get'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(array('getDriver'))->getMock();
 
         $ftpInterface->expects($this->exactly(2))
             ->method('get')
@@ -124,8 +124,8 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testLogin()
     {
-        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('login'))->getMock();
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+        $ftpInterface = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('login'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(array('getDriver'))->getMock();
 
         $ftpInterface->expects($this->exactly(2))
             ->method('login')
@@ -143,9 +143,9 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testConnect()
     {
-        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('connect'))->getMock();
-        $ftpInterface2 = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('connect'))->getMock();
-        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+        $ftpInterface = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('connect'))->getMock();
+        $ftpInterface2 = $this->getMockBuilder('\Tests\FtpInterfaceMockFtp')->setMethods(array('connect'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp')->setMethods(array('getDriver'))->getMock();
 
         $ftpInterface->expects($this->once())
             ->method('connect')
@@ -168,12 +168,12 @@ class FtpTest extends \PHPUnit_Framework_TestCase
     {
         $ftp = new Ftp;
         $factory = $ftp->getFactory();
-        $this->assertInstanceOf(Ftp\Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Ftp\Factory', $factory);
         $this->assertSame($factory, $ftp->getFactory());
 
-        $factory = $this->getMockBuilder(FtpFactoryMockFtp::class)->getMock();
+        $factory = $this->getMockBuilder('\Tests\FtpFactoryMockFtp')->disableOriginalConstructor()->getMock();
         /** @var $factory Ftp\Factory */
-        $reflection = new \ReflectionProperty(Ftp\Factory::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Ftp\Factory', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($ftp->getFactory(), $factory);
         $this->assertSame($ftp, $ftp->setFactory($factory));

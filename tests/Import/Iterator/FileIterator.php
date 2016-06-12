@@ -12,8 +12,7 @@ class FileIteratorTest extends \PHPUnit_Framework_TestCase
     public function testFailWhenFileDontExists()
     {
         $iterator = new \FMUP\Import\Iterator\FileIterator();
-        $this->expectException(\FMUP\Import\Exception::class);
-        $this->expectExceptionMessage("Le fichier specifie n'existe pas ou est introuvable");
+        $this->setExpectedException('\FMUP\Import\Exception', "Le fichier specifie n'existe pas ou est introuvable");
         $iterator->rewind();
     }
 

@@ -18,16 +18,16 @@ class DbTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(null)->getMock();
-        $reflection = new \ReflectionProperty(\FMUP\Db::class, 'driver');
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(null)->getMock();
+        $reflection = new \ReflectionProperty('\FMUP\Db', 'driver');
         $reflection->setAccessible(true);
         $this->assertSame(\FMUP\Db\Factory::DRIVER_PDO, $reflection->getValue($db));
 
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(null)
             ->setConstructorArgs(array(array('db_driver' => 'unexisting driver')))
             ->getMock();
-        $reflection = new \ReflectionProperty(\FMUP\Db::class, 'driver');
+        $reflection = new \ReflectionProperty('\FMUP\Db', 'driver');
         $reflection->setAccessible(true);
         $this->assertSame('unexisting driver', $reflection->getValue($db));
     }
@@ -36,12 +36,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $db = new \FMUP\Db;
         $factory = $db->getFactory();
-        $this->assertInstanceOf(\FMUP\Db\Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Db\Factory', $factory);
         $this->assertSame($factory, $db->getFactory());
 
-        $factory = $this->getMockBuilder(DbFactoryMockDb::class)->getMock();
+        $factory = $this->getMockBuilder('\Tests\DbFactoryMockDb')->getMock();
         /** @var $factory \FMUP\Db\Factory */
-        $reflection = new \ReflectionProperty(\FMUP\Db\Factory::class, 'instance');
+        $reflection = new \ReflectionProperty('\FMUP\Db\Factory', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($db->getFactory(), $factory);
         $this->assertSame($db, $db->setFactory($factory));
@@ -52,7 +52,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $sql = 'SELECT * FROM UNIT_TEST';
         $statement = new \stdClass();
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -65,17 +65,17 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->method('execute')
             ->with($this->equalTo($statement), $this->equalTo(array()))
             ->willReturn($statement);
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(array('getDriver'))
             ->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
-        $this->assertInstanceOf(\FMUP\Db\FetchIterator::class, $db->getIterator($sql));
+        $this->assertInstanceOf('\FMUP\Db\FetchIterator', $db->getIterator($sql));
     }
 
     public function testForceReconnect()
     {
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -84,7 +84,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $driver->expects($this->exactly(1))->method('forceReconnect')->willReturn($driver);
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame($driver, $db->forceReconnect());
@@ -92,7 +92,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testLastInsertId()
     {
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -102,7 +102,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $driver->expects($this->at(0))->method('lastInsertId')->with($this->equalTo(null))->willReturn('unitTest');
         $driver->expects($this->at(1))->method('lastInsertId')->with($this->equalTo('test'))->willReturn('unitTest');
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame('unitTest', $db->lastInsertId());
@@ -111,7 +111,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testRollback()
     {
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -120,7 +120,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $driver->expects($this->exactly(1))->method('rollback')->willReturn(true);
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame(true, $db->rollback());
@@ -128,7 +128,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testCommit()
     {
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -137,7 +137,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $driver->expects($this->exactly(1))->method('commit')->willReturn(true);
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame(true, $db->commit());
@@ -145,7 +145,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testBeginTransaction()
     {
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -154,7 +154,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $driver->expects($this->exactly(1))->method('beginTransaction')->willReturn(false);
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame(false, $db->beginTransaction());
@@ -164,7 +164,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $sql = 'SELECT * FROM UNIT_TEST';
         $statement = new \stdClass();
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -181,7 +181,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->method('fetchRow')
             ->with($this->equalTo($statement))
             ->willReturn(array('col' => 'value'));
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame(array('col' => 'value'), $db->fetchRow($sql));
@@ -191,7 +191,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $sql = 'SELECT * FROM UNIT_TEST';
         $statement = new \stdClass();
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -208,17 +208,17 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->method('fetchAll')
             ->with($this->equalTo($statement))
             ->willReturn(array('col' => 'value'));
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
-        $this->assertInstanceOf(\ArrayIterator::class, $db->fetchAll($sql));
+        $this->assertInstanceOf('\ArrayIterator', $db->fetchAll($sql));
     }
 
     public function testQuery()
     {
         $sql = 'SELECT * FROM UNIT_TEST';
         $statement = new \stdClass();
-        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
@@ -231,7 +231,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->method('execute')
             ->with($this->equalTo($statement), $this->equalTo(array()))
             ->willReturn($statement);
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('getDriver'))->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
         $this->assertSame($statement, $db->query($sql));
@@ -239,17 +239,17 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDriver()
     {
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('hasLogger', 'getLogger'))->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('hasLogger', 'getLogger'))->getMock();
         $db->expects($this->exactly(1))->method('hasLogger')->willReturn(true);
         $db->expects($this->exactly(1))->method('getLogger')->willReturn(
-            $this->getMockBuilder(\FMUP\Logger::class)->setMethods(null)->getMock()
+            $this->getMockBuilder('\FMUP\Logger')->setMethods(null)->getMock()
         );
         /**
          * @var $db \FMUP\Db
          * @var $factory \FMUP\Db\Factory
          */
         $retrievedDriver = $db->getDriver();
-        $this->assertInstanceOf(\FMUP\Db\DbInterface::class, $retrievedDriver);
+        $this->assertInstanceOf('\FMUP\Db\DbInterface', $retrievedDriver);
         $this->assertSame($retrievedDriver, $db->getDriver());
     }
 }

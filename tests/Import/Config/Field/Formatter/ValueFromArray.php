@@ -7,10 +7,9 @@ class ValueFromArrayTest extends \PHPUnit_Framework_TestCase
     public function testFormatErrorWhenNoArrayDefined()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\ValueFromArray();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
-        $this->expectException(\FMUP\Exception\UnexpectedValue::class);
-        $this->expectExceptionMessage("No array defined");
+        $this->setExpectedException('\FMUP\Exception\UnexpectedValue', "No array defined");
         $formatter->format('');
         $this->assertTrue($formatter->hasError());
         $this->assertSame("La valeur  n'a pas été trouvée dans le tableau", $formatter->getErrorMessage(''));
@@ -19,7 +18,7 @@ class ValueFromArrayTest extends \PHPUnit_Framework_TestCase
     public function testFormatErrorWhenNotDefinedValue()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\ValueFromArray();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $arr = array(
             'A' => 1,
@@ -37,7 +36,7 @@ class ValueFromArrayTest extends \PHPUnit_Framework_TestCase
     public function testFormatWhenSuccess()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\ValueFromArray();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $arr = array(
             'A' => 1,

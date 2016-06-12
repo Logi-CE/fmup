@@ -18,8 +18,8 @@ class SqlSrvTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetOptionsAndGetDsn()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoSqlSrv::class)->setMethods(array('setAttribute'))->getMock();
-        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo\SqlSrv::class)
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\Pdo\PdoMockDbDriverPdoSqlSrv')->setMethods(array('setAttribute'))->getMock();
+        $pdo = $this->getMockBuilder('\FMUP\Db\Driver\Pdo\SqlSrv')
             ->setMethods(array('getPdo', 'log', 'getDatabase', 'defaultConfiguration'))
             ->getMock();
         $pdo->expects($this->once())->method('getDatabase')->willReturn('unitTest');

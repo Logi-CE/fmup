@@ -12,7 +12,7 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
     public function testContruct()
     {
         $contentTransferEncoding = new \FMUP\Response\Header\ContentTransferEncoding();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $contentTransferEncoding);
+        $this->assertInstanceOf('\FMUP\Response\Header', $contentTransferEncoding);
         $this->assertSame(\FMUP\Response\Header\ContentTransferEncoding::TRANSFER_BINARY, $contentTransferEncoding->getValue());
 
         $contentTransferEncoding = new \FMUP\Response\Header\ContentTransferEncoding(

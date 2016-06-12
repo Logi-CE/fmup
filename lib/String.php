@@ -4,7 +4,7 @@ namespace FMUP;
 /**
  * String handling class
  */
-abstract class StringHandling
+abstract class String
 {
     /**
      * private construct - singleton

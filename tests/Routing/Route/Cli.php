@@ -26,10 +26,10 @@ class CliTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanHandle()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('has', 'get'))->getMock();
         $request->method('has')->will($this->onConsecutiveCalls(false, true, false, true, false, true, false, true));
         $request->method('get')->will($this->onConsecutiveCalls('test', 'test/test'));
-        $sapi = $this->getMockBuilder(SapiMock::class)->setMethods(array('get'))->getMock();
+        $sapi = $this->getMockBuilder('\Tests\Routing\Route\SapiMock')->setMethods(array('get'))->getMock();
         $sapi->method('get')->will(
             $this->onConsecutiveCalls(
                 SapiMock::CGI,
@@ -42,7 +42,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
                 SapiMock::CLI
             )
         );
-        $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)
+        $cliPlugin = $this->getMockBuilder('\FMUP\Routing\Route\Cli')
             ->setMethods(array('getSapi', 'getRequest'))
             ->getMock();
         $cliPlugin->method('getSapi')->willReturn($sapi);
@@ -60,11 +60,11 @@ class CliTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleGetAction()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')
             ->setMethods(array('has', 'get'))
             ->getMock();
         $request->method('get')->will($this->onConsecutiveCalls('/test', 'test/test2'));
-        $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
+        $cliPlugin = $this->getMockBuilder('\FMUP\Routing\Route\Cli')->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
         $this->assertNull($cliPlugin->getAction());
@@ -76,37 +76,33 @@ class CliTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleGetControllerNameFailOnNonExisting()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('has', 'get'))->getMock();
         $request->method('get')->willReturn('controller/test');
-        $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
+        $cliPlugin = $this->getMockBuilder('\FMUP\Routing\Route\Cli')->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
-        $this->expectException(\FMUP\Exception\Status\NotFound::class);
-        $this->expectExceptionMessage('Controller controller does not exist');
-        $this->expectExceptionCode(\FMUP\Routing\Route\Cli::ERROR_NOT_FOUND);
+        $this->setExpectedException('\FMUP\Exception\Status\NotFound', 'Controller controller does not exist', \FMUP\Routing\Route\Cli::ERROR_NOT_FOUND);
         $cliPlugin->handle();
         $cliPlugin->getControllerName();
     }
 
     public function testHandleGetControllerNameFailOnLogicError()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('has', 'get'))->getMock();
         $request->method('get')->willReturn('\Tests\Routing\Route\NotValidController/test');
-        $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
+        $cliPlugin = $this->getMockBuilder('\FMUP\Routing\Route\Cli')->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
-        $this->expectException(\FMUP\Exception\Status\NotFound::class);
-        $this->expectExceptionMessage('Controller \Tests\Routing\Route\NotValidController does not exist');
-        $this->expectExceptionCode(\FMUP\Routing\Route\Cli::ERROR_LOGIC);
+        $this->setExpectedException('\FMUP\Exception\Status\NotFound', 'Controller \Tests\Routing\Route\NotValidController does not exist', \FMUP\Routing\Route\Cli::ERROR_LOGIC);
         $cliPlugin->handle();
         $cliPlugin->getControllerName();
     }
 
     public function testHandleGetControllerNameSuccess()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('has', 'get'))->getMock();
         $request->method('get')->willReturn('\Tests\Routing\Route\ValidController/test');
-        $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
+        $cliPlugin = $this->getMockBuilder('\FMUP\Routing\Route\Cli')->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
         $cliPlugin->handle();

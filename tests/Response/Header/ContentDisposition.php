@@ -12,7 +12,7 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $contentDisposition = new \FMUP\Response\Header\ContentDisposition();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $contentDisposition);
+        $this->assertInstanceOf('\FMUP\Response\Header', $contentDisposition);
         $this->assertSame('attachment', $contentDisposition->getValue());
         $contentDisposition = new \FMUP\Response\Header\ContentDisposition('', 'test.png');
         $this->assertSame('filename="test.png"', $contentDisposition->getValue());

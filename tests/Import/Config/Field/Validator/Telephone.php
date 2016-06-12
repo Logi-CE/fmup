@@ -13,7 +13,7 @@ class TelephoneTest extends \PHPUnit_Framework_TestCase
     public function testSetGetCanEmpty()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Telephone();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->getCanEmpty());
         $validator = new \FMUP\Import\Config\Field\Validator\Telephone(true);
         $this->assertTrue($validator->getCanEmpty());
@@ -28,7 +28,7 @@ class TelephoneTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Telephone();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $validator->setCanEmpty(false);
         $this->assertFalse($validator->validate(''));
         $validator->setCanEmpty(true);
@@ -42,7 +42,6 @@ class TelephoneTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->validate('+                     '));
         $this->assertTrue($validator->validate("+\t\t\t\t\t\t\t\t\t\t"));
         $this->assertTrue($validator->validate("+\t\n\t\n\t\n\t\n\t\t"));
-        $this->assertTrue($validator->validate("+\t\r\t\n\v\n\t\f\r\t"));
         $this->assertTrue($validator->validate('+01234567890213'));
         $this->assertTrue($validator->validate('+01.23(45 67)89'));
         $this->assertFalse($validator->validate('01-23-45-67-89'));
@@ -56,7 +55,7 @@ class TelephoneTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\Telephone();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu n\'est pas un téléphone valide', $validator->getErrorMessage());
     }
 }

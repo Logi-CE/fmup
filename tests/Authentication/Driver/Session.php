@@ -19,7 +19,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $driver = new \FMUP\Authentication\Driver\Session();
         $session = $driver->getSession();
-        $this->assertInstanceOf(\FMUP\Session::class, $session);
+        $this->assertInstanceOf('\FMUP\Session', $session);
         $this->assertSame($session, $driver->getSession());
         $newSession = new SessionMockAuthenticationDriver();
         $this->assertSame($driver, $driver->setSession($newSession));
@@ -28,8 +28,8 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetClear()
     {
-        $user = $this->getMockBuilder(\FMUP\Authentication\UserInterface::class)->getMock();
-        $session = $this->getMockBuilder(SessionMockAuthenticationDriver::class)
+        $user = $this->getMockBuilder('\FMUP\Authentication\UserInterface')->getMock();
+        $session = $this->getMockBuilder('\Tests\Authentication\Driver\SessionMockAuthenticationDriver')
             ->setMethods(array('set', 'get', 'remove'))
             ->getMock();
         $session->expects($this->exactly(1))->method('get')->willReturn($user);

@@ -28,77 +28,77 @@ class ByMaskTest extends \PHPUnit_Framework_TestCase
 {
     public function testDispatchWithoutMask()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/');
-        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
+        $byMask = $this->getMockBuilder('\FMUP\Routing\ByMask')->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->method('getMasks')->willReturn(array());
         $byMask->expects($this->never())->method('addRoute');
         /**
          * @var $byMask \FMUP\Routing\ByMask
          * @var $request \FMUP\Request
          */
-        $this->assertInstanceOf(\FMUP\Routing::class, $byMask);
+        $this->assertInstanceOf('\FMUP\Routing', $byMask);
         $this->assertNull($byMask->dispatch($request));
     }
 
     public function testDispatchWithoutMatchingMask()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/not/matching');
-        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
+        $byMask = $this->getMockBuilder('\FMUP\Routing\ByMask')->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->never())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(
-                '^/$' => \stdClass::class,
-                '^/not/$' => \stdClass::class,
+                '^/$' => '\stdClass',
+                '^/not/$' => '\stdClass',
             )
         );
         /**
          * @var $byMask \FMUP\Routing\ByMask
          * @var $request \FMUP\Request
          */
-        $this->assertInstanceOf(\FMUP\Routing::class, $byMask);
+        $this->assertInstanceOf('\FMUP\Routing', $byMask);
         $this->assertNull($byMask->dispatch($request));
     }
 
     public function testDispatchWithNonValidMatchingMask()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/not/matching');
-        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
+        $byMask = $this->getMockBuilder('\FMUP\Routing\ByMask')->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->never())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(
-                '^/$' => \stdClass::class,
-                '^/not/matching$' => \stdClass::class,
+                '^/$' => '\stdClass',
+                '^/not/matching$' => '\stdClass',
             )
         );
         /**
          * @var $byMask \FMUP\Routing\ByMask
          * @var $request \FMUP\Request
          */
-        $this->assertInstanceOf(\FMUP\Routing::class, $byMask);
+        $this->assertInstanceOf('\FMUP\Routing', $byMask);
         $this->assertNull($byMask->dispatch($request));
     }
 
     public function testDispatchWithValidMatchingMask()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('getRequestUri'))->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(array('getRequestUri'))->getMock();
         $request->method('getRequestUri')->willReturn('/will/match');
-        $byMask = $this->getMockBuilder(\FMUP\Routing\ByMask::class)->setMethods(array('getMasks', 'addRoute'))->getMock();
+        $byMask = $this->getMockBuilder('\FMUP\Routing\ByMask')->setMethods(array('getMasks', 'addRoute'))->getMock();
         $byMask->expects($this->once())->method('addRoute');
         $byMask->method('getMasks')->willReturn(
             array(
-                '^/$' => \stdClass::class,
-                '^/will/match$' => MatchingRouteMock::class,
-                '^/will/match(/too)?$' => MatchingRouteMock::class,
+                '^/$' => '\stdClass',
+                '^/will/match$' => '\Tests\Routing\MatchingRouteMock',
+                '^/will/match(/too)?$' => '\Tests\Routing\MatchingRouteMock',
             )
         );
         /**
          * @var $byMask \FMUP\Routing\ByMask
          * @var $request \FMUP\Request
          */
-        $this->assertInstanceOf(\FMUP\Routing::class, $byMask);
+        $this->assertInstanceOf('\FMUP\Routing', $byMask);
         $byMask->dispatch($request);
     }
 }

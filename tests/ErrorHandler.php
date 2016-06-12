@@ -11,13 +11,13 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testAddClearGet()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $plugin1 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
-        $plugin2 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
-        $plugin3 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
         /**
@@ -41,14 +41,13 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testGetResponseWhenNoResponse()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Unable to access response. Not set');
+        $this->setExpectedException('\FMUP\Exception', 'Unable to access response. Not set');
         $errorHandler->getResponse();
     }
 
     public function testSetGetResponse()
     {
-        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $response \FMUP\Response */
         $this->assertSame($errorHandler, $errorHandler->setResponse($response));
@@ -58,14 +57,13 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testGetRequestWhenNoRequest()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Unable to access request. Not set');
+        $this->setExpectedException('\FMUP\Exception', 'Unable to access request. Not set');
         $errorHandler->getRequest();
     }
 
     public function testSetGetRequest()
     {
-        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request')->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $request \FMUP\Request */
         $this->assertSame($errorHandler, $errorHandler->setRequest($request));
@@ -75,14 +73,13 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testGetBootstrapWhenNoBootstrap()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Unable to access bootstrap. Not set');
+        $this->setExpectedException('\FMUP\Exception', 'Unable to access bootstrap. Not set');
         $errorHandler->getBootstrap();
     }
 
     public function testSetGetBootstrap()
     {
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')->getMock();
         $errorHandler = new \FMUP\ErrorHandler();
         /** @var $bootstrap \FMUP\Bootstrap */
         $this->assertSame($errorHandler, $errorHandler->setBootstrap($bootstrap));
@@ -92,32 +89,32 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleWhenNoPlugin()
     {
         $errorHandler = new \FMUP\ErrorHandler();
-        $this->expectException(\Exception::class);
+        $this->setExpectedException('\Exception');
         $errorHandler->handle(new \Exception);
     }
 
     public function testHandle()
     {
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->getMock();
-        $request = $this->getMockBuilder(\FMUP\Request::class)->getMock();
-        $response = $this->getMockBuilder(\FMUP\Response::class)->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request')->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->getMock();
         /**
          * @var $response \FMUP\Response
          * @var $request \FMUP\Request
          * @var $bootstrap \FMUP\Bootstrap
          */
         $errorHandler = new \FMUP\ErrorHandler;
-        $plugin1 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin1 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
         $plugin1->method('canHandle')->willReturn(true);
         $plugin1->expects($this->exactly(1))->method('handle');
-        $plugin2 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin2 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
         $plugin2->method('canHandle')->willReturn(false);
         $plugin2->expects($this->exactly(0))->method('handle');
-        $plugin3 = $this->getMockBuilder(\FMUP\ErrorHandler\Plugin\Abstraction::class)
+        $plugin3 = $this->getMockBuilder('\FMUP\ErrorHandler\Plugin\Abstraction')
             ->setMethods(array('handle', 'canHandle'))
             ->getMock();
         $plugin3->method('canHandle')->willReturn(true);

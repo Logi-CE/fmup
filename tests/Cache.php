@@ -7,7 +7,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Cache\Factory::class);
+        $reflector = new \ReflectionClass('\FMUP\Cache\Factory');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         $method = $reflector->getMethod('__clone');

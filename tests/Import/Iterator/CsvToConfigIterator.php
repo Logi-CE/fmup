@@ -11,7 +11,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->getMock();
+        $config = $this->getMockBuilder('\FMUP\Import\Config')->getMock();
         /** @var \FMUP\Import\Config $config */
         $csv = new \FMUP\Import\Iterator\CsvToConfigIterator(new \ArrayIterator(array()), $config);
         $this->assertSame($config, $csv->getConfig());
@@ -19,12 +19,12 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testCurrentWhenOneField()
     {
-        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+        $field = $this->getMockBuilder('\FMUP\Import\Config\Field')
             ->setMethods(array('setValue'))
             ->disableOriginalConstructor()
             ->getMock();
         $field->expects($this->at(0))->method('setValue')->with($this->isNull());
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getField', 'getListeField'))
             ->getMock();
         $config->expects($this->at(0))->method('getListeField')->willReturn(array(1));
@@ -34,7 +34,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
         $csv = new \FMUP\Import\Iterator\CsvToConfigIterator($iterator, $config);
         $count = 0;
         foreach ($csv as $current) {
-            $this->assertInstanceOf(\FMUP\Import\Config::class, $current);
+            $this->assertInstanceOf('\FMUP\Import\Config', $current);
             $count++;
         }
         $this->assertSame(1, $count);
@@ -42,12 +42,12 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testCurrentWhenMoreFields()
     {
-        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+        $field = $this->getMockBuilder('\FMUP\Import\Config\Field')
             ->setMethods(array('setValue'))
             ->disableOriginalConstructor()
             ->getMock();
         $field->expects($this->at(0))->method('setValue')->with($this->equalTo('oneElement'));
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getField', 'getListeField'))
             ->getMock();
         $config->expects($this->at(0))->method('getListeField')->willReturn(array(1));
@@ -59,7 +59,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
         $csv = new \FMUP\Import\Iterator\CsvToConfigIterator($iterator, $config);
         $count = 0;
         foreach ($csv as $current) {
-            $this->assertInstanceOf(\FMUP\Import\Config::class, $current);
+            $this->assertInstanceOf('\FMUP\Import\Config', $current);
             $count++;
         }
         $this->assertSame(1, $count);
@@ -67,7 +67,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testCurrentWhenLessFields()
     {
-        $field = $this->getMockBuilder(\FMUP\Import\Config\Field::class)
+        $field = $this->getMockBuilder('\FMUP\Import\Config\Field')
             ->setMethods(array('setValue'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -76,7 +76,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
         $field->expects($this->at(2))->method('setValue')->with($this->equalTo('thirdElement'));
         $field->expects($this->at(3))->method('setValue')->with($this->isNull());
         $field->expects($this->at(4))->method('setValue')->with($this->isNull());
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getField', 'getListeField', 'setField'))
             ->getMock();
         $config->expects($this->at(0))->method('getListeField')->willReturn(array(1, 2, 3, 4, 5));
@@ -93,7 +93,7 @@ class CsvToConfigIteratorTest extends \PHPUnit_Framework_TestCase
         $csv = new \FMUP\Import\Iterator\CsvToConfigIterator($iterator, $config);
         $count = 0;
         foreach ($csv as $current) {
-            $this->assertInstanceOf(\FMUP\Import\Config::class, $current);
+            $this->assertInstanceOf('\FMUP\Import\Config', $current);
             $count++;
         }
         $this->assertSame(1, $count);

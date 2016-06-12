@@ -12,15 +12,15 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new Driver\Memcached();
-        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
-        $this->assertInstanceOf(Driver\Memcached::class, $cache, 'Instance of ' . Driver\Memcached::class);
+        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of ' . '\FMUP\Cache\CacheInterface');
+        $this->assertInstanceOf('\FMUP\Cache\Driver\Memcached', $cache, 'Instance of ' . '\FMUP\Cache\Driver\Memcached');
         $cache2 = new Driver\Memcached(array(Driver\Memcached::SETTINGS_CACHE_PREFIX => 'TestCase'));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotSame(clone $cache, $cache);
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
 
         /** @var $memcachedMock \Memcached */
-        $memcachedMock = $this->getMockBuilder(\Memcached::class)
+        $memcachedMock = $this->getMockBuilder('\Memcached')
             ->setMethods(array('set', 'get', 'getResultMessage', 'getResultCode'))
             ->getMock();
         $cache3 = new Driver\Memcached(array(Driver\Memcached::SETTINGS_MEMCACHED => $memcachedMock));
@@ -31,7 +31,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetSettings()
     {
-        $memcached = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $memcached = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $memcached->method('isAvailable')->willReturn(true);
         /** @var $memcached Driver\Memcached */
         $testValue = 'testValue';
@@ -43,10 +43,10 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testRemove()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
 
-        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('delete'))->getMock();
+        $memcached = $this->getMockBuilder('\Memcached')->setMethods(array('delete'))->getMock();
         $memcached->method('delete')->willReturn(true);
         /**
          * @var $memcached \Memcached
@@ -58,78 +58,72 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveWhenMemcachedFails()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
 
-        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('delete'))->getMock();
+        $memcached = $this->getMockBuilder('\Memcached')->setMethods(array('delete'))->getMock();
         $memcached->method('delete')->willReturn(false);
         /**
          * @var $memcached \Memcached
          * @var $cache Driver\Memcached
          */
         $cache->setMemcachedInstance($memcached);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Error while deleting key in memcached');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Error while deleting key in memcached');
         $cache->remove('test');
     }
 
     public function testGetMemcachedInstanceFailsWhenNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Memcached is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Memcached is not available');
         /** @var $cache Driver\Memcached */
         $cache->getMemcachedInstance();
     }
 
     public function testGetMemcachedInstance()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')
             ->setMethods(array('isAvailable', 'createMemcached'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
-        $cache->method('createMemcached')->willReturn($this->getMockBuilder(\Memcached::class)->getMock());
+        $cache->method('createMemcached')->willReturn($this->getMockBuilder('\Memcached')->getMock());
         /** @var $cache Driver\Memcached */
-        $this->assertInstanceOf(\Memcached::class, $cache->getMemcachedInstance());
+        $this->assertInstanceOf('\Memcached', $cache->getMemcachedInstance());
     }
 
     public function testHasWhenMemcachedNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Memcached is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Memcached is not available');
         /** @var $cache Driver\Memcached */
         $cache->has('bob');
     }
 
     public function testGetWhenMemcachedNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Memcached is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Memcached is not available');
         /** @var $cache Driver\Memcached */
         $cache->get('bob');
     }
 
     public function testSetWhenMemcachedNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Memcached is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Memcached is not available');
         /** @var $cache Driver\Memcached */
         $cache->set('bob', 'bob');
     }
 
     public function testRemoveWhenMemcachedNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Memcached::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Memcached is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Memcached is not available');
         /** @var $cache Driver\Memcached */
         $cache->remove('bob');
     }
@@ -142,10 +136,10 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('getAllKeys'))->getMock();
+        $memcached = $this->getMockBuilder('\Memcached')->setMethods(array('getAllKeys'))->getMock();
         $memcached->method('getAllKeys')->willReturn(array('test', 'two'));
 
-        $cache = $this->getMockBuilder(Driver\Memcached::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')
             ->setMethods(array('isAvailable', 'getMemcachedInstance'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
@@ -158,10 +152,10 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('get'))->getMock();
+        $memcached = $this->getMockBuilder('\Memcached')->setMethods(array('get'))->getMock();
         $memcached->method('get')->with($this->equalTo('test'))->willReturn('ok');
 
-        $cache = $this->getMockBuilder(Driver\Memcached::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')
             ->setMethods(array('isAvailable', 'getMemcachedInstance'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
@@ -172,12 +166,12 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testSet()
     {
-        $memcached = $this->getMockBuilder(\Memcached::class)->setMethods(array('set'))->getMock();
+        $memcached = $this->getMockBuilder('\Memcached')->setMethods(array('set'))->getMock();
         $memcached->method('set')
             ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
             ->willReturn(true);
 
-        $cache = $this->getMockBuilder(Driver\Memcached::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')
             ->setMethods(array('isAvailable', 'getMemcachedInstance', 'getCacheKey', 'getSetting'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
@@ -190,7 +184,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFailsWhenCannotSet()
     {
-        $memcached = $this->getMockBuilder(\Memcached::class)
+        $memcached = $this->getMockBuilder('\Memcached')
             ->setMethods(array('set', 'getResultMessage', 'getResultCode'))
             ->getMock();
         $memcached->method('set')
@@ -199,7 +193,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $memcached->method('getResultCode')->willReturn(50);
         $memcached->method('getResultMessage')->willReturn('Failed');
 
-        $cache = $this->getMockBuilder(Driver\Memcached::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Memcached')
             ->setMethods(array('isAvailable', 'getMemcachedInstance', 'getCacheKey', 'getSetting'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
@@ -207,9 +201,7 @@ class MemcachedTest extends \PHPUnit_Framework_TestCase
         $cache->method('getMemcachedInstance')->willReturn($memcached);
         $cache->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
 
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionCode(50);
-        $this->expectExceptionMessage('Error while inserting value in memcached : Failed');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Error while inserting value in memcached : Failed', 50);
         /** @var $cache Driver\Memcached */
         $cache->set('testKey', 'testValue');
     }

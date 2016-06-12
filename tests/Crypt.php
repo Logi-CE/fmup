@@ -13,7 +13,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
     {
         $cache = new \FMUP\Crypt();
         $cache2 = new \FMUP\Crypt(\FMUP\Crypt\Factory::DRIVER_MD5);
-        $this->assertInstanceOf(\FMUP\Crypt::class, $cache, 'Instance of ' . \FMUP\Crypt::class);
+        $this->assertInstanceOf('\FMUP\Crypt', $cache, 'Instance of ' . '\FMUP\Crypt');
         $this->assertNotSame($cache2, $cache, 'New crypt instance must be not same');
 
         return $cache2;
@@ -27,14 +27,14 @@ class CryptTest extends \PHPUnit_Framework_TestCase
     {
         $crypt = clone $cryptOriginal;
         //Driver Mocké = Md5
-        $mock = $this->getMockBuilder(\FMUP\Crypt\CryptInterface::class)
+        $mock = $this->getMockBuilder('\FMUP\Crypt\CryptInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->assertInstanceOf(
-            \FMUP\Crypt\CryptInterface::class,
+            '\FMUP\Crypt\CryptInterface',
             $crypt->getDriver(),
-            'Instance of ' . \FMUP\Crypt\CryptInterface::class
+            'Instance of ' . '\FMUP\Crypt\CryptInterface'
         );
         /** @var $mock \FMUP\Crypt\CryptInterface */
         $return = $crypt->setDriver($mock);
@@ -62,7 +62,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
     {
 
         //Driver Mocké = Md5
-        $mock = $this->getMockBuilder(\FMUP\Crypt\CryptInterface::class)->getMock();
+        $mock = $this->getMockBuilder('\FMUP\Crypt\CryptInterface')->getMock();
 
         $mock->method('hash')->willReturn('e2fc714c4727ee9395f324cd2e7f331f');
         /** @var $mock \FMUP\Crypt\CryptInterface */
@@ -83,7 +83,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 
         //driver Mocké = DRIVER_MCRYPT
         $mock = $this->getMockForAbstractClass(
-            \FMUP\Crypt\CryptInterface::class,
+            '\FMUP\Crypt\CryptInterface',
             array("unHash"),
             \FMUP\Crypt\Factory::DRIVER_MCRYPT
         );

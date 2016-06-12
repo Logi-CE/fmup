@@ -20,7 +20,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(Factory::class);
+        $reflector = new \ReflectionClass('\FMUP\Crypt\Factory');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -34,7 +34,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         }
 
         $factory = Factory::getInstance();
-        $this->assertInstanceOf(Factory::class, $factory);
+        $this->assertInstanceOf('\FMUP\Crypt\Factory', $factory);
         $factory2 = Factory::getInstance();
         $this->assertSame($factory, $factory2);
         return $factory;
@@ -46,11 +46,11 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreate(Factory $factory)
     {
         $driver = $factory->create();
-        $this->assertInstanceOf(\FMUP\Crypt\CryptInterface::class, $driver);
-        $this->assertInstanceOf(\FMUP\Crypt\Driver\Md5::class, $driver);
+        $this->assertInstanceOf('\FMUP\Crypt\CryptInterface', $driver);
+        $this->assertInstanceOf('\FMUP\Crypt\Driver\Md5', $driver);
         $driver2 = $factory->create();
-        $this->assertInstanceOf(\FMUP\Crypt\CryptInterface::class, $driver);
-        $this->assertInstanceOf(\FMUP\Crypt\Driver\Md5::class, $driver);
+        $this->assertInstanceOf('\FMUP\Crypt\CryptInterface', $driver);
+        $this->assertInstanceOf('\FMUP\Crypt\Driver\Md5', $driver);
         $this->assertNotSame($driver, $driver2);
     }
 
@@ -60,8 +60,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWhenDriverDoNotExists(Factory $factory)
     {
-        $this->expectException(\FMUP\Crypt\Exception::class);
-        $this->expectExceptionMessage('Unable to create FMUP\Crypt\Driver\Random');
+        $this->setExpectedException('\FMUP\Crypt\Exception', 'Unable to create FMUP\Crypt\Driver\Random');
         $factory->create('Random');
     }
 
@@ -71,8 +70,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWhenDriverNotCorrect(Factory $factory)
     {
-        $this->expectException(\FMUP\Crypt\Exception::class);
-        $this->expectExceptionMessage('Unable to create FMUP\Crypt\Driver\DriverMock');
+        $this->setExpectedException('\FMUP\Crypt\Exception', 'Unable to create FMUP\Crypt\Driver\DriverMock');
         $factory->create('DriverMock');
     }
 }

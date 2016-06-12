@@ -11,17 +11,17 @@ class LaunchTest extends \PHPUnit_Framework_TestCase
 {
     public function testParseFailWhenErrorOccurs()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->getMock();
-        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('beginTransaction', 'commit', 'rollback'))->getMock();
+        $config = $this->getMockBuilder('\FMUP\Import\Config')->getMock();
+        $db = $this->getMockBuilder('\FMUP\Db')->setMethods(array('beginTransaction', 'commit', 'rollback'))->getMock();
         $db->expects($this->once())->method('beginTransaction');
         $db->expects($this->once())->method('rollback');
         $db->expects($this->never())->method('commit');
-        $validIterator = $this->getMockBuilder(\FMUP\Import\Iterator\ValidatorIterator::class)
+        $validIterator = $this->getMockBuilder('\FMUP\Import\Iterator\ValidatorIterator')
             ->setMethods(array('rewind'))
             ->setConstructorArgs(array(new \ArrayIterator(array())))
             ->getMock();
         $validIterator->expects($this->once())->method('rewind')->willThrowException(new \Exception('erreur test'));
-        $launch = $this->getMockBuilder(\FMUP\Import\Launch::class)
+        $launch = $this->getMockBuilder('\FMUP\Import\Launch')
             ->setMethods(array('getDb', 'getLineToConfigIterator', 'getDoublonIterator', 'getValidatorIterator'))
             ->setConstructorArgs(array(__FILE__, $config))
             ->getMock();
@@ -40,18 +40,18 @@ class LaunchTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('getDoublonLigne', 'insertLine'))
             ->getMock();
         $config->expects($this->exactly(3))->method('getDoublonLigne')->willReturnOnConsecutiveCalls(true, false, true);
         $config->expects($this->once())->method('insertLine');
-        $db = $this->getMockBuilder(\FMUP\Db::class)
+        $db = $this->getMockBuilder('\FMUP\Db')
             ->setMethods(array('beginTransaction', 'commit', 'rollback'))
             ->getMock();
         $db->expects($this->once())->method('beginTransaction');
         $db->expects($this->never())->method('rollback');
         $db->expects($this->once())->method('commit');
-        $validIterator = $this->getMockBuilder(\FMUP\Import\Iterator\ValidatorIterator::class)
+        $validIterator = $this->getMockBuilder('\FMUP\Import\Iterator\ValidatorIterator')
             ->setMethods(array('getTotalErrors', 'getTotalInsert', 'getTotalUpdate', 'current', 'next', 'getValid', 'valid'))
             ->setConstructorArgs(array(new \ArrayIterator(array())))
             ->getMock();
@@ -61,7 +61,7 @@ class LaunchTest extends \PHPUnit_Framework_TestCase
         $validIterator->method('getTotalErrors')->willReturn(1);
         $validIterator->method('getTotalInsert')->willReturn(2);
         $validIterator->method('getTotalUpdate')->willReturn(3);
-        $launch = $this->getMockBuilder(\FMUP\Import\Launch::class)
+        $launch = $this->getMockBuilder('\FMUP\Import\Launch')
             ->setMethods(array('getDb', 'getLineToConfigIterator', 'getDoublonIterator', 'getValidatorIterator'))
             ->setConstructorArgs(array(__FILE__, $config))
             ->getMock();

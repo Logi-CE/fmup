@@ -13,14 +13,13 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
     public function testFailsWhenNotConfig()
     {
         $iterator = new \FMUP\Import\Iterator\ValidatorIterator(new \ArrayIterator(array('here')));
-        $this->expectException(\FMUP\Import\Exception::class);
-        $this->expectExceptionMessage('Iterator can only validate Config');
+        $this->setExpectedException('\FMUP\Import\Exception', 'Iterator can only validate Config');
         foreach ($iterator as $current);
     }
 
     public function testIterator()
     {
-        $configObject = $this->getMockBuilder(\FMUP\Import\Config\ConfigObjet::class)
+        $configObject = $this->getMockBuilder('\FMUP\Import\Config\ConfigObjet')
             ->setMethods(array('getStatut'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -34,7 +33,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
                 '', ConfigObjet::INSERT, ConfigObjet::UPDATE, //result update
                 '', '', '' //result ''
             );
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)
+        $config = $this->getMockBuilder('\FMUP\Import\Config')
             ->setMethods(array('validateLine', 'getListeConfigObjet', 'getDoublonLigne'))
             ->getMock();
         $config->method('getListeConfigObjet')->willReturn(array($configObject, $configObject, $configObject));

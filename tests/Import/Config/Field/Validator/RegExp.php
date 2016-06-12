@@ -13,7 +13,7 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
     public function testSetGetCanEmpty()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->getAllowEmpty());
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp(null, true);
         $this->assertTrue($validator->getAllowEmpty());
@@ -28,7 +28,7 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
     public function testSetGetExpression()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('', $validator->getExpression());
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp('test');
         $this->assertSame('test', $validator->getExpression());
@@ -39,7 +39,7 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp('~^[0-9]+$~');
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertFalse($validator->validate(''));
         $this->assertSame($validator, $validator->setAllowEmpty(true));
         $this->assertTrue($validator->validate(''));
@@ -60,7 +60,7 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
     public function testGetErrorMessage()
     {
         $validator = new \FMUP\Import\Config\Field\Validator\RegExp();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Validator::class, $validator);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Validator', $validator);
         $this->assertSame('Le champ reçu ne correspond pas au format autorisé', $validator->getErrorMessage());
     }
 }

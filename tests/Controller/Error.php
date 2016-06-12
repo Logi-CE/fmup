@@ -12,8 +12,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
     public function testSetGetException()
     {
         /** @var \FMUP\Controller\Error $error */
-        $error = $this->getMockBuilder(\FMUP\Controller\Error::class)->setMethods(array('render'))->getMock();
-        $reflection = new \ReflectionMethod(\FMUP\Controller\Error::class, 'getException');
+        $error = $this->getMockBuilder('\FMUP\Controller\Error')->setMethods(array('render'))->getMock();
+        $reflection = new \ReflectionMethod('\FMUP\Controller\Error', 'getException');
         $reflection->setAccessible(true);
         $this->assertNull($reflection->invoke($error, 'getException'));
         $exception = new \Exception(uniqid());
@@ -23,8 +23,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorStatusWhenNormalException()
     {
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $error = $this->getMockBuilder(\FMUP\Controller\Error::class)->setMethods(array('render'))->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $error = $this->getMockBuilder('\FMUP\Controller\Error')->setMethods(array('render'))->getMock();
         $error->method('render')->will($this->returnCallback(function () use ($error) {
             /** @var \FMUP\Controller\Error $error */
             $this->assertEquals(array(), $error->getResponse()->getHeaders());
@@ -41,8 +41,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorStatusWhen404()
     {
-        $response = $this->getMockBuilder(\FMUP\Response::class)->setMethods(null)->getMock();
-        $error = $this->getMockBuilder(\FMUP\Controller\Error::class)->setMethods(array('render'))->getMock();
+        $response = $this->getMockBuilder('\FMUP\Response')->setMethods(null)->getMock();
+        $error = $this->getMockBuilder('\FMUP\Controller\Error')->setMethods(array('render'))->getMock();
         $error->method('render')->will($this->returnCallback(function () use ($error) {
             /** @var \FMUP\Controller\Error $error */
             $this->assertEquals(
@@ -54,7 +54,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
                 $error->getResponse()->getHeaders()
             );
         }));
-        $exception = $this->getMockBuilder(\FMUP\Exception\Status\NotFound::class)->setMethods(null)->getMock();
+        $exception = $this->getMockBuilder('\FMUP\Exception\Status\NotFound')->setMethods(null)->getMock();
         /**
          * @var \FMUP\Controller\Error $error
          * @var \FMUP\Response $response

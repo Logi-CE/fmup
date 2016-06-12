@@ -12,8 +12,7 @@ class ExtendedTest extends \PHPUnit_Framework_TestCase
     public function testGetConfigFailsWhenFileDontExist()
     {
         $file = '/not/existing/path';
-        $this->expectException(\FMUP\Config\Exception::class);
-        $this->expectExceptionMessage('File does not exist');
+        $this->setExpectedException('\FMUP\Config\Exception', 'File does not exist');
         $config = new \FMUP\Config\Ini\Extended($file);
         $config->getConfig();
     }
@@ -23,9 +22,9 @@ class ExtendedTest extends \PHPUnit_Framework_TestCase
         $file = php_ini_loaded_file();
         $config = new \FMUP\Config\Ini\Extended($file);
         $oldConfig = $config->getConfig();
-        $this->assertInstanceOf(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class, $oldConfig);
+        $this->assertInstanceOf('\FMUP\Config\Ini\Extended\ZendConfig\Ini', $oldConfig);
 
-        $zendConfig = $this->getMockBuilder(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class)
+        $zendConfig = $this->getMockBuilder('\FMUP\Config\Ini\Extended\ZendConfig\Ini')
             ->setMethods(null)
             ->setConstructorArgs(array($file))
             ->getMock();

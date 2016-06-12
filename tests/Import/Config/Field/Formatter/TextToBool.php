@@ -12,7 +12,7 @@ class TextToBoolTest extends \PHPUnit_Framework_TestCase
     public function testFormatErrorWhenEmpty()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\TextToBool();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $this->assertSame('', $formatter->format(''));
         $this->assertTrue($formatter->hasError());
@@ -22,7 +22,7 @@ class TextToBoolTest extends \PHPUnit_Framework_TestCase
     public function testFormatErrorWhenNotAllowedValue()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\TextToBool();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $this->assertSame('', $formatter->format('yes'));
         $this->assertFalse($formatter->hasError());
@@ -32,7 +32,7 @@ class TextToBoolTest extends \PHPUnit_Framework_TestCase
     public function testFormatWhenValueAreOk()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\TextToBool();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $this->assertTrue($formatter->format('oui'));
         $this->assertFalse($formatter->hasError());

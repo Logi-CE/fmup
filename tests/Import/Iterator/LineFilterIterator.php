@@ -11,7 +11,7 @@ class LineFilterIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilter()
     {
-        $config = $this->getMockBuilder(\FMUP\Import\Config::class)->setMethods(array('validateLine'))->getMock();
+        $config = $this->getMockBuilder('\FMUP\Import\Config')->setMethods(array('validateLine'))->getMock();
         $config->method('validateLine')->willReturnOnConsecutiveCalls(true, false, true);
         $arrayForIterator = array('string', $config, null, false, $config, $config);
         $count = 0;

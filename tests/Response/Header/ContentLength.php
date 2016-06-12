@@ -12,7 +12,7 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $contentLength = new \FMUP\Response\Header\ContentLength(10);
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $contentLength);
+        $this->assertInstanceOf('\FMUP\Response\Header', $contentLength);
         $this->assertSame(10, $contentLength->getContentLength());
         $this->assertSame($contentLength, $contentLength->setContentLength(1000));
         $this->assertSame(1000, $contentLength->getContentLength());

@@ -42,10 +42,10 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 {
     public function testWarmUp()
     {
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(null)->getMock();
-        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(null)->getMock();
+        $config = $this->getMockBuilder('\FMUP\Config')->setMethods(null)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')
             ->setMethods(
                 array('defineTimezone', 'getLogger', 'initHelperDb', 'getSection', 'getConfig', 'getRequest', 'hasRequest')
             )
@@ -60,7 +60,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($bootstrap, $bootstrap->warmUp());
         $this->assertTrue($bootstrap->isWarmed());
         $this->assertSame($bootstrap, $bootstrap->warmUp());
-        $bootstrap2 = $this->getMockBuilder(\FMUP\Bootstrap::class)
+        $bootstrap2 = $this->getMockBuilder('\FMUP\Bootstrap')
             ->setMethods(
                 array('hasRequest', 'getRequest', 'getConfig')
             )
@@ -76,25 +76,25 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $session = new SessionMockBootstrap();
         $bootstrap = new \FMUP\Bootstrap();
-        $this->assertInstanceOf(\FMUP\Session::class, $bootstrap->getSession());
+        $this->assertInstanceOf('\FMUP\Session', $bootstrap->getSession());
         $this->assertSame($bootstrap, $bootstrap->setSession($session));
-        $this->assertInstanceOf(\FMUP\Session::class, $bootstrap->getSession());
+        $this->assertInstanceOf('\FMUP\Session', $bootstrap->getSession());
         $this->assertSame($session, $bootstrap->getSession());
     }
 
     public function testSetGetLogger()
     {
-        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)
+        $config = $this->getMockBuilder('\FMUP\Config')->setMethods(null)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')
             ->setMethods(array('hasRequest', 'getRequest', 'getConfig'))
             ->getMock();
         $bootstrap->method('hasRequest')->willReturn(true);
         $bootstrap->method('getRequest')->willReturn($request);
         $bootstrap->method('getConfig')->willReturn($config);
         /** @var $bootstrap \FMUP\Bootstrap */
-        $this->assertInstanceOf(\FMUP\Logger::class, $bootstrap->getLogger());
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)
+        $this->assertInstanceOf('\FMUP\Logger', $bootstrap->getLogger());
+        $logger = $this->getMockBuilder('\FMUP\Logger')
             ->setMethods(array('setEnvironment'))
             ->getMock();
         $logger->expects($this->exactly(1))->method('setEnvironment')->with($this->equalTo($bootstrap->getEnvironment()));
@@ -104,14 +104,14 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterErrorHandler()
     {
-        $monolog = $this->getMockBuilder(\Monolog\Logger::class)->setMethods(null)->setConstructorArgs(array('name'))->getMock();
-        $loggerChannel = $this->getMockBuilder(\FMUP\Logger\Channel::class)
+        $monolog = $this->getMockBuilder('\Monolog\Logger')->setMethods(null)->setConstructorArgs(array('name'))->getMock();
+        $loggerChannel = $this->getMockBuilder('\FMUP\Logger\Channel')
             ->setMethods(array('getLogger', 'getName', 'configure'))
             ->getMock();
         $loggerChannel->expects($this->exactly(1))->method('getLogger')->willReturn($monolog);
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('get'))->getMock();
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('get'))->getMock();
         $logger->expects($this->exactly(1))->method('get')->willReturn($loggerChannel);
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getLogger'))->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')->setMethods(array('getLogger'))->getMock();
         $bootstrap->method('getLogger')->willReturn($logger);
         /** @var $bootstrap \FMUP\Bootstrap */
         $this->assertSame($bootstrap, $bootstrap->registerErrorHandler());
@@ -121,14 +121,13 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     public function testGetRequestWhenNoRequest()
     {
         $bootstrap = new \FMUP\Bootstrap();
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Request is not defined');
+        $this->setExpectedException('\LogicException', 'Request is not defined');
         $bootstrap->getRequest();
     }
 
     public function testSetGetHasRequest()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
         /** @var $request \FMUP\Request\Cli */
         $bootstrap = new \FMUP\Bootstrap();
         $this->assertFalse($bootstrap->hasRequest());
@@ -141,7 +140,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $bootstrap = new \FMUP\Bootstrap();
         $flashMessengerInstance = $bootstrap->getFlashMessenger();
-        $this->assertInstanceOf(\FMUP\FlashMessenger::class, $flashMessengerInstance);
+        $this->assertInstanceOf('\FMUP\FlashMessenger', $flashMessengerInstance);
         $this->assertSame($flashMessengerInstance, $bootstrap->getFlashMessenger());
         $flashMock = new FlashMessengerMockBootstrap();
         $this->assertSame($bootstrap, $bootstrap->setFlashMessenger($flashMock));
@@ -152,7 +151,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $bootstrap = new \FMUP\Bootstrap();
         $cookieInstance = $bootstrap->getCookie();
-        $this->assertInstanceOf(\FMUP\Cookie::class, $cookieInstance);
+        $this->assertInstanceOf('\FMUP\Cookie', $cookieInstance);
         $this->assertSame($cookieInstance, $bootstrap->getCookie());
         $cookieMock = new CookieMockBootstrap();
         $this->assertSame($bootstrap, $bootstrap->setCookie($cookieMock));
@@ -161,10 +160,10 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEnvironment()
     {
-        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(null)->getMock();
-        $bootstrap = $this->getMockBuilder(\FMUP\Bootstrap::class)->setMethods(array('getConfig'))->getMock();
+        $config = $this->getMockBuilder('\FMUP\Config')->setMethods(null)->getMock();
+        $bootstrap = $this->getMockBuilder('\FMUP\Bootstrap')->setMethods(array('getConfig'))->getMock();
         $bootstrap->method('getConfig')->willReturn($config);
-        $environment = $this->getMockBuilder(EnvironmentMockBootstrap::class)->setMethods(array('hasConfig', 'setConfig'))->getMock();
+        $environment = $this->getMockBuilder('\Tests\EnvironmentMockBootstrap')->setMethods(array('hasConfig', 'setConfig'))->getMock();
         $environment->expects($this->exactly(1))->method('hasConfig')->willReturn(false);
         $environment->expects($this->exactly(1))->method('setConfig')->with($this->equalTo($config));
         /** @var $bootstrap \FMUP\Bootstrap */

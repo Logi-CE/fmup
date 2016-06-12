@@ -34,19 +34,19 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $projectVersion = $this->getMockBuilder(ProjectVersionMockChannelError::class)->setMethods(array('name'))->getMock();
-        $config = $this->getMockBuilder(\FMUP\Config::class)->setMethods(array('get'))->getMock();
-        $environment = $this->getMockBuilder(EnvironmentMockChannelError::class)->setMethods(array('get'))->getMock();
+        $projectVersion = $this->getMockBuilder('\Tests\Logger\Channel\ProjectVersionMockChannelError')->setMethods(array('name'))->getMock();
+        $config = $this->getMockBuilder('\FMUP\Config')->setMethods(array('get'))->getMock();
+        $environment = $this->getMockBuilder('\Tests\Logger\Channel\EnvironmentMockChannelError')->setMethods(array('get'))->getMock();
         $environment->method('get')->willReturnOnConsecutiveCalls(EnvironmentMockChannelError::DEV, EnvironmentMockChannelError::PROD);
-        $sapi = $this->getMockBuilder(SapiMockChannelError::class)->setMethods(array('get'))->getMock();
+        $sapi = $this->getMockBuilder('\Tests\Logger\Channel\SapiMockChannelError')->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturnOnConsecutiveCalls(SapiMockChannelError::CLI, SapiMockChannelError::CGI);
-        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+        $monologChannel = $this->getMockBuilder('\Monolog\Logger')
             ->setMethods(array('pushHandler', 'pushProcessor'))
             ->setConstructorArgs(array('Mock'))
             ->getMock();
         $monologChannel->method('pushHandler')->willReturn($monologChannel);
         $monologChannel->method('pushProcessor')->willReturn($monologChannel);
-        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Error::class)
+        $channel = $this->getMockBuilder('\FMUP\Logger\Channel\Error')
             ->setMethods(
                 array('getLogger', 'headerSent', 'getSapi', 'getEnvironment', 'getConfig', 'getProjectVersion')
             )
@@ -58,8 +58,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $channel->method('getConfig')->willReturn($config);
         $channel->method('getEnvironment')->willReturn($environment);
         /** @var $channel \FMUP\Logger\Channel\Error */
-        $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);
-        $this->assertInstanceOf(\FMUP\Logger\Channel\Standard::class, $channel);
+        $this->assertInstanceOf('\FMUP\Logger\Channel', $channel);
+        $this->assertInstanceOf('\FMUP\Logger\Channel\Standard', $channel);
         $this->assertSame($channel, $channel->configure());
         $_SERVER['HTTP_USER_AGENT'] = 'Castelis';
         $this->assertSame($channel, $channel->configure());
@@ -67,12 +67,12 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProjectVersion()
     {
-        $projectVersionMock = $this->getMockBuilder(ProjectVersionMockChannelError::class)->setMethods(array('name'))->getMock();
-        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Error::class)->setMethods(null)->getMock();
+        $projectVersionMock = $this->getMockBuilder('\Tests\Logger\Channel\ProjectVersionMockChannelError')->setMethods(array('name'))->getMock();
+        $channel = $this->getMockBuilder('\FMUP\Logger\Channel\Error')->setMethods(null)->getMock();
         /** @var $channel \FMUP\Logger\Channel\Error */
         /** @var $projectVersionMock ProjectVersionMockChannelError */
         $projectVersion = $channel->getProjectVersion();
-        $this->assertInstanceOf(\FMUP\ProjectVersion::class, $projectVersion);
+        $this->assertInstanceOf('\FMUP\ProjectVersion', $projectVersion);
         $this->assertSame($channel, $channel->setProjectVersion($projectVersionMock));
         $this->assertNotSame($projectVersion, $channel->getProjectVersion());
         $this->assertSame($projectVersionMock, $channel->getProjectVersion());

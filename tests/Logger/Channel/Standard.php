@@ -26,16 +26,16 @@ class StandardTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $environment = $this->getMockBuilder(EnvironmentMockChannelStandard::class)->setMethods(array('get'))->getMock();
+        $environment = $this->getMockBuilder('\Tests\Logger\Channel\EnvironmentMockChannelStandard')->setMethods(array('get'))->getMock();
         $environment->method('get')->willReturnOnConsecutiveCalls(EnvironmentMockChannelStandard::DEV, EnvironmentMockChannelStandard::PROD);
-        $sapi = $this->getMockBuilder(SapiMockChannelStandard::class)->setMethods(array('get'))->getMock();
+        $sapi = $this->getMockBuilder('\Tests\Logger\Channel\SapiMockChannelStandard')->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturnOnConsecutiveCalls(SapiMockChannelStandard::CLI, SapiMockChannelStandard::CGI);
-        $monologChannel = $this->getMockBuilder(\Monolog\Logger::class)
+        $monologChannel = $this->getMockBuilder('\Monolog\Logger')
             ->setMethods(array('pushHandler'))
             ->setConstructorArgs(array('Mock'))
             ->getMock();
         $monologChannel->method('pushHandler')->willReturn($monologChannel);
-        $channel = $this->getMockBuilder(\FMUP\Logger\Channel\Standard::class)
+        $channel = $this->getMockBuilder('\FMUP\Logger\Channel\Standard')
             ->setMethods(array('getLogger', 'headerSent', 'getSapi', 'getEnvironment'))
             ->getMock();
         $channel->method('getLogger')->willReturn($monologChannel);
@@ -43,8 +43,8 @@ class StandardTest extends \PHPUnit_Framework_TestCase
         $channel->method('getSapi')->willReturn($sapi);
         $channel->method('getEnvironment')->willReturn($environment);
         /** @var $channel \FMUP\Logger\Channel\Standard */
-        $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);
-        $this->assertInstanceOf(\FMUP\Logger\Channel\System::class, $channel);
+        $this->assertInstanceOf('\FMUP\Logger\Channel', $channel);
+        $this->assertInstanceOf('\FMUP\Logger\Channel\System', $channel);
         $this->assertSame($channel, $channel->configure());
         $_SERVER['HTTP_USER_AGENT'] = 'Castelis';
         $this->assertSame($channel, $channel->configure());

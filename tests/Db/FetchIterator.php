@@ -11,7 +11,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructAndSetGetStatementAndSetGetDbInterface()
     {
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -31,7 +31,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                 )
             )
             ->getMock();
-        $dbInterface2 = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $dbInterface2 = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -55,7 +55,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
         /** @var \FMUP\Db\DbInterface $dbInterface2 */
         $statement = new \stdClass();
         $fetchIterator = new \FMUP\Db\FetchIterator($statement, $dbInterface);
-        $this->assertInstanceOf(\Iterator::class, $fetchIterator);
+        $this->assertInstanceOf('\Iterator', $fetchIterator);
         $this->assertSame($statement, $fetchIterator->getStatement());
         $this->assertSame($dbInterface, $fetchIterator->getDbInterface());
         $statement2 = new \stdClass();
@@ -70,9 +70,9 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIterations()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute');
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -93,7 +93,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $dbInterface->method('fetchRow')->willReturnOnConsecutiveCalls(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
+        $iterator = $this->getMockBuilder('\FMUP\Db\FetchIterator')
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
             ->getMock();
@@ -108,9 +108,9 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testSeek()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute');
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -131,11 +131,11 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $dbInterface->expects($this->exactly(3))->method('fetchRow')->willReturnOnConsecutiveCalls(1, false, 2);
-        $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
+        $iterator = $this->getMockBuilder('\FMUP\Db\FetchIterator')
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
             ->getMock();
-        $reflector = new \ReflectionMethod(\FMUP\Db\FetchIterator::class, 'seek');
+        $reflector = new \ReflectionMethod('\FMUP\Db\FetchIterator', 'seek');
         $reflector->setAccessible(true);
         /** @var $iterator \FMUP\Db\FetchIterator */
         $reflector->invoke($iterator, 10);
@@ -148,8 +148,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsets()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -170,7 +170,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
             )
             ->getMock();
         $dbInterface->method('fetchRow')->willReturnOnConsecutiveCalls(1, false, false, 2, false, 3, false, false);
-        $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
+        $iterator = $this->getMockBuilder('\FMUP\Db\FetchIterator')
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
             ->getMock();
@@ -184,8 +184,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsetSet()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -205,20 +205,19 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                 )
             )
             ->getMock();
-        $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
+        $iterator = $this->getMockBuilder('\FMUP\Db\FetchIterator')
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
             ->getMock();
         /** @var $iterator \FMUP\Db\FetchIterator */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to set offset 10 to value 12 on iterator');
+        $this->setExpectedException('\FMUP\Db\Exception', 'Unable to set offset 10 to value 12 on iterator');
         $iterator[10] = 12;
     }
 
     public function testOffsetUnset()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
-        $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+        $statement = $this->getMockBuilder('\PDOStatement')->setMethods(array('execute'))->getMock();
+        $dbInterface = $this->getMockBuilder('\FMUP\Db\DbInterface')
             ->setMethods(
                 array(
                     '__construct',
@@ -238,13 +237,12 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                 )
             )
             ->getMock();
-        $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
+        $iterator = $this->getMockBuilder('\FMUP\Db\FetchIterator')
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
             ->getMock();
         /** @var $iterator \FMUP\Db\FetchIterator */
-        $this->expectException(\FMUP\Db\Exception::class);
-        $this->expectExceptionMessage('Unable to unset offset 10 on iterator');
+        $this->setExpectedException('\FMUP\Db\Exception', 'Unable to unset offset 10 on iterator');
         unset($iterator[10]);
     }
 }

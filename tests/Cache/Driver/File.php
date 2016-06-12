@@ -5,23 +5,26 @@ use FMUP\Cache\Driver;
 
 class FileTest extends \PHPUnit_Framework_TestCase
 {
-    const TMP_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'test';
+    static private function getTmpDir()
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'test';
+    }
 
     public static function setUpBeforeClass()
     {
-        mkdir(self::TMP_DIR);
+        mkdir(self::getTmpDir());
     }
 
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\File();
-        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
-        $this->assertInstanceOf(\FMUP\Cache\Driver\File::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\File::class);
+        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of ' . '\FMUP\Cache\CacheInterface');
+        $this->assertInstanceOf('\FMUP\Cache\Driver\File', $cache, 'Instance of ' . '\FMUP\Cache\Driver\File');
         $cache2 = new \FMUP\Cache\Driver\File(array(\FMUP\Cache\Driver\File::SETTING_SERIALIZE => true));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
-        $cache2->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, self::TMP_DIR);
+        $cache2->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, self::getTmpDir());
         $this->assertSame(
-            self::TMP_DIR,
+            self::getTmpDir(),
             $cache2->getSetting(\FMUP\Cache\Driver\File::SETTING_PATH),
             'Settings path must be set by setSetting'
         );
@@ -45,7 +48,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             array('1', '1'),
             array('1', '2'),
             array('1', new \stdClass()),
-            array('1', $this->getMockBuilder(\stdClass::class)->getMock()),
+            array('1', $this->getMockBuilder('\stdClass')->getMock()),
         );
         $return = null;
         foreach ($test as $case) {
@@ -124,10 +127,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenUnableToCreateDirectory()
     {
-        $cache = $this->getMockBuilder(Driver\File::class)->setMethods(array('mkDir', 'fileExists'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\File')->setMethods(array('mkDir', 'fileExists'))->getMock();
         $cache->method('mkDir')->willReturn(false);
         $cache->method('fileExists')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
+        $this->setExpectedException('\FMUP\Cache\Exception');
         /** @var $cache Driver\File */
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, null)->set('test', 1);
     }
@@ -140,7 +143,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGetPathByKey(\FMUP\Cache\Driver\File $cache)
     {
         $dirs = array(
-            self::TMP_DIR . DIRECTORY_SEPARATOR . uniqid(),
+            self::getTmpDir() . DIRECTORY_SEPARATOR . uniqid(),
         );
         foreach ($dirs as $dir) {
             $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, $dir);
@@ -175,7 +178,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testMkdir(\FMUP\Cache\Driver\File $cache)
     {
-        $folder = self::TMP_DIR;
+        $folder = self::getTmpDir();
         $cache->setSetting(\FMUP\Cache\Driver\File::SETTING_PATH, $folder);
         $test = array(
             array('test', 'test'),
@@ -203,7 +206,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        $dir = self::TMP_DIR;
+        $dir = self::getTmpDir();
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST

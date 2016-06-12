@@ -11,8 +11,7 @@ class SettingsTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefineByArrayFail()
     {
-        $this->expectException(\FMUP\Queue\Exception::class);
-        $this->expectExceptionMessage('Setting is not defined');
+        $this->setExpectedException('\FMUP\Queue\Exception', 'Setting is not defined');
         new \FMUP\Queue\Channel\Settings(array('test' => 1));
     }
 

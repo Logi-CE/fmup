@@ -17,19 +17,19 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         // check without optional param
         $view = new View();
-        $this->assertInstanceOf(\FMUP\View::class, $view, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\View::class));
+        $this->assertInstanceOf('\FMUP\View', $view, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\View'));
 
         // check with empty array of params
         $view2 = new View(array());
-        $this->assertInstanceOf(\FMUP\View::class, $view2, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\View::class));
+        $this->assertInstanceOf('\FMUP\View', $view2, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\View'));
 
         // check with array of params with 1 element
         $view3 = new View(array(self::PARAM_KEY => self::PARAM_VALUE));
-        $this->assertInstanceOf(\FMUP\View::class, $view3, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\View::class));
+        $this->assertInstanceOf('\FMUP\View', $view3, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\View'));
 
         // check with object as value in array
         $view4 = new View(array(self::PARAM_KEY, new \stdClass()));
-        $this->assertInstanceOf(\FMUP\View::class, $view4, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\View::class));
+        $this->assertInstanceOf('\FMUP\View', $view4, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\View'));
 
         return $view;
     }

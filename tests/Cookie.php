@@ -31,8 +31,8 @@ class CookieTest extends \PHPUnit_Framework_TestCase
 
     private function getCookieMock()
     {
-        $cookie = $this->getMockBuilder(CookieMock::class)->setMethods(array('setCookie'))->getMock();
-        $reflection = new \ReflectionProperty(\FMUP\Cookie::class, 'instance');
+        $cookie = $this->getMockBuilder('\Tests\CookieMock')->setMethods(array('setCookie'))->getMock();
+        $reflection = new \ReflectionProperty('\FMUP\Cookie', 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue($cookie);
         return $cookie;
@@ -43,7 +43,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Cookie::class);
+        $reflector = new \ReflectionClass('\FMUP\Cookie');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -57,9 +57,9 @@ class CookieTest extends \PHPUnit_Framework_TestCase
         }
 
         $cookie = Cookie::getInstance();
-        $this->assertInstanceOf(\FMUP\Cookie::class, $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\Cookie::class));
+        $this->assertInstanceOf('\FMUP\Cookie', $cookie, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\Cookie'));
         $cookie2 = Cookie::getInstance();
-        $this->assertSame($cookie, $cookie2, sprintf(self::ERROR_NOT_INSTANCE_OF, \FMUP\Cookie::class));
+        $this->assertSame($cookie, $cookie2, sprintf(self::ERROR_NOT_INSTANCE_OF, '\FMUP\Cookie'));
         return $cookie;
     }
 

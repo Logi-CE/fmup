@@ -15,8 +15,8 @@ class LoggerTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetHasLogger()
     {
-        $loggerMock = $this->getMockBuilder(\FMUP\Logger::class)->getMock();
-        $logger = $this->getMockBuilder(LoggerMockLogger::class)->setMethods(null)->getMock();
+        $loggerMock = $this->getMockBuilder('\FMUP\Logger')->getMock();
+        $logger = $this->getMockBuilder('\Tests\Logger\LoggerMockLogger')->setMethods(null)->getMock();
         /** @var $logger LoggerMockLogger */
         /** @var $loggerMock \FMUP\Logger */
         $this->assertFalse($logger->hasLogger());
@@ -27,7 +27,7 @@ class LoggerTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testLog()
     {
-        $loggerMock = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $loggerMock = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('log'))->getMock();
         $loggerMock->expects($this->once())->method('log')
             ->with(
                 $this->equalTo(\FMUP\Logger\Channel\Standard::NAME),
@@ -35,7 +35,7 @@ class LoggerTraitTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo('PHPunit Test Case'),
                 $this->arrayHasKey('test')
             );
-        $logger = $this->getMockBuilder(LoggerMockLogger::class)->setMethods(null)->getMock();
+        $logger = $this->getMockBuilder('\Tests\Logger\LoggerMockLogger')->setMethods(null)->getMock();
         /** @var $logger LoggerMockLogger */
         /** @var $loggerMock \FMUP\Logger */
         $this->assertFalse($logger->hasLogger());
@@ -48,8 +48,7 @@ class LoggerTraitTest extends \PHPUnit_Framework_TestCase
     public function testGetLoggerFailWhenNotSet()
     {
         $logger = new LoggerMockLogger;
-        $this->expectException(\FMUP\Logger\Exception::class);
-        $this->expectExceptionMessage('Logger must be defined');
+        $this->setExpectedException('\FMUP\Logger\Exception', 'Logger must be defined');
         $logger->getLogger();
     }
 }

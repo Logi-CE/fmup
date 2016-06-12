@@ -13,7 +13,7 @@ if (!function_exists('fmuAutoload')) {
      */
     function fmuAutoload($className)
     {
-        $className = strtolower(\FMUP\StringHandling::toSnakeCase($className));
+        $className = strtolower(\FMUP\String::toSnakeCase($className));
 
         //liste des repertoires pouvant contenir une classe à include
         $classesPath = array(

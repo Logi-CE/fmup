@@ -17,7 +17,7 @@ class FlashMessengerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\FlashMessenger::class);
+        $reflector = new \ReflectionClass('\FMUP\FlashMessenger');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -31,7 +31,7 @@ class FlashMessengerTest extends \PHPUnit_Framework_TestCase
         }
 
         $flashMessenger = \FMUP\FlashMessenger::getInstance();
-        $this->assertInstanceOf(\FMUP\FlashMessenger::class, $flashMessenger);
+        $this->assertInstanceOf('\FMUP\FlashMessenger', $flashMessenger);
         $flashMessenger2 = \FMUP\FlashMessenger::getInstance();
         $this->assertSame($flashMessenger, $flashMessenger2);
         return $flashMessenger;
@@ -41,9 +41,9 @@ class FlashMessengerTest extends \PHPUnit_Framework_TestCase
     {
         $flashMessenger = new FlashMessengerMock();
         $driver = $flashMessenger->getDriver();
-        $this->assertInstanceOf(\FMUP\FlashMessenger\DriverInterface::class, $driver);
+        $this->assertInstanceOf('\FMUP\FlashMessenger\DriverInterface', $driver);
         $this->assertSame($driver, $flashMessenger->getDriver());
-        $driverMock = $this->getMockBuilder(\FMUP\FlashMessenger\DriverInterface::class)
+        $driverMock = $this->getMockBuilder('\FMUP\FlashMessenger\DriverInterface')
             ->setMethods(array('add', 'get', 'clear'))
             ->getMock();
         /** @var $driverMock \FMUP\FlashMessenger\DriverInterface */
@@ -53,21 +53,21 @@ class FlashMessengerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddGetClear()
     {
-        $message1 = $this->getMockBuilder(\FMUP\FlashMessenger\Message::class)
+        $message1 = $this->getMockBuilder('\FMUP\FlashMessenger\Message')
             ->setMethods(null)
             ->setConstructorArgs(array('message 1'))
             ->getMock();
-        $message2 = $this->getMockBuilder(\FMUP\FlashMessenger\Message::class)
+        $message2 = $this->getMockBuilder('\FMUP\FlashMessenger\Message')
             ->setMethods(null)
             ->setConstructorArgs(array('message 2'))
             ->getMock();
-        $message3 = $this->getMockBuilder(\FMUP\FlashMessenger\Message::class)
+        $message3 = $this->getMockBuilder('\FMUP\FlashMessenger\Message')
             ->setMethods(null)
             ->setConstructorArgs(array('message 3'))
             ->getMock();
         $expectedMessages = array($message1, $message2, $message3);
         $flashMessenger = new FlashMessengerMock();
-        $driver = $this->getMockBuilder(\FMUP\FlashMessenger\DriverInterface::class)
+        $driver = $this->getMockBuilder('\FMUP\FlashMessenger\DriverInterface')
             ->setMethods(array('add', 'get', 'clear'))
             ->getMock();
         $driver->expects($this->exactly(3))->method('add');

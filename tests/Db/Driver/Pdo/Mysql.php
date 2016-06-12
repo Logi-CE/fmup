@@ -21,14 +21,18 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $pdo = new \FMUP\Db\Driver\Pdo\Mysql();
         $this->assertSame('mysql', $pdo->getDriver());
     }
+
     public function testPrepare()
     {
-        $pdoMock = $this->getMockBuilder(PdoMockDbDriverPdoMysql::class)->setMethods(array('prepare'))->getMock();
+        $pdoMock = $this->getMockBuilder('\Tests\Db\Driver\Pdo\PdoMockDbDriverPdoMysql')
+            ->setMethods(array('prepare'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $pdoMock->expects($this->once())
             ->method('prepare')
             ->willReturn(10)
             ->with($this->equalTo('sql'), $this->equalTo(array(\Pdo::MYSQL_ATTR_USE_BUFFERED_QUERY => true)));
-        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo\Mysql::class)->setMethods(array('getDriver', 'log'))->getMock();
+        $pdo = $this->getMockBuilder('\FMUP\Db\Driver\Pdo\Mysql')->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->method('getDriver')->willReturn($pdoMock);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $pdo->prepare('sql');

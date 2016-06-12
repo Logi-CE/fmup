@@ -14,7 +14,7 @@ class Environment extends \PHPUnit_Framework_TestCase
      */
     public function testGetInstance()
     {
-        $reflector = new \ReflectionClass(\FMUP\Environment::class);
+        $reflector = new \ReflectionClass('\FMUP\Environment');
         $method = $reflector->getMethod('__construct');
         $this->assertTrue($method->isPrivate(), 'Construct must be private');
         try {
@@ -28,7 +28,7 @@ class Environment extends \PHPUnit_Framework_TestCase
         }
 
         $environment = \FMUP\Environment::getInstance();
-        $this->assertInstanceOf(\FMUP\Environment::class, $environment, 'Instance of ' . \FMUP\Environment::class);
+        $this->assertInstanceOf('\FMUP\Environment', $environment, 'Instance of ' . '\FMUP\Environment');
         $environment2 = \FMUP\Environment::getInstance();
         $this->assertSame($environment, $environment2, 'Must be same instance of the driver');
         return $environment;
@@ -48,7 +48,7 @@ class Environment extends \PHPUnit_Framework_TestCase
             $this->assertEquals('No environment detected', $e->getMessage(), 'Exception message is not correct');
         }
 
-        $configMock = $this->getMockBuilder(\FMUP\Config::class)->getMock();
+        $configMock = $this->getMockBuilder('\FMUP\Config')->getMock();
         try {
             $environment->setConfig($configMock)->get();
             $this->assertTrue(false, 'Config is empty and does not contain version. It should not work');

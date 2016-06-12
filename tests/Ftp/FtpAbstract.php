@@ -7,11 +7,10 @@ class FtpAbstractTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetSessionWithoutSession()
     {
-        $ftpAbstract = $this->getMockBuilder(Ftp\FtpAbstract::class)
+        $ftpAbstract = $this->getMockBuilder('\FMUP\Ftp\FtpAbstract')
             ->getMockForAbstractClass();
 
-        $this->expectException(Ftp\Exception::class);
-        $this->expectExceptionMessage('Unable to connect to the FTP server');
+        $this->setExpectedException('\FMUP\Ftp\Exception', 'Unable to connect to the FTP server');
         /**
          * @var $ftpAbstract Ftp\FtpAbstract
          */
@@ -20,10 +19,10 @@ class FtpAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorAndGettingSettings()
     {
-        $method = new \ReflectionMethod(Ftp\FtpAbstract::class, 'getSettings');
+        $method = new \ReflectionMethod('\FMUP\Ftp\FtpAbstract', 'getSettings');
         $method->setAccessible(true);
 
-        $ftpAbstract = $this->getMockBuilder(Ftp\FtpAbstract::class)
+        $ftpAbstract = $this->getMockBuilder('\FMUP\Ftp\FtpAbstract')
             ->setConstructorArgs(array(array('key1' => 'val1', 'key2' => 'val2')))
             ->getMock();
 
@@ -34,7 +33,7 @@ class FtpAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSetSession()
     {
-        $ftpAbstract = $this->getMockBuilder(Ftp\FtpAbstract::class)->getMockForAbstractClass();
+        $ftpAbstract = $this->getMockBuilder('\FMUP\Ftp\FtpAbstract')->getMockForAbstractClass();
 
         $resource = fopen('php://stdin', 'r');
         /**

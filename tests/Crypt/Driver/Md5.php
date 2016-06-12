@@ -17,7 +17,7 @@ class Md5Test extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $crypt = new Md5();
-        $this->assertInstanceOf(Crypt\CryptInterface::class, $crypt);
+        $this->assertInstanceOf('\FMUP\Crypt\CryptInterface', $crypt);
         return $crypt;
     }
 
@@ -37,8 +37,7 @@ class Md5Test extends \PHPUnit_Framework_TestCase
      */
     public function testUnHash(Md5 $cryptOriginal)
     {
-        $this->expectException(\FMUP\Crypt\Exception::class);
-        $this->expectExceptionMessage('Invalid method for this driver');
+        $this->setExpectedException('\FMUP\Crypt\Exception', 'Invalid method for this driver');
         $cryptOriginal->unHash('test');
     }
 }

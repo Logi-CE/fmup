@@ -315,7 +315,7 @@ class Config
     {
         /** @var $objectInstance \Model */
         foreach ($this->getListeField() as $field) {
-            if (\FMUP\StringHandling::toCamelCase($field->getTableCible()) == $objectName) {
+            if (\FMUP\String::toCamelCase($field->getTableCible()) == $objectName) {
                 $objectInstance->setAttribute($field->getChampCible(), $field->getValue());
             }
         }

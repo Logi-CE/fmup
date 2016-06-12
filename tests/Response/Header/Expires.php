@@ -12,29 +12,29 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $expires = new \FMUP\Response\Header\Expires();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $expires);
-        $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
+        $this->assertInstanceOf('\FMUP\Response\Header', $expires);
+        $this->assertInstanceOf('\DateTime', $expires->getExpireDate());
     }
 
     public function testSetGetExpireDate()
     {
         $expires = new \FMUP\Response\Header\Expires();
         $this->assertSame($expires, $expires->setExpireDate());
-        $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $expires->getExpireDate());
         $this->assertEquals(new \DateTime(), $expires->getExpireDate());
         $dateTime = new \DateTime('+2 months');
         $this->assertSame($expires, $expires->setExpireDate($dateTime));
-        $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $expires->getExpireDate());
         $this->assertSame($dateTime, $expires->getExpireDate());
     }
 
     public function testGetValue()
     {
         $expires = new \FMUP\Response\Header\Expires();
-        $this->assertInstanceOf(\FMUP\Response\Header::class, $expires);
+        $this->assertInstanceOf('\FMUP\Response\Header', $expires);
         $dateTime = new \DateTime('+2 months');
         $this->assertSame($expires, $expires->setExpireDate($dateTime));
-        $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
+        $this->assertInstanceOf('\DateTime', $expires->getExpireDate());
         $this->assertSame($dateTime->format('D, d M Y H:i:s T'), $expires->getValue());
     }
 

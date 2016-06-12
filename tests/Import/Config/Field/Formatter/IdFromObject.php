@@ -6,7 +6,7 @@ class IdFromObject extends \PHPUnit_Framework_TestCase
     public function testFormatError()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\IdFromObject();
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $ret = $formatter->format(new \stdClass());
         $this->assertTrue($formatter->hasError());
@@ -17,11 +17,11 @@ class IdFromObject extends \PHPUnit_Framework_TestCase
     public function testFormatSuccess()
     {
         $formatter = new \FMUP\Import\Config\Field\Formatter\IdFromObject();
-        $obj = $this->getMockBuilder(\FMUP\Import\Config\Field\Formatter\Interfaces\ObjectWithId::class)
+        $obj = $this->getMockBuilder('\FMUP\Import\Config\Field\Formatter\Interfaces\ObjectWithId')
             ->setMethods(array('getId'))
             ->getMock();
         $obj->method('getId')->willReturn(1);
-        $this->assertInstanceOf(\FMUP\Import\Config\Field\Formatter::class, $formatter);
+        $this->assertInstanceOf('\FMUP\Import\Config\Field\Formatter', $formatter);
         $this->assertFalse($formatter->hasError());
         $ret = $formatter->format($obj);
         $this->assertFalse($formatter->hasError());

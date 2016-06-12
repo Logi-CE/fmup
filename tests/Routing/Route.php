@@ -10,8 +10,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetRequest()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $route = $this->getMockBuilder('\FMUP\Routing\Route')
             ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
             ->getMock();
         /**
@@ -24,22 +24,21 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testFailGetRequest()
     {
-        $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->getMock();
-        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+        $request = $this->getMockBuilder('\FMUP\Request\Cli')->getMock();
+        $route = $this->getMockBuilder('\FMUP\Routing\Route')
             ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
             ->getMock();
         /**
          * @var \FMUP\Routing\Route $route
          * @var \FMUP\Request $request
          */
-        $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('Route Request not set');
+        $this->setExpectedException('\FMUP\Exception', 'Route Request not set');
         $this->assertSame($request, $route->getRequest());
     }
 
     public function testHandle()
     {
-        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+        $route = $this->getMockBuilder('\FMUP\Routing\Route')
             ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
             ->getMock();
         /** @var \FMUP\Routing\Route $route */
@@ -49,7 +48,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testHasToBeRedispatched()
     {
-        $route = $this->getMockBuilder(\FMUP\Routing\Route::class)
+        $route = $this->getMockBuilder('\FMUP\Routing\Route')
             ->setMethods(array('canHandle', 'getControllerName', 'getAction'))
             ->getMock();
         /** @var \FMUP\Routing\Route $route */

@@ -158,7 +158,7 @@ class ConfigObjet
         $this->priority = $priority;
         $this->mandatoryId = explode(";", $mandatoryId);
         foreach ($this->mandatoryId as $id) {
-            $this->attributeName[$id] = "id_" . \FMUP\StringHandling::toCamelCase($id);
+            $this->attributeName[$id] = "id_" . \FMUP\String::toCamelCase($id);
         }
     }
 }

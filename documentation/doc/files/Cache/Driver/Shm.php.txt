@@ -100,10 +100,19 @@ class Shm implements CacheInterface
             $memorySize = $this->getSetting(self::SETTING_SIZE);
             $shmName = $this->secureName($this->getSetting(self::SETTING_NAME));
             $this->shmInstance = is_numeric($memorySize)
-                ? shm_attach($shmName, (int)$memorySize)
-                : shm_attach($shmName);
+                ? $this->shmAttach($shmName, (int)$memorySize)
+                : $this->shmAttach($shmName);
         }
         return $this->shmInstance;
+    }
+
+    /**
+     * @return resource
+     * @codeCoverageIgnore
+     */
+    protected function shmAttach()
+    {
+        return call_user_func_array('shm_attach', func_get_args());
     }
 
     /**

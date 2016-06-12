@@ -13,8 +13,8 @@ class ShmTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $cache = new \FMUP\Cache\Driver\Shm();
-        $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
-        $this->assertInstanceOf(\FMUP\Cache\Driver\Shm::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\Shm::class);
+        $this->assertInstanceOf('\FMUP\Cache\CacheInterface', $cache, 'Instance of ' . '\FMUP\Cache\CacheInterface');
+        $this->assertInstanceOf('\FMUP\Cache\Driver\Shm', $cache, 'Instance of ' . '\FMUP\Cache\Driver\Shm');
         if (!$cache->isAvailable()) {
             $this->markTestSkipped("SHM not available");
         }
@@ -94,40 +94,36 @@ class ShmTest extends \PHPUnit_Framework_TestCase
 
     public function testHasWhenShmNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('SHM is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'SHM is not available');
         /** @var $cache Driver\Shm */
         $cache->has('bob');
     }
 
     public function testGetWhenShmNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('SHM is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'SHM is not available');
         /** @var $cache Driver\Shm */
         $cache->get('bob');
     }
 
     public function testSetWhenShmNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('SHM is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'SHM is not available');
         /** @var $cache Driver\Shm */
         $cache->set('bob', 'bob');
     }
 
     public function testRemoveWhenShmNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('SHM is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'SHM is not available');
         /** @var $cache Driver\Shm */
         $cache->remove('bob');
     }
@@ -147,44 +143,41 @@ class ShmTest extends \PHPUnit_Framework_TestCase
 
     public function testGetShmWhenShmNotAvailable()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('SHM is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'SHM is not available');
         /** @var $cache Driver\Shm */
-        $reflectionMethod = new \ReflectionMethod(Driver\Shm::class, 'getShm');
+        $reflectionMethod = new \ReflectionMethod('\FMUP\Cache\Driver\Shm', 'getShm');
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($cache);
     }
 
     public function testRemoveWhenShmRemoveFails()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('shmRemoveVar'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('shmRemoveVar'))->getMock();
         $cache->method('shmRemoveVar')->willReturn(false);
         /** @var $cache Driver\Shm */
         if (!$cache->isAvailable()) {
             $this->markTestSkipped("SHM not available");
         }
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Unable to delete key from cache Shm');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Unable to delete key from cache Shm');
         $cache->set('test', 'test')->remove('test');
     }
 
     public function testSetWhenShmPutFails()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('shmPutVar'))->getMock();
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')->setMethods(array('shmPutVar'))->getMock();
         /** @var $cache Driver\Shm */
         if (!$cache->isAvailable()) {
             $this->markTestSkipped("SHM not available");
         }
-        $this->expectException(\FMUP\Cache\Exception::class);
-        $this->expectExceptionMessage('Unable to define key into cache Shm');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Unable to define key into cache Shm');
         $cache->set('test', 'test');
     }
 
     public function testSetWhenShmHasTtl()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)
+        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Shm')
             ->setMethods(array('shmPutVar', 'isAvailable', 'shmAttach'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);

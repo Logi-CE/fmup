@@ -15,7 +15,7 @@ class ChannelTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('test', $channel->getName());
         $this->assertSame($channel, $channel->setName('releaseTest'));
         $this->assertSame('releaseTest', $channel->getName());
-        $this->assertInstanceOf(\FMUP\Queue\Channel\Settings::class, $channel->getSettings());
+        $this->assertInstanceOf('\FMUP\Queue\Channel\Settings', $channel->getSettings());
         $settings = new \FMUP\Queue\Channel\Settings();
         $settings->setAutoAck(true);
         $this->assertEquals($channel, $channel->setSettings($settings));
@@ -25,8 +25,7 @@ class ChannelTest extends \PHPUnit_Framework_TestCase
     public function testGetResourceFail()
     {
         $channel = new \FMUP\Queue\Channel('test');
-        $this->expectException(\FMUP\Queue\Exception::class);
-        $this->expectExceptionMessage('Resource must be set before using it');
+        $this->setExpectedException('\FMUP\Queue\Exception', 'Resource must be set before using it');
         $channel->getResource();
     }
 
