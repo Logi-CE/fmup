@@ -17,6 +17,15 @@ Compatibility with PHP 7 + rework unit test
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
 
 /*********/
+/* 6.8.2 */
+/*********/
+
+Regaining PHP 5.4 compatibility
+
+#Fix
+ - Downgrade PHP dependencies
+
+/*********/
 /* 6.8.1 */
 /*********/
 
