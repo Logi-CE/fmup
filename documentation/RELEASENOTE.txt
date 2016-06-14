@@ -1,4 +1,13 @@
 /*********/
+/* 6.8.3 */
+/*********/
+
+Fix .gitignore
+
+#Fix
+ - .gitignore now acts correctly
+
+/*********/
 /* 6.8.2 */
 /*********/
 
