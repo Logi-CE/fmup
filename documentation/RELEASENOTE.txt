@@ -1,4 +1,13 @@
 /*********/
+/* 6.8.4 */
+/*********/
+
+Fix error code returned by CLI Framework when error occurs
+
+#Fix
+ - error code is now 1 instead of 0 when error occurs
+
+/*********/
 /* 6.8.3 */
 /*********/
 
