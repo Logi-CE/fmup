@@ -375,11 +375,12 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $bootstrap->method('getLogger')->willReturn($logger);
         $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(null)->getMock();
         $framework = $this->getMockBuilder(\FMUP\Framework::class)
-            ->setMethods(array('getBootstrap', 'getRequest', 'createPluginMail'))
+            ->setMethods(array('getBootstrap', 'getRequest', 'createPluginMail', 'phpExit'))
             ->getMock();
         $framework->method('getBootstrap')->willReturn($bootstrap);
         $framework->method('getRequest')->willReturn($request);
         $framework->method('createPluginMail')->willReturn($pluginMailMock);
+        $framework->method('phpExit')->with($this->equalTo(1));
         /** @var $framework \FMUP\Framework */
         $framework->errorHandler(E_NOTICE, 'test 1');
         $framework->errorHandler(E_ERROR, 'test 2', 'file', 12, array('test' => 'test'));
