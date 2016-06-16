@@ -352,7 +352,14 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorHandler()
     {
-        $logger = $this->getMockBuilder(\FMUP\Logger::class)->setMethods(array('log'))->getMock();
+        $sapi = $this->getMockBuilder('\Tests\SapiMockFramework')->setMethods(array('getRaw'))->getMock();
+        $sapi->method('getRaw')->willReturn(SapiMockFramework::CLI);
+
+        $reflection = new \ReflectionProperty('\FMUP\Sapi', 'instance');
+        $reflection->setAccessible(true);
+        $reflection->setValue($sapi);
+
+        $logger = $this->getMockBuilder('\FMUP\Logger')->setMethods(array('log'))->getMock();
         $logger->expects($this->at(0))
             ->method('log')
             ->with(
@@ -382,8 +389,8 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $framework->method('createPluginMail')->willReturn($pluginMailMock);
         $framework->expects($this->once())->method('phpExit')->with($this->equalTo(E_ERROR));
         /** @var $framework \FMUP\Framework */
-        $framework->errorHandler(E_NOTICE, 'test 1');
-        $framework->errorHandler(E_ERROR, 'test 2', 'file', 12, array('test' => 'test'));
+        $framework->setSapi($sapi)->errorHandler(E_NOTICE, 'test 1');
+        $framework->setSapi($sapi)->errorHandler(E_ERROR, 'test 2', 'file', 12, array('test' => 'test'));
     }
 
     public function testInstantiateWhenClassDontExist()
