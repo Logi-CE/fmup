@@ -379,7 +379,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $framework->method('getBootstrap')->willReturn($bootstrap);
         $framework->method('getRequest')->willReturn($request);
         $framework->method('createPluginMail')->willReturn($pluginMailMock);
-        $framework->method('phpExit')->with($this->equalTo(1));
+        $framework->expects($this->once())->method('phpExit')->with($this->equalTo(E_ERROR));
         /** @var $framework \FMUP\Framework */
         $framework->errorHandler(E_NOTICE, 'test 1');
         $framework->errorHandler(E_ERROR, 'test 2', 'file', 12, array('test' => 'test'));
