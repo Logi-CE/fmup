@@ -215,7 +215,7 @@ class Framework extends \Framework
         $level = isset($translate[$code]) ? $translate[$code] : Logger::ALERT;
         $message = $msg . ' in ' . $errFile . ' on line ' . $errLine;
         $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $level, $message, $errContext);
-        $this->phpExit(1);
+        $this->phpExit($binary);
     }
 
     /**

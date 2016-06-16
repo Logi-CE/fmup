@@ -1,4 +1,13 @@
 /*********/
+/* 7.0.2 */
+/*********/
+
+CLI Framework semantic error code - merged 6.8.5
+
+#Fix
+ - error code is now an integer representing the blocking error instead of 1 when error occurs. Will return 0 if a non-blocking error occurs
+
+/*********/
 /* 7.0.1 */
 /*********/
 
@@ -24,6 +33,15 @@ Compatibility with PHP 7 + rework unit test
 
 #BC Break
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
+
+/*********/
+/* 6.8.5 */
+/*********/
+
+CLI Framework semantic error code
+
+#Fix
+ - error code is now an integer representing the blocking error instead of 1 when error occurs. Will return 0 if a non-blocking error occurs
 
 /*********/
 /* 6.8.4 */
