@@ -1,4 +1,13 @@
 /*********/
+/* 6.8.5 */
+/*********/
+
+CLI Framework semantic error code
+
+#Fix
+ - error code is now an integer representing the blocking error instead of 1 when error occurs. Will return 0 if a non-blocking error occurs
+
+/*********/
 /* 6.8.4 */
 /*********/
 
