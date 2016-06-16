@@ -1,4 +1,16 @@
 /*********/
+/* 7.0.3 */
+/*********/
+
+Add code climate dev dependency + fix PMD - merged 6.8.6
+
+#Fix
+ - PMD error in FMUP\Framework
+
+#Compatible
+ - add codeclimate dev dependency
+
+/*********/
 /* 7.0.2 */
 /*********/
 
@@ -33,6 +45,18 @@ Compatibility with PHP 7 + rework unit test
 
 #BC Break
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
+
+/*********/
+/* 6.8.6 */
+/*********/
+
+Add code climate dev dependency + fix PMD
+
+#Fix
+ - PMD error in FMUP\Framework
+
+#Compatible
+ - add codeclimate dev dependency
 
 /*********/
 /* 6.8.5 */

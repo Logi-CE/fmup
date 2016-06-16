@@ -53,10 +53,7 @@ class Framework extends \Framework
      */
     public function getRoutingSystem()
     {
-        if (!$this->routingSystem) {
-            $this->routingSystem = new Routing();
-        }
-        return $this->routingSystem;
+        return $this->routingSystem = $this->routingSystem ?: new Routing();
     }
 
     /**
@@ -64,10 +61,7 @@ class Framework extends \Framework
      */
     public function getResponse()
     {
-        if (!$this->response) {
-            $this->response = new Response();
-        }
-        return $this->response;
+        return $this->response = $this->response ?: new Response();
     }
 
     /**
@@ -127,18 +121,15 @@ class Framework extends \Framework
         $controllerInstance->preFilter($action);
         $callable = $controllerInstance->getActionMethod($action);
         $actionReturn = null;
-        if (is_callable(array($controllerInstance, $callable))) {
-            $actionReturn = call_user_func(array($controllerInstance, $callable));
-        } else {
+        if (!is_callable(array($controllerInstance, $callable))) {
             throw new Exception\Status\NotFound("Undefined function $callable");
         }
+        $actionReturn = call_user_func(array($controllerInstance, $callable));
         $controllerInstance->postFilter($action);
 
         if (!is_null($actionReturn)) {
             $controllerInstance->getResponse()
-                ->setBody(
-                    $actionReturn instanceof View ? $actionReturn->render() : $actionReturn
-                );
+                ->setBody($actionReturn instanceof View ? $actionReturn->render() : $actionReturn);
         }
         return $controllerInstance;
     }
@@ -152,10 +143,7 @@ class Framework extends \Framework
             $this->preDispatch();
             parent::dispatch();
         } catch (Exception\Location $exception) {
-            $this->getResponse()
-                ->addHeader(
-                    new Response\Header\Location($exception->getLocation())
-                );
+            $this->getResponse()->addHeader(new Response\Header\Location($exception->getLocation()));
         } catch (\Exception $exception) {
             $this->getErrorHandler()
                 ->setBootstrap($this->getBootstrap())
@@ -187,11 +175,8 @@ class Framework extends \Framework
     {
         $block = E_PARSE | E_ERROR | E_USER_ERROR;
         $binary = $code & $block;
+        $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine . ' {' . serialize($errContext) . '}';
         if ($binary) {
-            $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
-            if ($errContext) {
-                $message .= ' {' . serialize($errContext) . '}';
-            }
             $this->createPluginMail()
                 ->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
@@ -211,10 +196,14 @@ class Framework extends \Framework
             E_USER_DEPRECATED => Logger::INFO,
             E_STRICT => Logger::INFO,
             E_RECOVERABLE_ERROR => Logger::ERROR,
+            E_ALL => Logger::CRITICAL,
+            E_COMPILE_ERROR => Logger::ERROR,
+            E_COMPILE_WARNING => Logger::WARNING,
+            E_CORE_ERROR => Logger::ERROR,
+            E_CORE_WARNING => Logger::WARNING,
+            E_USER_NOTICE => Logger::NOTICE,
         );
-        $level = isset($translate[$code]) ? $translate[$code] : Logger::ALERT;
-        $message = $msg . ' in ' . $errFile . ' on line ' . $errLine;
-        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $level, $message, $errContext);
+        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $translate[$code], $message, $errContext);
         if ($binary && $this->getSapi()->get() == Sapi::CLI) {
             $this->phpExit($binary);
         }
@@ -234,10 +223,7 @@ class Framework extends \Framework
      */
     public function getErrorHandler()
     {
-        if (!$this->errorHandler) {
-            $this->errorHandler = new ErrorHandler\Base();
-        }
-        return $this->errorHandler;
+        return $this->errorHandler = $this->errorHandler ?: new ErrorHandler\Base();
     }
 
     /**
@@ -323,10 +309,7 @@ class Framework extends \Framework
      */
     public function getPreDispatcherSystem()
     {
-        if (!$this->preDispatcherSystem) {
-            $this->preDispatcherSystem = new Dispatcher();
-        }
-        return $this->preDispatcherSystem;
+        return $this->preDispatcherSystem = $this->preDispatcherSystem ?: new Dispatcher();
     }
 
     /**
@@ -344,10 +327,7 @@ class Framework extends \Framework
      */
     public function getPostDispatcherSystem()
     {
-        if (!$this->postDispatcherSystem) {
-            $this->postDispatcherSystem = new Dispatcher\Post();
-        }
-        return $this->postDispatcherSystem;
+        return $this->postDispatcherSystem = $this->postDispatcherSystem ?: new Dispatcher\Post();
     }
 
     /**
@@ -365,10 +345,7 @@ class Framework extends \Framework
      */
     public function getBootstrap()
     {
-        if (!$this->bootstrap) {
-            $this->bootstrap = new Bootstrap;
-        }
-        return $this->bootstrap;
+        return $this->bootstrap = $this->bootstrap ?: new Bootstrap;
     }
 
     /**
