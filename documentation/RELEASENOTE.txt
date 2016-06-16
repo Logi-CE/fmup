@@ -1,4 +1,16 @@
 /*********/
+/* 6.8.6 */
+/*********/
+
+Add code climate dev dependency + fix PMD
+
+#Fix
+ - PMD error in FMUP\Framework
+
+#Compatible
+ - add codeclimate dev dependency
+
+/*********/
 /* 6.8.5 */
 /*********/
 
