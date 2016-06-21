@@ -175,7 +175,7 @@ class Framework extends \Framework
     {
         $block = E_PARSE | E_ERROR | E_USER_ERROR;
         $binary = $code & $block;
-        $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine . ' {' . serialize($errContext) . '}';
+        $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
         if ($binary) {
             $this->createPluginMail()
                 ->setBootstrap($this->getBootstrap())
@@ -203,7 +203,8 @@ class Framework extends \Framework
             E_CORE_WARNING => Logger::WARNING,
             E_USER_NOTICE => Logger::NOTICE,
         );
-        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $translate[$code], $message, $errContext);
+        $level = isset($translate[$code]) ? $translate[$code] : Logger::ALERT;
+        $this->getBootstrap()->getLogger()->log(Logger\Channel\System::NAME, $level, $message, $errContext);
         if ($binary && $this->getSapi()->get() == Sapi::CLI) {
             $this->phpExit($binary);
         }
