@@ -1,4 +1,13 @@
 /*********/
+/* 7.0.4 */
+/*********/
+
+Fix error serialization context - merged 6.8.7
+
+#Fix
+ - error serialization context
+
+/*********/
 /* 7.0.3 */
 /*********/
 
@@ -45,6 +54,15 @@ Compatibility with PHP 7 + rework unit test
 
 #BC Break
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
+
+/*********/
+/* 6.8.7 */
+/*********/
+
+Fix error serialization context
+
+#Fix
+ - error serialization context
 
 /*********/
 /* 6.8.6 */
