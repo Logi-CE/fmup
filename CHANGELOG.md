@@ -79,13 +79,20 @@ BC Break
 --------
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
 
+6.8.8
+======
+
+fix dateSQL formatter to permit to return Date or DateTime
+
+#fix
+ - fix dateSQL formatter
+
 6.8.7
 =====
 
-Fix error serialization context
+fix error serialization context
 
-Fixes
------
+#Fix
  - error serialization context
 
 6.8.6
