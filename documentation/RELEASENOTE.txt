@@ -1,4 +1,13 @@
 /*********/
+/* 6.8.7 */
+/*********/
+
+Fix error serialization context
+
+#Fix
+ - error serialization context
+
+/*********/
 /* 6.8.6 */
 /*********/
 

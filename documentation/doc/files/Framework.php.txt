@@ -175,8 +175,9 @@ class Framework extends \Framework
     {
         $block = E_PARSE | E_ERROR | E_USER_ERROR;
         $binary = $code & $block;
-        $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine . ' {' . serialize($errContext) . '}';
+        $message = $msg . ' in file ' . $errFile . ' on line ' . $errLine;
         if ($binary) {
+            $message .= ' {' . serialize($errContext) . '}';
             $this->createPluginMail()
                 ->setBootstrap($this->getBootstrap())
                 ->setRequest($this->getRequest())
