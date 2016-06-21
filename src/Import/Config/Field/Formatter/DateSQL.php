@@ -5,10 +5,27 @@ use FMUP\Import\Config\Field\Formatter;
 
 class DateSQL implements Formatter
 {
+    const DATE = 'Y-m-d';
+    const DATE_TIME = 'Y-m-d H:i:s';
+
     /**
      * @var bool
      */
     private $hasError = false;
+
+    /**
+     * @var string
+     */
+    private $datePattern;
+
+    /**
+     * DateSQL constructor.
+     * @param string $format
+     */
+    public function __construct($format = self::DATE_TIME)
+    {
+        $this->setDatePattern($format);
+    }
 
     /**
      * @param string $value
@@ -36,7 +53,7 @@ class DateSQL implements Formatter
         if (!$date) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
         }
-        return $date->format('Y-m-d H:i:s');
+        return $date->format($this->getDatePattern());
     }
 
     public function getErrorMessage($value = null)
@@ -47,5 +64,23 @@ class DateSQL implements Formatter
     public function hasError()
     {
         return $this->hasError;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDatePattern()
+    {
+        return $this->datePattern;
+    }
+
+    /***
+     * @param $datePattern
+     * @return $this
+     */
+    protected function setDatePattern($datePattern)
+    {
+        $this->datePattern = $datePattern;
+        return $this;
     }
 }
