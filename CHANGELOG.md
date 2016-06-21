@@ -96,7 +96,17 @@ New
 BC Break
 --------
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
-
+ 
+6.12.0
+=====
+ 
+Add socket management + improve error details when loading views
+ 
+new
+---
+ - Add Socket
+ - Show view path on view errors
+ 
 6.11.0
 =====
 
