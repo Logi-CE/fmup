@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Controller;
+namespace FMUPTests\Controller;
 
 
 class ErrorTest extends \PHPUnit_Framework_TestCase

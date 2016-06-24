@@ -15,7 +15,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">lib</directory>
+            <directory suffix=".php">src</directory>
             <!-- this directory should be deleted since code is not correctly designed -->
             <!--directory suffix=".php">system</directory-->
         </whitelist>

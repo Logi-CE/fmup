@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Sapi;
+namespace FMUPTests\Sapi;
 
 use FMUP\Sapi;
 

@@ -5,7 +5,7 @@ class Mock {
 
 }
 
-namespace Tests\Cache;
+namespace FMUPTests\Cache;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {

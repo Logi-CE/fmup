@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Routing;
+namespace FMUPTests\Routing;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {

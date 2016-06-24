@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Queue;
+namespace FMUPTests\Queue;
 
 
 class ChannelTest extends \PHPUnit_Framework_TestCase

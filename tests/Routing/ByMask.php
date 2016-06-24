@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Routing;
+namespace FMUPTests\Routing;
 
 class MatchingRouteMock extends \FMUP\Routing\Route
 {

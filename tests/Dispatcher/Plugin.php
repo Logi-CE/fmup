@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Dispatcher;
+namespace FMUPTests\Dispatcher;
 
 class PluginMockPlugin extends \FMUP\Dispatcher\Plugin
 {

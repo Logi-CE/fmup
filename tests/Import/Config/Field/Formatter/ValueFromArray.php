@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Import\Config\Field\Formatter;
+namespace FMUPTests\Import\Config\Field\Formatter;
 
 
 class ValueFromArrayTest extends \PHPUnit_Framework_TestCase

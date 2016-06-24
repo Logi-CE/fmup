@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Crypt\Driver;
+namespace FMUPTests\Crypt\Driver;
 
 use FMUP\Crypt;
 use FMUP\Crypt\Driver\MCrypt;

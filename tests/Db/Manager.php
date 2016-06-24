@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Db;
+namespace FMUPTests\Db;
 
 class ManagerMockDb extends \FMUP\Db\Manager
 {

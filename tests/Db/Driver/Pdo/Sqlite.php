@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Db\Driver\Pdo;
+namespace FMUPTests\Db\Driver\Pdo;
 
 class PdoMockDbDriverPdoSqlite extends \PDO
 {

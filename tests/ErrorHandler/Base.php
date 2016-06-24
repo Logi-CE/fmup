@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\ErrorHandler;
+namespace FMUPTests\ErrorHandler;
 
 
 class BaseTest extends \PHPUnit_Framework_TestCase

@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\ErrorHandler\Plugin;
+namespace FMUPTests\ErrorHandler\Plugin;
 
 class AbstrationTest extends \PHPUnit_Framework_TestCase
 {

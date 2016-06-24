@@ -13,7 +13,7 @@
  *          vendor/bin/phpunit tests/Config.php     => résultats à voir dans FMUP\build\coverage\report\index.html
  */
 
-namespace Tests;
+namespace FMUPTests;
 
 use FMUP\Bootstrap;
 use FMUP\Controller as FMUPController;

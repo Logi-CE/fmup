@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Db;
+namespace FMUPTests\Db;
 
 
 class FetchIteratorTest extends \PHPUnit_Framework_TestCase

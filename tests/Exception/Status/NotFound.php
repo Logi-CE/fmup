@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Exception\Status;
+namespace FMUPTests\Exception\Status;
 
 
 class NotFoundTest extends \PHPUnit_Framework_TestCase

@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Config;
+namespace FMUPTests\Config;
 
 class RequiredTraitMock
 {

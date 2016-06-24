@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Exception;
+namespace FMUPTests\Exception;
 
 
 class LocationTest extends \PHPUnit_Framework_TestCase

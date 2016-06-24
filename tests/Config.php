@@ -1,5 +1,5 @@
 <?php
-namespace Tests;
+namespace FMUPTests;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {

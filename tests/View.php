@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace FMUPTests;
 
 use FMUP\Exception;
 use FMUP\Exception\UnexpectedValue as ExceptionUnexpectedValue;

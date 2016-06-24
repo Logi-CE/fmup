@@ -3,7 +3,7 @@
  * Logger.php
  * @author: jmoulin@castelis.com
  */
-namespace Tests\Logger;
+namespace FMUPTests\Logger;
 
 class FactoryMockLogger extends \FMUP\Logger\Factory
 {
@@ -14,7 +14,7 @@ class FactoryMockLogger extends \FMUP\Logger\Factory
 }
 
 
-namespace Tests;
+namespace FMUPTests;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,15 +25,15 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\FMUP\Logger\Factory::class, $factory);
 
         $logger2 = new \FMUP\Logger();
-        $factoryMock = $this->getMockBuilder(\Tests\Logger\FactoryMockLogger::class)->getMock();
+        $factoryMock = $this->getMockBuilder(\FMUPTests\Logger\FactoryMockLogger::class)->getMock();
 
         $reflection = new \ReflectionProperty(\FMUP\Logger\Factory::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Logger\Factory::getInstance(), $factoryMock);
 
-        /** @var $factoryMock \Tests\Logger\FactoryMockLogger */
+        /** @var $factoryMock \FMUPTests\Logger\FactoryMockLogger */
         $logger->setFactory($factoryMock);
-        $this->assertInstanceOf(\Tests\Logger\FactoryMockLogger::class, $logger2->getFactory());
+        $this->assertInstanceOf(\FMUPTests\Logger\FactoryMockLogger::class, $logger2->getFactory());
     }
 
     public function testGetRequestWhenNotSet()

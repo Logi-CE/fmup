@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\FlashMessenger;
+namespace FMUPTests\FlashMessenger;
 
 
 class ViewTest extends \PHPUnit_Framework_TestCase

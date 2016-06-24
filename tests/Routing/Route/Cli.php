@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Routing\Route;
+namespace FMUPTests\Routing\Route;
 
 class SapiMock extends \FMUP\Sapi
 {

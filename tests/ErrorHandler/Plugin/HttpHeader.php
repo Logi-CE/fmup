@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\ErrorHandler\Plugin;
+namespace FMUPTests\ErrorHandler\Plugin;
 
 use FMUP\Response\Header\Status;
 

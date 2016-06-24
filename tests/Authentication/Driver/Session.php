@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Authentication\Driver;
+namespace FMUPTests\Authentication\Driver;
 
 class SessionMockAuthenticationDriver extends \FMUP\Session
 {

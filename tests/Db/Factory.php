@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Db;
+namespace FMUPTests\Db;
 
 class FactoryMockDbFactory extends \FMUP\Db\Factory
 {

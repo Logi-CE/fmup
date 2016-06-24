@@ -9,7 +9,7 @@ class DriverMock
  * Factory.php
  * @author: jmoulin@castelis.com
  */
-namespace Tests\Crypt;
+namespace FMUPTests\Crypt;
 
 use FMUP\Crypt\Factory;
 

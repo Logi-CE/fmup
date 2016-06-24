@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Ftp\Driver;
+namespace FMUPTests\Ftp\Driver;
 
 use FMUP\Ftp;
 

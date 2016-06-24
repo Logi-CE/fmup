@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Environment;
+namespace FMUPTests\Environment;
 
 use FMUP\Environment;
 

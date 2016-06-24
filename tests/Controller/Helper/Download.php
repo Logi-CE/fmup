@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Controller\Helper;
+namespace FMUPTests\Controller\Helper;
 
 use FMUP\Logger;
 

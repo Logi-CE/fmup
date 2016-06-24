@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Import\Iterator;
+namespace FMUPTests\Import\Iterator;
 
 
 class LineToConfigIteratorTest extends \PHPUnit_Framework_TestCase

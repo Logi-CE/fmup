@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests;
+namespace FMUPTests;
 
 class ResponseHeaderMockResponse extends \FMUP\Response\Header
 {

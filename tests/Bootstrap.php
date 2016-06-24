@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests;
+namespace FMUPTests;
 
 class SessionMockBootstrap extends \FMUP\Session
 {

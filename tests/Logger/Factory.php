@@ -11,7 +11,7 @@ class Mock
 
 }
 
-namespace Tests\Logger;
+namespace FMUPTests\Logger;
 
 class FactoryMockLoggerFactory extends \FMUP\Logger\Factory
 {

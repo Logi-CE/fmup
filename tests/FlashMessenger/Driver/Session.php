@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\FlashMessenger\Driver;
+namespace FMUPTests\FlashMessenger\Driver;
 
 class SessionMock extends \FMUP\Session
 {

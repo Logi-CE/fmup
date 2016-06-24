@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Db\Driver;
+namespace FMUPTests\Db\Driver;
 
 class PdoMockDbDriverPdo extends \PDO
 {

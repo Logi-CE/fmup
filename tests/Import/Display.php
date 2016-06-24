@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Import;
+namespace FMUPTests\Import;
 
 use FMUP\Import\Config;
 

@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests;
+namespace FMUPTests;
 
 use FMUP\Exception\Status\NotFound;
 use FMUP\Exception\Location;

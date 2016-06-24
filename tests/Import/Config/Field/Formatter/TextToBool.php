@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Import\Config\Field\Formatter;
+namespace FMUPTests\Import\Config\Field\Formatter;
 
 
 class TextToBoolTest extends \PHPUnit_Framework_TestCase

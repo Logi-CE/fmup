@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Import\Iterator;
+namespace FMUPTests\Import\Iterator;
 
 use FMUP\Import\Config\ConfigObjet;
 

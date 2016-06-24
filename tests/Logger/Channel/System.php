@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Logger\Channel;
+namespace FMUPTests\Logger\Channel;
 
 
 class SystemTest extends \PHPUnit_Framework_TestCase

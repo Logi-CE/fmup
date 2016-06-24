@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests;
+namespace FMUPTests;
 
 class MailTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Ftp;
+namespace FMUPTests\Ftp;
 
 use FMUP\Ftp;
 

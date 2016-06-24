@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Cache\Driver;
+namespace FMUPTests\Cache\Driver;
 
 /**
  * Created by PhpStorm.

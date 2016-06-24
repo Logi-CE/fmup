@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Import\Config\Field\Validator;
+namespace FMUPTests\Import\Config\Field\Validator;
 
 
 class EmailTest extends \PHPUnit_Framework_TestCase

@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Dispatcher\Plugin;
+namespace FMUPTests\Dispatcher\Plugin;
 
 
 class HtmlCompressTest extends \PHPUnit_Framework_TestCase

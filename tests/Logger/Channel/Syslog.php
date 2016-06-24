@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Logger\Channel;
+namespace FMUPTests\Logger\Channel;
 
 
 class SyslogTest extends \PHPUnit_Framework_TestCase

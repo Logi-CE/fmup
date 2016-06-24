@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Queue\Channel\Settings;
+namespace FMUPTests\Queue\Channel\Settings;
 
 
 class NativeTest extends \PHPUnit_Framework_TestCase

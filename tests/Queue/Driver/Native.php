@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Queue\Driver;
+namespace FMUPTests\Queue\Driver;
 
 class EnvironmentMockQueueDriverNative extends \FMUP\Environment
 {

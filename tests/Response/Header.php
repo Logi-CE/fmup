@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Response;
+namespace FMUPTests\Response;
 
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {

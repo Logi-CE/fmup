@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Request;
+namespace FMUPTests\Request;
 
 
 class UrlTest extends \PHPUnit_Framework_TestCase

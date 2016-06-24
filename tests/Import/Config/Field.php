@@ -17,7 +17,7 @@ class Mock implements \FMUP\Import\Config\Field\Validator
     }
 }
 
-namespace Tests\Import\Config;
+namespace FMUPTests\Import\Config;
 
 
 class FieldTest extends \PHPUnit_Framework_TestCase

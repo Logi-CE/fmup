@@ -4,7 +4,7 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace Tests\Logger;
+namespace FMUPTests\Logger;
 
 class LoggerMockLogger implements \FMUP\Logger\LoggerInterface
 {
