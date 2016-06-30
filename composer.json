@@ -1,6 +1,7 @@
 {
-  "name": "castelis/fmup",
-  "version": "7.0.5",
+  "name": "femtopixel/fmup",
+  "version": "7.0.6",
+  "abandoned": true,
   "require": {
     "php": "^5.6 || ^7.0",
     "ext-json": "^1.2",
