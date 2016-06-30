@@ -217,7 +217,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $config = $this->getMockBuilder(\FMUP\Import\Config::class)->setMethods(array('getListeField'))->getMock();
         $config->method('getListeField')->willReturn(array($field, $field));
         /** @var $config \FMUP\Import\Config */
-        $this->assertSame("0 \tname \tvalue \t\n1 \tname \tvalue \t\n", (string)$config);
+        $this->assertSame("0 \tname \tvalue \t\n1 \tname \tvalue \t" . PHP_EOL, (string)$config);
     }
 
     public function testSortByPriority()

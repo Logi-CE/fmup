@@ -37,7 +37,7 @@ class IntegerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate('1'));
         $this->assertTrue($validator->validate(0));
         $this->assertFalse($validator->validate(0.5));
-        $this->assertTrue($validator->validate(3e10));
+        $this->assertTrue($validator->validate(3e2));
         $this->assertFalse($validator->validate('test'));
         $this->assertTrue($validator->validate(-1));
     }

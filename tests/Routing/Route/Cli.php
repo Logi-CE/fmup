@@ -91,12 +91,12 @@ class CliTest extends \PHPUnit_Framework_TestCase
     public function testHandleGetControllerNameFailOnLogicError()
     {
         $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
-        $request->method('get')->willReturn('\Tests\Routing\Route\NotValidController/test');
+        $request->method('get')->willReturn('\FMUPTests\Routing\Route\NotValidController/test');
         $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
         $this->expectException(\FMUP\Exception\Status\NotFound::class);
-        $this->expectExceptionMessage('Controller \Tests\Routing\Route\NotValidController does not exist');
+        $this->expectExceptionMessage('Controller \FMUPTests\Routing\Route\NotValidController does not exist');
         $this->expectExceptionCode(\FMUP\Routing\Route\Cli::ERROR_LOGIC);
         $cliPlugin->handle();
         $cliPlugin->getControllerName();
@@ -105,11 +105,11 @@ class CliTest extends \PHPUnit_Framework_TestCase
     public function testHandleGetControllerNameSuccess()
     {
         $request = $this->getMockBuilder(\FMUP\Request\Cli::class)->setMethods(array('has', 'get'))->getMock();
-        $request->method('get')->willReturn('\Tests\Routing\Route\ValidController/test');
+        $request->method('get')->willReturn('\FMUPTests\Routing\Route\ValidController/test');
         $cliPlugin = $this->getMockBuilder(\FMUP\Routing\Route\Cli::class)->setMethods(array('getRequest'))->getMock();
         $cliPlugin->method('getRequest')->willReturn($request);
         /** @var $cliPlugin \FMUP\Routing\Route\Cli */
         $cliPlugin->handle();
-        $this->assertSame('\Tests\Routing\Route\ValidController', $cliPlugin->getControllerName());
+        $this->assertSame('\FMUPTests\Routing\Route\ValidController', $cliPlugin->getControllerName());
     }
 }

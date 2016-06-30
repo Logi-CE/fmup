@@ -18,7 +18,7 @@ class SapiMockFramework extends \FMUP\Sapi
     }
 }
 
-if (!class_exists('\Tests\ControllerMock')) {
+if (!class_exists('\FMUPTests\ControllerMock')) {
     class ControllerMock extends \FMUP\Controller
     {
         public function testAction()
@@ -352,7 +352,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
 
     public function testErrorHandler()
     {
-        $sapi = $this->getMockBuilder('\Tests\SapiMockFramework')->setMethods(array('getRaw'))->getMock();
+        $sapi = $this->getMockBuilder('\FMUPTests\SapiMockFramework')->setMethods(array('getRaw'))->getMock();
         $sapi->method('getRaw')->willReturn(SapiMockFramework::CLI);
 
         $reflection = new \ReflectionProperty('\FMUP\Sapi', 'instance');
@@ -414,7 +414,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('Undefined function actionNameAction');
         $reflection = new \ReflectionMethod(\FMUP\Framework::class, 'instantiate');
         $reflection->setAccessible(true);
-        $reflection->invoke($framework, '\Tests\ControllerMock', 'actionName');
+        $reflection->invoke($framework, '\FMUPTests\ControllerMock', 'actionName');
     }
 
     public function testInstantiateWithoutActionReturn()
@@ -425,7 +425,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('expected output!!');
         $reflection = new \ReflectionMethod(\FMUP\Framework::class, 'instantiate');
         $reflection->setAccessible(true);
-        $this->assertInstanceOf(\FMUP\Controller::class, $reflection->invoke($framework, '\Tests\ControllerMock', 'test'));
+        $this->assertInstanceOf(\FMUP\Controller::class, $reflection->invoke($framework, '\FMUPTests\ControllerMock', 'test'));
     }
 
     public function testInstantiateWithinActionReturn()
@@ -436,7 +436,7 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         /** @var $framework \FMUP\Framework */
         $reflection = new \ReflectionMethod(\FMUP\Framework::class, 'instantiate');
         $reflection->setAccessible(true);
-        $this->assertInstanceOf(\FMUP\Controller::class, $reflection->invoke($framework, '\Tests\ControllerMock', 'testWithReturn'));
+        $this->assertInstanceOf(\FMUP\Controller::class, $reflection->invoke($framework, '\FMUPTests\ControllerMock', 'testWithReturn'));
         $this->assertSame('expected output!!', $framework->getResponse()->getBody());
     }
 }
