@@ -1,3 +1,13 @@
+7.0.6
+=====
+
+Abandoned Framework. Educational purpose only
+
+Fixes
+-----
+ - Documentation in markedown format
+ - unit tests in x64 version
+
 7.0.5
 =====
 

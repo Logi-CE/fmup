@@ -25,7 +25,7 @@ class FileIteratorTest extends \PHPUnit_Framework_TestCase
         $count = 0;
         foreach ($iterator as $key => $current) {
             if ($key == 1) {
-                $this->assertSame(trim('"name": "castelis/fmup",'), trim($current));
+                $this->assertSame(trim('"name": "femtopixel/fmup",'), trim($current));
             }
             $count++;
         }
