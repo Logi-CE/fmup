@@ -3,4 +3,7 @@ FMUP
 
 Easy to handle Framework
 
-This Framework is abandoned. Educational purpose only
+Documentation
+=============
+
+Documentation is available either on `docs` folder or http://femtopixel.github.io/fmup/.

@@ -1,7 +1,20 @@
 {
   "name": "femtopixel/fmup",
   "version": "7.0.6",
-  "abandoned": true,
+  "keywords":["framework", "easy", "performant", "simple", "MVC", "PHP 7", "PHP 5.6"],
+  "license": "MIT",
+  "homepage": "http://femtopixel.github.io/fmup",
+  "authors": [
+    {
+      "name": "Jay MOULIN",
+      "email": "jaymoulin@gmail.com",
+      "homepage": "http://github.com/jaymoulin"
+    }
+  ],
+  "support": {
+    "issues": "http://github.com/femtopixel/fmup/issues",
+    "source": "https://github.com/femtopixel/fmup"
+  },
   "require": {
     "php": "^5.6 || ^7.0",
     "ext-json": "^1.2",
