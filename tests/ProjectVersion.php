@@ -91,4 +91,17 @@ COMPOSER;
         $this->assertSame($version, $projectVersion->get());
         unlink($filePath);
     }
+
+    public function testGetComposerPath()
+    {
+        $method = new \ReflectionMethod('\Tests\ProjectVersionMock', 'getComposerPath');
+        $method->setAccessible(true);
+        $projectVersion = $this->getMockBuilder('\Tests\ProjectVersionMock')->setMethods(null)->getMock();
+
+        /** @var $projectVersion \FMUP\ProjectVersion */
+        $this->assertRegExp(
+            '#/lib/\.\./\.\./\.\./\.\./composer\.json$#',
+            $method->invoke($projectVersion)
+        );
+    }
 }
