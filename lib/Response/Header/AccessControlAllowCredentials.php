@@ -30,10 +30,12 @@ class AccessControlAllowCredentials extends Header
 
     /**
      * @param boolean $allow
+     * @return $this
      */
     public function setAllow($allow)
     {
         $this->allow = $allow;
+        return $this;
     }
 
     /**
