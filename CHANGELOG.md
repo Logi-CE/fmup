@@ -79,6 +79,14 @@ BC Break
 --------
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
 
+6.9.0
+=====
+ 
+add response headers for CORS
+ 
+#New
+- add Access-Control-Allow-Origin and Access-Control-Allow-Credentials headers for CORS response
+
 6.8.8
 ======
 
