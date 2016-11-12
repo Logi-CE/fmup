@@ -1,5 +1,6 @@
 {
-  "name": "femtopixel/fmup",
+  "name": "fmup/fmup",
+  "version": "7.0.8",
   "keywords":["framework", "easy", "performant", "simple", "MVC", "PHP 7", "PHP 5.6"],
   "license": "MIT",
   "homepage": "http://femtopixel.github.io/fmup",
