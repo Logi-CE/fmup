@@ -13,6 +13,7 @@ class ContentType extends Header
     const MIME_APPLICATION_JS = 'application/javascript';
     const CHARSET_UTF_8 = 'utf-8';
     const MIME_APPLICATION_JSON = 'application/json';
+    const MIME_APPLICATION_JWT = 'application/jwt';
 
     private $mime = self::MIME_TEXT_HTML;
     private $charset = self::CHARSET_UTF_8;
