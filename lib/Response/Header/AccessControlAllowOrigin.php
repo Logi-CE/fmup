@@ -27,10 +27,12 @@ class AccessControlAllowOrigin extends Header
 
     /**
      * @param mixed $origin
+     * @return $this
      */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
+        return $this;
     }
 
     /**

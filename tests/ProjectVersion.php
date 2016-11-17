@@ -65,6 +65,15 @@ class ProjectVersionTest extends \PHPUnit_Framework_TestCase
         $projectVersion->get();
     }
 
+    public function testComposerPath()
+    {
+        $reflection = new \ReflectionMethod('\FMUP\ProjectVersion', 'getComposerPath');
+        $reflection->setAccessible(true);
+
+        $projectVersion = $this->getMockBuilder('\Tests\ProjectVersionMock')->setMethods(null)->getMock();
+        $this->assertRegExp('~/../../../../composer.json$~', $reflection->invoke($projectVersion));
+    }
+
     public function testGetAndName()
     {
         $filePath = __DIR__ . DIRECTORY_SEPARATOR . '.files' . DIRECTORY_SEPARATOR . 'composer.json';
