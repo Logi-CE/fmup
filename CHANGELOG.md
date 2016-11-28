@@ -79,6 +79,15 @@ BC Break
 --------
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
 
+6.10.0
+=====
+
+Add authorization headers + JWT content type
+
+#New
+ - Add Authorization headers response
+ - Add JWT content type
+
 6.9.0
 =====
  
