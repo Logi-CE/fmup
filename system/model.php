@@ -105,7 +105,7 @@ abstract class Model
      * @param string $class_name : Type d'objet
      * @return Object
      */
-    private static function create($params, $class_name)
+    protected static function create($params, $class_name)
     {
         $class = new $class_name();
         foreach ($params as $attribut => $value) {
@@ -177,7 +177,7 @@ abstract class Model
         $liste = array();
         if ($matrix instanceof Traversable || is_array($matrix)) {
             foreach ($matrix as $array) {
-                array_push($liste, Model::create($array, $class_name));
+                array_push($liste, $class_name::create($array, $class_name));
             }
         }
         return $liste;
@@ -185,7 +185,7 @@ abstract class Model
 
     public static function objectsFromArray($array, $class_name)
     {
-        return Model::create($array, $class_name);
+        return $class_name::create($array, $class_name);
     }
 
     protected static function objectsFromMatrixByAttribute($matrix, $class_name, $attribute = 'id')
@@ -193,7 +193,7 @@ abstract class Model
         $liste = array();
         if (!empty($matrix) && (is_array($matrix) || $matrix instanceof Traversable)) {
             foreach ($matrix as $array) {
-                $objet = Model::create($array, $class_name);
+                $objet = $class_name::create($array, $class_name);
                 $liste[$objet->getAttribute($attribute)] = $objet;
             }
         }
