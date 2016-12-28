@@ -20,8 +20,9 @@ class ArrayToObjectIterator extends \IteratorIterator implements \Countable, \Ar
 
     private function defineCurrentToObject()
     {
+        $className = $this->className;
         $this->current = $this->getInnerIterator()->valid()
-            ? \Model::objectsFromArray($this->getInnerIterator()->current(), $this->className)
+            ? $className::objectsFromArray($this->getInnerIterator()->current(), $this->className)
             : null;
     }
 
