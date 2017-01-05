@@ -11,7 +11,6 @@ class Factory
 
     private function __construct()
     {
-
     }
 
     /**
@@ -31,7 +30,6 @@ class Factory
      */
     private function __clone()
     {
-
     }
 
     /**

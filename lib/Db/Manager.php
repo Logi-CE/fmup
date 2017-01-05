@@ -20,7 +20,6 @@ class Manager implements Logger\LoggerInterface
 
     private function __construct()
     {
-
     }
 
     /**
@@ -28,7 +27,6 @@ class Manager implements Logger\LoggerInterface
      */
     private function __clone()
     {
-
     }
 
     /**
