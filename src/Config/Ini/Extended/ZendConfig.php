@@ -238,7 +238,6 @@ class ZendConfig implements \Countable, \Iterator
         } else {
             throw new Exception('Zend_Config is read only');
         }
-
     }
 
     /**

@@ -27,7 +27,6 @@ class ProjectVersion
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -36,7 +35,6 @@ class ProjectVersion
      */
     private function __clone()
     {
-
     }
 
     /**

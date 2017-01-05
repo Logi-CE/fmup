@@ -64,7 +64,6 @@ abstract class Route
      */
     public function handle()
     {
-
     }
 
     /**

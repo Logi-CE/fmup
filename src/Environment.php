@@ -16,7 +16,6 @@ class Environment
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -24,7 +23,6 @@ class Environment
      */
     private function __clone()
     {
-
     }
 
     /**

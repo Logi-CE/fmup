@@ -29,7 +29,6 @@ class Sapi
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -37,7 +36,6 @@ class Sapi
      */
     private function __clone()
     {
-
     }
 
     /**
