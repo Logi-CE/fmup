@@ -79,6 +79,15 @@ BC Break
 --------
  - FMUP\String is renamed FMUP\StringHandling due to PHP7 string type
 
+6.11.0
+=====
+
+Change visibility and call method to permit i18n in LogiCE
+
+#new
+ - Change visibility of create method in old model
+ - Use class name instead of self in static method in old model (for creating 'entity'
+
 6.10.0
 =====
 
