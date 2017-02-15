@@ -40,7 +40,7 @@ class ProjectVersionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWhenFileDontExists()
     {
-        $projectVersion = $this->getMockBuilder('\Tests\ProjectVersionMock')->setMethods(array('getComposerPath'))->getMock();
+        $projectVersion = $this->getMockBuilder('\FMUPTests\ProjectVersionMock')->setMethods(array('getComposerPath'))->getMock();
         $projectVersion->method('getComposerPath')->willReturn('nonexistent_file');
 
         $reflection = new \ReflectionProperty('\FMUP\ProjectVersion', 'instance');
@@ -72,7 +72,7 @@ class ProjectVersionTest extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionMethod('\FMUP\ProjectVersion', 'getComposerPath');
         $reflection->setAccessible(true);
 
-        $projectVersion = $this->getMockBuilder('\Tests\ProjectVersionMock')->setMethods(null)->getMock();
+        $projectVersion = $this->getMockBuilder('\FMUPTests\ProjectVersionMock')->setMethods(null)->getMock();
         $this->assertRegExp('~/../../../../composer.json$~', $reflection->invoke($projectVersion));
     }
 

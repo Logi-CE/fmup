@@ -1,3 +1,21 @@
+7.1.0
+=====
+
+Reinsert 6.X features
+
+New
+---
+ - Change visibility of create method in old model
+ - Use class name instead of self in static method in old model (for creating 'entity'
+ - Add Authorization headers response
+ - Add JWT content type
+ - add Access-Control-Allow-Origin and Access-Control-Allow-Credentials headers for CORS response
+
+fix
+---
+ - fix dateSQL formatter
+
+
 7.0.6
 =====
 
@@ -84,7 +102,8 @@ BC Break
 
 Change visibility and call method to permit i18n in LogiCE
 
-#new
+new
+---
  - Change visibility of create method in old model
  - Use class name instead of self in static method in old model (for creating 'entity'
 
@@ -93,7 +112,8 @@ Change visibility and call method to permit i18n in LogiCE
 
 Add authorization headers + JWT content type
 
-#New
+New
+---
  - Add Authorization headers response
  - Add JWT content type
 
@@ -102,7 +122,8 @@ Add authorization headers + JWT content type
  
 add response headers for CORS
  
-#New
+New
+---
 - add Access-Control-Allow-Origin and Access-Control-Allow-Credentials headers for CORS response
 
 6.8.8
@@ -110,7 +131,8 @@ add response headers for CORS
 
 fix dateSQL formatter to permit to return Date or DateTime
 
-#fix
+fix
+---
  - fix dateSQL formatter
 
 6.8.7
@@ -118,7 +140,8 @@ fix dateSQL formatter to permit to return Date or DateTime
 
 fix error serialization context
 
-#Fix
+Fix
+---
  - error serialization context
 
 6.8.6
