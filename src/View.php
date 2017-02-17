@@ -87,10 +87,16 @@ class View
     public function render()
     {
         if (is_null($this->getViewPath())) {
-            throw new UnexpectedValue('View must be defined', UnexpectedValue::CODE_VALUE_NULL);
+            throw new UnexpectedValue(
+                'View must be defined : ' . $this->getViewPath(),
+                UnexpectedValue::CODE_VALUE_NULL
+            );
         }
         if (!file_exists($this->getViewPath())) {
-            throw new UnexpectedValue('File does not exist', UnexpectedValue::CODE_VALUE_INVALID_FILE_PATH);
+            throw new UnexpectedValue(
+                'File does not exist : ' . $this->getViewPath(),
+                UnexpectedValue::CODE_VALUE_INVALID_FILE_PATH
+            );
         }
         ob_start();
         $vars = $this->getParams();
