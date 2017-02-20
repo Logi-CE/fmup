@@ -1,3 +1,13 @@
+7.2.0
+=====
+ 
+Add socket management + improve error details when loading views (6.12.0)
+ 
+new
+---
+ - Add Socket
+ - Show view path on view errors
+ 
 7.1.0
 =====
 
