@@ -5,7 +5,8 @@ class Factory
 {
     const DRIVER_FTP = 'Ftp';
     const DRIVER_SFTP = 'Sftp';
-    
+    const DRIVER_FTP_IMPLICIT_SSL = 'FtpImplicitSSL';
+
     private static $instance;
     
     private function __construct()
