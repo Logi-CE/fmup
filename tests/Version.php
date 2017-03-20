@@ -39,16 +39,16 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $file = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'composer.json';
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__ , '..' , '..', '..' , '..', 'composer.lock'));
         if (!file_exists($file)) {
-            $this->fail('File composer.json do not exists');
+            $this->fail('File composer.lock do not exists');
         }
         $version = json_decode(file_get_contents($file));
         if (!$version) {
-            $this->fail('File composer.json is not correct');
+            $this->fail('File composer.lock is not correct');
         }
         if (!isset($version->version)) {
-            $this->fail('File composer.json is not correct - need version');
+            $this->fail('File composer.lock is not correct - need version');
         }
         $this->assertSame($version->version, \FMUP\Version::getInstance()->get());
     }
@@ -62,7 +62,8 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->setExpectedException('\FMUP\Exception', 'composer.json does not exist');
+        $this->expectException('\FMUP\Exception');
+        $this->expectExceptionMessage('composer.lock does not exist');
         /** @var $version \FMUP\Version */
         $version->get();
     }
@@ -76,7 +77,8 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->setExpectedException('\FMUP\Exception', 'composer.json invalid structure');
+        $this->expectException('\FMUP\Exception');
+        $this->expectExceptionMessage('composer.json invalid structure');
         /** @var $version \FMUP\Version */
         $version->get();
     }

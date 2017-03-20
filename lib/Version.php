@@ -43,7 +43,12 @@ class Version
      */
     public function get()
     {
-        return $this->getStructure()->version;
+        foreach ($this->getStructure()->packages as $package) {
+            if ($package->name == 'fmup/fmup') {
+                return $package->version;
+            }
+        }
+        return "v0.0.0";
     }
 
     /**
@@ -52,7 +57,7 @@ class Version
      */
     protected function getComposerPath()
     {
-        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'composer.json'));
+        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', 'composer.lock'));
     }
 
     /**
@@ -64,11 +69,11 @@ class Version
     {
         if (!$this->structure) {
             if (!is_file($this->getComposerPath())) {
-                throw new Exception('composer.json does not exist');
+                throw new Exception('composer.lock does not exist');
             }
             $this->structure = json_decode(file_get_contents($this->getComposerPath()));
             if (!$this->structure) {
-                throw new Exception('composer.json invalid structure');
+                throw new Exception('composer.lock invalid structure');
             }
         }
         return $this->structure;
