@@ -43,7 +43,10 @@ class ProjectVersion
      */
     public function get()
     {
-        return $this->getStructure()->version;
+        $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '.git', 'HEAD')), FILE_USE_INCLUDE_PATH);
+        $firstLine = $stringFromFile[0]; //get the string from the array
+        $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
+        return $explodedString[2]; //get the one that is always the branch name
     }
 
     public function name()
