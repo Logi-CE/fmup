@@ -1,5 +1,6 @@
 {
   "name": "fmup/fmup",
+  "description": "FMUP Framework - Easy to handle",
   "keywords":["framework", "easy", "performant", "simple", "MVC", "PHP 7", "PHP 5.6"],
   "license": "MIT",
   "homepage": "http://logi-ce.github.io/fmup",
