@@ -82,6 +82,7 @@ abstract class PdoConfiguration implements DbInterface, Logger\LoggerInterface
             isset($this->settings['PDOBddPersistant']) ? $this->settings['PDOBddPersistant'] : false
             ),
             \PDO::ATTR_EMULATE_PREPARES => true,
+            \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
         );
     }
 
