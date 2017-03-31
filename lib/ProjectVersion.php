@@ -43,7 +43,12 @@ class ProjectVersion
      */
     public function get()
     {
-        $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '.git', 'HEAD')), FILE_USE_INCLUDE_PATH);
+        $version = getenv('PROJECT_VERSION');
+        if ($version) {
+            return $version;
+        }
+        $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
+        $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array($rootPath, '.git', 'HEAD')));
         $firstLine = $stringFromFile[0]; //get the string from the array
         $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
         return $explodedString[2]; //get the one that is always the branch name
