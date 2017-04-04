@@ -47,6 +47,9 @@ class ProjectVersion
         if ($version) {
             return $version;
         }
+        if (isset($this->getStructure()->name)) {
+            return $this->getStructure()->name;
+        }
         $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
         $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array($rootPath, '.git', 'HEAD')));
         $firstLine = $stringFromFile[0]; //get the string from the array
