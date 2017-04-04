@@ -12,6 +12,15 @@ Erreur sur la ligne <strong><?php echo $exception->getLine() ?></strong> dans le
 <?php if (isset($_SERVER["HTTP_HOST"])) : ?>
     URL appelée : http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?><br/><br/>
 <?php endif; ?>
+<?php if (isset($_POST)) : ?>
+    POST : <?php var_dump($_POST); ?><br/><br/>
+<?php endif; ?>
+<?php if (isset($_SESSION)) : ?>
+    SESSION : <?php var_dump($_SESSION); ?><br/><br/>
+<?php endif; ?>
+<?php if (isset($_COOKIE)) : ?>
+    COOKIE : <?php var_dump($_COOKIE); ?><br/><br/>
+<?php endif; ?>
 Trace complète :<br/>
 
 <?php
