@@ -47,8 +47,8 @@ class ProjectVersion
         if ($version) {
             return $version;
         }
-        if (isset($this->getStructure()->name)) {
-            return $this->getStructure()->name;
+        if (isset($this->getStructure()->version)) {
+            return $this->getStructure()->version;
         }
         $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
         $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array($rootPath, '.git', 'HEAD')));
