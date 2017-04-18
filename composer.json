@@ -35,6 +35,7 @@
   },
   "suggest": {
     "php-amqplib/php-amqplib": "^2.5 To use AMQP",
+    "predis/predis": "^1.1 to use cache Redis",
     "ext-pdo_mysql": "To use Mysql connections",
     "ext-pdo_sqlite": "To use Sqlite connections",
     "ext-sqlite3": "To use Sqlite connections",
