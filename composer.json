@@ -8,7 +8,8 @@
         "ext-spl": "0.2.*",
         "monolog/monolog": "^1.13",
         "phpmailer/phpmailer":"^5.2",
-        "php-amqplib/php-amqplib": "^2.5"
+        "php-amqplib/php-amqplib": "^2.5",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
       "phing/phing": "^2.14",
@@ -28,7 +29,8 @@
       "ext-sqlite3": "To use Sqlite connections",
       "ext-sysvmsg": "To use Queue system",
       "ext-ssh2": "To use Ftp system",
-      "ext-memcached" : "Memcached >= 2.0.0 to use the Memcached Cache adapter"
+      "ext-memcached" : "Memcached >= 2.0.0 to use the Memcached Cache adapter",
+      "ext-redis" : "Redis >= * to use the Redis Cache adapter"
     },
     "autoload": {
         "psr-4": {
