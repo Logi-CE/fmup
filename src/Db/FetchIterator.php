@@ -23,6 +23,10 @@ class FetchIterator implements \Iterator, \ArrayAccess
      * @var array
      */
     private $current;
+    /**
+     * @var array
+     */
+    private $params = array();
 
     /**
      * @var int
@@ -30,12 +34,24 @@ class FetchIterator implements \Iterator, \ArrayAccess
     private $row = 0;
 
     /**
-     * @param $statement
+     * @param mixed $statement
      * @param DbInterface $dbInterface
+     * @param array $params
      */
-    public function __construct($statement, DbInterface $dbInterface)
+    public function __construct($statement, DbInterface $dbInterface, array $params = array())
     {
-        $this->setStatement($statement)->setDbInterface($dbInterface);
+        $this->setStatement($statement)->setDbInterface($dbInterface)->setParams($params);
+    }
+
+    /**
+     * Define params for the prepared statement
+     * @param array $params
+     * @return $this
+     */
+    public function setParams(array $params = array())
+    {
+        $this->params = $params;
+        return $this;
     }
 
     /**
@@ -103,7 +119,7 @@ class FetchIterator implements \Iterator, \ArrayAccess
     public function rewind()
     {
         $this->row = 0;
-        $this->getStatement()->execute();
+        $this->getDbInterface()->execute($this->getStatement(), $this->params);
         $this->current = $this->getDbInterface()->fetchRow($this->getStatement(), DbInterface::CURSOR_FIRST);
     }
 
