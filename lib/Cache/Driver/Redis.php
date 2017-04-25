@@ -110,7 +110,7 @@ class Redis implements CacheInterface
      */
     public function get($key)
     {
-        return $this->getRedisInstance()->get($this->getCacheKey($key));
+        return unserialize($this->getRedisInstance()->get($this->getCacheKey($key)));
     }
 
     /**
@@ -125,7 +125,7 @@ class Redis implements CacheInterface
         $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
         $key = $this->getCacheKey($key);
         $redis = $this->getRedisInstance();
-        $return = $redis->set($key, $value);
+        $return = $redis->set($key, serialize($value));
         if ($ttl) {
             $redis->expireAt($key, time() + $ttl);
             $redis->ttl($key);
