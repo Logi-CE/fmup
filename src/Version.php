@@ -54,6 +54,7 @@ class Version
     /**
      * Get composer json path
      * @return string
+     * @codeCoverageIgnore
      */
     protected function getComposerPath()
     {

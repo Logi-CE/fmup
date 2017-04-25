@@ -46,6 +46,15 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($versionMock->get(), '10.0.1');
     }
 
+    public function testGetWhenNotAvailable()
+    {
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__ , '.files', 'composererror.lock'));
+        $versionMock = $this->getMockBuilder(VersionMock::class)->setMethods(array('getComposerPath'))->getMock();
+        $versionMock->method('getComposerPath')->willReturn($file);
+        /** @var $version \FMUP\Version */
+        $this->assertSame($versionMock->get(), 'v0.0.0');
+    }
+
     public function testGetWhenFilePathFails()
     {
         $version = $this->getMockBuilder(VersionMock::class)->setMethods(array('getComposerPath'))->getMock();

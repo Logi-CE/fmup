@@ -126,8 +126,30 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAvailable()
     {
-        $cache = new Driver\Redis();
-        $this->assertTrue(is_bool($cache->isAvailable()));
+        $predisClient = $this->getMockBuilder(\Predis\Client::class)
+            ->setMethods(array('ping'))
+            ->getMock();
+        $predisClient->method('ping')->willReturn(true);
+        $cache = $this->getMockBuilder(\FMUP\Cache\Driver\Redis::class)
+            ->setMethods(array('getRedisInstance'))
+            ->getMock();
+        $cache->method('getRedisInstance')->willReturn($predisClient);
+        /** @var $cache Driver\Redis */
+        $this->assertTrue($cache->isAvailable());
+    }
+
+    public function testIsAvailableWhenNotAvailable()
+    {
+        $predisClient = $this->getMockBuilder(\Predis\Client::class)
+            ->setMethods(array('ping'))
+            ->getMock();
+        $predisClient->method('ping')->will($this->throwException(new \Exception));
+        $cache = $this->getMockBuilder(\FMUP\Cache\Driver\Redis::class)
+            ->setMethods(array('getRedisInstance'))
+            ->getMock();
+        $cache->method('getRedisInstance')->willReturn($predisClient);
+        /** @var $cache Driver\Redis */
+        $this->assertFalse($cache->isAvailable());
     }
 
     public function testHas()

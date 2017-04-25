@@ -65,6 +65,7 @@ class Redis implements CacheInterface
     /**
      * @return \Predis\Client|null
      * @throws Exception
+     * @codeCoverageIgnore
      */
     private function createRedis()
     {
