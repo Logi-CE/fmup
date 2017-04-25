@@ -63,11 +63,17 @@ class Redis implements CacheInterface
     }
 
     /**
-     * @return \Predis\Client
+     * @return \Predis\Client|null
+     * @throws Exception
      */
     private function createRedis()
     {
-        return new \Predis\Client($this->settings);
+        try {
+            $instance = new \Predis\Client($this->settings);
+        } catch (\Exception $e) {
+            throw new Exception('Redis is not available', $e->getCode(), $e);
+        }
+        return $instance;
     }
 
     /**
@@ -100,6 +106,9 @@ class Redis implements CacheInterface
      */
     public function has($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         return $this->getRedisInstance()->exists($this->getCacheKey($key));
     }
 
@@ -110,6 +119,9 @@ class Redis implements CacheInterface
      */
     public function get($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         return unserialize($this->getRedisInstance()->get($this->getCacheKey($key)));
     }
 
@@ -122,6 +134,9 @@ class Redis implements CacheInterface
      */
     public function set($key, $value)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
         $key = $this->getCacheKey($key);
         $redis = $this->getRedisInstance();
@@ -131,7 +146,7 @@ class Redis implements CacheInterface
             $redis->ttl($key);
         }
         if (!$return) {
-            throw new Exception('Error while inserting value in redis!');
+            throw new Exception('Error while inserting value in redis');
         }
         return $this;
     }
@@ -144,6 +159,9 @@ class Redis implements CacheInterface
      */
     public function remove($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         $key = $this->getCacheKey($key);
         if (!$this->getRedisInstance()->delete($key)) {
             throw new Exception('Error while deleting key in redis');

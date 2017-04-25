@@ -39,18 +39,11 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__ , '..' , '..', '..' , '..', 'composer.lock'));
-        if (!file_exists($file)) {
-            $this->fail('File composer.lock do not exists');
-        }
-        $version = json_decode(file_get_contents($file));
-        if (!$version) {
-            $this->fail('File composer.lock is not correct');
-        }
-        if (!isset($version->version)) {
-            $this->fail('File composer.lock is not correct - need version');
-        }
-        $this->assertSame($version->version, \FMUP\Version::getInstance()->get());
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__ , '.files', 'composer.lock'));
+        $versionMock = $this->getMockBuilder(VersionMock::class)->setMethods(array('getComposerPath'))->getMock();
+        $versionMock->method('getComposerPath')->willReturn($file);
+        /** @var $version \FMUP\Version */
+        $this->assertSame($versionMock->get(), '10.0.1');
     }
 
     public function testGetWhenFilePathFails()
@@ -63,7 +56,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
         $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('composer.json does not exist');
+        $this->expectExceptionMessage('composer.lock does not exist');
         /** @var $version \FMUP\Version */
         $version->get();
     }
@@ -78,7 +71,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
         $this->expectException(\FMUP\Exception::class);
-        $this->expectExceptionMessage('composer.json invalid structure');
+        $this->expectExceptionMessage('composer.lock invalid structure');
         /** @var $version \FMUP\Version */
         $version->get();
     }

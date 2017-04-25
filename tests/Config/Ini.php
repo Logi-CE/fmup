@@ -20,7 +20,7 @@ class IniTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSetHas()
     {
-        $file = php_ini_loaded_file();
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '.files', 'testphp.ini'));
         $config = new \FMUP\Config\Ini($file);
         $this->assertFalse($config->has('test'));
         $this->assertNull($config->get('test'));
@@ -34,7 +34,7 @@ class IniTest extends \PHPUnit_Framework_TestCase
 
     public function testMerge()
     {
-        $file = php_ini_loaded_file();
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '.files', 'testphp.ini'));
         $config = new \FMUP\Config\Ini($file);
         $this->assertTrue($config->has('max_execution_time'));
         $this->assertNotSame(1234, $config->get('max_execution_time'));
@@ -54,7 +54,7 @@ class IniTest extends \PHPUnit_Framework_TestCase
 
     public function testSection()
     {
-        $file = php_ini_loaded_file();
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '.files', 'testphp.ini'));
         $config = new \FMUP\Config\Ini($file);
         $this->assertTrue($config->has('max_execution_time'));
         $config = new \FMUP\Config\Ini($file, 'notExistingSection');

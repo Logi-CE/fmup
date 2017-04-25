@@ -116,6 +116,15 @@ class Shm implements CacheInterface
     }
 
     /**
+     * @return mixed
+     * @codeCoverageIgnore
+     */
+    protected function shmGetVar()
+    {
+        return call_user_func_array('shm_get_var', func_get_args());
+    }
+
+    /**
      * Retrieve stored value
      * @param string $key
      * @return mixed|null
@@ -127,7 +136,16 @@ class Shm implements CacheInterface
             throw new Exception('SHM is not available');
         }
         $key = $this->secureName($key);
-        return ($this->has($key)) ? shm_get_var($this->getShm(), $key) : null;
+        return ($this->has($key)) ? $this->shmGetVar($this->getShm(), $key) : null;
+    }
+
+    /**
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function shmHasVar()
+    {
+        return call_user_func_array('shm_has_var', func_get_args());
     }
 
     /**
@@ -142,7 +160,7 @@ class Shm implements CacheInterface
             throw new Exception('SHM is not available');
         }
         $key = $this->secureName($key);
-        return shm_has_var($this->getShm(), $key);
+        return $this->shmHasVar($this->getShm(), $key);
     }
 
     /**
@@ -166,6 +184,7 @@ class Shm implements CacheInterface
     /**
      * @param resource $shmResource
      * @param string $key
+     * @codeCoverageIgnore
      * @return bool
      */
     protected function shmRemoveVar($shmResource, $key)
@@ -197,6 +216,7 @@ class Shm implements CacheInterface
      * @param string $key
      * @param mixed $value
      * @return bool
+     * @codeCoverageIgnore
      */
     protected function shmPutVar($shmResource, $key, $value)
     {

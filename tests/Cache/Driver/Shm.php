@@ -12,28 +12,25 @@ class ShmTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $cache = new \FMUP\Cache\Driver\Shm();
+        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('isAvailable'))->getMock();
         $this->assertInstanceOf(\FMUP\Cache\CacheInterface::class, $cache, 'Instance of ' . \FMUP\Cache\CacheInterface::class);
         $this->assertInstanceOf(\FMUP\Cache\Driver\Shm::class, $cache, 'Instance of ' . \FMUP\Cache\Driver\Shm::class);
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
-        }
         $cache2 = new \FMUP\Cache\Driver\Shm(array(''));
         $this->assertNotSame($cache2, $cache, 'New cache instance must not be same');
         $this->assertNotEquals($cache2, $cache, 'New cache instance must not be equal');
+        $cache->method('isAvailable')->willReturn(true);
         return $cache;
     }
 
-    /**
-     * @depends testConstruct
-     * @param \FMUP\Cache\Driver\Shm $cache
-     * @return \FMUP\Cache
-     */
-    public function testSetGet(\FMUP\Cache\Driver\Shm $cache)
+    public function testSet()
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
-        }
+        $mockShm = new \stdClass;
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmPutVar', 'shmAttach'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('shmAttach')->willReturn($mockShm);
+        $cache->method('shmPutVar')->willReturn(true);
         $test = array(
             array('test', 'test'),
             array('test', 'bob'),
@@ -47,22 +44,46 @@ class ShmTest extends \PHPUnit_Framework_TestCase
             array('1', $this->getMockBuilder('\stdClass')->getMock()),
         );
         foreach ($test as $case) {
-            $return = $cache->set($case[0], $case[1]);
-            $this->assertEquals($case[1], $cache->get($case[0]), 'Value is different on get');
-            $this->assertSame($cache, $return, 'Set settings must return its instance');
+            $cache->set($case[0], $case[1]);
         }
         return $cache;
     }
 
-    /**
-     * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Shm $cache
-     */
-    public function testHas(\FMUP\Cache\Driver\Shm $cache)
+    public function testGet()
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
+        $mockShm = new \stdClass;
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmGetVar', 'shmAttach', 'shmHasVar'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('shmAttach')->willReturn($mockShm);
+        $cache->method('shmHasVar')->willReturnOnConsecutiveCalls(true, true, true, true, true, true, true, true, false);
+        $cache->method('shmGetVar')->willReturnOnConsecutiveCalls('test', 'bob', 'bob', 'test', 1, '1', '1', '2', null);
+        $test = array(
+            array('test', 'test'),
+            array('test', 'bob'),
+            array('bob', 'bob'),
+            array('bob', 'test'),
+            array('bob', 1),
+            array('bob', '1'),
+            array('1', '1'),
+            array('1', '2'),
+        );
+        foreach ($test as $case) {
+            $this->assertEquals($cache->get($case[0]), $case[1]);
         }
+        return $cache;
+    }
+
+    public function testHas()
+    {
+        $mockShm = new \stdClass;
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmAttach', 'shmHasVar'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('shmAttach')->willReturn($mockShm);
+        $cache->method('shmHasVar')->willReturnOnConsecutiveCalls(true, true, true, true, true, true, true, true, false, false);
         $test = array(
             array('test', true),
             array('bob', true),
@@ -76,21 +97,23 @@ class ShmTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @depends testSetGet
-     * @param \FMUP\Cache\Driver\Shm $cache
-     */
-    public function testRemove(\FMUP\Cache\Driver\Shm $cache)
+    public function testRemove()
     {
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
-        }
+        $mockShm = new \stdClass;
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmRemoveVar', 'shmAttach', 'shmHasVar'))
+            ->getMock();
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('shmAttach')->willReturn($mockShm);
+        $cache->expects($this->once())->method('shmRemoveVar')->willReturn($cache);
+        $cache->method('shmHasVar')->willReturnOnConsecutiveCalls(true, true, false);
+
+        /* @var Driver\Shm $cache */
         $this->assertTrue($cache->has('test'), 'Test should exist');
         $return = $cache->remove('test');
         $this->assertSame($cache, $return, 'Set settings must return its instance');
         $this->assertFalse($cache->has('test'), 'Test should\'nt exist');
     }
-
 
     public function testHasWhenShmNotAvailable()
     {
@@ -159,27 +182,36 @@ class ShmTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveWhenShmRemoveFails()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('shmRemoveVar'))->getMock();
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmRemoveVar', 'shmHasVar', 'shmAttach'))
+            ->getMock();
+        $cache->method('shmAttach')->willReturn(new \stdClass());
+        $cache->method('isAvailable')->willReturn(true);
+        $cache->method('shmHasVar')->willReturn(true);
         $cache->method('shmRemoveVar')->willReturn(false);
         /** @var $cache Driver\Shm */
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
-        }
         $this->expectException(\FMUP\Cache\Exception::class);
         $this->expectExceptionMessage('Unable to delete key from cache Shm');
-        $cache->set('test', 'test')->remove('test');
+        $cache->remove('test');
     }
 
     public function testSetWhenShmPutFails()
     {
-        $cache = $this->getMockBuilder(Driver\Shm::class)->setMethods(array('shmPutVar'))->getMock();
+        $cache = $this->getMockBuilder(Driver\Shm::class)
+            ->setMethods(array('isAvailable', 'shmPutVar', 'shmAttach'))
+            ->getMock();
+        $cache->method('shmAttach')->willReturn(new \stdClass());
+        $cache->method('isAvailable')->willReturn(true);
         /** @var $cache Driver\Shm */
-        if (!$cache->isAvailable()) {
-            $this->markTestSkipped("SHM not available");
-        }
         $this->expectException(\FMUP\Cache\Exception::class);
         $this->expectExceptionMessage('Unable to define key into cache Shm');
         $cache->set('test', 'test');
+    }
+
+    public function testIsAvailable()
+    {
+        $cache = new Driver\Shm;
+        $this->assertTrue(is_bool($cache->isAvailable()));
     }
 
     public function testSetWhenShmHasTtl()

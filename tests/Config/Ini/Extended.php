@@ -20,7 +20,7 @@ class ExtendedTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetConfig()
     {
-        $file = php_ini_loaded_file();
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '.files', 'testphp.ini'));
         $config = new \FMUP\Config\Ini\Extended($file);
         $oldConfig = $config->getConfig();
         $this->assertInstanceOf(\FMUP\Config\Ini\Extended\ZendConfig\Ini::class, $oldConfig);
@@ -37,7 +37,7 @@ class ExtendedTest extends \PHPUnit_Framework_TestCase
 
     public function testHasSetGet()
     {
-        $file = php_ini_loaded_file();
+        $file = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '.files', 'testphp.ini'));
         $config = new \FMUP\Config\Ini\Extended($file);
         $this->assertFalse($config->has('test'));
         $this->assertNull($config->get('test'));
