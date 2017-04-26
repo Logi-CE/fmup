@@ -164,7 +164,7 @@ class Redis implements CacheInterface
             throw new Exception('Redis is not available');
         }
         $key = $this->getCacheKey($key);
-        if (!$this->getRedisInstance()->delete($key)) {
+        if (!$this->getRedisInstance()->del(array($key))) {
             throw new Exception('Error while deleting key in redis');
         }
         return $this;
