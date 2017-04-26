@@ -43,18 +43,45 @@ class ProjectVersion
      */
     public function get()
     {
-        $version = getenv('PROJECT_VERSION');
+        $version = (string)$this->getEnv('PROJECT_VERSION');
         if ($version) {
             return $version;
         }
-        if (isset($this->getStructure()->version)) {
-            return $this->getStructure()->version;
+        try {
+            if (isset($this->getStructure()->version)) {
+                return $this->getStructure()->version;
+            }
+        } catch (\LogicException $e) {
+            //Do nothing since we have a fallback
         }
-        $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
-        $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array($rootPath, '.git', 'HEAD')));
-        $firstLine = $stringFromFile[0]; //get the string from the array
-        $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
-        return $explodedString[2]; //get the one that is always the branch name
+        $rootPath = $this->getGitHeadFilePath();
+        if (file_exists($rootPath)) {
+            $stringFromFile = file($rootPath);
+            $firstLine = $stringFromFile[0]; //get the string from the array
+            $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
+            return trim($explodedString[2]); //get the one that is always the branch name
+        }
+        return 'v0.0.0';
+    }
+
+    /**
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function getGitHeadFilePath()
+    {
+        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '.git', 'HEAD'));
+    }
+
+    /**
+     * Retrieve environment variable
+     * @param string $name
+     * @return array|false|string
+     * @codeCoverageIgnore
+     */
+    protected function getEnv($name)
+    {
+        return getenv($name);
     }
 
     public function name()
