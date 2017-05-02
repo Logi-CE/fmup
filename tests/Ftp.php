@@ -21,6 +21,10 @@ class FtpInterfaceMockFtp implements Ftp\FtpInterface
     {
     }
 
+    public function put($remoteFile, $localFile)
+    {
+    }
+
     public function delete($file)
     {
     }
@@ -120,6 +124,25 @@ class FtpTest extends \PHPUnit_Framework_TestCase
          */
         $this->assertTrue($ftp->get('path/to/local/file.txt', 'path/to/remote/file.txt'));
         $this->assertFalse($ftp->get('path/to/local/file.txt', 'path/to/remote/file.txt'));
+    }
+
+    public function testPut()
+    {
+        $ftpInterface = $this->getMockBuilder(FtpInterfaceMockFtp::class)->setMethods(array('put'))->getMock();
+        $ftp = $this->getMockBuilder(Ftp::class)->setMethods(array('getDriver'))->getMock();
+
+        $ftpInterface->expects($this->exactly(2))
+            ->method('put')
+            ->will($this->onConsecutiveCalls(true, false))
+            ->with($this->equalTo('path/to/remote/file.txt'), $this->equalTo('path/to/local/file.txt'));
+        $ftp->expects($this->exactly(2))->method('getDriver')->will(
+            $this->onConsecutiveCalls($ftpInterface, $ftpInterface)
+        );
+        /**
+         * @var $ftp Ftp
+         */
+        $this->assertTrue($ftp->put('path/to/remote/file.txt', 'path/to/local/file.txt'));
+        $this->assertFalse($ftp->put('path/to/remote/file.txt', 'path/to/local/file.txt'));
     }
 
     public function testLogin()

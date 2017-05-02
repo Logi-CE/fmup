@@ -89,6 +89,16 @@ class Ftp
     }
 
     /**
+     * @param string $remoteFile
+     * @param string $localFile
+     * @return bool
+     */
+    public function put($remoteFile, $localFile)
+    {
+        return $this->getDriver()->put($remoteFile, $localFile);
+    }
+
+    /**
      * @param $file
      * @return bool
      */

@@ -36,6 +36,14 @@ interface FtpInterface
     public function get($localFile, $remoteFile);
 
     /**
+     * Put file on ftp server
+     * @param string $remoteFile
+     * @param string $localFile
+     * @return bool
+     */
+    public function put($remoteFile, $localFile);
+
+    /**
      * Delete file on ftp server
      * @param string $file
      * @return bool

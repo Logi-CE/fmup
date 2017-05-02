@@ -10,6 +10,8 @@ class Ftp extends FtpAbstract
     const TIMEOUT = 'timeout';
     const MODE = 'mode';
     const RESUME_POS = 'resumepos';
+    const START_POS = 'startpos';
+    const PASSIVE_MODE = 'passive_mode';
 
     /**
      * Connection timeout in second
@@ -36,6 +38,24 @@ class Ftp extends FtpAbstract
     protected function getResumePos()
     {
         return isset($this->settings[self::RESUME_POS]) ? $this->settings[self::RESUME_POS] : 0;
+    }
+
+    /**
+     * Begin upload position in local file to put in remote file
+     * @return int
+     */
+    protected function getStartPos()
+    {
+        return isset($this->settings[self::START_POS]) ? $this->settings[self::START_POS] : 0;
+    }
+
+    /**
+     * Begin upload position in local file to put in remote file
+     * @return int
+     */
+    protected function getPassiveMode()
+    {
+        return isset($this->settings[self::PASSIVE_MODE]) ? $this->settings[self::PASSIVE_MODE] : true;
     }
 
     /**
@@ -76,6 +96,7 @@ class Ftp extends FtpAbstract
             $this->log(Logger::ERROR, "Unable to login to FTP server", (array)$this->getSettings());
             throw new FtpException('Unable to login to the FTP server');
         }
+        $this->ftpPasv($this->getSession(), $this->getPassiveMode());
         return $ret;
     }
 
@@ -102,6 +123,17 @@ class Ftp extends FtpAbstract
     }
 
     /**
+     * Put file on ftp server
+     * @param string $remoteFile
+     * @param string $localFile
+     * @return bool
+     */
+    public function put($remoteFile, $localFile)
+    {
+        return $this->ftpPut($this->getSession(), $remoteFile, $localFile, $this->getMode(), $this->getStartPos());
+    }
+
+    /**
      * @param resource $ftpStream
      * @param string $localFile
      * @param string $remoteFile
@@ -113,6 +145,20 @@ class Ftp extends FtpAbstract
     protected function ftpGet($ftpStream, $localFile, $remoteFile, $mode, $resumePos)
     {
         return ftp_get($ftpStream, $localFile, $remoteFile, $mode, $resumePos);
+    }
+
+    /**
+     * @param resource $ftpStream
+     * @param string $remoteFile
+     * @param string $localFile
+     * @param int $mode
+     * @param int $startpos
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function ftpPut($ftpStream, $remoteFile, $localFile, $mode, $startpos)
+    {
+        return ftp_put($ftpStream, $remoteFile, $localFile, $mode, $startpos);
     }
 
     /**
@@ -151,5 +197,16 @@ class Ftp extends FtpAbstract
     protected function ftpClose($ftpStream)
     {
         return ftp_close($ftpStream);
+    }
+
+    /**
+     * @param resource $ftpStream
+     * @param bool $pasv
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function ftpPasv($ftpStream, $pasv)
+    {
+        return ftp_pasv($ftpStream, $pasv);
     }
 }

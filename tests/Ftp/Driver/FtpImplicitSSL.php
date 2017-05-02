@@ -13,7 +13,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetCurlOptions()
     {
-        $method = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getCurlOptions');
+        $method = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getCurlOptions');
         $method->setAccessible(true);
 
         $ftps = new Ftp\Driver\FtpImplicitSSL();
@@ -42,7 +42,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPassiveMode()
     {
-        $method = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getPassiveMode');
+        $method = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getPassiveMode');
         $method->setAccessible(true);
 
         $ftps = new Ftp\Driver\FtpImplicitSSL();
@@ -54,10 +54,10 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSetUrl()
     {
-        $methodGet = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getUrl');
+        $methodGet = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getUrl');
         $methodGet->setAccessible(true);
 
-        $methodSet = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'setUrl');
+        $methodSet = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'setUrl');
         $methodSet->setAccessible(true);
 
         $ftps = new Ftp\Driver\FtpImplicitSSL();
@@ -69,7 +69,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectFailInitSession()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->disableOriginalConstructor()
             ->setMethods(array(
                 'setSession',
@@ -108,7 +108,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectionSuccessActiveMode()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'setSession',
                 'phpCurlInit',
@@ -145,7 +145,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
         /** @var Ftp\Driver\FtpImplicitSSL $ftps */
         $ftps->connect('host');
 
-        $settings = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getSettings');
+        $settings = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getSettings');
         $settings->setAccessible(true);
 
         $this->assertSame(array(
@@ -163,7 +163,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectionSuccessPassiveMode()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'setSession',
                 'phpCurlInit',
@@ -201,7 +201,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
         /** @var Ftp\Driver\FtpImplicitSSL $ftps */
         $ftps->connect('host');
 
-        $settings = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getSettings');
+        $settings = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getSettings');
         $settings->setAccessible(true);
 
         $this->assertSame(array(
@@ -218,7 +218,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginFail()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'getCurlOptions',
                 'phpCurlSetOpt',
@@ -265,7 +265,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginSuccess()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'getCurlOptions',
                 'phpCurlSetOpt',
@@ -299,7 +299,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
         /** @var Ftp\Driver\FtpImplicitSSL $ftps */
         $this->assertTrue($ftps->login('user', 'pass'));
 
-        $settings = new \ReflectionMethod('\FMUP\Ftp\Driver\FtpImplicitSSL', 'getSettings');
+        $settings = new \ReflectionMethod(Ftp\Driver\FtpImplicitSSL::class, 'getSettings');
         $settings->setAccessible(true);
 
         $this->assertSame(array(
@@ -316,7 +316,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFail()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'phpFopen',
                 'getSettings',
@@ -343,7 +343,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSuccess()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->setMethods(array(
                 'phpFopen',
                 'log',
@@ -396,6 +396,92 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ftps->get('local_file', 'remote_file'));
     }
 
+    public function testPutFail()
+    {
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
+            ->setMethods(array(
+                'phpFopen',
+                'getSettings',
+                'log',
+            ))->getMock();
+
+        $ftps->expects($this->once())
+            ->method('phpFopen')
+            ->willReturn(false);
+
+        $ftps->expects($this->once())
+            ->method('getSettings')
+            ->willReturn(array());
+
+        $ftps->expects($this->once())
+            ->method('log')
+            ->with(\FMUP\Logger::ERROR, 'Unable to open file to read : local_file', array());
+
+        $this->setExpectedException('\FMUP\Ftp\Exception', 'Unable to open file to read : local_file');
+
+        /** @var Ftp\Driver\FtpImplicitSSL $ftps */
+        $ftps->put('remote_file', 'local_file');
+    }
+
+    public function testPutSuccess()
+    {
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
+            ->setMethods(array(
+                'phpFopen',
+                'log',
+                'getSession',
+                'phpCurlSetOpt',
+                'getUrl',
+                'phpCurlExec',
+                'phpFclose',
+                'phpCurlError',
+            ))->getMock();
+
+        $resource = fopen('php://stdin', 'r');
+        $resource2 = fopen('php://stdin', 'r');
+
+        $ftps->expects($this->once())
+            ->method('phpFopen')
+            ->willReturn($resource);
+
+        $ftps->expects($this->never())
+            ->method('log');
+
+        $ftps->expects($this->exactly(5))
+            ->method('getSession')
+            ->willReturn($resource2);
+
+        $ftps->expects($this->once())
+            ->method('getUrl')
+            ->willReturn('ftps://url/');
+
+        $ftps->expects($this->exactly(3))
+            ->method('phpCurlSetOpt')
+            ->withConsecutive(
+                array($resource2, CURLOPT_URL, 'ftps://url/remote_file'),
+                array($resource2, CURLOPT_UPLOAD, 1),
+                array($resource2, CURLOPT_INFILE, $resource)
+            )
+            ->willReturn(true);
+
+        $ftps->expects($this->once())
+            ->method('phpCurlExec')
+            ->with($resource2)
+            ->willReturn(true);
+
+        $ftps->expects($this->once())
+            ->method('phpFclose')
+            ->with($resource);
+
+        $ftps->expects($this->once())
+            ->method('phpCurlError')
+            ->with($resource2)
+            ->willReturn(false);
+
+        /** @var Ftp\Driver\FtpImplicitSSL $ftps */
+        $this->assertTrue($ftps->put('remote_file', 'local_file'));
+    }
+
     public function testDelete()
     {
         $ftps = new Ftp\Driver\FtpImplicitSSL();
@@ -404,7 +490,7 @@ class FtpImplicitSSLTest extends \PHPUnit_Framework_TestCase
 
     public function testClose()
     {
-        $ftps = $this->getMockBuilder('\FMUP\Ftp\Driver\FtpImplicitSSL')
+        $ftps = $this->getMockBuilder(Ftp\Driver\FtpImplicitSSL::class)
             ->disableOriginalConstructor()
             ->setMethods(array(
                 'phpCurlClose',
