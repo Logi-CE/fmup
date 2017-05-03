@@ -6,7 +6,7 @@ interface ConfigInterface
     /**
      * Retrieve defined param
      * @param string $paramName
-     * @return array|null
+     * @return array|string|null
      */
     public function get($paramName = null);
 

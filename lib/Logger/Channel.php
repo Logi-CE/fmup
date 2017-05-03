@@ -32,10 +32,14 @@ abstract class Channel
     private $response;
 
     /**
-     * Name of the channel
-     * @return string
+     * Get name of the current channel
+     * @return String
      */
-    abstract public function getName();
+    public function getIdentifier()
+    {
+        $split = explode('\\', get_class($this));
+        return array_pop($split);
+    }
 
     /**
      * Must configure the logger channel
@@ -50,7 +54,7 @@ abstract class Channel
     public function getLogger()
     {
         if (!isset($this->logger)) {
-            $this->logger = new MonologLogger($this->getName());
+            $this->logger = new MonologLogger($this->getIdentifier());
             $this->configure();
         }
         return $this->logger;

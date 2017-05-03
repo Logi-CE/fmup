@@ -5,14 +5,14 @@ use FMUP\Environment;
 use FMUP\Sapi;
 use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\FirePHPHandler;
+use FMUP\Logger\Channel;
 
-class Standard extends System
+class Standard extends Channel
 {
     const NAME = 'Standard';
 
     public function configure()
     {
-        parent::configure();
         $canSendHeaders = !$this->headerSent() && $this->getSapi()->get() != Sapi::CLI;
         $isDev = $this->getEnvironment()->get() == Environment::DEV;
         $allowBrowser = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Castelis') !== false;
