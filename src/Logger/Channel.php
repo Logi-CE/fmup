@@ -35,7 +35,7 @@ abstract class Channel
      * Get name of the current channel
      * @return String
      */
-    public function getIdentifier()
+    public function getName()
     {
         $split = explode('\\', get_class($this));
         return array_pop($split);
@@ -54,7 +54,7 @@ abstract class Channel
     public function getLogger()
     {
         if (!isset($this->logger)) {
-            $this->logger = new MonologLogger($this->getIdentifier());
+            $this->logger = new MonologLogger($this->getName());
             $this->configure();
         }
         return $this->logger;
