@@ -4,8 +4,18 @@
  * @author: jmoulin@castelis.com
  */
 
-namespace FMUP\Logger;
+namespace FMUPTests\Logger\Channel;
 
+class Bidibidi extends \FMUP\Logger\Channel
+{
+    public function configure()
+    {
+        // TODO: Implement configure() method.
+    }
+
+}
+
+namespace FMUP\Logger;
 
 class ChannelTest extends \PHPUnit_Framework_TestCase
 {
@@ -76,6 +86,12 @@ class ChannelTest extends \PHPUnit_Framework_TestCase
         /** @var $channel \FMUP\Logger\Channel */
         $channel->setConfig($config);
         $this->assertInstanceOf(\FMUP\Environment::class, $channel->getEnvironment());
+    }
+
+    public function testGetName()
+    {
+        $channel = new \FMUPTests\Logger\Channel\Bidibidi;
+        $this->assertSame('Bidibidi', $channel->getName());
     }
 
     public function testAddRecord()

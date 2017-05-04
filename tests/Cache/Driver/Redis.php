@@ -61,8 +61,8 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $cache = $this->getMockBuilder(\FMUP\Cache\Driver\Redis::class)->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
 
-        $redis = $this->getMockBuilder(\Predis\Client::class)->setMethods(array('delete'))->getMock();
-        $redis->method('delete')->willReturn(false);
+        $redis = $this->getMockBuilder(\Predis\Client::class)->setMethods(array('del'))->getMock();
+        $redis->method('del')->willReturn(false);
         /**
          * @var $redis \Predis\Client
          * @var $cache Driver\Redis
