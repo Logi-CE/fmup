@@ -44,6 +44,31 @@ class FtpTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(50, $method->invoke($ftp));
     }
 
+    public function testGetStartPos()
+    {
+        $method = new \ReflectionMethod('\FMUP\Ftp\Driver\Ftp', 'getStartPos');
+        $method->setAccessible(true);
+
+        $ftp = new Ftp\Driver\Ftp();
+        $this->assertSame(0, $method->invoke($ftp));
+
+        $ftp = new Ftp\Driver\Ftp(array(Ftp\Driver\Ftp::START_POS => 50));
+        $this->assertTrue(is_int($method->invoke($ftp)));
+        $this->assertSame(50, $method->invoke($ftp));
+    }
+
+    public function testGetPassiveMode()
+    {
+        $method = new \ReflectionMethod('\FMUP\Ftp\Driver\Ftp', 'getPassiveMode');
+        $method->setAccessible(true);
+
+        $ftp = new Ftp\Driver\Ftp();
+        $this->assertTrue($method->invoke($ftp));
+
+        $ftp = new Ftp\Driver\Ftp(array(Ftp\Driver\Ftp::PASSIVE_MODE => false));
+        $this->assertFalse($method->invoke($ftp));
+    }
+
     public function testConnect()
     {
         $ftp = $this->getMockBuilder('\FMUP\Ftp\Driver\Ftp')->setMethods(array('ftpConnect'))->getMock();
@@ -99,13 +124,25 @@ class FtpTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginSuccess()
     {
-        $ftp = $this->getMockBuilder('\FMUP\Ftp\Driver\Ftp')->setMethods(array('ftpLogin', 'getSession'))->getMock();
+        $ftp = $this->getMockBuilder('\FMUP\Ftp\Driver\Ftp')->setMethods(array(
+            'ftpLogin',
+            'getSession',
+            'ftpPasv',
+            'getPassiveMode',
+        ))->getMock();
         $resource = fopen('php://stdin', 'r');
         $ftp->method('getSession')->willReturn($resource);
         $ftp->expects($this->once())->method('ftpLogin')->willReturn(true)->with(
             $this->equalTo($resource),
             $this->equalTo('login'),
             $this->equalTo('pass')
+        );
+
+        $ftp->expects($this->once())->method('getPassiveMode')->willReturn(true);
+
+        $ftp->expects($this->once())->method('ftpPasv')->with(
+            $this->equalTo($resource),
+            $this->equalTo(true)
         );
 
         /**
@@ -136,6 +173,30 @@ class FtpTest extends \PHPUnit_Framework_TestCase
          * @var $ftp Ftp\Driver\Ftp
          */
         $ret = $ftp->get('path/to/local/file.txt', 'path/to/remote/file.txt');
+        $this->assertTrue($ret);
+    }
+
+    public function testPutFile()
+    {
+        $ftp = $this->getMockBuilder('\FMUP\Ftp\Driver\Ftp')
+            ->setMethods(array('ftpPut', 'getSession', 'getMode', 'getStartPos'))
+            ->getMock();
+        $resource = fopen('php://stdin', 'r');
+        $ftp->method('getSession')->willReturn($resource);
+        $ftp->method('getMode')->willReturn(FTP_ASCII);
+        $ftp->method('getStartPos')->willReturn(0);
+
+        $ftp->expects($this->once())->method('ftpPut')->willReturn(true)->with(
+            $this->equalTo($resource),
+            $this->equalTo('path/to/remote/file.txt'),
+            $this->equalTo('path/to/local/file.txt'),
+            $this->equalTo(FTP_ASCII),
+            $this->equalTo(0)
+        );
+        /**
+         * @var $ftp Ftp\Driver\Ftp
+         */
+        $ret = $ftp->put('path/to/remote/file.txt', 'path/to/local/file.txt');
         $this->assertTrue($ret);
     }
 

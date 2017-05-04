@@ -135,6 +135,29 @@ class FtpImplicitSSL extends FtpAbstract implements Logger\LoggerInterface
     }
 
     /**
+     * Put file on ftp server
+     * @param string $remoteFile
+     * @param string $localFile
+     * @return bool
+     * @throws FtpException
+     */
+    public function put($remoteFile, $localFile)
+    {
+        $file = $this->phpFopen($localFile, 'r');
+        if (!$file) {
+            $this->log(Logger::ERROR, 'Unable to open file to read : ' . $localFile, (array)$this->getSettings());
+            throw new FtpException('Unable to open file to read : ' . $localFile);
+        }
+        $this->phpCurlSetOpt($this->getSession(), CURLOPT_URL, $this->getUrl() . $remoteFile);
+        $this->phpCurlSetOpt($this->getSession(), CURLOPT_UPLOAD, 1);
+        $this->phpCurlSetOpt($this->getSession(), CURLOPT_INFILE, $file);
+        $this->phpCurlExec($this->getSession());
+        $this->phpFclose($file);
+        return !$this->phpCurlError($this->getSession());
+    }
+
+
+    /**
      * @param string $file
      * @return bool
      */
@@ -182,6 +205,16 @@ class FtpImplicitSSL extends FtpAbstract implements Logger\LoggerInterface
     protected function phpCurlSetOpt($ch, $option, $value)
     {
         return curl_setopt($ch, $option, $value);
+    }
+
+    /**
+     * @param resource $ch
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function phpCurlError($ch)
+    {
+        return curl_error($ch);
     }
 
     /**

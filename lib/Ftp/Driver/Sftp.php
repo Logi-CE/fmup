@@ -17,6 +17,7 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
     const PUT_CONTENT_FLAGS = 'put_content_flags';
     const OFFSET = 'offset';
     const MAXLEN = 'maxlen';
+    const CREATE_MODE = 'create_mode';
 
     private $sftpSession;
 
@@ -103,6 +104,15 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
     }
 
     /**
+     * Optional param for file_get_content
+     * @return int
+     */
+    protected function getCreateMode()
+    {
+        return isset($this->settings[self::CREATE_MODE]) ? $this->settings[self::CREATE_MODE] : 0644;
+    }
+
+    /**
      * @param string $host
      * @param int $port
      * @return $this
@@ -185,6 +195,51 @@ class Sftp extends FtpAbstract implements Logger\LoggerInterface
             $this->getPutContentFlags(),
             $this->getPutContentContext()
         );
+    }
+
+    /**
+     * Put file on ftp server
+     * @param string $remoteFile
+     * @param string $localFile
+     * @return bool
+     */
+    public function put($remoteFile, $localFile)
+    {
+        if ($this->getMaxLen() === null) {
+            $fileContent = $this->fileGetContents(
+                $localFile,
+                $this->getUseIncludePath(),
+                $this->getGetContentContext(),
+                $this->getOffset()
+            );
+        } else {
+            $fileContent = $this->fileGetContents(
+                $localFile,
+                $this->getUseIncludePath(),
+                $this->getGetContentContext(),
+                $this->getOffset(),
+                $this->getMaxLen()
+            );
+        }
+        return $this->filePutContents(
+            'ssh2.sftp://' . intval($this->getSftpSession()) . '/' . $remoteFile,
+            $fileContent,
+            $this->getPutContentFlags(),
+            $this->getPutContentContext()
+        );
+    }
+
+    /**
+     * @param resource $session
+     * @param string $localFile
+     * @param string $remoteFile
+     * @param int $createMode
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    protected function ssh2ScpSend($session, $localFile, $remoteFile, $createMode)
+    {
+        return ssh2_scp_send($session, $localFile, $remoteFile, $createMode);
     }
 
     /**
