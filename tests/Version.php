@@ -62,8 +62,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->expectException('\FMUP\Exception');
-        $this->expectExceptionMessage('composer.lock does not exist');
+        $this->setExpectedException('\FMUP\Exception', 'composer.lock does not exist');
         /** @var $version \FMUP\Version */
         $version->get();
     }
@@ -77,8 +76,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
         $reflection->setValue(\FMUP\Version::getInstance(), $version);
 
-        $this->expectException('\FMUP\Exception');
-        $this->expectExceptionMessage('composer.json invalid structure');
+        $this->setExpectedException('\FMUP\Exception', 'composer.json invalid structure');
         /** @var $version \FMUP\Version */
         $version->get();
     }

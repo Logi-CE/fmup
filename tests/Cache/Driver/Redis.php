@@ -56,34 +56,23 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($cache, $cache->remove('test'));
     }
 
-    public function testRemoveWhenMemcachedFails()
+    public function testRemoveWhenRedisFails()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(true);
 
-        $redis = $this->getMockBuilder('\Predis\Client')->setMethods(array('delete'))->getMock();
-        $redis->method('delete')->willReturn(false);
+        $redis = $this->getMockBuilder('\Predis\Client')->setMethods(array('del'))->getMock();
+        $redis->method('del')->willReturn(false);
         /**
          * @var $redis \Predis\Client
          * @var $cache Driver\Redis
          */
         $cache->setRedisInstance($redis);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Error while deleting key in redis');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Error while deleting key in redis');
         $cache->remove('test');
     }
 
-    public function testGetMemcachedInstanceFailsWhenNotAvailable()
-    {
-        $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
-        $cache->method('isAvailable')->willReturn(false);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Redis is not available');
-        /** @var $cache Driver\Redis */
-        $cache->getRedisInstance();
-    }
-
-    public function testGetMemcachedInstance()
+    public function testGetRedisInstance()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')
             ->setMethods(array('isAvailable', 'createRedis'))
@@ -94,42 +83,38 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Predis\Client', $cache->getRedisInstance());
     }
 
-    public function testHasWhenMemcachedNotAvailable()
+    public function testHasWhenRedisNotAvailable()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Redis is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Redis is not available');
         /** @var $cache Driver\Redis */
         $cache->has('bob');
     }
 
-    public function testGetWhenMemcachedNotAvailable()
+    public function testGetWhenRedisNotAvailable()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Redis is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Redis is not available');
         /** @var $cache Driver\Redis */
         $cache->get('bob');
     }
 
-    public function testSetWhenMemcachedNotAvailable()
+    public function testSetWhenRedisNotAvailable()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Redis is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Redis is not available');
         /** @var $cache Driver\Redis */
         $cache->set('bob', 'bob');
     }
 
-    public function testRemoveWhenMemcachedNotAvailable()
+    public function testRemoveWhenRedisNotAvailable()
     {
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')->setMethods(array('isAvailable'))->getMock();
         $cache->method('isAvailable')->willReturn(false);
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Redis is not available');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Redis is not available');
         /** @var $cache Driver\Redis */
         $cache->remove('bob');
     }
@@ -142,14 +127,14 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $memcached = $this->getMockBuilder('\Predis\Client')->setMethods(array('exists'))->getMock();
-        $memcached->method('exists')->willReturnOnConsecutiveCalls(array(true, true, false));
+        $redis = $this->getMockBuilder('\Predis\Client')->setMethods(array('exists'))->getMock();
+        $redis->method('exists')->willReturnOnConsecutiveCalls(true, true, false);
 
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')
             ->setMethods(array('isAvailable', 'getRedisInstance'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
-        $cache->method('getRedisInstance')->willReturn($memcached);
+        $cache->method('getRedisInstance')->willReturn($redis);
         /** @var $cache Driver\Redis */
         $this->assertTrue($cache->has('test'));
         $this->assertTrue($cache->has('two'));
@@ -158,23 +143,29 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $memcached = $this->getMockBuilder('\Predis\Client')->setMethods(array('get'))->getMock();
-        $memcached->method('get')->with($this->equalTo('test'))->willReturn('ok');
+        $redis = $this->getMockBuilder('\Predis\Client')->setMethods(array('get'))->getMock();
+        $redis->method('get')->with($this->equalTo('test'))->willReturn(serialize('ok'));
 
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')
             ->setMethods(array('isAvailable', 'getRedisInstance'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
-        $cache->method('getRedisInstance')->willReturn($memcached);
+        $cache->method('getRedisInstance')->willReturn($redis);
         /** @var $cache Driver\Redis */
         $this->assertSame('ok', $cache->get('test'));
     }
 
     public function testSet()
     {
-        $memcached = $this->getMockBuilder('\Predis\Client')->setMethods(array('set'))->getMock();
-        $memcached->method('set')
-            ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
+        $redis = $this->getMockBuilder('\Predis\Client')->setMethods(array('set', 'expireAt', 'ttl'))->getMock();
+        $redis->method('set')
+            ->with($this->equalTo('testKey'), $this->equalTo(serialize('testValue')))
+            ->willReturn(true);
+        $redis->method('expireAt')
+            ->with($this->equalTo('testKey'), $this->equalTo(time() + 20))
+            ->willReturn(true);
+        $redis->method('ttl')
+            ->with($this->equalTo('testKey'))
             ->willReturn(true);
 
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')
@@ -182,7 +173,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('getSetting')->with($this->equalTo(Driver\Redis::SETTINGS_TTL_IN_SECOND))->willReturn(20);
-        $cache->method('getRedisInstance')->willReturn($memcached);
+        $cache->method('getRedisInstance')->willReturn($redis);
         $cache->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
         /** @var $cache Driver\Redis */
         $this->assertSame($cache, $cache->set('testKey', 'testValue'));
@@ -190,23 +181,28 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFailsWhenCannotSet()
     {
-        $memcached = $this->getMockBuilder('\Predis\Client')
-            ->setMethods(array('set'))
+        $redis = $this->getMockBuilder('\Predis\Client')
+            ->setMethods(array('set', 'expireAt', 'ttl'))
             ->getMock();
-        $memcached->method('set')
-            ->with($this->equalTo('testKey'), $this->equalTo('testValue'), $this->equalTo(20))
+        $redis->method('set')
+            ->with($this->equalTo('testKey'), $this->equalTo(serialize('testValue')))
             ->willReturn(false);
+        $redis->method('expireAt')
+            ->with($this->equalTo('testKey'), $this->equalTo(time() + 20))
+            ->willReturn(true);
+        $redis->method('ttl')
+            ->with($this->equalTo('testKey'))
+            ->willReturn(true);
 
         $cache = $this->getMockBuilder('\FMUP\Cache\Driver\Redis')
             ->setMethods(array('isAvailable', 'getRedisInstance', 'getCacheKey', 'getSetting'))
             ->getMock();
         $cache->method('isAvailable')->willReturn(true);
         $cache->method('getSetting')->with($this->equalTo(Driver\Redis::SETTINGS_TTL_IN_SECOND))->willReturn(20);
-        $cache->method('getMemcachedInstance')->willReturn($memcached);
+        $cache->method('getRedisInstance')->willReturn($redis);
         $cache->method('getCacheKey')->with($this->equalTo('testKey'))->willReturn('testKey');
 
-        $this->expectException('\FMUP\Cache\Exception');
-        $this->expectExceptionMessage('Error while inserting value in redis');
+        $this->setExpectedException('\FMUP\Cache\Exception', 'Error while inserting value in redis');
         /** @var $cache Driver\Redis */
         $cache->set('testKey', 'testValue');
     }

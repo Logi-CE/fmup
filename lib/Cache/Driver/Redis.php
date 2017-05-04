@@ -100,6 +100,9 @@ class Redis implements CacheInterface
      */
     public function has($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         return $this->getRedisInstance()->exists($this->getCacheKey($key));
     }
 
@@ -110,6 +113,9 @@ class Redis implements CacheInterface
      */
     public function get($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         return unserialize($this->getRedisInstance()->get($this->getCacheKey($key)));
     }
 
@@ -122,6 +128,9 @@ class Redis implements CacheInterface
      */
     public function set($key, $value)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         $ttl = (int)$this->getSetting(self::SETTINGS_TTL_IN_SECOND);
         $key = $this->getCacheKey($key);
         $redis = $this->getRedisInstance();
@@ -144,6 +153,9 @@ class Redis implements CacheInterface
      */
     public function remove($key)
     {
+        if (!$this->isAvailable()) {
+            throw new Exception('Redis is not available');
+        }
         $key = $this->getCacheKey($key);
         if (!$this->getRedisInstance()->del(array($key))) {
             throw new Exception('Error while deleting key in redis');
