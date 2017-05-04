@@ -8,13 +8,26 @@ class Syslog extends Channel
 {
     const NAME = 'Syslog';
 
-    /**$
-     * @return mixed
+    private $identifier = 'webapp';
+
+    /**
+     * Name of syslog application (identifier)
+     * @return string
      */
-    public function getName()
+    public function getIdentifier()
     {
-        $split = explode('\\', get_class($this));
-        return array_pop($split);
+        return $this->identifier;
+    }
+
+    /**
+     * Define identifier for syslog
+     * @param string $identifier
+     * @return $this
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = (string)$identifier;
+        return $this;
     }
 
     /**
@@ -22,7 +35,7 @@ class Syslog extends Channel
      */
     public function configure()
     {
-        $this->getLogger()->pushHandler(new SyslogHandler($this->getName()));
+        $this->getLogger()->pushHandler(new SyslogHandler($this->getIdentifier()));
         return $this;
     }
 }

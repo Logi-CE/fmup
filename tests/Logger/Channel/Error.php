@@ -59,7 +59,6 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $channel->method('getEnvironment')->willReturn($environment);
         /** @var $channel \FMUP\Logger\Channel\Error */
         $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);
-        $this->assertInstanceOf(\FMUP\Logger\Channel\Standard::class, $channel);
         $this->assertSame($channel, $channel->configure());
         $_SERVER['HTTP_USER_AGENT'] = 'Castelis';
         $this->assertSame($channel, $channel->configure());

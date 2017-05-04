@@ -44,7 +44,6 @@ class StandardTest extends \PHPUnit_Framework_TestCase
         $channel->method('getEnvironment')->willReturn($environment);
         /** @var $channel \FMUP\Logger\Channel\Standard */
         $this->assertInstanceOf(\FMUP\Logger\Channel::class, $channel);
-        $this->assertInstanceOf(\FMUP\Logger\Channel\System::class, $channel);
         $this->assertSame($channel, $channel->configure());
         $_SERVER['HTTP_USER_AGENT'] = 'Castelis';
         $this->assertSame($channel, $channel->configure());

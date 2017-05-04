@@ -167,7 +167,7 @@ class Logger
         $message = (string)$message;
         $level = (int)($level <= 0 ? self::ALERT : $level);
         $channelType = $this->get($channel);
-        if ($channelType->getName() === Logger\Channel\Standard::NAME) {
+        if ($channelType->getIdentifier() === Logger\Channel\Standard::NAME) {
             $message = "[Channel $channel] $message";
         }
         return $channelType->addRecord((int)$level, $message, (array)$context);

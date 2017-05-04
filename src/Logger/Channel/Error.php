@@ -1,7 +1,7 @@
 <?php
 namespace FMUP\Logger\Channel;
 
-use FMUP\Request;
+use FMUP\Logger\Channel;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
@@ -12,7 +12,7 @@ use Monolog\Processor\WebProcessor;
  * Class Error
  * @package FMUP\Logger\Channel
  */
-class Error extends Standard
+class Error extends Channel
 {
     const NAME = 'Error';
 
@@ -20,7 +20,6 @@ class Error extends Standard
 
     public function configure()
     {
-        parent::configure();
         $handler = new NativeMailerHandler(
             explode(',', $this->getConfig()->get('mail_support')),
             '[Erreur] ' . $this->getProjectVersion()->name(),
