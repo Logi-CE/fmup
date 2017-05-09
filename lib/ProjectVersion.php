@@ -51,6 +51,10 @@ class ProjectVersion
             return $this->getStructure()->version;
         }
         $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
+        exec("cd $rootPath && git describe", $gitVersion, $errorCode);
+        if (!$errorCode && trim($gitVersion)) {
+            return trim($gitVersion);
+        }
         $stringFromFile = file(implode(DIRECTORY_SEPARATOR, array($rootPath, '.git', 'HEAD')));
         $firstLine = $stringFromFile[0]; //get the string from the array
         $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
