@@ -54,23 +54,18 @@ class ProjectVersion
         } catch (\LogicException $e) {
             //Do nothing since we have a fallback
         }
-        $rootPath = $this->getGitHeadFilePath();
-        if (file_exists($rootPath)) {
-            $stringFromFile = file($rootPath);
-            $firstLine = $stringFromFile[0]; //get the string from the array
-            $explodedString = explode("/", $firstLine, 3); //seperate out by the "/" in the string
-            return trim($explodedString[2]); //get the one that is always the branch name
-        }
-        return 'v0.0.0';
+        return trim($this->getFromGit()) ?: 'v0.0.0';
     }
 
     /**
      * @return string
      * @codeCoverageIgnore
      */
-    protected function getGitHeadFilePath()
+    protected function getFromGit()
     {
-        return implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..', '.git', 'HEAD'));
+        $rootPath = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..'));
+        exec("cd $rootPath && git describe", $gitVersion, $errorCode);
+        return !$errorCode ? $gitVersion : "";
     }
 
     /**

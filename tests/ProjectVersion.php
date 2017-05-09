@@ -86,14 +86,10 @@ COMPOSER;
     public function testGetVersionWhenGitExists()
     {
         $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
-            ->setMethods(array('getGitHeadFilePath', 'getStructure'))
+            ->setMethods(array('getFromGit', 'getStructure'))
             ->getMock();
-        $projectVersion
-            ->method('getGitHeadFilePath')
-            ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEAD')));
-        $projectVersion
-            ->method('getStructure')
-            ->will($this->throwException(new \LogicException));
+        $projectVersion->method('getFromGit')->willReturn("8.8.8\n");
+        $projectVersion->method('getStructure')->will($this->throwException(new \LogicException));
         /** @var $projectVersion \FMUP\ProjectVersion */
         $this->assertSame('8.8.8', $projectVersion->get());
     }
@@ -101,11 +97,11 @@ COMPOSER;
     public function testGetVersionWhenNothingExists()
     {
         $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
-            ->setMethods(array('getGitHeadFilePath', 'getStructure'))
+            ->setMethods(array('getFromGit', 'getStructure'))
             ->getMock();
         $projectVersion
-            ->method('getGitHeadFilePath')
-            ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEADnotexists')));
+            ->method('getFromGit')
+            ->willReturn("");
         $projectVersion
             ->method('getStructure')
             ->will($this->throwException(new \LogicException));
@@ -116,14 +112,12 @@ COMPOSER;
     public function testGetWhenFileDontExists()
     {
         $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
-            ->setMethods(array('getGitHeadFilePath', 'getComposerPath'))
+            ->setMethods(array('getFromGit', 'getComposerPath'))
             ->getMock();
         $projectVersion
             ->method('getComposerPath')
             ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEADnotexists')));
-        $projectVersion
-            ->method('getGitHeadFilePath')
-            ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEADnotexists')));
+        $projectVersion->method('getFromGit')->willReturn("");
         /** @var $projectVersion \FMUP\ProjectVersion */
         $this->assertSame('v0.0.0', $projectVersion->get());
     }
@@ -131,14 +125,10 @@ COMPOSER;
     public function testGetWhenStructureIsBad()
     {
         $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
-            ->setMethods(array('getGitHeadFilePath', 'getComposerPath'))
+            ->setMethods(array('getFromGit', 'getComposerPath'))
             ->getMock();
-        $projectVersion
-            ->method('getComposerPath')
-            ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEAD')));
-        $projectVersion
-            ->method('getGitHeadFilePath')
-            ->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEADnotexists')));
+        $projectVersion->method('getComposerPath')->willReturn(implode(DIRECTORY_SEPARATOR, array(__DIR__, '.files', 'GITHEAD')));
+        $projectVersion->method('getFromGit')->willReturn('');
         /** @var $projectVersion \FMUP\ProjectVersion */
         $this->assertSame('v0.0.0', $projectVersion->get());
     }
