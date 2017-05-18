@@ -94,6 +94,18 @@ COMPOSER;
         $this->assertSame('8.8.8', $projectVersion->get());
     }
 
+    public function testGetWhenStructureIsWrong()
+    {
+        $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
+            ->setMethods(array('getFromGit', 'getComposerPath'))
+            ->getMock();
+        $projectVersion->method('getFromGit')->willReturn("9.9.9");
+        $projectVersion->method('getComposerPath')
+            ->willReturn(implode(DIRECTORY_SEPARATOR, [__DIR__, '.files', 'test.csv']));
+        /** @var $projectVersion \FMUP\ProjectVersion */
+        $this->assertSame('9.9.9', $projectVersion->get());
+    }
+
     public function testGetVersionWhenNothingExists()
     {
         $projectVersion = $this->getMockBuilder(ProjectVersionMock::class)
