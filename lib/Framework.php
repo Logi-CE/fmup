@@ -265,15 +265,17 @@ class Framework extends \Framework
         $isDebug = $this->isDebug();
         $code = E_PARSE | E_ERROR | E_USER_ERROR;
         $canHeader = $this->getSapi()->get() != Sapi::CLI;
-        if ($error !== null && ($error['type'] & $code) && $canHeader) {
+        if ($error !== null && ($error['type'] & $code)) {
             $this->errorHandler($code, $error['message'], $error['file'], $error['line']);
-            $this->getErrorHeader()->render();
-            if (!$isDebug) {
-                echo "<br/>Une erreur est survenue !<br/>"
-                    . "Le support informatique a été prévenu "
-                    . "et règlera le problême dans les plus brefs délais.<br/>"
-                    . "<br/>"
-                    . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
+            if ($canHeader) {
+                $this->getErrorHeader()->render();
+                if (!$isDebug) {
+                    echo "<br/>Une erreur est survenue !<br/>"
+                        . "Le support informatique a été prévenu "
+                        . "et règlera le problême dans les plus brefs délais.<br/>"
+                        . "<br/>"
+                        . "L'équipe des développeurs vous prie de l'excuser pour le désagrément.<br/>";
+                }
             }
         }
     }
