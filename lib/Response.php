@@ -7,6 +7,7 @@ namespace FMUP;
  */
 class Response
 {
+    use Sapi\OptionalTrait;
     /**
      * @var array
      */
@@ -96,10 +97,13 @@ class Response
      */
     public function send()
     {
-        foreach ($this->getHeaders() as $headers) {
-            foreach ($headers as $header) {
-                /* @var $header Response\Header */
-                $header->render();
+        if ($this->getSapi()->get() != Sapi::CLI) {
+            $this->setHeader(new Response\Header\ContentLength(mb_strlen($this->getBody())));
+            foreach ($this->getHeaders() as $headers) {
+                foreach ($headers as $header) {
+                    /* @var $header Response\Header */
+                    $header->render();
+                }
             }
         }
         echo $this->getBody();
