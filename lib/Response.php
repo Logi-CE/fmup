@@ -98,7 +98,7 @@ class Response
     public function send()
     {
         if ($this->getSapi()->get() != Sapi::CLI) {
-            $this->setHeader(new Response\Header\ContentLength(mb_strlen($this->getBody())));
+            $this->setHeader(new Response\Header\ContentLength(strlen($this->getBody())));
             foreach ($this->getHeaders() as $headers) {
                 foreach ($headers as $header) {
                     /* @var $header Response\Header */
