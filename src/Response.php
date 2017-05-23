@@ -98,7 +98,10 @@ class Response
     public function send()
     {
         if ($this->getSapi()->get() != Sapi::CLI) {
-            $this->setHeader($this->getContentLengthHeader(strlen($this->getBody())));
+            $strLen = $this->phpStrLen($this->getBody());
+            if ($strLen) {
+                $this->setHeader($this->getContentLengthHeader($strLen));
+            }
             foreach ($this->getHeaders() as $headers) {
                 foreach ($headers as $header) {
                     /* @var $header Response\Header */
@@ -120,6 +123,16 @@ class Response
     protected function getContentLengthHeader($size)
     {
         return new Response\Header\ContentLength((int)$size);
+    }
+
+    /**
+     * @param string $string
+     * @return int
+     * @codeCoverageIgnore
+     */
+    protected function phpStrLen($string)
+    {
+        return strlen($string);
     }
 
     /**
