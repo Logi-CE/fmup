@@ -33,6 +33,30 @@ class SocketTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($socket->getErrorString());
     }
 
+    public function testConnectWithTimeout()
+    {
+        $socket = $this->getMockBuilder(Socket::class)
+            ->setMethods(array(
+                'phpFSockOpen',
+            ))->getMock();
+        $h = fopen('php://stdin', 'r');
+        $socket->expects($this->once())
+            ->method('phpFSockOpen')
+            ->with('127.0.0.1', 80, null, null, 10)
+            ->willReturn($h);
+
+        $property = new \ReflectionProperty(Socket::class, 'socket');
+        $property->setAccessible(true);
+
+        /** @var Socket $socket */
+        $this->assertFalse($socket->isConnected());
+        $this->assertSame($socket, $socket->connect('127.0.0.1', 80, 10));
+        $this->assertSame($h, $property->getValue($socket));
+        $this->assertTrue($socket->isConnected());
+        $this->assertNull($socket->getErrorNumber());
+        $this->assertNull($socket->getErrorString());
+    }
+
     public function testWrite()
     {
         $socket = $this->getMockBuilder(Socket::class)

@@ -21,9 +21,12 @@ class Socket
      * @param $port
      * @return $this
      */
-    public function connect($host, $port)
+    public function connect($host, $port, $timeout = null)
     {
-        $this->socket = $this->phpFSockOpen($host, $port, $this->errorNumber, $this->errorString);
+        if (!$timeout) {
+            $timeout = ini_get('default_socket_timeout');
+        }
+        $this->socket = $this->phpFSockOpen($host, $port, $this->errorNumber, $this->errorString, $timeout);
         return $this;
     }
 
@@ -78,12 +81,13 @@ class Socket
      * @param int $port
      * @param int $errno
      * @param string $errstr
+     * @param float $timeout
      * @return resource
      * @codeCoverageIgnore
      */
-    protected function phpFSockOpen($host, $port, $errno, $errstr)
+    protected function phpFSockOpen($host, $port, $errno, $errstr, $timeout)
     {
-        return fsockopen($host, $port, $errno, $errstr);
+        return fsockopen($host, $port, $errno, $errstr, $timeout);
     }
 
     /**
