@@ -66,6 +66,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($instance, $manager->get());
     }
 
+    public function testSetDb()
+    {
+        $db = new \FMUP\Db();
+        $manager = \FMUP\Db\Manager::getInstance();
+        $this->assertSame($manager, $manager->set('test', $db));
+        $this->assertSame($db, $manager->get('test'));
+    }
+
     public function testGetOtherDb()
     {
         $config = $this->getMockBuilder('\FMUP\Config')->setMethods(array('get'))->getMock();
