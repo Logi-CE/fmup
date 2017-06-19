@@ -63,6 +63,18 @@ class Manager implements Logger\LoggerInterface
     }
 
     /**
+     * Close or change a connection by its name
+     * @param string $name
+     * @param Db|null $db
+     * @return $this
+     */
+    public function set($name = self::DEFAULT_NAME, Db $db = null)
+    {
+        $this->instances[(string) $name] = $db;
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     final public static function getInstance()
