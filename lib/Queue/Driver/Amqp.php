@@ -27,7 +27,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
         if (!$channel->hasResource()) {
             $channelResource = $this->getAmqpConnection()->channel();
             $channel->setName($this->secureName($channel->getName()));
-            $channelResource->queue_declare($channel->getName(), false, true);
+            $channelResource->queue_declare($channel->getName(), false, true, false, false);
             $channel->setResource($channelResource);
         }
         return $channel;
