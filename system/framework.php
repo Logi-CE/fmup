@@ -14,18 +14,40 @@ class Framework
      * @var Request
      */
     private $request;
+    /**
+     * @var Request\Factory
+     */
+    private $requestFactory;
 
     /**
-     * @return \FMUP\Request
+     * @return Request
      */
     public function getRequest()
     {
         if (!$this->request) {
-            $this->request = (
-                $this->getSapi()->get() == \FMUP\Sapi::CLI ? new \FMUP\Request\Cli() : new \FMUP\Request\Http()
-            );
+            $this->request = $this->getRequestFactory()->get();
         }
         return $this->request;
+    }
+
+    /**
+     * Returns defined request factory
+     * @return Request\Factory
+     */
+    public function getRequestFactory()
+    {
+        return $this->requestFactory = $this->requestFactory ?: new Request\Factory();
+    }
+
+    /**
+     * Define request factory
+     * @param Request\Factory|null $factory
+     * @return $this
+     */
+    public function setRequestFactory(Request\Factory $factory = null)
+    {
+        $this->requestFactory = $factory;
+        return $this;
     }
 
     /**
