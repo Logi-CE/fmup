@@ -217,4 +217,13 @@ class Http extends Request
     {
         return $this->getServer(self::HTTP_REFERER);
     }
+
+    /**
+     * Return request headers
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return (array)(function_exists('getallheaders') ? getallheaders() : false);
+    }
 }
