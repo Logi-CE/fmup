@@ -8,6 +8,10 @@ class Factory
     const CONTENT_TYPE = 'Content-Type';
     const JSON_HEADER = 'application/json';
 
+    /**
+     * Build the correct request object
+     * @return Cli|Http|Json
+     */
     public function get()
     {
         if ($this->isCli()) {
@@ -19,19 +23,32 @@ class Factory
         return new \FMUP\Request\Http();
     }
 
+    /**
+     * Checks if request should be cli
+     * @return bool
+     */
     private function isCli()
     {
         return $this->getSapi()->get() == \FMUP\Sapi::CLI;
     }
 
+    /**
+     * Checks if request should be json
+     * @return bool
+     */
     private function isJson()
     {
         $headers = !$this->isCli() ? (array)$this->getHeaders() : [];
         return isset($headers[self::CONTENT_TYPE]) && in_array(self::JSON_HEADER, (array)$headers[self::CONTENT_TYPE]);
     }
 
-    private function getHeaders()
+    /**
+     * Retrieve headers of the request
+     * @codeCoverageIgnore
+     * @return array|false
+     */
+    protected function getHeaders()
     {
-        return getallheaders();
+        return function_exists('getallheaders') ? getallheaders() : false;
     }
 }

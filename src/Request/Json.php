@@ -15,7 +15,17 @@ class Json extends Http
      */
     private function getJson()
     {
-        return $this->json = (array)($this->json ?: json_decode(file_get_contents('php://input'), true));
+        return $this->json = (array)($this->json ?: json_decode($this->getRequestContent(), true));
+    }
+
+    /**
+     * Retrieve content of the request - do not use
+     * @codeCoverageIgnore
+     * @return string|null
+     */
+    protected function getRequestContent()
+    {
+        return file_get_contents('php://input');
     }
 
     /**

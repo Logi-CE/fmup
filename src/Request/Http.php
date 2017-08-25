@@ -220,10 +220,11 @@ class Http extends Request
 
     /**
      * Return request headers
+     * @codeCoverageIgnore
      * @return array
      */
     public function getHeaders()
     {
-        return (array)getallheaders();
+        return (array) (function_exists('getallheaders') ? getallheaders() : false);
     }
 }
