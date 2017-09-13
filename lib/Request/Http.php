@@ -20,6 +20,8 @@ class Http extends Request
     const HTTP_REFERER = 'HTTP_REFERER';
     const HTTP_HOST = 'HTTP_HOST';
 
+    const AUTHORIZATION_TOKEN = 'Authorization-Token';
+
     protected $get = array();
     protected $post = array();
     protected $server = array();
@@ -225,5 +227,26 @@ class Http extends Request
     public function getHeaders()
     {
         return (array)(function_exists('getallheaders') ? getallheaders() : false);
+    }
+
+    /**
+     * Return requested key in headers HTTP
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getHeader($key, $default = null)
+    {
+        return $this->hasHeader($key) ? $this->getHeaders()[$key] : $default;
+    }
+
+    /**
+     * Check whether selected key exists
+     * @param string $key
+     * @return bool
+     */
+    public function hasHeader($key)
+    {
+        return array_key_exists($key, $this->getHeaders());
     }
 }
