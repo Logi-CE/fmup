@@ -171,4 +171,28 @@ class HttpTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(array()), $request->getFiles('file'));
         $this->assertSame(array(array()), $request->getFiles('file', 'defaultValue'));
     }
+
+    public function testGetHeader()
+    {
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getHeaders'))->getMock();
+        $request->method('getHeaders')->willReturn(['header' => '0123456789']);
+        /**
+         * @var $request \FMUP\Request\Http
+         */
+        $this->assertSame('0123456789', $request->getHeader('header'));
+        $this->assertNull($request->getHeader('notExistingHeader'));
+        $this->assertSame('defaultUnitValue', $request->getHeader('notExistingHeader', 'defaultUnitValue'));
+        $this->assertSame('0123456789', $request->getHeader('header', 'defaultUnitValue'));
+    }
+
+    public function testHasHeader()
+    {
+        $request = $this->getMockBuilder(\FMUP\Request\Http::class)->setMethods(array('getHeaders'))->getMock();
+        $request->method('getHeaders')->willReturn(['header' => '0123456789']);
+        /**
+         * @var $request \FMUP\Request\Http
+         */
+        $this->assertTrue($request->hasHeader('header'));
+        $this->assertFalse($request->hasHeader('header2'));
+    }
 }
