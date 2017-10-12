@@ -1,4 +1,5 @@
 <?php
+
 namespace FMUP\Db\Driver;
 
 use FMUP\Db\Exception;
@@ -14,8 +15,8 @@ class Pdo extends PdoConfiguration
      */
     protected function getCharset()
     {
-        $charset = $this->getSettings('charset');
-        return $charset ? $charset : self::CHARSET_UTF8;
+        $charset = (string)$this->getSettings('charset');
+        return $charset ?: self::CHARSET_UTF8;
     }
 
     /**
@@ -65,6 +66,7 @@ class Pdo extends PdoConfiguration
                 $this->log(Logger::CRITICAL, 'Transaction already opened', $this->getSettings());
                 throw new Exception('Transaction already opened');
             }
+            $this->log(Logger::DEBUG, 'Transaction start');
             return $this->getDriver()->beginTransaction();
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('settings' => $this->getSettings()));
@@ -79,6 +81,7 @@ class Pdo extends PdoConfiguration
     public function rollback()
     {
         try {
+            $this->log(Logger::DEBUG, 'Transaction rollback');
             return $this->getDriver()->rollBack();
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
@@ -121,6 +124,7 @@ class Pdo extends PdoConfiguration
     public function commit()
     {
         try {
+            $this->log(Logger::DEBUG, 'Transaction commit');
             return $this->getDriver()->commit();
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
@@ -143,6 +147,7 @@ class Pdo extends PdoConfiguration
         }
 
         try {
+            $this->log(Logger::DEBUG, 'Executing query', array('values' => $values));
             return $statement->execute($values);
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('exception' => $e, 'values' => $values));
@@ -160,6 +165,7 @@ class Pdo extends PdoConfiguration
     public function prepare($sql, array $options = array())
     {
         try {
+            $this->log(Logger::DEBUG, 'Preparing query', array('sql' => $sql, 'options' => $options));
             return $this->getDriver()->prepare($sql, $options);
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('exception' => $e, 'sql' => $sql));

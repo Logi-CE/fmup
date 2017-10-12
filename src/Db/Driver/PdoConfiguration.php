@@ -149,6 +149,7 @@ abstract class PdoConfiguration implements DbInterface, Logger\LoggerInterface
     public function rawExecute($sql)
     {
         try {
+            $this->log(Logger::DEBUG, 'Raw execute query', array('sql' => $sql));
             return $this->getDriver()->prepare($sql)->execute();
         } catch (\PDOException $e) {
             $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));

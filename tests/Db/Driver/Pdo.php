@@ -73,7 +73,11 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdoMock->expects($this->once())->method('rollBack')->willThrowException(new \PDOException('random message'));
         $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
+        $pdo->expects($this->exactly(2))->method('log')
+            ->withConsecutive(
+                array($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Transaction rollback')),
+                array($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'))
+            );
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
         $this->expectExceptionMessage('random message');
@@ -142,7 +146,11 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdoMock->expects($this->once())->method('commit')->willThrowException(new \PDOException('random message'));
         $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
+        $pdo->expects($this->exactly(2))->method('log')
+            ->withConsecutive(
+                array($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Transaction commit')),
+                array($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'))
+            );
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
         $this->expectExceptionMessage('random message');
@@ -175,7 +183,11 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
         $statement->expects($this->once())->method('execute')->willThrowException(new \PDOException('random message'));
         $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
+        $pdo->expects($this->exactly(2))->method('log')
+            ->withConsecutive(
+                array($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Executing query')),
+                array($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'))
+            );
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
         $this->expectExceptionMessage('random message');
@@ -197,7 +209,11 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdoMock->expects($this->once())->method('prepare')->willThrowException(new \PDOException('random message'));
         $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('getDriver', 'log'))->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
+        $pdo->expects($this->exactly(2))->method('log')
+            ->withConsecutive(
+                array($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Preparing query')),
+                array($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'))
+            );
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
         $this->expectExceptionMessage('random message');
