@@ -27,7 +27,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
@@ -47,7 +48,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
@@ -70,8 +72,7 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIterations()
     {
-        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('execute'))->getMock();
-        $statement->expects($this->once())->method('execute');
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array())->getMock();
         $dbInterface = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
             ->setMethods(
                 array(
@@ -88,11 +89,13 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
         $dbInterface->method('fetchRow')->willReturnOnConsecutiveCalls(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $dbInterface->expects($this->once())->method('execute')->with($this->equalTo($statement), $this->equalTo(array()));
         $iterator = $this->getMockBuilder(\FMUP\Db\FetchIterator::class)
             ->setMethods(null)
             ->setConstructorArgs(array($statement, $dbInterface))
@@ -126,7 +129,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
@@ -165,7 +169,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
@@ -201,7 +206,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();
@@ -234,7 +240,8 @@ class FetchIteratorTest extends \PHPUnit_Framework_TestCase
                     'fetchRow',
                     'fetchAll',
                     'forceReconnect',
-                    'getDriver'
+                    'getDriver',
+                    'count'
                 )
             )
             ->getMock();

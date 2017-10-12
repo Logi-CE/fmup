@@ -68,6 +68,11 @@ class PdoConfigurationMockDbDriverPdoConfiguration extends \FMUP\Db\Driver\PdoCo
     {
         // TODO: Implement rollback() method.
     }
+
+    public function count($statement)
+    {
+        // TODO: Implement count() method.
+    }
 }
 
 class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
