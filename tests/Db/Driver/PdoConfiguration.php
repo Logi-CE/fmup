@@ -147,7 +147,11 @@ class PdoConfigurationTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('getDriver', 'log'))
             ->getMock();
         $pdo->expects($this->once())->method('getDriver')->willReturn($pdoMock);
-        $pdo->expects($this->once())->method('log')->with($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'));
+        $pdo->expects($this->exactly(2))->method('log')
+            ->withConsecutive(
+                array($this->equalTo(\FMUP\Logger::DEBUG), $this->equalTo('Raw execute query')),
+                array($this->equalTo(\FMUP\Logger::ERROR), $this->equalTo('random message'))
+            );
         /** @var PdoConfigurationMockDbDriverPdoConfiguration $pdo */
         $this->expectException(\FMUP\Db\Exception::class);
         $this->expectExceptionMessage('random message');
