@@ -56,7 +56,29 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
+                )
+            )
+            ->getMock();
+        $driver->expects($this->exactly(1))->method('prepare')->with($this->equalTo($sql))->willReturn($statement);
+        $driver->expects($this->exactly(0))->method('execute');
+        $db = $this->getMockBuilder(\FMUP\Db::class)->setMethods(array('getDriver'))->getMock();
+        $db->method('getDriver')->willReturn($driver);
+        /** @var $db \FMUP\Db */
+        $this->assertInstanceOf(\FMUP\Db\FetchIterator::class, $db->getIterator($sql));
+    }
+
+    public function testGetIteratorOnRewind()
+    {
+        $sql = 'SELECT * FROM UNIT_TEST';
+        $statement = new \stdClass();
+        $driver = $this->getMockBuilder(\FMUP\Db\DbInterface::class)
+            ->setMethods(
+                array(
+                    'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -70,7 +92,9 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $db->method('getDriver')->willReturn($driver);
         /** @var $db \FMUP\Db */
-        $this->assertInstanceOf(\FMUP\Db\FetchIterator::class, $db->getIterator($sql));
+        $oIterator = $db->getIterator($sql);
+        $this->assertInstanceOf(\FMUP\Db\FetchIterator::class, $oIterator);
+        foreach($oIterator as $oElem);
     }
 
     public function testForceReconnect()
@@ -79,7 +103,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -96,7 +121,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -115,7 +141,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -132,7 +159,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -149,7 +177,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -168,7 +197,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count',
                 )
             )
             ->getMock();
@@ -195,7 +225,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();
@@ -222,7 +253,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'beginTransaction', 'rollback', 'errorCode', 'errorInfo', 'commit', 'rawExecute', 'execute',
-                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct'
+                    'prepare', 'lastInsertId', 'fetchRow', 'fetchAll', 'forceReconnect', 'getDriver', '__construct',
+                    'count'
                 )
             )
             ->getMock();

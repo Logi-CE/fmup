@@ -182,4 +182,25 @@ class Pdo extends PdoConfiguration
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
+
+    /**
+     * Retrieve number of affected rows of a statement
+     * @param mixed $statement
+     * @return int
+     * @throws Exception
+     */
+    public function count($statement)
+    {
+        if (!$statement instanceof \PDOStatement) {
+            $this->log(Logger::ERROR, 'Statement not in right format', array('statement' => $statement));
+            throw new Exception('Statement not in right format');
+        }
+
+        try {
+            return $statement->rowCount();
+        } catch (\PDOException $e) {
+            $this->log(Logger::ERROR, $e->getMessage(), array('error' => $e));
+            throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
+        }
+    }
 }

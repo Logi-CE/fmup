@@ -121,4 +121,11 @@ interface DbInterface
      * @return mixed
      */
     public function getDriver();
+
+    /**
+     * Returns number of affected rows of a statement
+     * @param mixed $statement
+     * @return int
+     */
+    public function count($statement);
 }

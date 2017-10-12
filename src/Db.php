@@ -159,9 +159,6 @@ class Db implements Logger\LoggerInterface
      */
     public function getIterator($sql, array $params = array())
     {
-        $statement = $this->getDriver()->prepare($sql);
-        $this->getDriver()->execute($statement, $params);
-
-        return new Db\FetchIterator($statement, $this->getDriver());
+        return new Db\FetchIterator($this->getDriver()->prepare($sql), $this->getDriver(), $params);
     }
 }
