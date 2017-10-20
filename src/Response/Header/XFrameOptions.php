@@ -4,17 +4,21 @@ namespace FMUP\Response\Header;
 
 use FMUP\Response\Header;
 
+/**
+ * Class XFrameOptions
+ *
+ * @package FMUP\Response\Header
+ */
 class XFrameOptions extends Header
 {
-
     const TYPE = 'X-Frame-Options';
     const OPTIONS_DENY = 'Deny';
-    const OPTIONS_SAMEORIGIN = 'Sameorigin';
+    const OPTIONS_SAME_ORIGIN = 'Sameorigin';
     const OPTIONS_ALLOW_FROM = 'ALLOW_FROM';
     const OPTIONS_ALLOW_FROM_URI_DEFAULT = '*';
 
     private $options = self::OPTIONS_DENY;
-    private $uri = self::OPTIONS_DENY;
+    private $uri = [];
 
 
     /**
@@ -22,10 +26,9 @@ class XFrameOptions extends Header
      * @param $options
      * @param array $uri
      */
-    public function __construct($options, $uri = array())
+    public function __construct($options = self::OPTIONS_DENY, array $uri = array())
     {
-        $this->setOptions($options);
-        $this->setUri($uri);
+        $this->setOptions($options)->setUri($uri);
     }
 
     /**
@@ -34,15 +37,13 @@ class XFrameOptions extends Header
      */
     public function getValue()
     {
-        $return = '';
         $options = $this->getOptions();
+        $return = $options;
         if ($options == self::OPTIONS_ALLOW_FROM) {
-            $urls = $this->getUri();
-            foreach ($urls as $url) {
+            $return = '';
+            foreach ($this->getUri() as $url) {
                 $return .= $options . ' ' . $url . ';';
             }
-        } else {
-            $return = $options;
         }
         return $return;
     }
@@ -61,26 +62,25 @@ class XFrameOptions extends Header
      */
     public function setOptions($options)
     {
-        $this->options = $options;
+        $this->options = (string)$options;
         return $this;
     }
 
     /**
+     * Returns allowed Uri
      * @return array
      */
     public function getUri()
     {
-        if (!isset($this->uri) or empty($this->uri)) {
-            $this->uri = array(self::OPTIONS_ALLOW_FROM_URI_DEFAULT);
-        }
-        return $this->uri;
+        return $this->uri = $this->uri ?: [self::OPTIONS_ALLOW_FROM_URI_DEFAULT];
     }
 
     /**
-     * @param array $uri
+     * Define list of url to be allowed
+     * @param string[] $uri
      * @return $this
      */
-    public function setUri($uri)
+    public function setUri(array $uri = [])
     {
         $this->uri = $uri;
         return $this;
