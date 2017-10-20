@@ -6,6 +6,8 @@
 
 namespace FMUPTests\Db\Driver;
 
+use FMUP\Logger;
+
 class PdoMockDbDriverPdo extends \PDO
 {
     public function __construct()
@@ -290,5 +292,48 @@ class PdoTest extends \PHPUnit_Framework_TestCase
         $pdo->expects($this->once())->method('getFetchMode')->willReturn(1);
         /** @var \FMUP\Db\Driver\Pdo $pdo */
         $this->assertSame(array(array()), $pdo->fetchAll($statement));
+    }
+
+    public function testCountOnStatementIsBroken()
+    {
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
+        $pdo->expects($this->once())->method('log')->with(
+            $this->equalTo(Logger::ERROR),
+            $this->equalTo('Statement not in right format'),
+            $this->equalTo(['statement' => false])
+        );
+        $this->expectException(\FMUP\Db\Exception::class);
+        $this->expectExceptionMessage('Statement not in right format');
+        /** @var \FMUP\Db\Driver\Pdo $pdo */
+        $pdo->count(false);
+    }
+
+    public function testCountOnStatementIsPDOException()
+    {
+        $exception = new \PDOException('my message', 12);
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('rowCount'))->getMock();
+        $statement->expects($this->once())->method('rowCount')->willThrowException($exception);
+
+        $pdo = $this->getMockBuilder(\FMUP\Db\Driver\Pdo::class)->setMethods(array('log'))->getMock();
+        $pdo->expects($this->once())->method('log')->with(
+            $this->equalTo(Logger::ERROR),
+            $this->equalTo('my message'),
+            $this->equalTo(['error' => $exception])
+        );
+        $this->expectException(\FMUP\Db\Exception::class);
+        $this->expectExceptionCode(12);
+        $this->expectExceptionMessage('my message');
+
+        /** @var \FMUP\Db\Driver\Pdo $pdo */
+        $pdo->count($statement);
+    }
+
+    public function testCount()
+    {
+        $statement = $this->getMockBuilder(\PDOStatement::class)->setMethods(array('rowCount'))->getMock();
+        $statement->expects($this->once())->method('rowCount')->willReturn(12);
+
+        $pdo = new \FMUP\Db\Driver\Pdo();
+        $this->assertSame(12, $pdo->count($statement));
     }
 }
