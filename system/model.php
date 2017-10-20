@@ -17,12 +17,12 @@ abstract class Model
 
     public function getIsLogue()
     {
-        return (bool) self::$is_logue;
+        return (bool)self::$is_logue;
     }
 
     public function setIsLogue($bool = false)
     {
-        self::$is_logue = (bool) $bool;
+        self::$is_logue = (bool)$bool;
         return $this;
     }
 
@@ -397,7 +397,8 @@ abstract class Model
         $attribute,
         $where = array(),
         $options = array()
-    ) {
+    )
+    {
         $SQL = "SELECT $attribute \n";
         $SQL .= " FROM $table  \n LEFT JOIN $left_table  \n";
         $SQL .= " ON $link_table  \n";
@@ -623,6 +624,7 @@ abstract class Model
         }
         return $modificateur;
     }
+
     /**
      * Modifie le champ date_creation par la date actuelle
      **/
@@ -1153,11 +1155,7 @@ abstract class Model
         $where['id'] = "IFnull(id, 0) <> IFnull(" . sql::secureId($this->id) . ", 0)";
         $doublon = $this->findFirst($where);
 
-        if ($doublon) {
-            return false;
-        } else {
-            return true;
-        }
+        return !$doublon;
     }
 
     /**
@@ -1177,5 +1175,10 @@ abstract class Model
             self::setSession(\FMUP\Session::getInstance());
         }
         return self::$session;
+    }
+
+    public static function hasSession()
+    {
+        return \FMUP\Sapi::getInstance() && \FMUP\Sapi::getInstance()->is(\FMUP\Sapi::CGI) && (bool)self::$session;
     }
 }
