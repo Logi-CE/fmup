@@ -18,7 +18,7 @@ class XFrameOptions extends Header
     const OPTIONS_ALLOW_FROM_URI_DEFAULT = '*';
 
     private $options = self::OPTIONS_DENY;
-    private $uri = [];
+    private $uri = [self::OPTIONS_ALLOW_FROM_URI_DEFAULT];
 
 
     /**
@@ -26,7 +26,7 @@ class XFrameOptions extends Header
      * @param $options
      * @param array $uri
      */
-    public function __construct($options = self::OPTIONS_DENY, array $uri = array())
+    public function __construct($options = self::OPTIONS_DENY, array $uri = [self::OPTIONS_ALLOW_FROM_URI_DEFAULT])
     {
         $this->setOptions($options)->setUri($uri);
     }
@@ -60,9 +60,9 @@ class XFrameOptions extends Header
      * @param string $options
      * @return $this
      */
-    public function setOptions($options)
+    public function setOptions($options = self::OPTIONS_DENY)
     {
-        $this->options = (string)$options;
+        $this->options = is_string($options) ? $options : self::OPTIONS_DENY;
         return $this;
     }
 
@@ -72,7 +72,7 @@ class XFrameOptions extends Header
      */
     public function getUri()
     {
-        return $this->uri = $this->uri ?: [self::OPTIONS_ALLOW_FROM_URI_DEFAULT];
+        return $this->uri;
     }
 
     /**
@@ -82,7 +82,7 @@ class XFrameOptions extends Header
      */
     public function setUri(array $uri = [])
     {
-        $this->uri = $uri;
+        $this->uri = $uri ?: [self::OPTIONS_ALLOW_FROM_URI_DEFAULT];
         return $this;
     }
 
