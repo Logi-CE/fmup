@@ -1,4 +1,5 @@
 <?php
+
 namespace FMUP\Request;
 
 class Factory
@@ -27,7 +28,8 @@ class Factory
     private function isJson()
     {
         $headers = !$this->isCli() ? (array)$this->getHeaders() : [];
-        return isset($headers[self::CONTENT_TYPE]) && in_array(self::JSON_HEADER, (array)$headers[self::CONTENT_TYPE]);
+        return getenv(self::CONTENT_TYPE) == self::JSON_HEADER ||
+            (isset($headers[self::CONTENT_TYPE]) && in_array(self::JSON_HEADER, (array)$headers[self::CONTENT_TYPE]));
     }
 
     private function getHeaders()
