@@ -117,4 +117,36 @@ class XFrameOptionsTest extends \PHPUnit_Framework_TestCase
          */
         $this->assertSame('X-Frame-Options', $header->getType(), 'Unexpected type value');
     }
+
+    public function testRenderWhenOptionsAllowWithEmptyUri()
+    {
+        $obj = $this->getMockBuilder(\FMUP\Response\Header\XFrameOptions::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOptions', 'getUri', 'header'])
+            ->getMock();
+        $obj->expects($this->once())->method('getUri')->willReturn(['*']);
+        $obj->expects($this->never())->method('getOptions');
+        $obj->expects($this->never())->method('header');
+        /**
+         * @var \FMUP\Response\Header\XFrameOptions $obj
+         */
+        $this->assertSame($obj, $obj->render(), 'render should be empty by default');
+    }
+
+    public function testRenderWhenOptionsAllowWithSomeUri()
+    {
+        $obj = $this->getMockBuilder(\FMUP\Response\Header\XFrameOptions::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOptions', 'getUri', 'header'])
+            ->getMock();
+        $obj->expects($this->once())->method('getOptions')
+            ->willReturn(\FMUP\Response\Header\XFrameOptions::OPTIONS_ALLOW_FROM);
+        $obj->method('getUri')->willReturn(['http://google.com', 'bob.local']);
+        $obj->expects($this->once())->method('header')
+            ->with($this->equalTo('X-Frame-Options: ALLOW_FROM http://google.com;ALLOW_FROM bob.local;'));
+        /**
+         * @var \FMUP\Response\Header\XFrameOptions $obj
+         */
+        $this->assertSame($obj, $obj->render(), 'Unexpected value');
+    }
 }

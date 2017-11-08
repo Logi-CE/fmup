@@ -94,4 +94,13 @@ class XFrameOptions extends Header
     {
         return self::TYPE;
     }
+
+    /**
+     * Displays the header
+     * @return Header
+     */
+    public function render()
+    {
+        return ($this->getUri() != [self::OPTIONS_ALLOW_FROM_URI_DEFAULT] ? parent::render() : $this);
+    }
 }
