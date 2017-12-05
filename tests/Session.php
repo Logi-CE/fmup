@@ -336,7 +336,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMockBuilder(SapiMockSession::class)->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
-        $session = $this->getMockBuilder(SessionMock::class)->setMethods(array('sessionStart'))->getMock();
+        $session = $this->getMockBuilder(SessionMock::class)->setMethods(array('sessionStart', 'sessionId'))->getMock();
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
@@ -356,7 +356,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $sapi = $this->getMockBuilder(SapiMockSession::class)->setMethods(array('get'))->getMock();
         $sapi->method('get')->willReturn(\FMUP\Sapi::CGI);
-        $session = $this->getMockBuilder(SessionMock::class)->setMethods(array('sessionStart'))->getMock();
+        $session = $this->getMockBuilder(SessionMock::class)->setMethods(array('sessionStart', 'sessionId'))->getMock();
         $session->method('sessionStart')->willReturn(true);
 
         $reflection = new \ReflectionProperty(\FMUP\Session::class, 'instance');
