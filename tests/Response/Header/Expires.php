@@ -21,7 +21,7 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
         $expires = new \FMUP\Response\Header\Expires();
         $this->assertSame($expires, $expires->setExpireDate());
         $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
-        $this->assertEquals(new \DateTime(), $expires->getExpireDate());
+        $this->assertEquals((new \DateTime())->format('Y-m-d H:i'), $expires->getExpireDate()->format('Y-m-d H:i'));
         $dateTime = new \DateTime('+2 months');
         $this->assertSame($expires, $expires->setExpireDate($dateTime));
         $this->assertInstanceOf(\DateTime::class, $expires->getExpireDate());
