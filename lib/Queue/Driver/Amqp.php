@@ -105,7 +105,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
         $queue = $this->getQueue($channel);
         $serialize = $channel->getSettings()->getSerialize();
         $msg = (!$message instanceof AMQPMessage)
-            ? new AMQPMessage($serialize ? serialize($message) : (string)$message)
+            ? new AMQPMessage($serialize ? serialize($message) : (string)$message, array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT))
             : $message;
         $queue->basic_publish($msg, '', $channel->getName());
         return true;
@@ -134,7 +134,7 @@ class Amqp implements DriverInterface, Environment\OptionalInterface
                 array($this, 'onPull')
             );
             do {
-                $queue->wait();
+                $queue->wait(null, false, 650);
             } while (is_null($this->currentMsg));
         } else {
             $message = $queue->basic_get($name, true);
