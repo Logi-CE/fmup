@@ -187,7 +187,10 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testPushNotMessageAndSerialize()
     {
-        $amqpMessage = new \PhpAmqpLib\Message\AMQPMessage(serialize('test'));
+        $amqpMessage = new \PhpAmqpLib\Message\AMQPMessage(
+            serialize('test'),
+            array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT)
+        );
         $channelResource = $this->getMockBuilder('\Tests\Queue\Driver\AMQPChannelMockQueueDriverAmqp')
             ->setMethods(array('basic_publish'))
             ->getMock();
