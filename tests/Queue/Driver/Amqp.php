@@ -74,7 +74,7 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
         $connection = $amqp->getAmqpConnection();
         $this->assertInstanceOf(\PhpAmqpLib\Connection\AMQPStreamConnection::class, $connection);
         $this->assertSame($connection, $amqp->getAmqpConnection());
-        $newFakeInstance  = new AMQPStreamConnectionMockQueueDriverAmqp;
+        $newFakeInstance = new AMQPStreamConnectionMockQueueDriverAmqp;
         $this->assertSame($amqp, $amqp->setAmqpConnection($newFakeInstance));
         $this->assertSame($newFakeInstance, $amqp->getAmqpConnection());
     }
@@ -190,7 +190,10 @@ class AmqpTest extends \PHPUnit_Framework_TestCase
 
     public function testPushNotMessageAndSerialize()
     {
-        $amqpMessage = new \PhpAmqpLib\Message\AMQPMessage(serialize('test'));
+        $amqpMessage = new \PhpAmqpLib\Message\AMQPMessage(
+            serialize('test'),
+            array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT)
+        );
         $channelResource = $this->getMockBuilder(AMQPChannelMockQueueDriverAmqp::class)
             ->setMethods(array('basic_publish'))
             ->getMock();
